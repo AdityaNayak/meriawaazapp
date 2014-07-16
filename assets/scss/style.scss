@@ -29,7 +29,7 @@
 //"foundation/components/joyride",
 //"foundation/components/keystrokes",
 //"foundation/components/labels",
-//"foundation/components/magellan",
+"foundation/components/magellan",
 //"foundation/components/orbit",
 //"foundation/components/pagination",
 "foundation/components/panels",
@@ -38,20 +38,20 @@
 //"foundation/components/reveal",
 //"foundation/components/side-nav",
 //"foundation/components/split-buttons",
-//"foundation/components/sub-nav",
+"foundation/components/sub-nav",
 //"foundation/components/switch",
 //"foundation/components/tables",
 //"foundation/components/tabs",
 //"foundation/components/thumbs",
 //"foundation/components/tooltips",
-"foundation/components/top-bar",
+//"foundation/components/top-bar",
 "foundation/components/type";
 //"foundation/components/offcanvas",
 //"foundation/components/visibility";
 
 
 
-@import "foundation-icons";
+//@import "foundation-icons";
 
 .secondary{
 	font-size:0.9em;
@@ -137,5 +137,10 @@
 		span{
 			padding:10px 20px;
 		}
+	}
+}
+.press-nav{
+	.sub-nav{
+		display:inline-block;
 	}
 }
