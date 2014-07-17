@@ -15,7 +15,7 @@
 @import
 //  "foundation/components/accordion",
 //"foundation/components/alert-boxes",
-//"foundation/components/block-grid",
+"foundation/components/block-grid",
 //"foundation/components/breadcrumbs",
 //"foundation/components/button-groups",
 "foundation/components/buttons",
@@ -30,9 +30,9 @@
 //"foundation/components/keystrokes",
 //"foundation/components/labels",
 "foundation/components/magellan",
-//"foundation/components/orbit",
+"foundation/components/orbit",
 //"foundation/components/pagination",
-"foundation/components/panels",
+//"foundation/components/panels",
 //"foundation/components/pricing-tables",
 //"foundation/components/progress-bars",
 //"foundation/components/reveal",
@@ -142,5 +142,30 @@
 .press-nav{
 	.sub-nav{
 		display:inline-block;
+	}
+}
+.press{
+	h3{
+		margin-top:2em;
+	}
+}
+.app-slider{
+	background:url('../images/app-back.png') no-repeat no-repeat 50% 0;
+}
+.orbit-container .orbit-slides-container img{
+	margin:0 auto;
+}
+.circles{
+	width:56px;
+	height:56px;
+	border-radius:50%;
+	padding-top:20px;
+	border:1px solid $grey;
+	margin:1.5em auto 0 auto;
+	&:hover{
+		border:2px solid $blue;
+	}
+	&.active{
+		border:2px solid $lightblue;
 	}
 }
