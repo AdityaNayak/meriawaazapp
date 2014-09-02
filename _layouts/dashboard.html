@@ -29,7 +29,8 @@
 
 	<link rel="icon" type="image/png" href="http://meriawaazapp.com/assets/images/favicon.png">
     <!--[if IE]><link rel="shortcut icon" href="http://meriawaazapp.com/assets/images/favicon.ico"/><![endif]-->
-    <script src="http://www.google.com/jsapi?key=ABQIAAAAlJFc1lrstqhgTl3ZYo38bBQcfCcww1WgMTxEFsdaTsnOXOVOUhTplLhHcmgnaY0u87hQyd-n-kiOqQ"></script>
+    
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -74,19 +75,24 @@
     Parse.initialize('km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt', 'BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI');
 
     //Once again, we extend the Parse.Object class to make the ListItem class
-        ListItem = Parse.Object.extend("Complaints");
+        ListItem = Parse.Object.extend("complaint");
          
         //This time, we use Parse.Query to generate a new query, specifically querying the ListItem table.
         query = new Parse.Query(ListItem);
          
         //We set constraints on the query.
        // query.limit = 10;
-        //query.descending('createdAt');
+        query.descending('createdAt');
          
         //We submit the query and pass in callback functions.
         query.find({
           success: function(results) {
             //Success callback
+            console.log("Total: "+results.length);
+            for (var i = 0; i < results.length; i++) { 
+      var object = results[i];
+      console.log(object.id + ' - ' + object.get('category')+ '-'+JSON.stringify(object.get('location').latitude)+','+JSON.stringify(object.get('location').longitude));
+    }
             console.log('ho gaya');
           },
           error: function(error) {
@@ -94,47 +100,75 @@
           }
         });
 
-    </script>
-    <script>
-        (function () {
-            google.load("maps", "2");
-            google.setOnLoadCallback(function () {
-                // Create map
-                var map = new google.maps.Map2(document.getElementById("map")),
-                    //markerText = "<h2>You are here</h2><p>Nice with geolocation, ain't it?</p>",
-                    markOutLocation = function (lat, long) {
-                        var latLong = new google.maps.LatLng(lat, long),
-                            marker = new google.maps.Marker(latLong);
-                        map.setCenter(latLong, 13);
-                        map.addOverlay(marker);
-                        //marker.openInfoWindow(markerText);
-                        google.maps.Event.addListener(marker, "click", function () {
-                            marker.openInfoWindow(markerText);
-                        });
-                    };
-                    map.setUIToDefault();
+    function initialize() {
 
-                // Check for geolocation support    
-                if (navigator.geolocation) {
-                    // Get current position
-                    navigator.geolocation.getCurrentPosition(function (position) {
-                            // Success!
-                            markOutLocation(position.coords.latitude, position.coords.longitude);
-                        }, 
-                        function () {
+    var locations = [
+        ['Hougang', 1.37265, 103.893658],
+        ['Punggol', 1.400617, 103.907833],
+        ['MacRitchie Reservoir', 1.346002, 103.825436],
+        ['Bishan', 1.352051, 103.849125],
+        ['Sentosa', 1.251226, 103.830757]
+        ];
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 15,
+        center: new google.maps.LatLng(1.37265, 103.893658),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map
+        });
+
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                infowindow.setContent(locations[i][0]);
+                infowindow.open(map, marker);
+            }
+        })(marker, i));
+    }
+                                                        
+    // Check if user support geo-location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            var geolocpoint = new google.maps.LatLng(latitude, longitude);
+
+            var mapOptions = {
+                zoom: 8,
+                center: geolocpoint,
+                mapTypeId: google.maps.MapTypeId.HYBRID
+            }
+            // Place a marker
+            var geolocation = new google.maps.Marker({
+                position: geolocpoint,
+                map: map,
+                title: 'Your geolocation',
+                icon: 'http://labs.google.com/ridefinder/images/mm_20_green.png'
+            });
+        }),
+        function () {
                             // Gelocation fallback: Defaults to Stockholm, Sweden
                             markerText = "<p>Please accept geolocation for us to be able to find you. <br>I've put you in Rashtrapati Bhavan for now.</p>";
                             markOutLocation(28.61436,77.199621);
-                        }
-                    );
-                }
-                else {
+            }
+    }
+    else {
                     // No geolocation fallback: Defaults to Eeaster Island, Chile
                     markerText = "<p>No location support. Enjoy India Gate for now. :-)</p>";
                     markOutLocation(28.612912,77.22951);
-                }
-            }); 
-        })();
+        }
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+
+      
     </script>
 </body>
 </html>
