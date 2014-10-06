@@ -30,7 +30,7 @@ function addList(){
     query.include('user');
     query.descending('createdAt');
     var adminTable=$('#admin-tb tbody');
-    query.limit(50);
+    query.limit(20);
     query.find({
       success: function(results) {
         for (var i = 0; i < results.length; i++) { 
