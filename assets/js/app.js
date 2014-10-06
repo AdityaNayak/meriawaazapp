@@ -23,7 +23,6 @@ function addMarker(){
         }
     });
 }
-temp3 = "";
 function addList(){    
     ListItem = Parse.Object.extend("complaint");
     query = new Parse.Query(ListItem);
@@ -31,48 +30,52 @@ function addList(){
     query.include('user');
     query.descending('createdAt');
     var adminTable=$('#admin-tb tbody');
-    query.limit(15);
-    userList = Parse.Object.extend("user");
-    var query2 = new Parse.Query(userList);
+    query.limit(50);
     query.find({
       success: function(results) {
         for (var i = 0; i < results.length; i++) { 
-            var object = results[i];
-            
+            var object = results[i];            
             var userObjectId = object.get('deviceId').id;
             
-            query2.get(userObjectId, {
-              success: function emailfn(object1) {
-                if (object1.get('facebookEmail')){
-                    temp3 = object1.get('facebookEmail');
-                    console.log(temp3);
-                    
-                }
-                else if (object1.get('googleId')){
-                    temp3= object1.get('googleId');
-                    console.log('2');
-                }
-                else{
-                    console.log('empty');
-                }
-              },
-
-              error: function(object1, error) {
-                
-              }
-            });
-            console.log(temp3);
             if ( typeof object.get('photo') !== 'undefined'){
-                adminTable.append( "<tr><td>"+object.createdAt+"</td><td>"+object.get('category')+"</td><td>"+object.get('content')+"</td><td>"+object.get('location').latitude+", "+object.get('location').longitude+"</td><td><a href="+object.get('photo')._url+" target='_blank'>Image</a></td><td>"+temp3+"</td></tr>");     
+                adminTable.append( "<tr><td>"+object.createdAt+"</td><td>"+object.get('category')+"</td><td>"+object.get('content')+"</td><td>"+object.get('location').latitude+","+object.get('location').longitude+"</td><td><a href="+object.get('photo')._url+" target='_blank'>Image</a></td><td class='clktrg' id="+userObjectId+">View</td></tr>");
                 //console.log(object.get('deviceId'));
             }       
             else{
-                adminTable.append( "<tr><td>"+object.createdAt+"</td><td>"+object.get('category')+"</td><td>"+object.get('content')+"</td><td>"+object.get('location').latitude+", "+object.get('location').longitude+"</td><td></td><td>"+temp3+"</td></tr>");
+                adminTable.append( "<tr><td>"+object.createdAt+"</td><td>"+object.get('category')+"</td><td>"+object.get('content')+"</td><td>"+object.get('location').latitude+","+object.get('location').longitude+"</td><td></td><td class='clktrg' id="+userObjectId+">View</td></tr>");
             }            
         }
       console.log('ho gaya');
+      $('.clktrg').on("click", onclickuser);
     },
       error: function(error) {
+        }
+    });
+    //$('.clktrg').on("click", onclickuser);
+}
+function onclickuser(){
+    userList = Parse.Object.extend("user");
+    var query2 = new Parse.Query(userList);
+    var userObjectId = this.id;
+    query2.get(userObjectId, {
+        success: function (object) {
+        if (object.get('googleId')){
+            temp3= object.get('googleId');
+            alert(temp3);
+        }
+        else if (object.get('facebookEmail')){
+            temp3 = object.get('facebookEmail');
+            alert(temp3);
+            
+        }
+        
+        else{
+            console.log('empty');
+        }
+        },
+
+        error: function(object, error) {
+
         }
     });
 }
