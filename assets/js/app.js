@@ -1,21 +1,39 @@
 Parse.initialize('km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt', 'BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI');
-
+var infowindow;
 function addMarker(){
-    ListItem = Parse.Object.extend("complaint");
-
-        query = new Parse.Query(ListItem);
+       ListItem = Parse.Object.extend("complaint");
+       query = new Parse.Query(ListItem);
+       
        query.descending('createdAt');
         query.find({
           success: function(results) {
             for (var i = 0; i < results.length; i++) { 
+                
 				var object = results[i];
 				marker = new google.maps.Marker({
 					position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
 					map: map,
 					title: object.get('category'),
+                    content: object,
 					draggable: false,
         			animation: google.maps.Animation.DROP
 				});
+                google.maps.event.addListener(marker, 'click', (function(marker,object) {
+                    return function() {
+                        if(infowindow) {
+                          infowindow.close();
+                        }
+                        infowindow = new google.maps.InfoWindow({
+                            maxWidth: 700,
+                            maxHeight: 900
+                        });
+                        infowindow.setContent("<ul style='list-style: none;'><li><b>Created at: </b>"+object.createdAt+"</li><li><b>Category: </b>"+object.get('category')+"</li><li><b>Content: </b>"+object.get('content')+"</li><li><b>Location: </b>"+object.get('location').latitude+","+object.get('location').longitude+"</li><li><b>Uploads: </b><a href='"+"' target='_blank'>Image</a></li></ul>");
+                        infowindow.open(map, marker);
+                        console.log("Ye Mila:");
+                        console.log(object.get('category'));
+                        
+                    }
+                })(marker,object));
 			}
           console.log('ho gaya');
       },
@@ -23,6 +41,7 @@ function addMarker(){
         }
     });
 }
+
 function addList(){    
     ListItem = Parse.Object.extend("complaint");
     query = new Parse.Query(ListItem);
@@ -53,6 +72,7 @@ function addList(){
     });
     //$('.clktrg').on("click", onclickuser);
 }
+
 function onclickuser(){
     userList = Parse.Object.extend("user");
     var query2 = new Parse.Query(userList);
@@ -105,7 +125,12 @@ function initialize() {
 	        });
 	    });
     }
+
+
+
+    
 }
+
 if($('#map').length){
     google.maps.event.addDomListener(window, 'load', initialize);
 }
