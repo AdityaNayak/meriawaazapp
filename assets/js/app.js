@@ -1,45 +1,21 @@
 Parse.initialize('km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt', 'BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI');
 var infowindow;
 function addMarker(){
+       console.log('Add Marker!');
        ListItem = Parse.Object.extend("complaint");
        query = new Parse.Query(ListItem);
-       
-       query.descending('createdAt');
-        query.find({
-          success: function(results) {
-            for (var i = 0; i < results.length; i++) { 
-                
-				var object = results[i];
-                var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+       var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
           
-                var icons = [
-                    iconURLPrefix + 'red-dot.png',
-                    iconURLPrefix + 'blue-dot.png',
-                    iconURLPrefix + 'yellow-dot.png',
-                    iconURLPrefix + 'green-dot.png',
-                    iconURLPrefix + 'purple-dot.png',
-                    iconURLPrefix + 'pink-dot.png', 
-                ]
-                var myicon;
-                if (object.get('category')=="sanitation"){
-                    myicon=icons[0]; 
-                }
-                else if(object.get('category')=="law"){
-                    myicon=icons[1];
-                }
-                else if(object.get('category')=="road"){
-                    myicon=icons[2];
-                }
-                else if(object.get('category')=="electricity"){
-                    myicon=icons[3];
-                }
-                else if(object.get('category')=="water"){
-                    myicon=icons[4];
-                }
-                else{
-                    myicon=icons[5];
-                }
-                var legend = document.getElementById('legend');
+       var icons = [
+                iconURLPrefix + 'red-dot.png',
+                iconURLPrefix + 'blue-dot.png',
+                iconURLPrefix + 'yellow-dot.png',
+                iconURLPrefix + 'green-dot.png',
+                iconURLPrefix + 'purple-dot.png',
+                iconURLPrefix + 'pink-dot.png', 
+       ]
+       
+       var legend = document.getElementById('legend');
                 for (var i=0;i<6;i++) {
                     var name;
                     var icon;
@@ -64,7 +40,7 @@ function addMarker(){
                         icon=icons[4]; 
                     }
                     else{
-                        name="sanitation";
+                        name="transport";
                         icon=icons[5]; 
                     }
                   
@@ -72,6 +48,31 @@ function addMarker(){
                   div.innerHTML = '<img src="' + icon + '"> ' + name;
                   legend.appendChild(div);
                 }
+       query.descending('createdAt');
+        query.find({
+          success: function(results) {
+            for (var i = 0; i < results.length; i++) { 
+				var object = results[i];
+                var myicon;
+                if (object.get('category')=="sanitation"){
+                    myicon=icons[0]; 
+                }
+                else if(object.get('category')=="law"){
+                    myicon=icons[1];
+                }
+                else if(object.get('category')=="road"){
+                    myicon=icons[2];
+                }
+                else if(object.get('category')=="electricity"){
+                    myicon=icons[3];
+                }
+                else if(object.get('category')=="water"){
+                    myicon=icons[4];
+                }
+                else{
+                    myicon=icons[5];
+                }
+                
 
 				marker = new google.maps.Marker({
 					position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
@@ -98,8 +99,8 @@ function addMarker(){
                         console.log(object.get('category'));
                         var data = document.getElementById('data');
                         var division = document.createElement('div');
-                        divisions.innerHTML = line;
-                        legend.appendChild(division);                       
+                        data.innerHTML = line;
+                        
                     }
                 })(marker,object));
 			}
