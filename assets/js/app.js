@@ -10,11 +10,75 @@ function addMarker(){
             for (var i = 0; i < results.length; i++) { 
                 
 				var object = results[i];
+                var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+          
+                var icons = [
+                    iconURLPrefix + 'red-dot.png',
+                    iconURLPrefix + 'blue-dot.png',
+                    iconURLPrefix + 'yellow-dot.png',
+                    iconURLPrefix + 'green-dot.png',
+                    iconURLPrefix + 'purple-dot.png',
+                    iconURLPrefix + 'pink-dot.png', 
+                ]
+                var myicon;
+                if (object.get('category')=="sanitation"){
+                    myicon=icons[0]; 
+                }
+                else if(object.get('category')=="law"){
+                    myicon=icons[1];
+                }
+                else if(object.get('category')=="road"){
+                    myicon=icons[2];
+                }
+                else if(object.get('category')=="electricity"){
+                    myicon=icons[3];
+                }
+                else if(object.get('category')=="water"){
+                    myicon=icons[4];
+                }
+                else{
+                    myicon=icons[5];
+                }
+                var legend = document.getElementById('legend');
+                for (var i=0;i<6;i++) {
+                    var name;
+                    var icon;
+                    if (i==0){
+                        name="sanitation";
+                        icon=icons[0]; 
+                    }
+                    else if(i==1){
+                        name="law";
+                        icon=icons[1]; 
+                    }
+                    else if(i==2){
+                        name="road";
+                        icon=icons[2]; 
+                    }
+                    else if(i==3){
+                        name="electricity";
+                        icon=icons[3]; 
+                    }
+                    else if(i==4){
+                        name="water";
+                        icon=icons[4]; 
+                    }
+                    else{
+                        name="sanitation";
+                        icon=icons[5]; 
+                    }
+                  
+                  var div = document.createElement('div');
+                  div.innerHTML = '<img src="' + icon + '"> ' + name;
+                  legend.appendChild(div);
+                }
+
 				marker = new google.maps.Marker({
 					position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
 					map: map,
 					title: object.get('category'),
                     content: object,
+                    icon : myicon,
 					draggable: false,
         			animation: google.maps.Animation.DROP
 				});
@@ -27,11 +91,15 @@ function addMarker(){
                             maxWidth: 700,
                             maxHeight: 900
                         });
-                        infowindow.setContent("<ul style='list-style: none;'><li><b>Created at: </b>"+object.createdAt+"</li><li><b>Category: </b>"+object.get('category')+"</li><li><b>Content: </b>"+object.get('content')+"</li><li><b>Location: </b>"+object.get('location').latitude+","+object.get('location').longitude+"</li><li><b>Uploads: </b><a href='"+"' target='_blank'>Image</a></li></ul>");
+                        var line="<ul style='list-style: none;'><li><b>Created at: </b>"+object.createdAt+"</li><li><b>Category: </b>"+object.get('category')+"</li><li><b>Content: </b>"+object.get('content')+"</li><li><b>Location: </b>"+object.get('location').latitude+","+object.get('location').longitude+"</li><li><b>Uploads: </b><a href='"+"' target='_blank'>Image</a></li></ul>";
+                        infowindow.setContent(line);
                         infowindow.open(map, marker);
                         console.log("Ye Mila:");
                         console.log(object.get('category'));
-                        
+                        var data = document.getElementById('data');
+                        var division = document.createElement('div');
+                        divisions.innerHTML = line;
+                        legend.appendChild(division);                       
                     }
                 })(marker,object));
 			}
@@ -126,8 +194,8 @@ function initialize() {
 	    });
     }
 
-
-
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('legend'));
+    
     
 }
 
