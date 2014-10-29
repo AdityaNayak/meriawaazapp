@@ -1,32 +1,25 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
-
 *{margin:0;padding:0;}
 
-body{
-  background:#567;
-  font-family:'Open Sans',sans-serif;
-}
-
-
-#login{
+#formbox{
   width:400px;
   margin:0 auto;
-  margin-top:8px;
+  margin-top:5%;
   margin-bottom:2%;
   transition:opacity 1s;
   -webkit-transition:opacity 1s;
 }
 
-#triangle{
-  width:0;
-  border-top:12x solid transparent;
-  border-right:12px solid transparent;
-  border-bottom:12px solid #3399cc;
-  border-left:12px solid transparent;
+#oroption{
+  width:400px;
   margin:0 auto;
+  margin-top:8px;
+  margin-bottom:10%;
+  text-align:right;
+  transition:opacity 1s;
+  -webkit-transition:opacity 1s;
 }
 
-#login h1{
+#formbox h1{
   background:#3399cc;
   padding:20px 0;
   font-size:140%;
@@ -46,7 +39,7 @@ input[type="email"],input[type="password"]{
   margin-bottom:4%;
   border:1px solid #ccc;
   padding:4%;
-  font-family:'Open Sans',sans-serif;
+
   font-size:95%;
   color:#555;
 }
@@ -56,7 +49,7 @@ input[type="submit"]{
   background:#3399cc;
   border:0;
   padding:4%;
-  font-family:'Open Sans',sans-serif;
+ 
   font-size:100%;
   color:#fff;
   cursor:pointer;
