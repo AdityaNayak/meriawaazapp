@@ -66,8 +66,8 @@ function signup() {
 
 
 function login() {
-	  loading();
 	  console.log("Inside Login");
+	  loading();
 	  var form = document.getElementById("login-form")
 
 	  var username = form.email.value;
@@ -90,9 +90,9 @@ function login() {
 }
 
 function resetPassword() {
-	  loading();
-	  var form = document.getElementById("login-form")
 	  console.log("Reset Password");
+	  loading();
+	  var form = document.getElementById("login-form");
 	  var email = form.email.value;
       if(email === "") {
 	      alert("Looks like you have forgotten your password! Enter your email in this form itself and click this link again. We will send you a mail that will allow you to reset your password.");
