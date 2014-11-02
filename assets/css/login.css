@@ -9,8 +9,9 @@
   -webkit-transition:opacity 1s;
 }
 
-#oroption{
-  width:400px;
+#oroptionright{
+  float: right;
+  width:200px;
   margin:0 auto;
   margin-top:8px;
   margin-bottom:10%;
@@ -18,6 +19,19 @@
   transition:opacity 1s;
   -webkit-transition:opacity 1s;
 }
+
+
+#oroptionleft{
+  float: left;
+  width:200px;
+  margin:0 auto;
+  margin-top:8px;
+  margin-bottom:10%;
+  text-align:left;
+  transition:opacity 1s;
+  -webkit-transition:opacity 1s;
+}
+
 
 #formbox h1{
   background:#3399cc;

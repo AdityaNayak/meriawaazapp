@@ -42,11 +42,18 @@
   </script>
   <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
 </head>
-<body class="dashboard">
+<body class="dashboard" onload="initialize()">
     <div class="header-top">
         <div class="row">
             <div class="small-2 columns ">
                 <a href="{{site.url}}"><img src="assets/images/logo-full.png" alt="Meri Awaaz"></a>
+            </div>
+            <div class="small-2 columns" align="left">
+                <div id="hello">
+                </div>
+                <div id="logout">
+                    <a onClick="logout();">Logout</a>
+                </div>
             </div>
         </div>
     </div>
@@ -59,7 +66,6 @@
     	</div>
     	<div class="small-3 columns">
     	 	<div id="data">
-          Data
         </div>
     	</div>
         
@@ -84,5 +90,5 @@
 </div>
 </body>
 <script type="text/javascript" src="{{site.url}}/assets/bower_components/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="{{site.url}}/assets/js/app.js"></script>
+<script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
 </html>
