@@ -124,13 +124,13 @@ function addList(){
         for (var i = 0; i < results.length; i++) { 
             var object = results[i];            
             var userObjectId = object.get('deviceId').id;
-            
+            console.log('lol');
             if ( typeof object.get('photo') !== 'undefined'){
-                adminTable.append( "<tr><td>"+object.createdAt+"</td><td>"+object.get('category')+"</td><td>"+object.get('content')+"</td><td>"+object.get('location').latitude+","+object.get('location').longitude+"</td><td><a href="+object.get('photo')._url+" target='_blank'>Image</a></td><td class='clktrg' id="+userObjectId+">View</td></tr>");
+                adminTable.append( "<tr><td>"+object.createdAt+"</td><td>"+object.get('category')+"</td><td>"+object.get('content')+"</td><td>"+object.get('location').latitude+","+object.get('location').longitude+"</td><td><a href="+object.get('photo')._url+" target='_blank'>Image</a></td><td class='clktrg' id="+userObjectId+">View</td><td>"+object.get('googleId')+"</td></tr>");
                 //console.log(object.get('deviceId'));
             }       
             else{
-                adminTable.append( "<tr><td>"+object.createdAt+"</td><td>"+object.get('category')+"</td><td>"+object.get('content')+"</td><td>"+object.get('location').latitude+","+object.get('location').longitude+"</td><td></td><td class='clktrg' id="+userObjectId+">View</td></tr>");
+                adminTable.append( "<tr><td>"+object.createdAt+"</td><td>"+object.get('category')+"</td><td>"+object.get('content')+"</td><td>"+object.get('location').latitude+","+object.get('location').longitude+"</td><td></td><td class='clktrg' id="+userObjectId+">View</td><td>"+object.get('googleId')+"</td></tr>");
             }            
         }
       console.log('ho gaya');
