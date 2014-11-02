@@ -23,6 +23,11 @@ $rem-base: 16px !default;
 // Use Open Sans font
 $include-open-sans: true !default;
 
+// Data attribute namespace
+// styles get applied to [data-mysite-plugin], etc
+$namespace: false !default;
+
+
 //
 // Global Foundation Mixins
 //
@@ -308,6 +313,10 @@ $cursor-text-value: text !default;
     font-family: "/" + unquote($xxlarge-up) + "/";
     width: lower-bound($xxlarge-range);
   }
+  meta.foundation-data-attribute-namespace {
+    font-family: #{$namespace};
+  }
+
 
   @if $include-html-global-classes {
 

@@ -15,7 +15,7 @@
 @import
 //  "foundation/components/accordion",
 //"foundation/components/alert-boxes",
-//"foundation/components/block-grid",
+"foundation/components/block-grid",
 //"foundation/components/breadcrumbs",
 //"foundation/components/button-groups",
 "foundation/components/buttons",
@@ -29,29 +29,29 @@
 //"foundation/components/joyride",
 //"foundation/components/keystrokes",
 //"foundation/components/labels",
-//"foundation/components/magellan",
-//"foundation/components/orbit",
+"foundation/components/magellan",
+"foundation/components/orbit",
 //"foundation/components/pagination",
-"foundation/components/panels",
+//"foundation/components/panels",
 //"foundation/components/pricing-tables",
 //"foundation/components/progress-bars",
 //"foundation/components/reveal",
 //"foundation/components/side-nav",
 //"foundation/components/split-buttons",
-//"foundation/components/sub-nav",
+"foundation/components/sub-nav",
 //"foundation/components/switch",
-//"foundation/components/tables",
+"foundation/components/tables",
 //"foundation/components/tabs",
 //"foundation/components/thumbs",
 //"foundation/components/tooltips",
-"foundation/components/top-bar",
+//"foundation/components/top-bar",
 "foundation/components/type";
 //"foundation/components/offcanvas",
 //"foundation/components/visibility";
 
 
 
-@import "foundation-icons";
+//@import "foundation-icons";
 
 .secondary{
 	font-size:0.9em;
@@ -138,4 +138,45 @@
 			padding:10px 20px;
 		}
 	}
+}
+.press-nav{
+	.sub-nav{
+		display:inline-block;
+	}
+}
+.press{
+	h3{
+		margin-top:2em;
+	}
+}
+.app-slider{
+	background:url('../images/app-back.png') no-repeat no-repeat 50% 0;
+}
+.orbit-container .orbit-slides-container img{
+	margin:0 auto;
+}
+.circles{
+	width:56px;
+	height:56px;
+	border-radius:50%;
+	padding-top:20px;
+	border:1px solid $grey;
+	margin:1.5em auto 0 auto;
+	&:hover{
+		border:2px solid $blue;
+	}
+	&.active{
+		border:2px solid $lightblue;
+	}
+}
+.circle-img{
+	border-radius:50%;
+}
+.header-top{
+	border-bottom:3px solid $darkwhite;
+	padding:1em 0;
+}
+#map{
+	height:600px;
+	width:1200px;
 }

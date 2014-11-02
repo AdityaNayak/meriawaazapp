@@ -29,6 +29,8 @@ $bluegreen: #00B6A5;
 $lightblue: #1E91D0;
 $darkblue: #0E629B;
 
+$darkwhite: rgba(186, 182, 176, 0.2);
+
 // The default font-size is set to 100% of the browser style sheet (usually 16px)
 // for compatibility with brower-based text zoom or user-set defaults.
 
@@ -394,7 +396,7 @@ $form-label-font-color: scale-color($black, $lightness: 30%);
 // $form-label-bottom-margin: rem-calc(8);
 // $input-font-family: inherit;
 $input-font-color: scale-color($black, $lightness: 30%);
-$input-font-size: rem-calc(16);
+$input-font-size: rem-calc(20);
 $input-bg-color: $white;
 $input-focus-bg-color: scale-color($white, $lightness: -2%);
 $input-border-color: $grey;
@@ -628,7 +630,7 @@ $fieldset-margin: 0px;
 
 // We use these to controls the style of slide numbers
 // $orbit-slide-number-bg: rgba(0,0,0,0);
-// $orbit-slide-number-font-color: #fff;
+ $orbit-slide-number-font-color: $grey;
 // $orbit-slide-number-padding: rem-calc(5);
 
 // Graceful Loading Wrapper and preloader
