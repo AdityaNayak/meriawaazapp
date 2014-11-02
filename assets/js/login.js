@@ -18,9 +18,15 @@ function setVisibility(id) {
       }
 }
 
+function loading() {
+	  console.log("Yo!");
+	  document.getElementById("load").style.display = 'inline';  
+}
 
 function signup() {
+	  
 	  console.log("Inside Signup");
+	  loading();
       var user = new Parse.User();
 	  var form = document.getElementById("signup-form")
 
@@ -29,7 +35,10 @@ function signup() {
 	  var confirmation = form.confirmation.value;
 
 	  if(confirmation != password){
+	  	setTimeout(function(){document.getElementById("load").style.display = 'none';}, 3000);
 	  	alert("Passwords don't match. Please try again!");
+	  	form.password.value="";
+	  	form.confirmation.value="";
 	  	return false;
 	  }
 
@@ -41,26 +50,30 @@ function signup() {
  	  user.signUp(null, {
 	  	  success: function(user) {
 		    console.log("Sign Up Ho Gaya!");
-		    alert("Account Creation Successful. A verification mail has been sent to you. Please check your inbox to verify your email address.");
+		    alert("Account Creation Successful. A verification mail has been sent to you. Please check your inbox to verify your email address after which you can log in here.");
 		    setVisibility(1);
+		    
 		  },
 		  error: function(user, error) {
+		  	
 		  	alert("An Error Occured! "+error.message);
 		    console.log("Error: " + error.code + " " + error.message);
 		  }
 	  });
+	  setTimeout(function(){document.getElementById("load").style.display = 'none';}, 3000);
       return false;
 }
 
 
 function login() {
+	  loading();
 	  console.log("Inside Login");
 	  var form = document.getElementById("login-form")
 
 	  var username = form.email.value;
 	  console.log(username);
 	  var password = form.password.value;
-
+      
  	  Parse.User.logIn(username, password, {
 		  success: function(user) {
 	          console.log("Log In Ho Gaya!");
@@ -68,23 +81,23 @@ function login() {
 	          self.location="./dashboard.html";
 	        },
 		  error: function(user, error) {
+		  	  alert("An Error Occured! "+error.message);
 		      console.log("Error: " + error.code + " " + error.message);
 		  }
 	  });
+	  setTimeout(function(){document.getElementById("load").style.display = 'none';}, 3000);
       return false;
 }
 
 function resetPassword() {
+	  loading();
 	  var form = document.getElementById("login-form")
 	  console.log("Reset Password");
 	  var email = form.email.value;
       if(email === "") {
 	      alert("Looks like you have forgotten your password! Enter your email in this form itself and click this link again. We will send you a mail that will allow you to reset your password.");
+	      setTimeout(function(){document.getElementById("load").style.display = 'none';}, 3000);
 	      return;
-	  }
-	  else{
-	  	  
-	  	  alert("We are sending you a mail on "+email+" that will allow you to reset your password. Please follow the instruction in the mail.");
 	  }
       Parse.User.requestPasswordReset(email, {
           success:function() {
@@ -92,8 +105,10 @@ function resetPassword() {
           },
           error:function(error) {
               alert("An Error Occured! "+error.message);
+              
           }
       });
+      setTimeout(function(){document.getElementById("load").style.display = 'none';}, 3000);
       return false;
 }
 
