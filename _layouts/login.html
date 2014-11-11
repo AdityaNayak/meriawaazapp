@@ -32,8 +32,6 @@
     <link rel="icon" type="image/png" href="http://meriawaazapp.com/assets/images/favicon.png">
       <!--[if IE]><link rel="shortcut icon" href="http://meriawaazapp.com/assets/images/favicon.ico"/><![endif]-->
 
-
-      
       <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -46,6 +44,7 @@
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
     <script type="text/javascript" src="assets/js/login.js"></script>
+
     <script>
     $(document).ready(function(){
       $("#signup-form").submit(function(event){
@@ -58,7 +57,7 @@
     });
     </script>
 </head>
-<body class="dashboard">
+<body class="dashboard" onload="initialize();">
     <div class="header-top">
         <div class="row">
             <div class="small-2 columns ">
@@ -70,12 +69,13 @@
       <div id="formbox">
         <h1>Sign Up</h1>
         <form class="signup-form" id="signup-form" onSubmit="signup();">
-          <input type="email" id="email"placeholder="Email" required/>
+          <input type="email" id="email" placeholder="Email" required/>
           <input type="password" id="password" placeholder="Password" required/>
           <input type="password" id="confirmation" placeholder="Re-enter Password" required/>
           <input type="submit" value="Submit" /> 
+          
         </form>
-        <div id="oroption">
+        <div id="oroptionright">
           <a onclick='setVisibility(1);'> or Log-in here </a>
         </div>
       </div>
@@ -87,12 +87,25 @@
           <input type="email" id="email" placeholder="Email" required/>
           <input type="password" id="password" placeholder="Password" required/>
           <input type="submit" value="Submit" /> 
+          
         </form>
-        <div id="oroption">
+        <div id="oroptionright">
           <a onclick='setVisibility(0);'> or Register here </a>
         </div>
+        <div id="oroptionleft">
+          <a onclick='resetPassword();'> Forgot Password?</a>
+        </div>
+        
       </div>
     </div>
+    <div id="gifbox">
+      <div id="load" style="display: none" align="center">
+              <div id="oroptioncenter" align="center">
+                  <img id="loading" src="./assets/images/loading.gif" height="50" width="50">
+              </div>
+      </div>
+    </div>
+    
     <div class="row">
         <hr>
         <div class="small-7 columns">

@@ -1,0 +1,118 @@
+      var map,markers=[],numProps=6;
+      
+      function randLatLng(){
+          return new google.maps.LatLng(((Math.random() * 17000 - 8500)/100),
+                                        ((Math.random() * 36000 - 18000)/100));
+      }
+      function randArray(size){
+        var a=new Array(size);
+        for(var i=0;i<a.length;++i){
+          a[i]=Math.round(Math.random());
+        }
+        
+        return a;
+      }
+
+      function initialize() {
+
+        var myLatlng = new google.maps.LatLng(-25.363882,131.044922);
+
+          var marker1Pos = new google.maps.LatLng(-24.393882,127.944922);
+          var marker2Pos = new google.maps.LatLng(-24.393882,132.944922);
+          var marker3Pos = new google.maps.LatLng(-22.393882,134.944922);
+          var marker4Pos = new google.maps.LatLng(-28.393882,137.944922);
+          var marker5Pos = new google.maps.LatLng(-18.393882,132.944922);
+          var marker6Pos = new google.maps.LatLng(-33.393882,120.944922);
+
+
+        var mapOptions = {
+          zoom: 4,
+          center: myLatlng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        
+        map = new google.maps.Map(document.getElementById('map_canvas'),
+            mapOptions);
+
+          var marker = new google.maps.Marker({
+      position: marker1Pos,
+      map: map,
+      title: 'Uluru (Ayers Rock)'
+  });
+  
+   var marker2 = new google.maps.Marker({
+      position: marker2Pos,
+      map: map,
+      title: 'Uluru (Ayers Rock)'
+  });
+  
+   var marker3 = new google.maps.Marker({
+      position: marker3Pos,
+      map: map,
+      title: 'Uluru (Ayers Rock)'
+  });
+  
+   var marker4 = new google.maps.Marker({
+      position: marker4Pos,
+      map: map,
+      title: 'Uluru (Ayers Rock)'
+  });
+  
+   var marker5 = new google.maps.Marker({
+      position: marker5Pos,
+      map: map,
+      title: 'Uluru (Ayers Rock)'
+  });
+  
+   var marker6 = new google.maps.Marker({
+      position: marker6Pos,
+      props:6,
+      map: map,
+      title: 'Uluru (Ayers Rock)'
+  });
+
+
+
+            for(var i=0;i<50;++i){
+              var arr=randArray(numProps),
+                  int=parseInt(arr.join(''),2);
+              
+              
+              markers.push(new google.maps.Marker({
+                props:int,
+                title:String(int),
+                position:randLatLng()
+              }));
+              
+            }
+            
+            $('<pre/>').append($($.map(new Array(numProps),function(){return '<input type="checkbox">'}).join('')))
+              .append('<select><option value="0">AND<option value="1">OR</select>')
+               .prependTo('body');
+               
+            $('select,input').change(function(){
+              var props=0;
+              var boxes=document.getElementsByTagName('input');
+              
+              for(var i=0;i<boxes.length;i++){
+                props+=((boxes[i].checked)?Math.pow(2,i):0);
+              }
+              
+              for(var m=0;m<markers.length;m++){
+                markers[m].setMap((
+                             //AND-condition
+                             ($('select').val()==='0' && ((markers[m].props & props)>>>0===props))
+                              ||
+                             //OR-condition
+                              ($('select').val()==='1'&& (props & markers[m].props ))
+                            ) ?  ((props)? map : null) : null);
+                
+              }
+            
+            })
+            
+            
+        
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
