@@ -44,6 +44,7 @@
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
     <script type="text/javascript" src="assets/js/login.js"></script>
+
     <script>
     $(document).ready(function(){
       $("#signup-form").submit(function(event){
@@ -68,15 +69,11 @@
       <div id="formbox">
         <h1>Sign Up</h1>
         <form class="signup-form" id="signup-form" onSubmit="signup();">
-          <input type="email" id="email"placeholder="Email" required/>
+          <input type="email" id="email" placeholder="Email" required/>
           <input type="password" id="password" placeholder="Password" required/>
           <input type="password" id="confirmation" placeholder="Re-enter Password" required/>
           <input type="submit" value="Submit" /> 
-          <div id="load" style="display: none">
-            <div id="oroptioncenter">
-                <img id="loading" src="./assets/images/loading.gif" height="50" width="50">
-            </div>
-          </div>
+          
         </form>
         <div id="oroptionright">
           <a onclick='setVisibility(1);'> or Log-in here </a>
@@ -90,11 +87,7 @@
           <input type="email" id="email" placeholder="Email" required/>
           <input type="password" id="password" placeholder="Password" required/>
           <input type="submit" value="Submit" /> 
-          <div id="load" style="display: none">
-            <div id="oroptioncenter">
-                <img id="loading" src="./assets/images/loading.gif" height="50" width="50">
-            </div>
-          </div>
+          
         </form>
         <div id="oroptionright">
           <a onclick='setVisibility(0);'> or Register here </a>
@@ -105,6 +98,14 @@
         
       </div>
     </div>
+    <div id="gifbox">
+      <div id="load" style="display: none" align="center">
+              <div id="oroptioncenter" align="center">
+                  <img id="loading" src="./assets/images/loading.gif" height="50" width="50">
+              </div>
+      </div>
+    </div>
+    
     <div class="row">
         <hr>
         <div class="small-7 columns">

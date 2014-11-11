@@ -19,8 +19,13 @@ function setVisibility(id) {
 }
 
 function loading() {
-	  console.log("Yo!");
+	  console.log("I am shown!");
 	  document.getElementById("load").style.display = 'inline';  
+}
+
+function hide(){
+	  console.log("Lets Hide!");	
+	  document.getElementById("load").style.display = 'none';
 }
 
 function signup() {
@@ -35,7 +40,9 @@ function signup() {
 	  var confirmation = form.confirmation.value;
 
 	  if(confirmation != password){
-	  	setTimeout(function(){document.getElementById("load").style.display = 'none';}, 3000);
+
+	  	setTimeout(hide, 3000);
+	  	//hide();
 	  	alert("Passwords don't match. Please try again!");
 	  	form.password.value="";
 	  	form.confirmation.value="";
@@ -60,7 +67,8 @@ function signup() {
 		    console.log("Error: " + error.code + " " + error.message);
 		  }
 	  });
-	  setTimeout(function(){document.getElementById("load").style.display = 'none';}, 3000);
+	  setTimeout(hide, 3000);
+	  //hide();
       return false;
 }
 
@@ -85,7 +93,8 @@ function login() {
 		      console.log("Error: " + error.code + " " + error.message);
 		  }
 	  });
-	  setTimeout(function(){document.getElementById("load").style.display = 'none';}, 3000);
+	  setTimeout(hide, 3000);
+	  //hide();
       return false;
 }
 
@@ -96,7 +105,8 @@ function resetPassword() {
 	  var email = form.email.value;
       if(email === "") {
 	      alert("Looks like you have forgotten your password! Enter your email in this form itself and click this link again. We will send you a mail that will allow you to reset your password.");
-	      setTimeout(function(){document.getElementById("load").style.display = 'none';}, 3000);
+	      setTimeout(hide, 3000);
+	      //hide();
 	      return;
 	  }
       Parse.User.requestPasswordReset(email, {
@@ -108,7 +118,8 @@ function resetPassword() {
               
           }
       });
-      setTimeout(function(){document.getElementById("load").style.display = 'none';}, 3000);
+      setTimeout(hide, 3000);
+      //hide();
       return false;
 }
 

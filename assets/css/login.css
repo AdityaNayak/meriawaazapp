@@ -9,6 +9,15 @@
   -webkit-transition:opacity 1s;
 }
 
+#gifbox{
+  width:400px;
+  margin:0 auto;
+  margin-top:5%;
+  margin-bottom:2%;
+  transition:opacity 1s;
+  -webkit-transition:opacity 1s;
+}
+
 #oroptionright{
   float: right;
   width:200px;
@@ -34,7 +43,7 @@
 
 #oroptioncenter{
   float: center;
-  width:400px;
+  background:#FFFFFF;
   margin:0 auto;
   margin-top:8px;
   margin-bottom:10%;

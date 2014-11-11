@@ -41,6 +41,16 @@
       ga('send', 'pageview');
   </script>
   <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="assets/css/login.css">
+      <script>
+    $(document).ready(function(){
+      $("#filter-form").submit(function(event){
+        event.preventDefault();
+      });
+
+    });
+    </script>
 </head>
 <body class="dashboard" onload="initialize()">
     <div class="header-top">
@@ -57,17 +67,44 @@
             </div>
         </div>
     </div>
-    <div id="legend" style="background: white; padding: 10px;">
+    <!--<div id="legend" style="background: white; padding: 10px;">-->
     </div>
     <div class="row s-ws-top">
     	<div class="small-7 columns">
         	<div id="map" style="width:100%">
     		</div>
     	</div>
-    	<div class="small-3 columns">
-    	 	<div id="data">
+    	<div class="small-5 columns">
+        <div>
+          <div id="filterbox">
+            <h3>Issue Filters</h3>
+            <form class="filter-form" id="filter-form" onSubmit="filter();">
+              <table style="width:100%;">
+                <tr>
+                  <td><img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png"><input type="checkbox" id="sanitation" checked='true'> Sanitation</td>
+                  <td><img src="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"><input type="checkbox" id="law" checked='true'> Law </td>
+                </tr>
+                <tr>
+                  <td><img src="http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"><input type="checkbox" id="road" checked='true'> Road </td>
+                  <td><img src="http://maps.google.com/mapfiles/ms/icons/green-dot.png"><input type="checkbox" id="electricity" checked='true'> Electricity</td>
+                </tr>
+                <tr>
+                  <td><img src="http://maps.google.com/mapfiles/ms/icons/purple-dot.png"><input type="checkbox" id="water" checked='true'> Water </td>
+                  <td><img src="http://maps.google.com/mapfiles/ms/icons/pink-dot.png"><input type="checkbox" id="transportation" checked='true'> Transportation</td>
+                </tr>
+              </table> 
+              <input type="submit" value="Filter" /> </li>
+            </ul>
+            </form>
+        </div>
+        <div id="filterbox">
+        	 	<div id="data">
+              <h3>Click on a marker for more details.</h3>
+            </div>
         </div>
     	</div>
+            
+<div id="map_canvas"></div>
         
     </div>
     <div class="row">
