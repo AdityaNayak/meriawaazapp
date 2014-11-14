@@ -6,31 +6,31 @@
 @import "normalize";
 
 // Comment out this import if you are customizing you imports below
-//@import "foundation";
+@import "foundation";
 
 // Make sure the charset is set appropriately
 @charset "UTF-8";
 
 // Behold, here are all the Foundation components.
-@import
+//@import
 //  "foundation/components/accordion",
 //"foundation/components/alert-boxes",
-"foundation/components/block-grid",
+//"foundation/components/block-grid",
 //"foundation/components/breadcrumbs",
 //"foundation/components/button-groups",
-"foundation/components/buttons",
+//"foundation/components/buttons",
 //"foundation/components/clearing",
 //"foundation/components/dropdown",
 //"foundation/components/dropdown-buttons",
 //"foundation/components/flex-video",
-"foundation/components/forms",
-"foundation/components/grid",
-"foundation/components/inline-lists",
+//"foundation/components/forms",
+//"foundation/components/grid",
+//"foundation/components/inline-lists",
 //"foundation/components/joyride",
 //"foundation/components/keystrokes",
 //"foundation/components/labels",
-"foundation/components/magellan",
-"foundation/components/orbit",
+//"foundation/components/magellan",
+//"foundation/components/orbit",
 //"foundation/components/pagination",
 //"foundation/components/panels",
 //"foundation/components/pricing-tables",
@@ -38,14 +38,14 @@
 //"foundation/components/reveal",
 //"foundation/components/side-nav",
 //"foundation/components/split-buttons",
-"foundation/components/sub-nav",
+//"foundation/components/sub-nav",
 //"foundation/components/switch",
-"foundation/components/tables",
+//"foundation/components/tables",
 //"foundation/components/tabs",
 //"foundation/components/thumbs",
 //"foundation/components/tooltips",
 //"foundation/components/top-bar",
-"foundation/components/type";
+//"foundation/components/type",
 //"foundation/components/offcanvas",
 //"foundation/components/visibility";
 
@@ -79,6 +79,26 @@
 		font-size: 0.9em;
 		margin-top: 1.75em;
 		margin-right: 1em;
+	}
+	.name{
+		max-width:20em;
+	}
+}
+@media #{$medium-up} { 
+	.top-bar-section{
+		li:not(.has-form) a:not(.button){
+			&:hover{
+				border-bottom:3px solid $blue;
+			}
+		}
+	} 
+	.contain-to-grid{
+		padding:2em 0;
+		transition: all 1s;
+		&.fixed{
+		padding: 1em 0;
+		transition: all 1s;
+		}
 	}
 }
 
@@ -120,7 +140,7 @@
 	background:$blue !important;
 }
 .lbbg{
-	background:$lightblue !important;
+	background:$blue !important;
 }
 .bgbg{
 	background:$bluegreen !important;
@@ -166,7 +186,7 @@
 		border:2px solid $blue;
 	}
 	&.active{
-		border:2px solid $lightblue;
+		border:2px solid $blue;
 	}
 }
 .circle-img{

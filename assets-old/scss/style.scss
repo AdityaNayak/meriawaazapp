@@ -1,0 +1,182 @@
+// Global Foundation Settings
+@import url("http://fonts.googleapis.com/css?family=Roboto:400,300");
+@import "settings";
+
+// Comment out this import if you don't want to use normalize
+@import "normalize";
+
+// Comment out this import if you are customizing you imports below
+@import "foundation";
+
+// Make sure the charset is set appropriately
+@charset "UTF-8";
+
+// Behold, here are all the Foundation components.
+//@import
+//  "foundation/components/accordion",
+//"foundation/components/alert-boxes",
+//"foundation/components/block-grid",
+//"foundation/components/breadcrumbs",
+//"foundation/components/button-groups",
+//"foundation/components/buttons",
+//"foundation/components/clearing",
+//"foundation/components/dropdown",
+//"foundation/components/dropdown-buttons",
+//"foundation/components/flex-video",
+//"foundation/components/forms",
+//"foundation/components/grid",
+//"foundation/components/inline-lists",
+//"foundation/components/joyride",
+//"foundation/components/keystrokes",
+//"foundation/components/labels",
+//"foundation/components/magellan",
+//"foundation/components/orbit",
+//"foundation/components/pagination",
+//"foundation/components/panels",
+//"foundation/components/pricing-tables",
+//"foundation/components/progress-bars",
+//"foundation/components/reveal",
+//"foundation/components/side-nav",
+//"foundation/components/split-buttons",
+//"foundation/components/sub-nav",
+//"foundation/components/switch",
+//"foundation/components/tables",
+//"foundation/components/tabs",
+//"foundation/components/thumbs",
+//"foundation/components/tooltips",
+//"foundation/components/top-bar",
+//"foundation/components/type",
+//"foundation/components/offcanvas",
+//"foundation/components/visibility";
+
+
+
+//@import "foundation-icons";
+
+.secondary{
+	font-size:0.9em;
+	margin-top:0.4em;
+	line-height:1;
+
+}
+.secondary-color{
+	color:scale-color($grey, $lightness:-25%);
+}
+.tertiary{
+	font-size:0.75em;
+	margin-top:0.6em;
+	line-height:1;
+}
+.tertiary-color{
+	color:scale-color($grey, $lightness:-15%);
+}
+.contain-to-grid{
+	border-bottom:1px solid $grey;
+	margin-bottom:1em;
+}
+.top-bar {
+	.secondary-color{
+		font-size: 0.9em;
+		margin-top: 1.75em;
+		margin-right: 1em;
+	}
+}
+
+::selection {
+	background: $blue; /* Safari */
+	color:$white;
+}
+::-moz-selection {
+	background: $blue; /* Firefox */
+	color:$white;
+}
+.naked{
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+.s-ws-top{
+	margin-top:1em;
+}
+.m-ws-top{
+	margin-top:2em;
+}
+.b-ws-top{
+	margin-top:3em;
+}
+.s-ws-bottom{
+	margin-bottom:1em;
+}
+.m-ws-bottom{
+	margin-bottom:2em;
+}
+.b-ws-bottom{
+	margin-bottom:3em;
+}
+.bc{
+	color:$blue !important;
+}
+.bbg{
+	background:$blue !important;
+}
+.lbbg{
+	background:$lightblue !important;
+}
+.bgbg{
+	background:$bluegreen !important;
+}
+.dbbg{
+	background:$darkblue !important;
+}
+.landing{
+	h1{
+		line-height: 2.25;
+		text-transform: uppercase;
+		color:$white;
+		font-size:2em;
+		span{
+			padding:10px 20px;
+		}
+	}
+}
+.press-nav{
+	.sub-nav{
+		display:inline-block;
+	}
+}
+.press{
+	h3{
+		margin-top:2em;
+	}
+}
+.app-slider{
+	background:url('../images/app-back.png') no-repeat no-repeat 50% 0;
+}
+.orbit-container .orbit-slides-container img{
+	margin:0 auto;
+}
+.circles{
+	width:56px;
+	height:56px;
+	border-radius:50%;
+	padding-top:20px;
+	border:1px solid $grey;
+	margin:1.5em auto 0 auto;
+	&:hover{
+		border:2px solid $blue;
+	}
+	&.active{
+		border:2px solid $lightblue;
+	}
+}
+.circle-img{
+	border-radius:50%;
+}
+.header-top{
+	border-bottom:3px solid $darkwhite;
+	padding:1em 0;
+}
+#map{
+	height:600px;
+	width:1200px;
+}
