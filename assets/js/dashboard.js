@@ -8,15 +8,63 @@ function addMarker(){
        console.log('Add Marker!');
        ListItem = Parse.Object.extend("complaint");
        query = new Parse.Query(ListItem);
-       var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
-          
+       var iconURLPrefix = './assets/images/';
+       var width=40;
+       var height=40;
+       var anchor_left=0;
+       var anchor_top=0;
+       var icon1 = {
+             url: iconURLPrefix + 'marker-1.png', // url
+             scaledSize: new google.maps.Size(width, height), // size
+             origin: new google.maps.Point(0,0), // origin
+             anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
+       };
+       var icon2 = {
+             url: iconURLPrefix + 'marker-2-o.png', // url
+             scaledSize: new google.maps.Size(width, height), // size
+             origin: new google.maps.Point(0,0), // origin
+             anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
+       };
+       var icon3 = {
+             url: iconURLPrefix + 'marker-3.png', // url
+             scaledSize: new google.maps.Size(width, height), // size
+             origin: new google.maps.Point(0,0), // origin
+             anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
+       };
+       var icon4 = {
+             url: iconURLPrefix + 'marker-4.png', // url
+             scaledSize: new google.maps.Size(width, height), // size
+             origin: new google.maps.Point(0,0), // origin
+             anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
+       };
+       var icon5 = {
+             url: iconURLPrefix + 'marker-5-o.png', // url
+             scaledSize: new google.maps.Size(width, height), // size
+             origin: new google.maps.Point(0,0), // origin
+             anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
+       };
+       var icon6 = {
+             url: iconURLPrefix + 'marker-6-o.png', // url
+             scaledSize: new google.maps.Size(width, height), // size
+             origin: new google.maps.Point(0,0), // origin
+             anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
+       }; 
        var icons = [
-                iconURLPrefix + 'red-dot.png',
-                iconURLPrefix + 'blue-dot.png',
-                iconURLPrefix + 'yellow-dot.png',
-                iconURLPrefix + 'green-dot.png',
-                iconURLPrefix + 'purple-dot.png',
-                iconURLPrefix + 'pink-dot.png', 
+                icon1,
+                icon2,
+                icon3,
+                icon4,
+                icon5,
+                icon6, 
+       ]
+
+       var icons_url = [
+                iconURLPrefix + 'marker-1-o.png',
+                iconURLPrefix + 'marker-2-o.png',
+                iconURLPrefix + 'marker-3-o.png',
+                iconURLPrefix + 'marker-4-o.png',
+                iconURLPrefix + 'marker-5-o.png',
+                iconURLPrefix + 'marker-6-o.png', 
        ]
        
        var legend = document.getElementById('legend');
@@ -25,31 +73,31 @@ function addMarker(){
                     var icon;
                     if (i==0){
                         name="sanitation";
-                        icon=icons[0]; 
+                        icon=icons_url[0]; 
                     }
                     else if(i==1){
                         name="law";
-                        icon=icons[1]; 
+                        icon=icons_url[1]; 
                     }
                     else if(i==2){
                         name="road";
-                        icon=icons[2]; 
+                        icon=icons_url[2]; 
                     }
                     else if(i==3){
                         name="electricity";
-                        icon=icons[3]; 
+                        icon=icons_url[3]; 
                     }
                     else if(i==4){
                         name="water";
-                        icon=icons[4]; 
+                        icon=icons_url[4]; 
                     }
                     else{
                         name="transport";
-                        icon=icons[5]; 
+                        icon=icons_url[5]; 
                     }
                   
                   //var div = document.createElement('div');
-                  //div.innerHTML = '<img src="' + icon + '"> ' + name;
+                  //div.innerHTML = '<img src="' + icon + '" width=6% height=6%> ' + name;
                   //legend.appendChild(div);
                 }
        query.descending('createdAt');
@@ -212,11 +260,18 @@ function initialize() {
                 var geolocpoint = new google.maps.LatLng(latitude, longitude);
                 map.setCenter(geolocpoint);
                 map.setZoom(16);
+                var iconURLPrefix = './assets/images/';
+                var geoicon = {
+                     url: iconURLPrefix + 'record.png', // url
+                     scaledSize: new google.maps.Size(40, 40), // size
+                     origin: new google.maps.Point(0,0), // origin
+                     anchor: new google.maps.Point(0,0) // anchor 
+                };
     	        var geolocation = new google.maps.Marker({
     	            position: geolocpoint,
     	            map: map,
     	            title: 'You are here',
-    	            //icon: 'http://labs.google.com/ridefinder/images/mm_20_green.png'
+    	            icon: geoicon
     	        });
     	    });
         }

@@ -90,8 +90,12 @@
 			&:hover{
 				border-bottom:3px solid $blue;
 			}
+
 		}
 	} 
+	.top-bar-section ul li.active > a{
+		border-bottom:3px solid $darkblue;
+	}
 	.contain-to-grid{
 		padding:2em 0;
 		transition: all 1s;
@@ -101,7 +105,9 @@
 		}
 	}
 }
-
+i{
+	color:$darkgrey;
+}
 ::selection {
 	background: $blue; /* Safari */
 	color:$white;
@@ -114,6 +120,9 @@
 	list-style:none;
 	margin:0;
 	padding:0;
+}
+.panel{
+	border-radius:2px;
 }
 .s-ws-top{
 	margin-top:1em;
@@ -133,8 +142,20 @@
 .b-ws-bottom{
 	margin-bottom:3em;
 }
+.yc{
+	color:$yellow !important;
+}
 .bc{
 	color:$blue !important;
+}
+.dbc{
+	color:$darkblue !important;
+}
+.bgc{
+	color:$bluegreen !important;
+}
+.wc{
+	color:$white !important;
 }
 .bbg{
 	background:$blue !important;
@@ -148,16 +169,32 @@
 .dbbg{
 	background:$darkblue !important;
 }
-.landing{
-	h1{
-		line-height: 2.25;
-		text-transform: uppercase;
-		color:$white;
-		font-size:2em;
-		span{
-			padding:10px 20px;
+.f-2x{
+	font-size:2em;
+}
+.f-3x{
+	font-size:3em;
+}
+.f-4x{
+	font-size:4em;
+}
+.filters{
+	img{
+		width:30%;
+	}
+	.columns{
+		border-right:1px solid $grey;
+		&:last-child{
+			border:none;
 		}
 	}
+}
+.hero-heading{
+	span{
+		padding:0.25em;
+		margin:1em 0;
+	}
+	line-height:2;
 }
 .press-nav{
 	.sub-nav{
@@ -191,10 +228,6 @@
 }
 .circle-img{
 	border-radius:50%;
-}
-.header-top{
-	border-bottom:3px solid $darkwhite;
-	padding:1em 0;
 }
 #map{
 	height:600px;

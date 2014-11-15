@@ -1,41 +1,85 @@
+
 {% include header.html %}
+<div class="row panel filters text-center b-ws-top">
+  <div class="small-2 columns">    
+    <label for="road_cb"><img src="./assets/images/marker-1.png"><br>Road</label><input type="checkbox" id="road_cb" checked='true'>
+  </div>
+  <div class="small-2 columns">
+    <label for="electricity_cb"><img src="./assets/images/marker-2.png"><br>Electricity</label><input type="checkbox" id="electricity_cb" checked='true'>
+  </div>
+  <div class="small-2 columns">
+    <label for="water_cb"><img src="./assets/images/marker-3.png"><br>Water</label><input type="checkbox" id="water_cb" checked='true'>
+  </div>
+  <div class="small-2 columns">
+    <label for="law_cb"><img src="./assets/images/marker-4.png"><br>Road</label><input type="checkbox" id="law_cb" checked='true'>
+  </div>
+  <div class="small-2 columns">
+    <label for="sanitation_cb"><img src="./assets/images/marker-5.png"><br>Sanitation</label><input type="checkbox" id="sanitation_cb" checked='true'>  </div>
+    <div class="small-2 columns">
+      <label for="transport_cb"><img src="./assets/images/marker-6.png"><br>Transportation</label><input type="checkbox" id="transport_cb" checked='true'>
     </div>
-    <div class="row s-ws-top">
-    	<div class="small-7 columns">
-        	<div id="map" style="width:100%">
-    		</div>
-    	</div>
-    	<div class="small-5 columns">
-        <div>
-          <div id="filterbox">
-            <h3>Issue Filters</h3>
-            <form class="filter-form" id="filter-form" onSubmit="filter();">
-              <table style="width:100%;">
-                <tr>
-                  <td><img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png"><input type="checkbox" id="sanitation" checked='true'> Sanitation</td>
-                  <td><img src="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"><input type="checkbox" id="law" checked='true'> Law </td>
-                </tr>
-                <tr>
-                  <td><img src="http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"><input type="checkbox" id="road" checked='true'> Road </td>
-                  <td><img src="http://maps.google.com/mapfiles/ms/icons/green-dot.png"><input type="checkbox" id="electricity" checked='true'> Electricity</td>
-                </tr>
-                <tr>
-                  <td><img src="http://maps.google.com/mapfiles/ms/icons/purple-dot.png"><input type="checkbox" id="water" checked='true'> Water </td>
-                  <td><img src="http://maps.google.com/mapfiles/ms/icons/pink-dot.png"><input type="checkbox" id="transportation" checked='true'> Transportation</td>
-                </tr>
-              </table> 
-              <input type="submit" value="Filter" /> </li>
-            </ul>
-            </form>
+  </div>
+  <div class="row">
+    <div class="small-2 columns panel text-center">
+      <h4>Status</h4>
+      <div id="fn1" class="f-2x yc">1</div>
+      <div>Open</div>
+      <div id="fn2" class="f-2x bgc">2</div>
+      <div>In progress</div>
+      <div id="fn3" class="f-2x bc">3</div>
+      <div>Review</div>
+      <div id="fn4" class="f-2x dbc">4</div>
+      <div>Closed</div>
+    </div>
+    <div class="small-7 columns">
+      <div id="map" style="width:100%"></div>
+    </div>
+    <div class="small-3 columns panel">
+      <h4>Details</h4>
+      <div class="row">
+        <div class="small-12 columns s-ws-top">
+          <img src="http://placehold.it/1600x900">
         </div>
-        <div id="filterbox">
-        	 	<div id="data">
-              <h3>Click on a marker for more details.</h3>
-            </div>
+      </div>
+      <div class="row secondary">
+        <div class="small-6 columns m-ws-top">
+          <i class="icon-calendar"></i> Oct 17 2014 
         </div>
-    	</div>
-            
-  <div id="map_canvas"></div>
-        
+        <div class="small-6 columns m-ws-top"><i class="icon-clock"></i> 01:09 AM</div>
+      </div>
+      <div class="row">
+        <div class="small-12 columns s-ws-top">
+          Issue type: <strong>Law and Order</strong>
+        </div>
+      </div>
+      <div class="row">
+        <div class="small-12 columns">
+          <hr>
+          <p>Issue content</p>
+          <hr>
+        </div>
+      </div>
+      <div class="row">
+        <div class="small-12 columns secondary secondary-color">
+          <i class="icon-location"></i> 28.5462653, 77.2732673
+        </div>
+        <div class="small-12 columns s-ws-top">
+          <p>86/1, Sample Adress, Resolved through geo lookup</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+<script>
+  $( document ).ready(function() {
+    var numAnim1 = new countUp("fn1", 0, 44);
+    numAnim1.start();
+    var numAnim2 = new countUp("fn2", 0, 12);
+    numAnim2.start();
+    var numAnim3 = new countUp("fn3", 0, 19);
+    numAnim3.start();  
+    var numAnim4 = new countUp("fn4", 0, 108);
+    numAnim4.start();
+  });
+</script>
 {% include footer.html %} 
