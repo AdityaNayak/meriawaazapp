@@ -20,19 +20,30 @@
     </div>
   </div>
   <div class="row">
+  <div class="small-4 columns small-offset-8 panel small">
+    <div id="reportrange" class="rangepicker-box secondary"><i class="icon-calendar"></i> <span></span></div>
+    </div>
+  </div>
+  <div class="row">
     <div class="small-2 columns panel text-center">
       <h4>Status</h4>
-      <div id="fn1" class="f-2x yc">1</div>
-      <div>Open</div>
-      <div id="fn2" class="f-2x bgc">2</div>
-      <div>In progress</div>
-      <div id="fn3" class="f-2x bc">3</div>
-      <div>Review</div>
-      <div id="fn4" class="f-2x dbc">4</div>
-      <div>Closed</div>
+      <div class="bbm">
+        <label for="open_it"><div id="fn1" class="f-2x yc">1</div>Open</label><input type="checkbox" id="open_it" checked='true'>
+      </div>
+      <div class="bbm">
+        <label for="prog_it"><div id="fn2" class="f-2x bgc">1</div>In progress</label><input type="checkbox" id="prog_it" checked='true'>
+      </div>
+      <div class="bbm">
+        <label for="review_it"><div id="fn3" class="f-2x bc">1</div>Review</label><input type="checkbox" id="review_it" checked='true'>
+      </div>
+      <div class="bbm">
+        <label for="closed_it"><div id="fn4" class="f-2x dbc">1</div>Closed</label><input type="checkbox" id="closed_it" checked='true'>
+      </div>
     </div>
     <div class="small-7 columns">
-      <div id="map" style="width:100%"></div>
+      <div class="panel">
+        <div id="map" style="width:100%"></div>
+      </div>
     </div>
     <div class="small-3 columns panel">
       <h4>Details</h4>
@@ -70,6 +81,12 @@
     </div>
   </div>
 </div>
+
+{% include footer.html %} 
+
+<script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+<script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
+<script type="text/javascript" src="{{site.url}}/assets/js/daterangepicker.js"></script>
 <script>
   $( document ).ready(function() {
     var numAnim1 = new countUp("fn1", 0, 44);
@@ -80,6 +97,49 @@
     numAnim3.start();  
     var numAnim4 = new countUp("fn4", 0, 108);
     numAnim4.start();
-  });
+
+    $('#reportrange').daterangepicker(
+    {
+      startDate: moment().subtract('days', 29),
+      endDate: moment(),
+      minDate: '01/01/2012',
+      maxDate: '12/31/2014',
+      dateLimit: { days: 60 },
+      showDropdowns: true,
+      showWeekNumbers: false,
+      timePicker: false,
+      timePickerIncrement: 1,
+      timePicker12Hour: true,
+      ranges: {
+       'Today': [moment(), moment()],
+       'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+       'Last 7 Days': [moment().subtract('days', 6), moment()],
+       'Last 30 Days': [moment().subtract('days', 29), moment()],
+       'This Month': [moment().startOf('month'), moment()],
+       'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+       'This Year': [moment().startOf('year'), moment()]
+     },
+     opens: 'left',
+     format: 'MM/DD/YYYY',
+     separator: ' to ',
+     locale: {
+      applyLabel: 'Submit',
+      fromLabel: 'From',
+      toLabel: 'To',
+      customRangeLabel: 'Custom Range',
+      daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
+      monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      firstDay: 1
+    }
+  },
+  function(start, end) {
+    console.log("Callback has been called!");
+    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+  }
+  );
+                  //Set the initial state of the picker label
+                  $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+
+                });
 </script>
-{% include footer.html %} 
+</html>

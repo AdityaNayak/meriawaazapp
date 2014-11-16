@@ -8,7 +8,7 @@
     </h2>
   </div>
   <div class="small-4 columns">
-    <div class="panel">
+    <div class="panel b-ws-top">
       <div id="login">
         <form class="b-ws-top" id="login-form" onSubmit="login();">
           <div class="row">
@@ -78,7 +78,11 @@
     </div>
   </div>
 </div>
-<script>
+
+  {% include footer.html %}
+
+  <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+  <script>
   $( document ).ready(function() {
     var numAnim1 = new countUp("num1", 0, 448);
     numAnim1.start();
@@ -87,4 +91,4 @@
     var numAnim3 = new countUp("num3", 0, 19);
     numAnim3.start();
   });</script>
-  {% include footer.html %}
+  </html>
