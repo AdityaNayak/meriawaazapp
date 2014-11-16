@@ -49,7 +49,7 @@
 //"foundation/components/offcanvas",
 //"foundation/components/visibility";
 
-
+@import "daterangepicker";
 
 //@import "foundation-icons";
 
@@ -97,16 +97,20 @@
 		border-bottom:3px solid $darkblue;
 	}
 	.contain-to-grid{
-		padding:2em 0;
+		padding:1em 0;
 		transition: all 1s;
 		&.fixed{
-		padding: 1em 0;
+		padding: 0.25em 0;
 		transition: all 1s;
 		}
 	}
 }
 i{
 	color:$darkgrey;
+}
+.bbm{
+	border-bottom:1px solid $grey;
+	margin-bottom:1em;
 }
 ::selection {
 	background: $blue; /* Safari */
@@ -123,6 +127,9 @@ i{
 }
 .panel{
 	border-radius:2px;
+	&.small{
+		padding:1rem;
+	}
 }
 .s-ws-top{
 	margin-top:1em;
@@ -230,6 +237,6 @@ i{
 	border-radius:50%;
 }
 #map{
-	height:600px;
-	width:1200px;
+	height:400px;
+	width:680px;
 }

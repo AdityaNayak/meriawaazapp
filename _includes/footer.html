@@ -22,7 +22,64 @@
 <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
 <script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.js"></script>
 <script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.topbar.js"></script>
+<script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
+<script type="text/javascript" src="{{site.url}}/assets/js/daterangepicker.js"></script>
 <script type="text/javascript">
       $(document).foundation();
+</script>
+<script>
+  $( document ).ready(function() {
+    var numAnim1 = new countUp("fn1", 0, 44);
+    numAnim1.start();
+    var numAnim2 = new countUp("fn2", 0, 12);
+    numAnim2.start();
+    var numAnim3 = new countUp("fn3", 0, 19);
+    numAnim3.start();  
+    var numAnim4 = new countUp("fn4", 0, 108);
+    numAnim4.start();
+
+    $('#reportrange').daterangepicker(
+    {
+      startDate: moment().subtract('days', 29),
+      endDate: moment(),
+      minDate: '01/01/2012',
+      maxDate: '12/31/2014',
+      dateLimit: { days: 60 },
+      showDropdowns: true,
+      showWeekNumbers: false,
+      timePicker: false,
+      timePickerIncrement: 1,
+      timePicker12Hour: true,
+      ranges: {
+       'Today': [moment(), moment()],
+       'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+       'Last 7 Days': [moment().subtract('days', 6), moment()],
+       'Last 30 Days': [moment().subtract('days', 29), moment()],
+       'This Month': [moment().startOf('month'), moment()],
+       'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+       'This Year': [moment().startOf('year'), moment()]
+     },
+     opens: 'left',
+     format: 'MM/DD/YYYY',
+     separator: ' to ',
+     locale: {
+      applyLabel: 'Submit',
+      fromLabel: 'From',
+      toLabel: 'To',
+      customRangeLabel: 'Custom Range',
+      daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
+      monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      firstDay: 1
+    }
+  },
+  function(start, end) {
+    console.log("Callback has been called!");
+    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+  }
+  );
+                  //Set the initial state of the picker label
+                  $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+
+                });
 </script>
 </html>
