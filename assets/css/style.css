@@ -10032,3 +10032,10 @@ i {
   height: 400px;
   width: 680px;
 }
+
+/* line 243, ../scss/style.scss */
+.fx1 {
+  vertical-align: super;
+  margin-right: 5px;
+  margin-left: 5px;
+}
