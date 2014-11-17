@@ -59,98 +59,133 @@
         <thead>
           <tr>
             <th width="100">Type</th>
-            <th>Content</th  >
-              <th width="100">Status</th>
-              <th width="100">Assignee</th>
-              <th width="100">Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="open">
-              <td>Road</td>
-              <td>Content truncated to a single line and some more</td>
-              <td>Open</td>
-              <td>User 1</td>
-              <td>12 min ago</td>
-            </tr>
-            <tr class="progress">
-              <td>Transportation</td>
-              <td>This is longer Content Goes </td>
-              <td>Review</td>
-              <td>User 1</td>
-              <td>16 min ago</td>
-            </tr>
-            <tr class="closed">
-              <td>Law and Order</td>
-              <td>This is longer Content Goes </td>
-              <td>Open</td>
-              <td>User 1</td>
-              <td>40 min ago</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+            <th>Content</th>
+            <th width="100">Status</th>
+            <th width="100">Assignee</th>
+            <th width="100">Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="open">
+            <td>Road</td>
+            <td>Content truncated to a single line and some more</td>
+            <td>Open</td>
+            <td>User 1</td>
+            <td>12 min ago</td>
+          </tr>
+          <tr class="progress">
+            <td>Transportation</td>
+            <td>This is longer Content Goes </td>
+            <td>Review</td>
+            <td>User 1</td>
+            <td>16 min ago</td>
+          </tr>
+          <tr class="closed">
+            <td>Law and Order</td>
+            <td>This is longer Content Goes </td>
+            <td>Open</td>
+            <td>User 1</td>
+            <td>40 min ago</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="small-3 columns panel">
-      <h4>Details</h4>
+    <div id="updates-view" class="panel" style="display:none;">
+      <h2>'Issue Type' Issue<small> Issue ID (incrementally assigned)</small></h2>
       <div class="row">
-        <div class="small-12 columns">
-        Status: <span class="yc"><strong>Open</strong></span>
-        // Color class changed by the status type
-        </div>
-      </div>
-      <div class="row">
-        <div class="small-6 columns s-ws-top">
-          <a href="#"><strong>Claim</strong></a>
-        </div>
-        <div class="small-6 columns s-ws-top">
-          <a href="#" data-dropdown="drop1"><strong>Assign</strong></a>
-          <ul id="drop1" class="medium f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
-            <datalist id="team">
-              <option value="user 1">
-              <option value="user 3">
-              <option value="user 2">
-            </datalist>
-            <li><input type="text" list="team"></li>
-            <li><a href="#">Username 1</a></li>
-            <li><a href="#">Username 2</a></li>
-            <li><a href="#">Username 3</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="row">
-        <div class="small-12 columns s-ws-top">
+        <div class="small-6 s-ws-top columns">
           <img src="http://placehold.it/1600x900">
         </div>
-      </div>
-      <div class="row secondary">
-        <div class="small-6 columns m-ws-top">
-          <i class="icon-calendar"></i> Oct 17 2014 
-        </div>
-        <div class="small-6 columns m-ws-top"><i class="icon-clock"></i> 01:09 AM</div>
+        <div class="small-6 columns s-ws-top">
+          <p> A long paragraph that shows the issue content</p>
+        </div>   
       </div>
       <div class="row">
-        <div class="small-12 columns s-ws-top">
-          Type: <strong>Law and Order</strong>
-        </div>
+      <div class="small-12 columns">
+      <hr>
+      </div>
       </div>
       <div class="row">
-        <div class="small-12 columns">
-          <hr>
-          <p>Issue content</p>
-          <hr>
+      <div class="timeline-view">
+        <div class="small-12 columns b-ws-top">
+          <div class="panel p-fx">
+          <div class="panel-head"><strong>MLA 1</strong> commented <small> 2 days ago</small></div>
+          <p>Comment that is reallly long and is a text paragraph</p>
+          </div>
+
+          <div class="panel p-fx">
+          <div class="panel-head"><strong>User 1</strong> commented <small> 1 day ago</small></div>
+          <p>A second Comment that is really long and is a text paragraph and may contain media</p>
+          </div>
+
+          <div class="panel nb">
+            <p><strong>user1</strong> was assigned by <strong>MLA1</strong> <small>2 days ago</small></p>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="small-12 columns secondary secondary-color">
-          <i class="icon-location"></i> 28.5462653, 77.2732673
-        </div>
-        <div class="small-12 columns s-ws-top">
-          <p>86/1, Sample Adress, Resolved through geo lookup</p>
         </div>
       </div>
     </div>
   </div>
+  <div id="details-column" class="small-3 columns panel">
+    <h4>Details</h4>
+    <div class="row">
+      <div class="small-12 columns">
+        Status: <span class="yc"><strong>Open</strong></span>
+        // Color class changed by the status type
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-6 columns s-ws-top">
+        <a href="#"><strong>Claim</strong></a>
+      </div>
+      <div class="small-6 columns s-ws-top">
+        <a href="#" data-dropdown="drop1"><strong>Assign</strong></a>
+        <ul id="drop1" class="medium f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
+          <datalist id="team">
+            <option value="user 1"></option>
+            <option value="user 3"></option>
+            <option value="user 2"></option>
+          </datalist>
+          <li><input type="text" list="team"></li>
+          <li><a href="#">Username 1</a></li>
+          <li><a href="#">Username 2</a></li>
+          <li><a href="#">Username 3</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns s-ws-top hod">
+        <img src="http://placehold.it/1600x900">
+      </div>
+    </div>
+    <div class="row secondary">
+      <div class="small-6 columns m-ws-top">
+        <i class="icon-calendar"></i> Oct 17 2014 
+      </div>
+      <div class="small-6 columns m-ws-top"><i class="icon-clock"></i> 01:09 AM</div>
+    </div>
+    <div class="row hod">
+      <div class="small-12 columns s-ws-top">
+        Type: <strong>Law and Order</strong>
+      </div>
+    </div>
+    <div class="row hod">
+      <div class="small-12 columns">
+        <hr>
+        <p>Issue content</p>
+        <hr>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns secondary secondary-color">
+        <i class="icon-location"></i> 28.5462653, 77.2732673
+      </div>
+      <div class="small-12 columns s-ws-top">
+        <p>86/1, Sample Adress, Resolved through geo lookup</p>
+      </div>
+    </div>
+  </div>
+</div>
 </div>
 
 {% include footer.html %} 
@@ -182,7 +217,17 @@
       }    
 
     });
-    
+    $('.list-table tbody tr').click(function() {
+      $('#list-view').fadeOut();
+      $('label').addClass('gs');
+      $('input[type="checkbox"]').prop("checked", false);
+      $( "#law_cb" ).prop( "checked", true );
+      $('label[for="law_cb"]').removeClass('gs');
+      $( "#open_it" ).prop( "checked", true );
+      $('label[for="open_it"]').removeClass('gs');
+      $('#updates-view').delay().fadeIn();
+      $('.hod').fadeOut();
+    });
 
     $('#reportrange').daterangepicker(
     {

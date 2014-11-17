@@ -219,7 +219,7 @@ $darkwhite: rgba(186, 182, 176, 0.2);
 // $header-font-family: $body-font-family;
 // $header-font-weight: $font-weight-normal;
 // $header-font-style: normal;
-// $header-font-color: $jet;
+ $header-font-color: $black;
 // $header-line-height: 1.4;
 // $header-top-margin: .2rem;
 // $header-bottom-margin: .5rem;
@@ -249,8 +249,8 @@ $darkwhite: rgba(186, 182, 176, 0.2);
 // $subheader-bottom-margin: .5rem;
 
 // A general <small> styling
-// $small-font-size: 60%;
-// $small-font-color: scale-color($header-font-color, $lightness: 35%);
+ $small-font-size: 80%;
+ $small-font-color: scale-color($header-font-color, $lightness: 60%);
 
 // We use these to style paragraphs
 // $paragraph-font-family: inherit;
