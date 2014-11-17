@@ -111,6 +111,9 @@ i{
 .bbm{
 	border-bottom:1px solid $grey;
 	margin-bottom:1em;
+	&:last-child{
+		border:none;
+	}
 }
 ::selection {
 	background: $blue; /* Safari */
@@ -129,6 +132,35 @@ i{
 	border-radius:2px;
 	&.small{
 		padding:1rem;
+	}
+	&.p-fx{
+		padding-top: 0;
+		padding-left:0;
+		padding-right:0;
+	}
+}
+.control-bar{
+	.switch{
+		padding-top:3px;
+	}
+}
+.list-table{
+	tr{
+		border:none;
+		border-left:3px solid $grey;
+		cursor: pointer;
+		&.open{
+			border-color:$yellow;
+		}
+		&.progress{
+			border-color:$bluegreen;
+		}
+		&.review{
+			border-color:$blue;
+		}
+		&.closed{
+			border-color:$darkblue;
+		}
 	}
 }
 .s-ws-top{
@@ -194,6 +226,15 @@ i{
 		&:last-child{
 			border:none;
 		}
+	}
+}
+.f-dropdown{
+	input{
+		font-size: 0.75rem;
+		height: 2rem;
+		padding:0.25rem;
+		margin:0.5rem;
+		width: 90%;
 	}
 }
 .hero-heading{

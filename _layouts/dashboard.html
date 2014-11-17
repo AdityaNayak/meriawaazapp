@@ -1,6 +1,19 @@
 
 {% include header.html %}
-<div class="row panel filters text-center b-ws-top">
+<div class="row control-bar b-ws-top">
+  <div class="small-3 small-offset-5 columns text-right">
+    <div class="switch radius">
+      <span class="fx1 secondary-color">list view</span>
+      <input id="maptgl" type="checkbox" checked name="maptglgroup">
+      <label for="maptgl"></label>
+      <span class="fx1 secondary-color">map view</span>
+    </div>
+  </div>
+  <div class="small-4 columns panel small">
+    <div id="reportrange" class="rangepicker-box secondary"><i class="icon-calendar"></i> <span></span></div>
+  </div>
+</div>
+<div class="row panel filters text-center">
   <div class="small-2 columns">    
     <label for="road_cb"><img src="./assets/images/marker-1.png"><br>Road</label><input type="checkbox" id="road_cb" checked='true'>
   </div>
@@ -19,42 +32,92 @@
       <label for="transport_cb"><img src="./assets/images/marker-6.png"><br>Transportation</label><input type="checkbox" id="transport_cb" checked='true'>
     </div>
   </div>
-  <div class="row">
-    <div class="small-3 small-offset-5 columns text-right">
-      <div class="switch radius">
-        <span class="fx1 secondary-color">list view</span>
-        <input id="maptgl" type="radio" checked name="maptglgroup">
-        <label for="maptgl"></label>
-        <span class="fx1 secondary-color">map view</span>
-      </div>
+</div>
+<div class="row">
+  <div class="small-2 columns panel text-center">
+    <h4>Status</h4>
+    <div class="bbm">
+      <label for="open_it"><div id="fn1" class="f-2x yc">1</div>Open</label><input type="checkbox" id="open_it" checked='true'>
     </div>
-    <div class="small-4 columns panel small">
-      <div id="reportrange" class="rangepicker-box secondary"><i class="icon-calendar"></i> <span></span></div>
+    <div class="bbm">
+      <label for="prog_it"><div id="fn2" class="f-2x bgc">1</div>In progress</label><input type="checkbox" id="prog_it" checked='true'>
+    </div>
+    <div class="bbm">
+      <label for="review_it"><div id="fn3" class="f-2x bc">1</div>Review</label><input type="checkbox" id="review_it" checked='true'>
+    </div>
+    <div class="bbm">
+      <label for="closed_it"><div id="fn4" class="f-2x dbc">1</div>Closed</label><input type="checkbox" id="closed_it" checked='true'>
     </div>
   </div>
-  <div class="row">
-    <div class="small-2 columns panel text-center">
-      <h4>Status</h4>
-      <div class="bbm">
-        <label for="open_it"><div id="fn1" class="f-2x yc">1</div>Open</label><input type="checkbox" id="open_it" checked='true'>
-      </div>
-      <div class="bbm">
-        <label for="prog_it"><div id="fn2" class="f-2x bgc">1</div>In progress</label><input type="checkbox" id="prog_it" checked='true'>
-      </div>
-      <div class="bbm">
-        <label for="review_it"><div id="fn3" class="f-2x bc">1</div>Review</label><input type="checkbox" id="review_it" checked='true'>
-      </div>
-      <div class="bbm">
-        <label for="closed_it"><div id="fn4" class="f-2x dbc">1</div>Closed</label><input type="checkbox" id="closed_it" checked='true'>
-      </div>
+  <div class="small-7 columns">
+    <div id="map-view" class="panel p-fx">
+      <img src="http://placehold.it/1600x900">
+      <!-- <div id="map" style="width:100%">  </div> -->
     </div>
-    <div class="small-7 columns">
-      <div class="panel">
-        <div id="map" style="width:100%"></div>
+    <div id="list-view" class="panel p-fx" style="display:none;">
+      <table class="list-table">
+        <thead>
+          <tr>
+            <th width="100">Type</th>
+            <th>Content</th  >
+              <th width="100">Status</th>
+              <th width="100">Assignee</th>
+              <th width="100">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="open">
+              <td>Road</td>
+              <td>Content truncated to a single line and some more</td>
+              <td>Open</td>
+              <td>User 1</td>
+              <td>12 min ago</td>
+            </tr>
+            <tr class="progress">
+              <td>Transportation</td>
+              <td>This is longer Content Goes </td>
+              <td>Review</td>
+              <td>User 1</td>
+              <td>16 min ago</td>
+            </tr>
+            <tr class="closed">
+              <td>Law and Order</td>
+              <td>This is longer Content Goes </td>
+              <td>Open</td>
+              <td>User 1</td>
+              <td>40 min ago</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="small-3 columns panel">
       <h4>Details</h4>
+      <div class="row">
+        <div class="small-12 columns">
+        Status: <span class="yc"><strong>Open</strong></span>
+        // Color class changed by the status type
+        </div>
+      </div>
+      <div class="row">
+        <div class="small-6 columns s-ws-top">
+          <a href="#"><strong>Claim</strong></a>
+        </div>
+        <div class="small-6 columns s-ws-top">
+          <a href="#" data-dropdown="drop1"><strong>Assign</strong></a>
+          <ul id="drop1" class="medium f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
+            <datalist id="team">
+              <option value="user 1">
+              <option value="user 3">
+              <option value="user 2">
+            </datalist>
+            <li><input type="text" list="team"></li>
+            <li><a href="#">Username 1</a></li>
+            <li><a href="#">Username 2</a></li>
+            <li><a href="#">Username 3</a></li>
+          </ul>
+        </div>
+      </div>
       <div class="row">
         <div class="small-12 columns s-ws-top">
           <img src="http://placehold.it/1600x900">
@@ -68,7 +131,7 @@
       </div>
       <div class="row">
         <div class="small-12 columns s-ws-top">
-          Issue type: <strong>Law and Order</strong>
+          Type: <strong>Law and Order</strong>
         </div>
       </div>
       <div class="row">
@@ -89,6 +152,7 @@
     </div>
   </div>
 </div>
+
 {% include footer.html %} 
 
 <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
@@ -104,6 +168,21 @@
     numAnim3.start();  
     var numAnim4 = new countUp("fn4", 0, 108);
     numAnim4.start();
+
+    $('input[name=maptglgroup]').change(function(){
+      if($(this).is(':checked'))
+      {
+        $('#map-view').fadeIn();
+        $('#list-view').delay().fadeOut();
+      }
+      else
+      {
+        $('#map-view').fadeOut();
+        $('#list-view').delay().fadeIn();
+      }    
+
+    });
+    
 
     $('#reportrange').daterangepicker(
     {
@@ -144,9 +223,9 @@
     $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
   }
   );
-                  //Set the initial state of the picker label
-                  $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+    //Set the initial state of the picker label
+    $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
 
-                });
+  });
 </script>
 </html>
