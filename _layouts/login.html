@@ -11,51 +11,53 @@
     <img src="{{site.url}}/assets/images/phone.png">
   </div>
   <div class="small-3 columns panel s-ws-top">
-    
-      <div id="login">
-        <form class="b-ws-top" id="login-form" onSubmit="login();">
-          <div class="row">
-            <div class="large-12 columns">
-              <label>Email
-                <input type="email" placeholder="you@example.com" id="email" required />
-              </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="large-12 columns">
-              <label>Password
-                <input type="password" placeholder="password" id="password" required />
-              </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="small-  12 text-right columns s-ws-bottom">
-              <a onclick="resetPassword();">forgot password?</a>
-            </div>
-          </div>
-          <input type="submit" value="Sign In" class="button fullwidth small" /> 
-        </form>
+
+    <div id="signin">
+      <form class="b-ws-top" id="signin-form" onSubmit="login();">
         <div class="row">
-          <div class="small-12 columns text-center">
-            <a onclick='setVisibility(0);'>Sign up for an account here</a>
+          <div class="large-12 columns">
+            <label>Email
+              <input type="email" placeholder="you@example.com" id="email" required />
+            </label>
           </div>
         </div>
-      </div>
-      <div id="signup" style="display: none">
-        <form class="b-ws-top" id="signup-form" onSubmit="signup();">
-          <input type="email" id="email" placeholder="Email" required/>
-          <input type="password" id="password" placeholder="Password" required/>
-          <input type="password" id="confirmation" placeholder="Re-enter Password" required/>
-          <input type="submit" value="Sign up" class="button fullwidth small" />    
-        </form>
         <div class="row">
-          <div class="small-12 columns text-center">
-            Already got an account?
-            <a onclick='setVisibility(1);'>Sign in</a>
+          <div class="large-12 columns">
+            <label>Password
+              <input type="password" placeholder="password" id="password" required />
+            </label>
           </div>
         </div>
+        <div class="row">
+          <div class="small-  12 text-right columns s-ws-bottom">
+            <a onclick="resetPassword();">forgot password?</a>
+          </div>
+        </div>
+        <input type="submit" value="Sign In" id="signin-btn" class="button fullwidth small" /> 
+        <div id="loading-btn" class="fullwidth text-center" style="display:none;"><img src="{{site.url}}/assets/images/loading.gif"></div>   
+      </form>
+      <div class="row">
+        <div class="small-12 columns text-center">
+          <a onclick='setVisibility(0);'>Sign up for an account here</a>
+        </div>
       </div>
-   
+    </div>
+    <div id="signup" style="display: none">
+      <form class="b-ws-top" id="signup-form" onSubmit="signup();">
+        <input type="email" id="email" placeholder="Email" required/>
+        <input type="password" id="password" placeholder="Password" required/>
+        <input type="password" id="confirmation" placeholder="Re-enter Password" required/>
+        <input type="submit" value="Sign up" id="signup-btn" class="button fullwidth small" />
+        <div id="loading-btn" class="fullwidth text-center" style="display:none;"><img src="{{site.url}}/assets/images/loading.gif"></div>
+      </form>
+      <div class="row">
+        <div class="small-12 columns text-center">
+          Already got an account?
+          <a onclick='setVisibility(1);'>Sign in</a>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 <div class="panel">
@@ -74,6 +76,53 @@
     </div>
   </div>
 </div>
+<div class="row">
+  <div class="small-12 columns text-center">
+    <div class="row">
+    <div class="small-4 columns b-ws-top">
+      <i class="icon-broadcast f-4x dbc"></i>
+        <h4>Reach out to more voters</h4>
+        <p class="secondary-color">
+          Spread your message to your targeted audience by focusing on just your constituency
+        </p>
+      </div>
+      <div class="small-4 columns b-ws-top">
+      <i class="icon-trophy f-4x dbc"></i>
+        <h4>Showcase your work</h4>
+        <p class="secondary-color">
+        No need to put road signs that no one needs. Let everyone see and acknowledge the work that you have done
+        </p>
+      </div>
+      <div class="small-4 columns b-ws-top">
+      <i class="icon-network f-4x dbc"></i>
+        <h4>Digital Politics</h4>
+        <p class="secondary-color">
+        Keeping in touch with the times of 'Digital India', it is time to use technology to manange your campaigns
+        </p>
+      </div>
+      
+    </div>
+    <div class="row b-ws-top">
+      <div class="small-4 columns b-ws-top">
+        <i class="icon-phone f-4x dbc"></i>
+        <h4>Connect with your electorate/citizens</h4>
+        <p class="secondary-color">
+        Gain a direct connection with your voters where you can answer their questions and interact with them</p>
+      </div>
+      <div class="small-4 columns b-ws-top">
+      <i class="icon-organization f-4x dbc"></i>
+        <h4>Manage your Volunteers</h4>
+        <p class="secondary-color">
+        You can now assign tasks to your team and ensure that they work for public good</p>
+      </div>
+      <div class="small-4 columns b-ws-top">
+      <i class="icon-warning-alt f-4x dbc"></i>
+        <h4>Identify the issues in your area</h4>
+        <p class="secondary-color">Identify the most pressing issues in your local area and what problems are being faced by your voters</p>
+      </div>
+    </div>
+  </div>
+</div>
 <div id="gifbox">
   <div id="load" style="display: none" align="center">
     <div id="oroptioncenter" align="center">
@@ -82,10 +131,11 @@
   </div>
 </div>
 
-  {% include footer.html %}
+{% include footer.html %}
+<script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
 
-  <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
-  <script>
+<script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+<script>
   $( document ).ready(function() {
     var numAnim1 = new countUp("num1", 0, 448);
     numAnim1.start();
@@ -93,8 +143,18 @@
     numAnim2.start();
     var numAnim3 = new countUp("num3", 0, 19);
     numAnim3.start();
+
+    $('#signup-form').submit(function(){
+      $('#signup-btn').fadeOut();
+      $('#loading-btn').delay().fadeIn();
+    });
+
+    $('#signin-form').submit(function(){
+      $('#signin-btn').fadeOut();
+      $('#loading-btn').delay().fadeIn();
+    });
   });</script>
   <script type="text/javascript">
-      $(document).foundation();
-</script>
+    $(document).foundation();
+  </script>
   </html>

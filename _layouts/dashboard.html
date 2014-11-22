@@ -34,7 +34,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="small-2 columns panel text-center">
+  <div class="small-2 columns panel text-center s-ws-top">
     <h4>Status</h4>
     <div class="bbm">
       <label for="open_it"><div id="fn1" class="f-2x yc">1</div>Open</label><input type="checkbox" id="open_it" checked='true'>
@@ -49,7 +49,7 @@
       <label for="closed_it"><div id="fn4" class="f-2x dbc">1</div>Closed</label><input type="checkbox" id="closed_it" checked='true'>
     </div>
   </div>
-  <div class="small-7 columns">
+  <div class="small-7 columns s-ws-top">
     <div id="map-view" class="panel p-fx">
       <img src="http://placehold.it/1600x900">
       <!-- <div id="map" style="width:100%">  </div> -->
@@ -126,7 +126,7 @@
       </div>
     </div>
   </div>
-  <div id="details-column" class="small-3 columns panel">
+  <div id="details-column" class="small-3 columns panel s-ws-top">
     <h4>Details</h4>
     <div class="row">
       <div class="small-12 columns">
@@ -189,6 +189,8 @@
 </div>
 
 {% include footer.html %} 
+<script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.dropdown.js"></script>
+<script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
 
   <script type="text/javascript">
       $(document).foundation();
