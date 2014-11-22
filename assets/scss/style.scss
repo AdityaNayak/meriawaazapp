@@ -141,6 +141,9 @@ i{
 			padding:1.25rem 1.25rem 0 1.25rem;
 		}
 	}
+	&.p-fx-btm{
+		padding-bottom:0;
+	}
 }
 .nb{
 	border:none;
@@ -266,6 +269,7 @@ filter: grayscale(100%);
 	}
 }
 .hero-heading{
+	font-size:2rem;
 	span{
 		padding:0.25em;
 		margin:1em 0;
@@ -313,4 +317,18 @@ filter: grayscale(100%);
 	vertical-align:super;
 	margin-right:5px;
 	margin-left:5px;
+}
+.home-showcase{
+	.small-4{
+		cursor: pointer;
+	}
+	.active{
+		
+			border-bottom:3px solid $grey;
+			padding-bottom:1em;
+		
+	}
+	img{
+		max-height: 50px;
+	}
 }

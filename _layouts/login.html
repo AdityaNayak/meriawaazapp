@@ -1,14 +1,17 @@
 {% include header-out.html %}
 <div class="row">
-  <div class="small-8 columns text-right">
-    <h2 class="hero-heading m-ws-top">
-      <div><span class="bgbg wc">Enabling</span></div>
-      <div><span class="bbg wc">Citizen-Government connect</span></div>
-      <div><span class="dbbg wc">through Mobile acess</span></div>
-    </h2>
+  <div class="small-6 columns text-right">
+    <h3 class="hero-heading b-ws-top">
+      <div><span class="bgbg wc">Connecting Citizens with</span></div>
+      <div><span class="bbg wc">Governments and Elected Officials</span></div>
+      <div><span class="dbbg wc">through the Mobile platform</span></div>
+    </h3>
   </div>
-  <div class="small-4 columns">
-    <div class="panel b-ws-top">
+  <div class="small-3 columns b-ws-top">
+    <img src="{{site.url}}/assets/images/phone.png">
+  </div>
+  <div class="small-3 columns panel s-ws-top">
+    
       <div id="login">
         <form class="b-ws-top" id="login-form" onSubmit="login();">
           <div class="row">
@@ -52,10 +55,10 @@
           </div>
         </div>
       </div>
-    </div>
+   
   </div>
 </div>
-<div class="panel b-ws-top">
+<div class="panel">
   <div class="row">
     <div class="small-4 columns text-center">
       <div id="num1" class="f-3x bgc">1</div>
@@ -91,4 +94,7 @@
     var numAnim3 = new countUp("num3", 0, 19);
     numAnim3.start();
   });</script>
+  <script type="text/javascript">
+      $(document).foundation();
+</script>
   </html>
