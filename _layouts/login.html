@@ -12,8 +12,8 @@
   </div>
   <div class="small-3 columns panel s-ws-top">
 
-    <div id="signin">
-      <form class="b-ws-top" id="signin-form" onSubmit="login();">
+    <div id="signin" style="display: none">
+      <form class="s-ws-top" id="signin-form" onSubmit="login();">
         <div class="row">
           <div class="large-12 columns">
             <label>Email
@@ -42,12 +42,31 @@
         </div>
       </div>
     </div>
-    <div id="signup" style="display: none">
-      <form class="b-ws-top" id="signup-form" onSubmit="signup();">
-        <input type="email" id="email" placeholder="Email" required/>
-        <input type="password" id="password" placeholder="Password" required/>
-        <input type="password" id="confirmation" placeholder="Re-enter Password" required/>
-        <input type="submit" value="Sign up" id="signup-btn" class="button fullwidth small" />
+    <div id="signup">
+      <form class="s-ws-top" id="signup-form" onSubmit="signup();">
+        <div class="row">
+          <div class="large-12 columns">
+            <label>Email
+              <input type="email" id="email" placeholder="you@example.com" required/>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+            <label>Password
+              <input type="password" placeholder="password" id="password" required />
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+            <label>Re-enter Password
+              <input type="password" id="confirmation" placeholder="Re-enter Password" required/>
+            </label>
+          </div>
+        </div>
+        
+        <input type="submit" value="Sign up for Free" id="signup-btn" class="button fullwidth small success" />
         <div id="loading-btn" class="fullwidth text-center" style="display:none;"><img src="{{site.url}}/assets/images/loading.gif"></div>
       </form>
       <div class="row">
@@ -79,25 +98,25 @@
 <div class="row">
   <div class="small-12 columns text-center">
     <div class="row">
-    <div class="small-4 columns b-ws-top">
-      <i class="icon-broadcast f-4x dbc"></i>
-        <h4>Reach out to more voters</h4>
+      <div class="small-4 columns b-ws-top">
+        <i class="icon-broadcast f-4x dbc"></i>
+        <h4>Reach out to more Voters</h4>
         <p class="secondary-color">
-          Spread your message to your targeted audience by focusing on just your constituency
+          Spread your message directly to your voters by targeted just your constituency
         </p>
       </div>
       <div class="small-4 columns b-ws-top">
-      <i class="icon-trophy f-4x dbc"></i>
-        <h4>Showcase your work</h4>
+        <i class="icon-trophy f-4x dbc"></i>
+        <h4>Showcase your Work</h4>
         <p class="secondary-color">
-        No need to put road signs that no one needs. Let everyone see and acknowledge the work that you have done
+          Claim and showcase your work in your area and let everyone share it with their friends
         </p>
       </div>
       <div class="small-4 columns b-ws-top">
-      <i class="icon-network f-4x dbc"></i>
+        <i class="icon-network f-4x dbc"></i>
         <h4>Digital Politics</h4>
         <p class="secondary-color">
-        Keeping in touch with the times of 'Digital India', it is time to use technology to manange your campaigns
+          Keeping in touch with the times of 'Digital India', use status updates to grow your campaign
         </p>
       </div>
       
@@ -105,56 +124,77 @@
     <div class="row b-ws-top">
       <div class="small-4 columns b-ws-top">
         <i class="icon-phone f-4x dbc"></i>
-        <h4>Connect with your electorate/citizens</h4>
+        <h4>Connect with your People</h4>
         <p class="secondary-color">
-        Gain a direct connection with your voters where you can answer their questions and interact with them</p>
-      </div>
-      <div class="small-4 columns b-ws-top">
-      <i class="icon-organization f-4x dbc"></i>
-        <h4>Manage your Volunteers</h4>
-        <p class="secondary-color">
-        You can now assign tasks to your team and ensure that they work for public good</p>
-      </div>
-      <div class="small-4 columns b-ws-top">
-      <i class="icon-warning-alt f-4x dbc"></i>
-        <h4>Identify the issues in your area</h4>
-        <p class="secondary-color">Identify the most pressing issues in your local area and what problems are being faced by your voters</p>
+          Gain a direct connect with your voters where you can answer their questions and interact with them</p>
+        </div>
+        <div class="small-4 columns b-ws-top">
+          <i class="icon-organization f-4x dbc"></i>
+          <h4>Manage your Volunteers</h4>
+          <p class="secondary-color">You can now mobilize your team campaign better by assigning them tasks</p>
+        </div>
+        <div class="small-4 columns b-ws-top">
+          <i class="icon-warning-alt f-4x dbc"></i>
+          <h4>Identify the Local Issues</h4>
+          <p class="secondary-color">Get a pulse of the most pressing problems faced by your voters and strategize accordingly</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div id="gifbox">
-  <div id="load" style="display: none" align="center">
-    <div id="oroptioncenter" align="center">
-      <img id="loading" src="./assets/images/loading.gif" height="50" width="50">
+  <div class="panel m-ws-top">
+    <div class="row">
+      <div class="small-7 columns text-right s-ws-top">
+        <h2 class="dbc">Need help getting starting?</h2>
+        <p class="secondary secondary-color">Drop your details and we will get back within 24 hours</p>
+      </div>
+      <div class="small-5 columns s-ws-top">
+        <div class="row">
+          <div class="large-12 columns">
+            <div class="row collapse">
+              <div class="small-10 columns">
+               <input type="text" placeholder="Drop your Phone or Email" class="lead" autofocus>
+              </div>
+              <div class="small-2 columns">
+                <a href="#" class="button postfix lead">Go</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+  <div id="gifbox">
+    <div id="load" style="display: none" align="center">
+      <div id="oroptioncenter" align="center">
+        <img id="loading" src="./assets/images/loading.gif" height="50" width="50">
+      </div>
+    </div>
+  </div>
 
-{% include footer.html %}
-<script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
+  {% include footer.html %}
+  <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
 
-<script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
-<script>
-  $( document ).ready(function() {
-    var numAnim1 = new countUp("num1", 0, 448);
-    numAnim1.start();
-    var numAnim2 = new countUp("num2", 0, 832);
-    numAnim2.start();
-    var numAnim3 = new countUp("num3", 0, 19);
-    numAnim3.start();
+  <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+  <script>
+    $( document ).ready(function() {
+      var numAnim1 = new countUp("num1", 0, 448);
+      numAnim1.start();
+      var numAnim2 = new countUp("num2", 0, 832);
+      numAnim2.start();
+      var numAnim3 = new countUp("num3", 0, 19);
+      numAnim3.start();
 
-    $('#signup-form').submit(function(){
-      $('#signup-btn').fadeOut();
-      $('#loading-btn').delay().fadeIn();
-    });
+      $('#signup-form').submit(function(){
+        $('#signup-btn').fadeOut();
+        $('#loading-btn').delay().fadeIn();
+      });
 
-    $('#signin-form').submit(function(){
-      $('#signin-btn').fadeOut();
-      $('#loading-btn').delay().fadeIn();
-    });
-  });</script>
-  <script type="text/javascript">
-    $(document).foundation();
-  </script>
-  </html>
+      $('#signin-form').submit(function(){
+        $('#signin-btn').fadeOut();
+        $('#loading-btn').delay().fadeIn();
+      });
+    });</script>
+    <script type="text/javascript">
+      $(document).foundation();
+    </script>
+    </html>

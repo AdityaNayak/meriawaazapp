@@ -24110,7 +24110,7 @@ th.hide-for-touch {
 
 /* line 62, ../scss/style.scss */
 .secondary-color {
-  color: #a5a5a5;
+  color: #a5a5a5 !important;
 }
 
 /* line 65, ../scss/style.scss */
@@ -24394,38 +24394,52 @@ i {
   width: 90%;
 }
 
-/* line 271, ../scss/style.scss */
+/* line 272, ../scss/style.scss */
+input.lead {
+  border: none;
+  border-bottom: 2px dotted #0071BC;
+  height: 3rem;
+  font-size: 1.25rem;
+}
+
+/* line 280, ../scss/style.scss */
+.button.lead {
+  height: 3rem;
+  line-height: 3rem;
+}
+
+/* line 285, ../scss/style.scss */
 .hero-heading {
   font-size: 2rem;
   line-height: 2;
 }
-/* line 273, ../scss/style.scss */
+/* line 287, ../scss/style.scss */
 .hero-heading span {
   padding: 0.25em;
   margin: 1em 0;
 }
 
-/* line 280, ../scss/style.scss */
+/* line 294, ../scss/style.scss */
 .press-nav .sub-nav {
   display: inline-block;
 }
 
-/* line 285, ../scss/style.scss */
+/* line 299, ../scss/style.scss */
 .press h3 {
   margin-top: 2em;
 }
 
-/* line 289, ../scss/style.scss */
+/* line 303, ../scss/style.scss */
 .app-slider {
   background: url("../images/app-back.png") no-repeat no-repeat 50% 0;
 }
 
-/* line 292, ../scss/style.scss */
+/* line 306, ../scss/style.scss */
 .orbit-container .orbit-slides-container img {
   margin: 0 auto;
 }
 
-/* line 295, ../scss/style.scss */
+/* line 309, ../scss/style.scss */
 .circles {
   width: 56px;
   height: 56px;
@@ -24434,43 +24448,43 @@ i {
   border: 1px solid #dcdcdc;
   margin: 1.5em auto 0 auto;
 }
-/* line 302, ../scss/style.scss */
+/* line 316, ../scss/style.scss */
 .circles:hover {
   border: 2px solid #0071BC;
 }
-/* line 305, ../scss/style.scss */
+/* line 319, ../scss/style.scss */
 .circles.active {
   border: 2px solid #0071BC;
 }
 
-/* line 309, ../scss/style.scss */
+/* line 323, ../scss/style.scss */
 .circle-img {
   border-radius: 50%;
 }
 
-/* line 312, ../scss/style.scss */
+/* line 326, ../scss/style.scss */
 #map {
   height: 400px;
   width: 680px;
 }
 
-/* line 316, ../scss/style.scss */
+/* line 330, ../scss/style.scss */
 .fx1 {
   vertical-align: super;
   margin-right: 5px;
   margin-left: 5px;
 }
 
-/* line 322, ../scss/style.scss */
+/* line 336, ../scss/style.scss */
 .home-showcase .small-4 {
   cursor: pointer;
 }
-/* line 325, ../scss/style.scss */
+/* line 339, ../scss/style.scss */
 .home-showcase .active {
   border-bottom: 3px solid #dcdcdc;
   padding-bottom: 1em;
 }
-/* line 331, ../scss/style.scss */
+/* line 345, ../scss/style.scss */
 .home-showcase img {
   max-height: 50px;
 }

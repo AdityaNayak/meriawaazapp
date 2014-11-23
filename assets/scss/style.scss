@@ -60,7 +60,7 @@
 
 }
 .secondary-color{
-	color:scale-color($grey, $lightness:-25%);
+	color:scale-color($grey, $lightness:-25%) !important;
 }
 .tertiary{
 	font-size:0.75em;
@@ -266,6 +266,20 @@ filter: grayscale(100%);
 		padding:0.25rem;
 		margin:0.5rem;
 		width: 90%;
+	}
+}
+input{
+	&.lead{
+		border:none;
+		border-bottom:2px dotted $blue;
+		height:3rem;
+		font-size: 1.25rem;
+	}
+}
+.button{
+	&.lead{
+		height: 3rem;
+		line-height: 3;
 	}
 }
 .hero-heading{

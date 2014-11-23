@@ -9,12 +9,13 @@ function initialize() {
 
 function setVisibility(id) {
       if(id==0){
-          document.getElementById("signup").style.display = 'inline';  
-          document.getElementById("signin").style.display = 'none';
+  		$("#signin").fadeOut(400);
+    	$("#signup").delay(400).fadeIn(400);  
+          
       }
       else if(id==1){
-          document.getElementById("signin").style.display = 'inline';  
-          document.getElementById("signup").style.display = 'none';  
+          $("#signup").fadeOut(400);
+          $("#signin").delay(400).fadeIn(400);
       }
 }
 
