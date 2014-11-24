@@ -192,8 +192,28 @@ i{
 }
 .gs{
 	-webkit-filter: grayscale(100%);
--moz-filter: grayscale(100%);
-filter: grayscale(100%);
+	-moz-filter: grayscale(100%);
+	filter: grayscale(100%);
+	transition:all 2s;
+	&.hv{
+		&.hover{
+			-webkit-filter: grayscale(0%);
+			-moz-filter: grayscale(0%);
+			filter: grayscale(0%);
+			transition:all 2s;
+		}
+	}
+}
+.l-lc{
+	border-top:5px solid $green;
+	display:inline-block;
+}
+.d-lc{
+	border-top:5px solid $red;
+	display:inline-block;
+}
+.top-push{
+	margin-top:-10em;
 }
 .s-ws-top{
 	margin-top:1em;
@@ -281,6 +301,18 @@ input{
 	&.lead{
 		height: 3rem;
 		line-height: 3;
+	}
+	&.v2{
+		background:none;
+		color:$blue;
+		border:2px solid $blue;
+		border-radius:3px;
+		padding:0.5rem 1rem;
+		transition: all 2s;
+		&:hover{
+			background:rbga($blue, 0.4);
+			transition: all 2s;
+		}
 	}
 }
 .hero-heading{

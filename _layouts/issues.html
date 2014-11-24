@@ -140,11 +140,9 @@
       </div>
     </div>
     <div class="row">
-      <div class="small-6 columns s-ws-top">
-        <a href="#"><strong>Claim</strong></a>
-      </div>
-      <div class="small-6 columns s-ws-top">
-        <a href="#" data-dropdown="drop1"><strong>Assign</strong></a>
+      <div class="small-12 columns s-ws-top">
+        <a href="#" class="button v2" id="claim-st1"><strong>Claim</strong></a>
+        <a href="#" class="button v2" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></a>
         <ul id="drop1" class="medium f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
           <datalist id="team">
             <option value="user 1"></option>
@@ -218,8 +216,8 @@
     $('input[name=maptglgroup]').change(function(){
       if($(this).is(':checked'))
       {
-        $('#map-view').fadeIn();
-        $('#list-view').delay().fadeOut();
+        $('#map-view').fadeIn(300);
+        $('#list-view').delay(400).fadeOut(300);
       }
       else
       {
@@ -227,6 +225,10 @@
         $('#list-view').delay().fadeIn();
       }    
 
+    });
+    $('#claim-st1').click(function(){
+      $('#claim-st1').fadeOut();
+      $('#claim-st2').delay().fadeIn();
     });
     $('.list-table tbody tr').click(function() {
       $('#list-view').fadeOut();

@@ -5,284 +5,164 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Profile | Meri Awaaz</title>
 
-{% include header.html %}
-<div class="row control-bar b-ws-top">
-  <div class="small-3 small-offset-5 columns text-right">
-    <div class="switch radius">
-      <span class="fx1 secondary-color">list view</span>
-      <input id="maptgl" type="checkbox" checked name="maptglgroup">
-      <label for="maptgl"></label>
-      <span class="fx1 secondary-color">map view</span>
+  {% include header.html %}
+  <div class="row" style="margin-top:12em;">
+    <div class="small-offset-3 small-2 columns">
+      <span class="f-3x yc">378 </span><span class="secondary secondary-color"> supporters</span>
+    </div>
+    <div class="small-4 columns m-ws-top">
+      <div class="l-lc text-right secondary-color" style="width:63%">378 supporters</div>
+      <div class="d-lc secondary-color" style="width:35%">disbelievers</div>
+    </div>
+    <div class="small-3 columns text-right s-ws-top">
+      <h3 class="subheader">Lok Sabha 2014</h3>
     </div>
   </div>
-  <div class="small-4 columns panel small">
-    <div id="reportrange" class="rangepicker-box secondary"><i class="icon-calendar"></i> <span></span></div>
-  </div>
-</div>
-<div class="row panel filters text-center">
-  <div class="small-2 columns">    
-    <label for="road_cb"><img src="./assets/images/marker-1.png"><br>Road</label><input type="checkbox" id="road_cb" checked='true'>
-  </div>
-  <div class="small-2 columns">
-    <label for="electricity_cb"><img src="./assets/images/marker-2.png"><br>Electricity</label><input type="checkbox" id="electricity_cb" checked='true'>
-  </div>
-  <div class="small-2 columns">
-    <label for="water_cb"><img src="./assets/images/marker-3.png"><br>Water</label><input type="checkbox" id="water_cb" checked='true'>
-  </div>
-  <div class="small-2 columns">
-    <label for="law_cb"><img src="./assets/images/marker-4.png"><br>Road</label><input type="checkbox" id="law_cb" checked='true'>
-  </div>
-  <div class="small-2 columns">
-    <label for="sanitation_cb"><img src="./assets/images/marker-5.png"><br>Sanitation</label><input type="checkbox" id="sanitation_cb" checked='true'>  </div>
-    <div class="small-2 columns">
-      <label for="transport_cb"><img src="./assets/images/marker-6.png"><br>Transportation</label><input type="checkbox" id="transport_cb" checked='true'>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="small-2 columns panel text-center s-ws-top">
-    <h4>Status</h4>
-    <div class="bbm">
-      <label for="open_it"><div id="fn1" class="f-2x yc">1</div>Open</label><input type="checkbox" id="open_it" checked='true'>
-    </div>
-    <div class="bbm">
-      <label for="prog_it"><div id="fn2" class="f-2x bgc">1</div>In progress</label><input type="checkbox" id="prog_it" checked='true'>
-    </div>
-    <div class="bbm">
-      <label for="review_it"><div id="fn3" class="f-2x bc">1</div>Review</label><input type="checkbox" id="review_it" checked='true'>
-    </div>
-    <div class="bbm">
-      <label for="closed_it"><div id="fn4" class="f-2x dbc">1</div>Closed</label><input type="checkbox" id="closed_it" checked='true'>
-    </div>
-  </div>
-  <div class="small-7 columns s-ws-top">
-    <div id="map-view" class="panel p-fx">
-      <img src="http://placehold.it/1600x900">
-      <!-- <div id="map" style="width:100%">  </div> -->
-    </div>
-    <div id="list-view" class="panel p-fx" style="display:none;">
-      <table class="list-table">
-        <thead>
-          <tr>
-            <th width="100">Type</th>
-            <th>Content</th>
-            <th width="100">Status</th>
-            <th width="100">Assignee</th>
-            <th width="100">Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="open">
-            <td>Road</td>
-            <td>Content truncated to a single line and some more</td>
-            <td>Open</td>
-            <td>User 1</td>
-            <td>12 min ago</td>
-          </tr>
-          <tr class="progress">
-            <td>Transportation</td>
-            <td>This is longer Content Goes </td>
-            <td>Review</td>
-            <td>User 1</td>
-            <td>16 min ago</td>
-          </tr>
-          <tr class="closed">
-            <td>Law and Order</td>
-            <td>This is longer Content Goes </td>
-            <td>Open</td>
-            <td>User 1</td>
-            <td>40 min ago</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div id="updates-view" class="panel" style="display:none;">
-      <h2>'Issue Type' Issue<small> Issue ID (incrementally assigned)</small></h2>
-      <div class="row">
-        <div class="small-6 s-ws-top columns">
-          <img src="http://placehold.it/1600x900">
-        </div>
-        <div class="small-6 columns s-ws-top">
-          <p> A long paragraph that shows the issue content</p>
-        </div>   
-      </div>
-      <div class="row">
-      <div class="small-12 columns">
-      <hr>
-      </div>
-      </div>
-      <div class="row">
-      <div class="timeline-view">
-        <div class="small-12 columns b-ws-top">
-          <div class="panel p-fx">
-          <div class="panel-head"><strong>MLA 1</strong> commented <small> 2 days ago</small></div>
-          <p>Comment that is reallly long and is a text paragraph</p>
-          </div>
-
-          <div class="panel p-fx">
-          <div class="panel-head"><strong>User 1</strong> commented <small> 1 day ago</small></div>
-          <p>A second Comment that is really long and is a text paragraph and may contain media</p>
-          </div>
-
-          <div class="panel nb">
-            <p><strong>user1</strong> was assigned by <strong>MLA1</strong> <small>2 days ago</small></p>
-          </div>
-        </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="details-column" class="small-3 columns panel s-ws-top">
-    <h4>Details</h4>
+  <div class="panel">
     <div class="row">
-      <div class="small-12 columns">
-        Status: <span class="yc"><strong>Open</strong></span>
-        // Color class changed by the status type
+      <div class="small-3 columns text-right">
+        <img src="{{site.url}}/assets/images/politicians/narendra-modi.jpg" class="circle-img top-push">
+        <h3 class="m-ws-top yc">Narendra Modi <small>(63)</small></h3>
+        <h4>Bhartiya Janta Party</h4>
+        <h4 class="s-ws-top">Vadodra,<small> Gujarat</small></h4>
+        <h5 class="subheader">Social and Political activity</h5>
+        <a href="#" class="button v2">Edit</a>
       </div>
-    </div>
-    <div class="row">
-      <div class="small-6 columns s-ws-top">
-        <a href="#"><strong>Claim</strong></a>
-      </div>
-      <div class="small-6 columns s-ws-top">
-        <a href="#" data-dropdown="drop1"><strong>Assign</strong></a>
-        <ul id="drop1" class="medium f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
-          <datalist id="team">
-            <option value="user 1"></option>
-            <option value="user 3"></option>
-            <option value="user 2"></option>
-          </datalist>
-          <li><input type="text" list="team"></li>
-          <li><a href="#">Username 1</a></li>
-          <li><a href="#">Username 2</a></li>
-          <li><a href="#">Username 3</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="row">
-      <div class="small-12 columns s-ws-top hod">
-        <img src="http://placehold.it/1600x900">
-      </div>
-    </div>
-    <div class="row secondary">
-      <div class="small-6 columns m-ws-top">
-        <i class="icon-calendar"></i> Oct 17 2014 
-      </div>
-      <div class="small-6 columns m-ws-top"><i class="icon-clock"></i> 01:09 AM</div>
-    </div>
-    <div class="row hod">
-      <div class="small-12 columns s-ws-top">
-        Type: <strong>Law and Order</strong>
-      </div>
-    </div>
-    <div class="row hod">
-      <div class="small-12 columns">
+      <div class="small-3 columns m-ws-top">
+        <h4 class="bgc">Statistics</h4>
         <hr>
-        <p>Issue content</p>
+        <div class="row">
+          <div class="small-5 columns">
+            Education:
+          </div>
+          <div class="small-7 columns">
+            <strong>Post Graduate</strong>
+            <br>
+            M.A., Gujarat University, Ahmedabad
+          </div>
+        </div>
         <hr>
+        <div class="row">
+          <div class="small-5 columns">
+            Total Assets:
+          </div>
+          <div class="small-7 columns">
+            <strong>1.65 Crores</strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="small-5 columns">
+            Liabilities:
+          </div>
+          <div class="small-7 columns">
+            <strong>None</strong>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="small-5 columns">
+            Criminal Cases:
+          </div>
+          <div class="small-7 columns">
+            <strong>None</strong>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="small-12 columns secondary secondary-color">
-        <i class="icon-location"></i> 28.5462653, 77.2732673
+      <div class="small-3 columns m-ws-top">
+        <h4 class="bc">Interactions</h4>
+        <hr>
+        <div class="row">
+          <div class="small-5 columns">
+            New Likes:
+          </div>
+          <div class="small-7 columns">
+            <strong>378</strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="small-5 columns">
+            Reach:
+          </div>
+          <div class="small-7 columns">
+            <strong>378</strong>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="small-5 columns">
+            Comments:
+          </div>
+          <div class="small-7 columns">
+            <strong>36</strong>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="small-5 columns">
+            Questions:
+          </div>
+          <div class="small-7 columns">
+            <strong>78</strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="small-5 columns">
+            Answers:
+          </div>
+          <div class="small-7 columns">
+            <strong>3</strong>
+          </div>
+        </div>
       </div>
-      <div class="small-12 columns s-ws-top">
-        <p>86/1, Sample Adress, Resolved through geo lookup</p>
+      <div class="small-3 columns m-ws-top">
+        <h4 class="dbc">Activities</h4>
+        <hr>
+        <div class="row">
+          <div class="small-5 columns">
+            Team size:
+          </div>
+          <div class="small-7 columns">
+            <strong>37</strong>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="small-5 columns">
+            Issues claimed:
+          </div>
+          <div class="small-7 columns">
+            <strong>78</strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="small-5 columns">
+            Issues closed:
+          </div>
+          <div class="small-7 columns">
+            <strong>37</strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="small-5 columns">
+            Issues Validated:
+          </div>
+          <div class="small-7 columns">
+            <strong>3</strong>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 
 {% include footer.html %} 
-<script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.dropdown.js"></script>
 <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
 
-  <script type="text/javascript">
-      $(document).foundation();
+<script type="text/javascript">
+  $(document).foundation();
 </script>
-
-<script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
-<script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
-<script type="text/javascript" src="{{site.url}}/assets/js/daterangepicker.js"></script>
 <script>
   $( document ).ready(function() {
-    var numAnim1 = new countUp("fn1", 0, 44);
-    numAnim1.start();
-    var numAnim2 = new countUp("fn2", 0, 12);
-    numAnim2.start();
-    var numAnim3 = new countUp("fn3", 0, 19);
-    numAnim3.start();  
-    var numAnim4 = new countUp("fn4", 0, 108);
-    numAnim4.start();
-
-    $('input[name=maptglgroup]').change(function(){
-      if($(this).is(':checked'))
-      {
-        $('#map-view').fadeIn();
-        $('#list-view').delay().fadeOut();
-      }
-      else
-      {
-        $('#map-view').fadeOut();
-        $('#list-view').delay().fadeIn();
-      }    
-
-    });
-    $('.list-table tbody tr').click(function() {
-      $('#list-view').fadeOut();
-      $('label').addClass('gs');
-      $('input[type="checkbox"]').prop("checked", false);
-      $( "#law_cb" ).prop( "checked", true );
-      $('label[for="law_cb"]').removeClass('gs');
-      $( "#open_it" ).prop( "checked", true );
-      $('label[for="open_it"]').removeClass('gs');
-      $('#updates-view').delay().fadeIn();
-      $('.hod').fadeOut();
-    });
-
-    $('#reportrange').daterangepicker(
-    {
-      startDate: moment().subtract('days', 29),
-      endDate: moment(),
-      minDate: '01/01/2012',
-      maxDate: '12/31/2014',
-      dateLimit: { days: 60 },
-      showDropdowns: true,
-      showWeekNumbers: false,
-      timePicker: false,
-      timePickerIncrement: 1,
-      timePicker12Hour: true,
-      ranges: {
-       'Today': [moment(), moment()],
-       'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
-       'Last 7 Days': [moment().subtract('days', 6), moment()],
-       'Last 30 Days': [moment().subtract('days', 29), moment()],
-       'This Month': [moment().startOf('month'), moment()],
-       'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-       'This Year': [moment().startOf('year'), moment()]
-     },
-     opens: 'left',
-     format: 'MM/DD/YYYY',
-     separator: ' to ',
-     locale: {
-      applyLabel: 'Submit',
-      fromLabel: 'From',
-      toLabel: 'To',
-      customRangeLabel: 'Custom Range',
-      daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-      monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      firstDay: 1
-    }
-  },
-  function(start, end) {
-    console.log("Callback has been called!");
-    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-  }
-  );
-    //Set the initial state of the picker label
-    $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
   });
 </script>
 </html>
