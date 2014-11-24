@@ -7,7 +7,149 @@
 
   {% include header.html %}
 
-  <div id="single-qa-view" class="row">
+  <div id="list-qa-view" class="row">
+    <div class="small-3 columns text-right">
+      <ul class="side-nav">
+        <li><strong>Filter</strong></li>
+        <li><a href="#">All</a></li>
+        <li><a href="#">Asked to You</a></li>
+        <li><a href="#">Open</a></li>
+        <li><a href="#">Following</a></li>
+      </ul>
+    </div>
+    <div class="small-9 columns panel">
+
+      <div class="row list-qa">
+        <div class="small-9 columns">
+          <h4>Do you think the price rise in railway fare is justifiable? Is it just a start to expect a price rise in everything?</h4>
+          <div class="row">
+            <div class="small-4 columns secondary secondary-color">
+              <i class="icon-clock"></i> 9:32 PM
+            </div>
+            <div class="small-4 columns secondary secondary-color">
+              <i class="icon-calendar"></i> 2 October, 2014
+            </div>
+            <div class="small-4 columns secondary secondary-color">
+              <i class="icon-location"></i> Vadodra
+            </div>
+          </div>
+          <p class="secondary-color s-ws-top">Yes. I support price rises in certain areas like public transport and fuels. You can't want great services and then agitate against price rises, particularly when a family of 4 spends >1000.</p>
+        </div>
+        <div class="small-3 columns">
+          <div class="row">
+            <div class="small-6 columns text-center">
+              <img src="http://api.randomuser.me/portraits/med/women/1.jpg" class="circle-img img-h">
+              <h5 class="secondary secondary-color">Asked by</h5>
+            </div>
+            <div class="small-6 columns text-center">
+              <img src="http://api.randomuser.me/portraits/med/men/6.jpg" class="circle-img img-h">
+              <h5 class="secondary secondary-color">Last reply</h5>
+            </div>
+          </div>
+          <div class="row secondary">
+            <div class="small-6 columns text-right secondary-color">
+              Last actvity:
+            </div>
+            <div class="small-6 columns">
+              3 hours ago
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-6 columns text-right secondary-color">
+              Views:
+            </div>
+            <div class="small-6 columns">
+              431
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-6 columns text-right secondary-color">
+              Comments:
+            </div>
+            <div class="small-6 columns">
+              43
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-6 columns text-right secondary-color">
+              Followers:
+            </div>
+            <div class="small-6 columns">
+              108
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr>
+
+      <div class="row list-qa">
+        <div class="small-9 columns">
+          <h4>Do you think the price rise in railway fare is justifiable? Is it just a start to expect a price rise in everything?</h4>
+          <div class="row">
+            <div class="small-4 columns secondary secondary-color">
+              <i class="icon-clock"></i> 9:32 PM
+            </div>
+            <div class="small-4 columns secondary secondary-color">
+              <i class="icon-calendar"></i> 2 October, 2014
+            </div>
+            <div class="small-4 columns secondary secondary-color">
+              <i class="icon-location"></i> Vadodra
+            </div>
+          </div>
+          <p class="secondary-color s-ws-top">Yes. I support price rises in certain areas like public transport and fuels. You can't want great services and then agitate against price rises, particularly when a family of 4 spends >1000.</p>
+        </div>
+        <div class="small-3 columns">
+          <div class="row">
+            <div class="small-6 columns text-center">
+              <img src="http://api.randomuser.me/portraits/med/women/1.jpg" class="circle-img img-h">
+              <h5 class="secondary secondary-color">Asked by</h5>
+            </div>
+            <div class="small-6 columns text-center">
+              <img src="http://api.randomuser.me/portraits/med/men/6.jpg" class="circle-img img-h">
+              <h5 class="secondary secondary-color">Last reply</h5>
+            </div>
+          </div>
+          <div class="row secondary">
+            <div class="small-6 columns text-right secondary-color">
+              Last actvity:
+            </div>
+            <div class="small-6 columns">
+              3 hours ago
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-6 columns text-right secondary-color">
+              Views:
+            </div>
+            <div class="small-6 columns">
+              431
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-6 columns text-right secondary-color">
+              Comments:
+            </div>
+            <div class="small-6 columns">
+              43
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-6 columns text-right secondary-color">
+              Followers:
+            </div>
+            <div class="small-6 columns">
+              108
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="single-qa-view" class="row" style="display:none;">
     <div class="small-2 columns b-ws-top text-right">
       <div class="row">
         <div class="small-12 columns secondary">
@@ -26,7 +168,7 @@
          asked by
        </div>
        <div class="small-5 columns">
-        <img src="http://api.randomuser.me/portraits/med/women/81.jpg" class="circle-img gs hv">
+        <img src="http://api.randomuser.me/portraits/med/women/81.jpg" class="circle-img">
       </div>
     </div>
     <hr>
@@ -35,7 +177,7 @@
         asked to
       </div>
       <div class="small-5 columns">
-        <img src="{{site.url}}/assets/images/politicians/narendra-modi.jpg" class="circle-img gs hv">
+        <img src="{{site.url}}/assets/images/politicians/narendra-modi.jpg" class="circle-img">
       </div>
     </div>
     <hr>
@@ -44,7 +186,7 @@
         open to
       </div>
       <div class="small-5 columns">
-        <img src="{{site.url}}/assets/images/politicians/narendra-modi.jpg" class="circle-img gs hv">
+        <img src="{{site.url}}/assets/images/politicians/narendra-modi.jpg" class="circle-img">
       </div>
     </div>
     <hr>
@@ -79,7 +221,7 @@
       <div class="small-3 columns text-right m-ws-top">
         <div class="row">
           <div class="small-5 columns small-offset-7">
-            <img src="http://api.randomuser.me/portraits/med/men/89.jpg" class="circle-img gs hv">
+            <img src="http://api.randomuser.me/portraits/med/men/89.jpg" class="circle-img">
           </div>
         </div>
         <div class="row">
@@ -155,7 +297,7 @@
             <img src="{{site.url}}/assets/images/neta.png" class="circle-img">
           </div>
           <div class="small-5 columns">
-            <img src="{{site.url}}/assets/images/politicians/narendra-modi.jpg" class="circle-img gs hv">
+            <img src="{{site.url}}/assets/images/politicians/narendra-modi.jpg" class="circle-img">
           </div>
         </div>
         <div class="row">
@@ -177,10 +319,11 @@
     </div>
 
     <div class="row">
+    <a name="answer-box"></a>
       <div class="small-3 columns text-right m-ws-top">
         <div class="row">
           <div class="small-5 small-offset-7 columns">
-            <img src="http://api.randomuser.me/portraits/med/men/9.jpg" class="circle-img gs hv">
+            <img src="http://api.randomuser.me/portraits/med/men/9.jpg" class="circle-img">
           </div>
         </div>
       </div>
@@ -193,33 +336,33 @@
 
   </div>
   <div class="small-2 columns b-ws-top">
-    <div class="button small fullwidth">Add Answer</div>
+    <a href="#answer-box" class="button small fullwidth">Add Answer</a>
     <h5>Question Stats</h5>
     <div class="row">
       <div class="small-6 columns text-right secondary">
-      Views: 
+        Views: 
       </div>
       <div class="small-6 columns">
-      512
+        512
       </div>
     </div>
     <div class="row">
       <div class="small-6 columns text-right secondary">
-      Followers: 
+        Followers: 
       </div>
       <div class="small-6 columns">
-      35
+        35
       </div>
     </div>
     <div class="row">
       <div class="small-6 columns text-right secondary">
-      Last Activity: 
+        Last Activity: 
       </div>
       <div class="small-6 columns">
-      3 days ago
+        3 days ago
       </div>
     </div>
-    
+
   </div>
 
 </div>
@@ -232,6 +375,10 @@
 </script>
 <script>
   $( document ).ready(function() {
+    $('.list-qa h4').click(function(){
+      $('#list-qa-view').fadeOut(300);
+      $('#single-qa-view').delay(300).fadeIn(300);
     });
+  });
 </script>
 </html>

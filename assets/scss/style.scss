@@ -196,11 +196,19 @@ i{
 	filter: grayscale(100%);
 	transition:all 2s;
 	&.hv{
-		&.hover{
+		&:hover{
 			-webkit-filter: grayscale(0%);
 			-moz-filter: grayscale(0%);
 			filter: grayscale(0%);
 			transition:all 2s;
+		}
+	}
+}
+.list-qa{
+	h4{
+		cursor: pointer;
+		&:hover{
+			color:$blue;
 		}
 	}
 }
@@ -315,6 +323,8 @@ input{
 .button{
 	font-weight:bold;
 	border-radius:2px !important;
+	padding-top:0.5rem;
+	padding-bottom:0.5rem;
 	&:hover{
 		color:$white;
 	}
@@ -383,6 +393,9 @@ input{
 }
 .circle-img{
 	border-radius:50%;
+}
+.img-h{
+	width:50%;
 }
 #map{
 	height:400px;
