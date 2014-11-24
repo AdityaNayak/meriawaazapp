@@ -236,6 +236,12 @@ i{
 .yc{
 	color:$yellow !important;
 }
+.gc{
+	color:$green !important;
+}
+.rc{
+	color:$red !important;
+}
 .bc{
 	color:$blue !important;
 }
@@ -279,6 +285,10 @@ i{
 			border:none;
 		}
 	}
+}
+.status-box{
+	padding:0.5rem 0;
+	background:$darkwhite;
 }
 .f-dropdown{
 	input{
