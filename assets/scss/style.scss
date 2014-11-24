@@ -233,6 +233,9 @@ i{
 .b-ws-bottom{
 	margin-bottom:3em;
 }
+.bbr{
+	border:2px solid $darkblue;
+}
 .yc{
 	color:$yellow !important;
 }
@@ -286,9 +289,11 @@ i{
 		}
 	}
 }
-.status-box{
-	padding:0.5rem 0;
-	background:$darkwhite;
+.secondary-panel{
+	padding-top:0.5rem;
+	background:$lightgrey;
+	padding-bottom:0.5rem;
+	border-radius:$global-radius;
 }
 .f-dropdown{
 	input{
@@ -308,20 +313,33 @@ input{
 	}
 }
 .button{
+	font-weight:bold;
+	border-radius:2px !important;
+	&:hover{
+		color:$white;
+	}
+	&.success{
+		background:$white;
+		color:$green;
+		&:hover{
+			color:$white;
+		}
+	}
+	&.secondary{
+		color:$black;
+		&:hover{
+			color:$darkgrey;
+		}
+	}
+}
+.postfix{
 	&.lead{
 		height: 3rem;
 		line-height: 3;
-	}
-	&.v2{
-		background:none;
-		color:$blue;
-		border:2px solid $blue;
-		border-radius:3px;
-		padding:0.5rem 1rem;
-		transition: all 2s;
+		font-weight: bold;
 		&:hover{
-			background:rbga($blue, 0.4);
-			transition: all 2s;
+			background:rgba($blue,0.6);
+			color:$white;
 		}
 	}
 }

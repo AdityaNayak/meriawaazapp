@@ -56,7 +56,7 @@
   </div>
   <div class="small-7 columns s-ws-top">
     <div id="map-view" class="panel p-fx">
-      <img src="http://placehold.it/1600x900">
+      <img src="http://placehold.it/1600x900&text=map">
       <!-- <div id="map" style="width:100%">  </div> -->
     </div>
     <div id="list-view" class="panel p-fx" style="display:none;">
@@ -99,7 +99,7 @@
       <h2>'Issue Type' Issue<small> Issue ID (incrementally assigned)</small></h2>
       <div class="row">
         <div class="small-6 s-ws-top columns">
-          <img src="http://placehold.it/1600x900">
+          <img src="http://placehold.it/1600x900&text=bigIssueImage">
         </div>
         <div class="small-6 columns s-ws-top">
           <p> A long paragraph that shows the issue content</p>
@@ -141,8 +141,10 @@
     </div>
     <div class="row">
       <div class="small-12 columns s-ws-top">
-        <a href="#" class="button v2" id="claim-st1"><strong>Claim</strong></a>
-        <a href="#" class="button v2" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></a>
+      <div class="text-center">
+        <div class="button v2" id="claim-st1"><strong>Claim</strong></div>
+        <div class="button v2" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
+        </div>
         <ul id="drop1" class="medium f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
           <datalist id="team">
             <option value="user 1"></option>
@@ -158,7 +160,7 @@
     </div>
     <div class="row">
       <div class="small-12 columns s-ws-top hod">
-        <img src="http://placehold.it/1600x900">
+        <img src="http://placehold.it/1600x900&text=issueImage">
       </div>
     </div>
     <div class="row secondary">
@@ -227,8 +229,8 @@
 
     });
     $('#claim-st1').click(function(){
-      $('#claim-st1').fadeOut();
-      $('#claim-st2').delay().fadeIn();
+      $('#claim-st1').fadeOut(400);
+      $('#claim-st2').delay(400).fadeIn(400);
     });
     $('.list-table tbody tr').click(function() {
       $('#list-view').fadeOut();

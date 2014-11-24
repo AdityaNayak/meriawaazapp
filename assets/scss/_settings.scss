@@ -121,7 +121,7 @@ $include-html-global-classes: $include-html-classes;
 
 
 $grey: #dcdcdc;
-$lightgrey: #FAFBFC;
+$lightgrey: scale-color($black, $lightness:96%);
 $darkgrey: scale-color($black, $lightness:30%);
 
 $yellow: #fbb82d;
@@ -453,8 +453,8 @@ $darkwhite: rgba(186, 182, 176, 0.2);
 
 // We use these to control button text styles.
 // $button-font-family: $body-font-family;
-// $button-font-color: $white;
- $button-font-color-alt: $black;
+ $button-font-color: $blue;
+ $button-font-color-alt: $blue;
  $button-font-tny: rem-calc(12);
  $button-font-sml: rem-calc(14);
 // $button-font-med: rem-calc(16);
@@ -467,17 +467,25 @@ $darkwhite: rgba(186, 182, 176, 0.2);
 $button-function-factor: 20%;
 
 // We use these to control button border and hover styles.
- $button-border-width: 0px 0px 3px 0px;
+ $button-border-width: 2px;
 // $button-border-style: solid;
-// $button-bg-color: $primary-color;
-// $button-bg-hover: scale-color($button-bg-color, $lightness: $button-function-factor);
- $button-border-color: $darkblue;
+ $button-bg-color: $white;
+// $button-bg-hover: scale-color($button-bg-color, $lightness: -$button-function-factor);
+ $button-bg-hover: rgba($blue,0.6);
+ $button-border-color: $blue;
 // $secondary-button-bg-hover: scale-color($secondary-color, $lightness: $button-function-factor);
 // $secondary-button-border-color: $secondary-button-bg-hover;
 // $success-button-bg-hover: scale-color($success-color, $lightness: $button-function-factor);
 // $success-button-border-color: $success-button-bg-hover;
 // $alert-button-bg-hover: scale-color($alert-color, $lightness: $button-function-factor);
 // $alert-button-border-color: $alert-button-bg-hover;
+
+$secondary-button-bg-hover: rgba($grey,0.6);
+ $secondary-button-border-color: $grey;
+ $success-button-bg-hover: rgba($green,0.6);
+ $success-button-border-color: $green;
+ $alert-button-bg-hover: rgba($red,0.6);
+ $alert-button-border-color: $red;
 
 // We use this to set the default radius used throughout the core.
 // $button-radius: $global-radius;
@@ -655,13 +663,13 @@ $input-font-size: rem-calc(16);
 $input-border-color: $grey;
 $input-focus-border-color: $primary-color;
 // $input-border-style: solid;
-// $input-border-width: 1px;
-// $input-border-radius: $global-radius;
+ $input-border-width: 2px;
+ $input-border-radius: $global-radius;
 // $input-disabled-bg: $gainsboro;
 // $input-disabled-cursor: $cursor-default-value;
 // $input-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
 $input-disabled-bg: $grey;
-$input-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+$input-box-shadow: none;
 $input-include-glowing-effect: false;
 
 // We use these to style the fieldset border and spacing.
@@ -686,6 +694,13 @@ $fieldset-margin: 0px;
 // $input-prefix-overflow: hidden;
 // $input-prefix-font-color: $oil;
 // $input-prefix-font-color-alt: $white;
+
+ $input-prefix-border-color: $blue;;
+ $input-prefix-border-size: 2px;
+ $input-prefix-border-type: solid;
+// $input-prefix-overflow: hidden;
+ $input-prefix-font-color: $blue;
+ $input-prefix-font-color-alt: $blue;
 
 // We use this setting to turn on/off HTML5 number spinners (the up/down arrows)
 // $input-number-spinners: true;
