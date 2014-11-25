@@ -21175,7 +21175,7 @@ p {
   font-family: inherit;
   font-weight: 300;
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.5;
   margin-bottom: 1.25rem;
   text-rendering: optimizeLegibility;
 }
@@ -21297,7 +21297,7 @@ ul,
 ol,
 dl {
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.5;
   margin-bottom: 1.25rem;
   list-style-position: outside;
   font-family: inherit;
@@ -21418,7 +21418,7 @@ blockquote cite a:visited {
 /* line 418, ../bower_components/foundation/scss/foundation/components/_type.scss */
 blockquote,
 blockquote p {
-  line-height: 1.6;
+  line-height: 1.5;
   color: #9a9189;
 }
 
@@ -22180,7 +22180,7 @@ p {
   font-family: inherit;
   font-weight: 300;
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.5;
   margin-bottom: 1.25rem;
   text-rendering: optimizeLegibility;
 }
@@ -22302,7 +22302,7 @@ ul,
 ol,
 dl {
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.5;
   margin-bottom: 1.25rem;
   list-style-position: outside;
   font-family: inherit;
@@ -22423,7 +22423,7 @@ blockquote cite a:visited {
 /* line 418, ../bower_components/foundation/scss/foundation/components/_type.scss */
 blockquote,
 blockquote p {
-  line-height: 1.6;
+  line-height: 1.5;
   color: #9a9189;
 }
 
@@ -24549,35 +24549,39 @@ input.lead {
 .circle-img {
   border-radius: 50%;
 }
+/* line 393, ../scss/style.scss */
+.circle-img.pd {
+  padding: 0.5rem;
+}
 
-/* line 394, ../scss/style.scss */
+/* line 397, ../scss/style.scss */
 .img-h {
   width: 50%;
 }
 
-/* line 397, ../scss/style.scss */
+/* line 400, ../scss/style.scss */
 #map {
   height: 400px;
   width: 680px;
 }
 
-/* line 401, ../scss/style.scss */
+/* line 404, ../scss/style.scss */
 .fx1 {
   vertical-align: super;
   margin-right: 5px;
   margin-left: 5px;
 }
 
-/* line 407, ../scss/style.scss */
+/* line 410, ../scss/style.scss */
 .home-showcase .small-4 {
   cursor: pointer;
 }
-/* line 410, ../scss/style.scss */
+/* line 413, ../scss/style.scss */
 .home-showcase .active {
   border-bottom: 3px solid #dcdcdc;
   padding-bottom: 1em;
 }
-/* line 416, ../scss/style.scss */
+/* line 419, ../scss/style.scss */
 .home-showcase img {
   max-height: 50px;
 }

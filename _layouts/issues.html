@@ -144,6 +144,7 @@
       <div class="text-center">
         <div class="button v2 fullwidth" id="claim-st1"><strong>Claim</strong></div>
         <div class="button v2 fullwidth" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
+        <div id="claim-st3">Assigned to: <strong>Username</strong></div>
         </div>
         <ul id="drop1" class="medium f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
           <datalist id="team">
@@ -231,6 +232,11 @@
     $('#claim-st1').click(function(){
       $('#claim-st1').fadeOut(400);
       $('#claim-st2').delay(400).fadeIn(400);
+    });
+    $('#drop1 li a').click(function(){
+      event.preventDefault();
+      $('#claim-st2').fadeOut(400);
+      $('#claim-st3').delay(400).fadeIn(400);
     });
     $('.list-table tbody tr').click(function() {
       $('#list-view').fadeOut();

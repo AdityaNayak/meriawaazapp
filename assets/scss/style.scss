@@ -390,6 +390,9 @@ input{
 }
 .circle-img{
 	border-radius:50%;
+	&.pd{
+		padding:0.5rem;
+	}
 }
 .img-h{
 	width:50%;
