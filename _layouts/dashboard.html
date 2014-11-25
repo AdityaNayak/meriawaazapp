@@ -5,101 +5,196 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard | Meri Awaaz</title>
 
-{% include header.html %}
+  {% include header.html %}
 
-Textbox to update status
-past statuses
-current view
+  <div class="row">
+    <div class="small-3 columns text-right">
+      <div class="row">
+        <div class="small-5 small-offset-7 columns s-ws-top">
+          <img src="{{site.url}}/assets/images/politicians/narendra-modi.jpg" class="circle-img">
+        </div>
+      </div>
+      <h3>Narendra Modi</h3>
+      <h5>Bhartiya Janta Party</h5>
+      <h5 class="secondary-color">Lok Sabha</h5>
+      <h5 class="secondary-color">Vadodra</h5>
+      <hr>
+      <select>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+        <option value="year">This Year</option>
+        <option value="lifetime">Lifetime</option>
+      </select>
+      <div class="row collapse">
+        <div class="small-6 columns"><span class="f-2x bgc">365 </span>followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
+      </div>
+      <div class="row collapse">
+        <div class="small-6 columns"><span class="f-2x bc">45 </span>interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
+      </div>
+      <div class="row collapse">
+        <div class="small-6 columns"><span class="f-2x dbc">5 </span>actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
+      </div>
+    </div>
+    <div class="small-6 columns">
+      <div class="panel">
+        <h4 class="dbc">Connect with your Voters <small>Say something inspiring</small></h4>
+        <textarea rows="4"></textarea>
+        <div class="text-right">
+          <div class="button nm">Send Update</div>
+        </div>
+      </div>
+      
+      <div class="panel">
+        <div class="row">
+          <div class="small-9 columns">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          </div>
+          <div class="small-3 columns secondary-color">
+            <div class="row">
+              <div class="small-12 columns secondary-color text-right">
+                44 min ago
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="small-8 columns text-right secondary">
+                Reach
+              </div>
+              <div class="small-4 columns">
+                871
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-8 columns text-right secondary">
+                Likes
+              </div>
+              <div class="small-4 columns">
+                87
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-8 columns text-right">
+                Comments
+              </div>
+              <div class="small-4 columns">
+                8
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="row">
+          <div class="small-9 columns">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          </div>
+          <div class="small-3 columns secondary-color">
+            <div class="row">
+              <div class="small-12 columns secondary-color text-right">
+                44 min ago
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="small-8 columns text-right secondary">
+                Reach
+              </div>
+              <div class="small-4 columns">
+                871
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-8 columns text-right secondary">
+                Likes
+              </div>
+              <div class="small-4 columns">
+                87
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-8 columns text-right">
+                Comments
+              </div>
+              <div class="small-4 columns">
+                8
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="small-3 columns">
+      <div class="panel">
+
+        <h5>Get Help</h5>
+        <a href="#">Contact</a> <br>
+        <a href="mailto:mahelp@mutinylabs.in">help@mutinylabs.in</a>
+        <div>Call 9999 999 999</div>
+      </div>
+      <hr>
+      <h5>Competitors</h5>
+      <select>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+        <option value="year">This Year</option>
+        <option value="lifetime">Lifetime</option>
+      </select>
+      <div class="row collapse">
+        <div class="small-3 columns">
+          <img src="http://api.randomuser.me/portraits/med/men/12.jpg" class="circle-img gs">
+        </div>
+        <div class="small-9 columns">
+          <h4>Ghansham Bhai <small>(34)</small></h4>
+          <h6>INC</h6>
+        </div>
+      </div>
+      <div class="row collapse tertiary">
+        <div class="small-6 columns"><span class="f-2x bgc">365 </span>followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
+      </div>
+      <div class="row collapse tertiary">
+        <div class="small-6 columns"><span class="f-2x bc">45 </span>interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
+      </div>
+      <div class="row collapse tertiary">
+        <div class="small-6 columns"><span class="f-2x dbc">5 </span>actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
+      </div>
+
+      <hr>
+
+      <div class="row collapse">
+        <div class="small-3 columns">
+          <img src="http://api.randomuser.me/portraits/med/men/16.jpg" class="circle-img gs">
+        </div>
+        <div class="small-9 columns">
+          <h4>Mota Bhai <small>(34)</small></h4>
+          <h6>AAP</h6>
+        </div>
+      </div>
+      <div class="row collapse tertiary">
+        <div class="small-6 columns"><span class="f-2x bgc">365 </span>followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
+      </div>
+      <div class="row collapse tertiary">
+        <div class="small-6 columns"><span class="f-2x bc">45 </span>interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
+      </div>
+      <div class="row collapse tertiary">
+        <div class="small-6 columns"><span class="f-2x dbc">5 </span>actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 {% include footer.html %} 
-<script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.dropdown.js"></script>
 <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
 
-  <script type="text/javascript">
-      $(document).foundation();
+<script type="text/javascript">
+  $(document).foundation();
 </script>
 
 <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
 <script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
-<script type="text/javascript" src="{{site.url}}/assets/js/daterangepicker.js"></script>
 <script>
   $( document ).ready(function() {
-    var numAnim1 = new countUp("fn1", 0, 44);
-    numAnim1.start();
-    var numAnim2 = new countUp("fn2", 0, 12);
-    numAnim2.start();
-    var numAnim3 = new countUp("fn3", 0, 19);
-    numAnim3.start();  
-    var numAnim4 = new countUp("fn4", 0, 108);
-    numAnim4.start();
-
-    $('input[name=maptglgroup]').change(function(){
-      if($(this).is(':checked'))
-      {
-        $('#map-view').fadeIn();
-        $('#list-view').delay().fadeOut();
-      }
-      else
-      {
-        $('#map-view').fadeOut();
-        $('#list-view').delay().fadeIn();
-      }    
-
-    });
-    $('.list-table tbody tr').click(function() {
-      $('#list-view').fadeOut();
-      $('label').addClass('gs');
-      $('input[type="checkbox"]').prop("checked", false);
-      $( "#law_cb" ).prop( "checked", true );
-      $('label[for="law_cb"]').removeClass('gs');
-      $( "#open_it" ).prop( "checked", true );
-      $('label[for="open_it"]').removeClass('gs');
-      $('#updates-view').delay().fadeIn();
-      $('.hod').fadeOut();
-    });
-
-    $('#reportrange').daterangepicker(
-    {
-      startDate: moment().subtract('days', 29),
-      endDate: moment(),
-      minDate: '01/01/2012',
-      maxDate: '12/31/2014',
-      dateLimit: { days: 60 },
-      showDropdowns: true,
-      showWeekNumbers: false,
-      timePicker: false,
-      timePickerIncrement: 1,
-      timePicker12Hour: true,
-      ranges: {
-       'Today': [moment(), moment()],
-       'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
-       'Last 7 Days': [moment().subtract('days', 6), moment()],
-       'Last 30 Days': [moment().subtract('days', 29), moment()],
-       'This Month': [moment().startOf('month'), moment()],
-       'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-       'This Year': [moment().startOf('year'), moment()]
-     },
-     opens: 'left',
-     format: 'MM/DD/YYYY',
-     separator: ' to ',
-     locale: {
-      applyLabel: 'Submit',
-      fromLabel: 'From',
-      toLabel: 'To',
-      customRangeLabel: 'Custom Range',
-      daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-      monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      firstDay: 1
-    }
-  },
-  function(start, end) {
-    console.log("Callback has been called!");
-    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-  }
-  );
-    //Set the initial state of the picker label
-    $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
   });
 </script>
 </html>
