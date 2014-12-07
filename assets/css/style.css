@@ -20,6 +20,15 @@ html {
   /* 2 */
 }
 
+.google-map img { 
+    max-width: none !important; 
+    height: auto !important; 
+    background: none !important;
+    border: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 /**
  * Remove default margin.
  */
