@@ -7,72 +7,15 @@ function initialize() {
     }
 }
 
-function setVisibility(id) {
-      if(id==0){
-  		$("#signin").fadeOut(400);
-    	$("#signup").delay(400).fadeIn(400);  
-          
-      }
-      else if(id==1){
-          $("#signup").fadeOut(400);
-          $("#signin").delay(400).fadeIn(400);
-      }
-}
-
 function loading() {
 	  console.log("I am shown!");
-	  document.getElementById("load").style.display = 'inline';  
+	  document.getElementById("loading-btn").style.display = 'inline';  
 }
 
 function hide(){
 	  console.log("Lets Hide!");	
-	  document.getElementById("load").style.display = 'none';
+	  document.getElementById("loading-btn").style.display = 'none';
 }
-
-function signup() {
-	  
-	  console.log("Inside Signup");
-	  loading();
-      var user = new Parse.User();
-	  var form = document.getElementById("signup-form")
-
-	  var email = form.email.value;
-	  var password = form.password.value;
-	  var confirmation = form.confirmation.value;
-
-	  if(confirmation != password){
-
-	  	setTimeout(hide, 3000);
-	  	//hide();
-	  	alert("Passwords don't match. Please try again!");
-	  	form.password.value="";
-	  	form.confirmation.value="";
-	  	return false;
-	  }
-
-	  user.set("username", email);
-	  user.set("password", password);
-	  user.set("email", email);
-	  console.log(email);
-
- 	  user.signUp(null, {
-	  	  success: function(user) {
-		    console.log("Sign Up Ho Gaya!");
-		    alert("Account Creation Successful. A verification mail has been sent to you. Please check your inbox to verify your email address after which you can log in here.");
-		    setVisibility(1);
-		    
-		  },
-		  error: function(user, error) {
-		  	
-		  	alert("An Error Occured! "+error.message);
-		    console.log("Error: " + error.code + " " + error.message);
-		  }
-	  });
-	  setTimeout(hide, 3000);
-	  //hide();
-      return false;
-}
-
 
 function login() {
 	  console.log("Inside Login");

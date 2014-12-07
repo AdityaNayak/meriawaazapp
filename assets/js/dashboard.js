@@ -20,7 +20,7 @@ function addMarker(){
              anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
        };
        var icon2 = {
-             url: iconURLPrefix + 'marker-2-o.png', // url
+             url: iconURLPrefix + 'marker-2.png', // url
              scaledSize: new google.maps.Size(width, height), // size
              origin: new google.maps.Point(0,0), // origin
              anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
@@ -38,13 +38,13 @@ function addMarker(){
              anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
        };
        var icon5 = {
-             url: iconURLPrefix + 'marker-5-o.png', // url
+             url: iconURLPrefix + 'marker-5.png', // url
              scaledSize: new google.maps.Size(width, height), // size
              origin: new google.maps.Point(0,0), // origin
              anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
        };
        var icon6 = {
-             url: iconURLPrefix + 'marker-6-o.png', // url
+             url: iconURLPrefix + 'marker-6.png', // url
              scaledSize: new google.maps.Size(width, height), // size
              origin: new google.maps.Point(0,0), // origin
              anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
@@ -59,12 +59,12 @@ function addMarker(){
        ]
 
        var icons_url = [
-                iconURLPrefix + 'marker-1-o.png',
-                iconURLPrefix + 'marker-2-o.png',
-                iconURLPrefix + 'marker-3-o.png',
-                iconURLPrefix + 'marker-4-o.png',
-                iconURLPrefix + 'marker-5-o.png',
-                iconURLPrefix + 'marker-6-o.png', 
+                iconURLPrefix + 'marker-1.png',
+                iconURLPrefix + 'marker-2.png',
+                iconURLPrefix + 'marker-3.png',
+                iconURLPrefix + 'marker-4.png',
+                iconURLPrefix + 'marker-5.png',
+                iconURLPrefix + 'marker-6.png', 
        ]
        
        var legend = document.getElementById('legend');
@@ -72,23 +72,23 @@ function addMarker(){
                     var name;
                     var icon;
                     if (i==0){
-                        name="sanitation";
+                        name="road";
                         icon=icons_url[0]; 
                     }
                     else if(i==1){
-                        name="law";
+                        name="electricity";
                         icon=icons_url[1]; 
                     }
                     else if(i==2){
-                        name="road";
+                        name="water";
                         icon=icons_url[2]; 
                     }
                     else if(i==3){
-                        name="electricity";
+                        name="law";
                         icon=icons_url[3]; 
                     }
                     else if(i==4){
-                        name="water";
+                        name="sanitation";
                         icon=icons_url[4]; 
                     }
                     else{
@@ -107,23 +107,23 @@ function addMarker(){
 				var object = results[i];
                 var myicon;
                 var mycategory;
-                if (object.get('category')=="sanitation"){
+                if (object.get('category')=="road"){
                     myicon=icons[0];
                     mycategory=0; 
                 }
-                else if(object.get('category')=="law"){
+                else if(object.get('category')=="electricity"){
                     myicon=icons[1];
                     mycategory=1;
                 }
-                else if(object.get('category')=="road"){
+                else if(object.get('category')=="water"){
                     myicon=icons[2];
                     mycategory=2;
                 }
-                else if(object.get('category')=="electricity"){
+                else if(object.get('category')=="law"){
                     myicon=icons[3];
                     mycategory=3;
                 }
-                else if(object.get('category')=="water"){
+                else if(object.get('category')=="sanitation"){
                     myicon=icons[4];
                     mycategory=4;
                 }
@@ -154,14 +154,37 @@ function addMarker(){
                             maxWidth: 700,
                             maxHeight: 900
                         });
-                        var line="<h3>Issue Details</h3><ul style='list-style: none;'><li><b>Created at: </b>"+object.createdAt+"</li><li><b>Category: </b>"+object.get('category')+"</li><li><b>Content: </b>"+object.get('content')+"</li><li><b>Location: </b>"+object.get('location').latitude+","+object.get('location').longitude+"</li><li><b>Uploads: </b><a href="+"'#'"+" target='_blank'>Image</a></li><li><b>Content: </b>"+object.get('googleId')+"</li></ul>";
-                        infowindow.setContent(line);
+                        //var line="<h3>Issue Details</h3><ul style='list-style: none;'><li><b>Created at: </b>"++"</li><li><b>Category: </b>"+object.get('category')+"</li><li><b>Content: </b>"+object.get('content')+"</li><li><b>Location: </b>"+object.get('location').latitude+","+object.get('location').longitude+"</li><li><b>Uploads: </b><a href="+"'#'"+" target='_blank'>Image</a></li><li><b>Email: </b>"+object.get('googleId')+"</li></ul>";
+                        var p_timestam=String(object.createdAt);
+                        var p_timestamp=p_timestam.split(" ");
+
+                        var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
+                        var p_time=p_timestamp[4];
+                        var p_content=object.get('content');
+                        var p_type=object.get('category');
+                        var p_location=object.get('location').latitude+","+object.get('location').longitude;
+                        var p_email=object.get('googleId');
+                        var p_photo=object.get('photo');
+
+                        infowindow.setContent("You Clicked me!");
                         infowindow.open(map, marker);
                         console.log("Ye Mila:");
                         console.log(object.get('category'));
-                        var data = document.getElementById('data');
-                        var division = document.createElement('div');
-                        data.innerHTML = line;
+                        var date=document.getElementById('date');
+                        var time=document.getElementById('time');
+                        var content=document.getElementById('content');
+                        var type=document.getElementById('type');
+                        var location=document.getElementById('location');
+                        var email=document.getElementById('email');
+                        var photo=document.getElementById('photo');
+                        photo.src="http://placehold.it/1600x900&text=issueImage";
+                        date.innerHTML = p_date;
+                        time.innerHTML = p_time;
+                        content.innerHTML = p_content;
+                        type.innerHTML = p_type;
+                        location.innerHTML = p_location;
+                        email.innerHTML = p_email;
+                        photo.src=p_photo.url();
                         
                     }
                 })(marker,object));
@@ -180,44 +203,45 @@ function logout(){
 }
 
 function filter(){
-    var box_s=document.getElementById('sanitation');
-    var box_l=document.getElementById('law');
-    var box_r=document.getElementById('road');
-    var box_e=document.getElementById('electricity');
-    var box_w=document.getElementById('water');
-    var box_t=document.getElementById('transportation');
+    
+    var box_r=document.getElementById('road_cb');
+    var box_e=document.getElementById('electricity_cb');
+    var box_w=document.getElementById('water_cb');
+    var box_l=document.getElementById('law_cb');
+    var box_s=document.getElementById('sanitation_cb');
+    var box_t=document.getElementById('transport_cb');
             
             for(var m=0;m<markers.length;m++){
                 console.log("Marker Value "+markers[m].props);
-                if(markers[m].props==0){
+                if(markers[m].props==4){
                     if(box_s.checked){
                         markers[m].setMap(map);
                     }else{
                         markers[m].setMap(null);
                     }
                 }
-                if(markers[m].props==1){
+                if(markers[m].props==3){
                     if(box_l.checked){
                         markers[m].setMap(map);
                     }else{
                         markers[m].setMap(null);
                     }
                 }
-                if(markers[m].props==2){
+                if(markers[m].props==0){
                     if(box_r.checked){
                         markers[m].setMap(map);
                     }else{
                         markers[m].setMap(null);
                     }
                 }
-                if(markers[m].props==3){
+                if(markers[m].props==1){
                     if(box_e.checked){
                         markers[m].setMap(map);
                     }else{
                         markers[m].setMap(null);
                     }
                 }
-                if(markers[m].props==4){
+                if(markers[m].props==2){
                     if(box_w.checked){
                         markers[m].setMap(map);
                     }else{
@@ -235,6 +259,11 @@ function filter(){
             }
       }  
 
+$('input[type=checkbox]').change(
+    function(){
+        filter();
+    });
+
 
 function initialize() {
     currentUser = Parse.User.current();
@@ -243,12 +272,14 @@ function initialize() {
         self.location="./login.html";
     }
     else{
+        console.log('ho gaya');
         hello.innerHTML = "Hi "+currentUser.get("username");
     	map = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,
         center: new google.maps.LatLng(28.612912,77.22951),
         mapTypeId: google.maps.MapTypeId.ROADMAP
         });
+        
     	var i=0;
     	setTimeout( function() {
             addMarker();
@@ -271,10 +302,13 @@ function initialize() {
     	            position: geolocpoint,
     	            map: map,
     	            title: 'You are here',
-    	            icon: geoicon
+    	            
     	        });
     	    });
         }
         //map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('legend'));
     }
 }
+
+initialize();
+

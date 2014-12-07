@@ -12,7 +12,7 @@
   </div>
   <div class="small-3 columns panel s-ws-top">
 
-    <div id="signin" style="display: none">
+    <div id="signin">
       <form class="s-ws-top" id="signin-form" onSubmit="login();">
         <div class="row">
           <div class="large-12 columns">
@@ -34,14 +34,15 @@
           </div>
         </div>
         <input type="submit" value="Sign In" id="signin-btn" class="button fullwidth small" /> 
-        <div id="loading-btn" class="fullwidth text-center" style="display:none;"><img src="{{site.url}}/assets/images/loading.gif"></div>   
+        <div id="loading-btn" class="fullwidth text-center" style="display:none;" align="center"><img src="{{site.url}}/assets/images/loading.gif"></div>   
       </form>
-      <div class="row">
+      <!--<div class="row">
         <div class="small-12 columns text-center">
           <a onclick='setVisibility(0);' class="secondary-color">or Sign up for a new account</a>
         </div>
-      </div>
+      </div>-->
     </div>
+    <!--
     <div id="signup">
       <form class="s-ws-top" id="signup-form" onSubmit="signup();">
         <div class="row">
@@ -76,6 +77,7 @@
         </div>
       </div>
     </div>
+    -->
 
   </div>
 </div>
@@ -172,8 +174,8 @@
   </div>
 
   {% include footer.html %}
-  <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
-
+  
+  <script type="text/javascript" src="{{site.url}}/assets/js/login.js"></script>
   <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
   <script>
     $( document ).ready(function() {
@@ -184,14 +186,16 @@
       var numAnim3 = new countUp("num3", 0, 19);
       numAnim3.start();
 
-      $('#signup-form').submit(function(){
-        $('#signup-btn').fadeOut();
-        $('#loading-btn').delay().fadeIn();
-      });
+      //$('#signup-form').submit(function(){
+      //  $('#signup-btn').fadeOut();
+      //  $('#loading-btn').delay().fadeIn();
+      //});
 
-      $('#signin-form').submit(function(){
+      $('#signin-form').submit(function(event){
+        event.preventDefault();
         $('#signin-btn').fadeOut();
         $('#loading-btn').delay().fadeIn();
+        login();
       });
     });</script>
     <script type="text/javascript">

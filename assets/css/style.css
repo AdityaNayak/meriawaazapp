@@ -2337,6 +2337,11 @@ img {
   max-width: none !important;
 }
 
+#map {
+   max-width: none !important;
+   max-height: none !important;
+}
+
 /* line 425, ../bower_components/foundation/scss/foundation/components/_global.scss */
 .left {
   float: left !important;
