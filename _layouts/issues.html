@@ -56,11 +56,11 @@
   </div>
   <div class="small-7 columns s-ws-top">
     <div id="map-view" class="panel p-fx">
-      <img src="http://placehold.it/1600x900&text=map">
-      <!-- <div id="map" style="width:100%">  </div> -->
+      <!--<img src="http://placehold.it/1600x900&text=map">-->
+      <div id="map" class="google-map" style="width:100%">  </div> 
     </div>
     <div id="list-view" class="panel p-fx" style="display:none;">
-      <table class="list-table">
+      <table class="list-table" id="list-view">
         <thead>
           <tr>
             <th width="100">Type</th>
@@ -161,33 +161,32 @@
     </div>
     <div class="row">
       <div class="small-12 columns s-ws-top hod">
-        <img src="http://placehold.it/1600x900&text=issueImage">
+        <img id="photo" src="http://placehold.it/1600x900&text=issueImage">
       </div>
     </div>
     <div class="row secondary">
       <div class="small-6 columns m-ws-top">
-        <i class="icon-calendar"></i> Oct 17 2014 
+        <i class="icon-calendar"></i> <div id="date">-</div>
       </div>
-      <div class="small-6 columns m-ws-top"><i class="icon-clock"></i> 01:09 AM</div>
+      <div class="small-6 columns m-ws-top"><i class="icon-clock"></i> <div id="time">-</div></div>
     </div>
     <div class="row hod">
       <div class="small-12 columns s-ws-top">
-        Type: <strong>Law and Order</strong>
+        Type: <div id="type">-</div>
       </div>
     </div>
     <div class="row hod">
       <div class="small-12 columns">
         <hr>
-        <p>Issue content</p>
+        <p><div id="content">-</div></p>
         <hr>
       </div>
     </div>
     <div class="row">
       <div class="small-12 columns secondary secondary-color">
-        <i class="icon-location"></i> 28.5462653, 77.2732673
-      </div>
+        <i class="icon-location"></i> <div id="location">-</div>
       <div class="small-12 columns s-ws-top">
-        <p>86/1, Sample Adress, Resolved through geo lookup</p>
+        <p>Email: <div id="email">-</div></p>
       </div>
     </div>
   </div>
