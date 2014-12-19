@@ -42,6 +42,9 @@ function login() {
 		  }
 	  });
 	  setTimeout(hide, 4000);
+	  $('input, textarea, select').focus(function() {
+        this.blur();
+      });
 	  //hide();
       return false;
 }
