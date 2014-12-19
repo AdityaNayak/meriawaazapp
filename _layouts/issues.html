@@ -56,7 +56,6 @@
   </div>
   <div class="small-7 columns s-ws-top">
     <div id="map-view" class="panel p-fx">
-      <!--<img src="http://placehold.it/1600x900&text=map">-->
       <div id="map" class="google-map" style="width:100%">  </div> 
     </div>
     <div id="list-view" class="panel p-fx" style="display:none;">
@@ -96,6 +95,7 @@
       </table>
     </div>
     <div id="updates-view" class="panel" style="display:none;">
+      <a id="back">Back</a>
       <h2>'Issue Type' Issue<small> Issue ID (incrementally assigned)</small></h2>
       <div class="row">
         <div class="small-6 s-ws-top columns">
@@ -131,7 +131,7 @@
       </div>
     </div>
   </div>
-  <div id="details-column" class="small-3 columns panel s-ws-top">
+  <div id="details-column" class="small-3 columns panel s-ws-top" style="display:none;">
     <h4>Details</h4>
     <div class="row">
       <div class="small-12 columns">
@@ -142,8 +142,8 @@
     <div class="row">
       <div class="small-12 columns s-ws-top">
       <div class="text-center">
-        <div class="button v2 fullwidth" id="claim-st1"><strong>Claim</strong></div>
-        <div class="button v2 fullwidth" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
+        <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
+        <div class="button fullwidth" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
         <div id="claim-st3">Assigned to: <strong>Username</strong></div>
         </div>
         <ul id="drop1" class="medium f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
@@ -220,6 +220,7 @@
       {
         $('#map-view').fadeIn(300);
         $('#list-view').delay(400).fadeOut(300);
+        $('#updates-view').delay().fadeOut();
       }
       else
       {
@@ -232,6 +233,20 @@
       $('#claim-st1').fadeOut(400);
       $('#claim-st2').delay(400).fadeIn(400);
     });
+
+    //$('#map').click(function(){
+      //$('#details-column').fadeOut(300);
+      //$('#details-column').fadeIn(300);
+      //$('#details-column').animate({ "left": "-=50px" }, "slow" ).fadeOut(300).animate({ "left": "+=100px" }, "slow" );
+      //$('#details-column').fadeIn(300).animate({ "left": "-=50px" }, "slow" );
+    //});
+
+    $('#back').click(function(){
+      $('#list-view').fadeIn(300);
+      $('#map-view').delay(400).fadeOut(300);
+      $('#updates-view').delay(400).fadeOut(300);
+    });
+
     $('#drop1 li a').click(function(){
       event.preventDefault();
       $('#claim-st2').fadeOut(400);

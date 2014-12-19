@@ -100,7 +100,7 @@ function addMarker(){
         query.find({
           success: function(results) {
             for (var i = 0; i < results.length; i++) { 
-				        var object = results[i];
+                        var object = results[i];
                 var myicon;
                 var mycategory;
                 if (object.get('category')=="road"){
@@ -129,16 +129,16 @@ function addMarker(){
                 }
                 
                 
-				    marker = new google.maps.Marker({
-					      position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
-					      map: map,
-                props: mycategory,
-				      	title: object.get('category'),
-                content: object,
-                icon : myicon,
-					      draggable: false,
-        			  animation: google.maps.Animation.DROP
-				    });
+                    marker = new google.maps.Marker({
+                          position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
+                          map: map,
+                          props: mycategory,
+                          title: object.get('category'),
+                          content: object,
+                          icon : myicon,
+                          draggable: false,
+                          animation: google.maps.Animation.DROP
+                    });
 
             markers.push(marker);
             google.maps.event.addListener(marker, 'click', (function(marker,object) {
@@ -150,6 +150,7 @@ function addMarker(){
                          maxWidth: 700,
                          maxHeight: 900
                      });
+
                      var p_timestam=String(object.createdAt);
                      var p_timestamp=p_timestam.split(" ");
                      var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
@@ -160,6 +161,7 @@ function addMarker(){
                      var p_email=object.get('googleId');
                      var p_photo=object.get('photo');
                      infowindow.setContent("You Clicked me!");
+                     DetailsColumn();
                      infowindow.open(map, marker);
                      console.log("Ye Mila:");
                      console.log(object.get('category'));
@@ -171,24 +173,29 @@ function addMarker(){
                      var email=document.getElementById('email');
                      var photo=document.getElementById('photo');
                      photo.src="http://placehold.it/1600x900&text=issueImage";
-                     date.innerHTML = p_date;
-                     time.innerHTML = p_time;
-                     content.innerHTML = p_content;
-                     type.innerHTML = p_type;
-                     location.innerHTML = p_location;
-                     email.innerHTML = p_email;
-                     photo.src=p_photo.url();
-                      
+                     setTimeout(function(){
+                             date.innerHTML = p_date;
+                             time.innerHTML = p_time;
+                             content.innerHTML = p_content;
+                             type.innerHTML = p_type;
+                             location.innerHTML = p_location;
+                             email.innerHTML = p_email;
+                             photo.src=p_photo.url(); 
+                    },300); 
                  }
              })(marker,object));
-			      }
+                  }
           },
           error: function(error) {
           }
         });
 }
 
-
+function DetailsColumn(){
+    console.log("Effect Starts");
+    $('#details-column').fadeOut(300);
+    $('#details-column').fadeIn(300);
+}
 
 function timeSince(date) {
 
@@ -318,14 +325,14 @@ function initialize() {
     else{
         console.log('ho gaya');
         hello.innerHTML = "Hi "+currentUser.get("username");
-    	  map = new google.maps.Map(document.getElementById('map'), {
+          map = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,
         center: new google.maps.LatLng(28.612912,77.22951),
         mapTypeId: google.maps.MapTypeId.ROADMAP
         });
         
-    	  var i=0;
-    	  setTimeout( function() {
+          var i=0;
+          setTimeout( function() {
             addMarker();
             populateList();
         }, i * 500);
@@ -343,16 +350,15 @@ function initialize() {
                      origin: new google.maps.Point(0,0), // origin
                      anchor: new google.maps.Point(0,0) // anchor 
                 };
-    	        var geolocation = new google.maps.Marker({
-    	            position: geolocpoint,
-    	            map: map,
-    	            title: 'You are here',
-    	            
-    	        });
-    	    });
+                var geolocation = new google.maps.Marker({
+                    position: geolocpoint,
+                    map: map,
+                    title: 'You are here',
+                    
+                });
+            });
         }
     }
 }
 
 initialize();
-
