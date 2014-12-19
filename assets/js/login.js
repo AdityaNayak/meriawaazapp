@@ -20,6 +20,7 @@ function hide(){
 }
 
 function login() {
+	  NProgress.start();
 	  console.log("Inside Login");
 	  loading();
 	  var form = document.getElementById("signin-form")
@@ -33,14 +34,17 @@ function login() {
 	          console.log("Log In Ho Gaya!");
 	          currentUser = Parse.User.current();
 	          self.location="./dashboard.html";
+	          NProgress.done();
 	        },
 		  error: function(user, error) {
+		  	  NProgress.done();
 		  	  if(error.code==101){
 		  	  	alert("An Error Occured! "+error.message);
 		  	  }	
 		      console.log("Error: " + error.code + " " + error.message);
 		  }
 	  });
+
 	  setTimeout(hide, 4000);
 	  $('#signin-btn').focus(function() {
         this.blur();
