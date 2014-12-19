@@ -42,7 +42,7 @@ function login() {
 		  }
 	  });
 	  setTimeout(hide, 4000);
-	  $('signin-btn').focus(function() {
+	  $('#signin-btn').focus(function() {
         this.blur();
       });
 	  //hide();
