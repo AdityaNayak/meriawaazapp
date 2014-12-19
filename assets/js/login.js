@@ -35,11 +35,13 @@ function login() {
 	          self.location="./dashboard.html";
 	        },
 		  error: function(user, error) {
-		  	  alert("An Error Occured! "+error.message);
+		  	  if(error.code==101){
+		  	  	alert("An Error Occured! "+error.message);
+		  	  }	
 		      console.log("Error: " + error.code + " " + error.message);
 		  }
 	  });
-	  setTimeout(hide, 3000);
+	  setTimeout(hide, 4000);
 	  //hide();
       return false;
 }
