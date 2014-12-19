@@ -42,7 +42,7 @@ function login() {
 		  }
 	  });
 	  setTimeout(hide, 4000);
-	  $('input, textarea, select').focus(function() {
+	  $('signin-btn').focus(function() {
         this.blur();
       });
 	  //hide();
