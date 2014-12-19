@@ -12,8 +12,8 @@
 @charset "UTF-8";
 
 // Behold, here are all the Foundation components.
-//@import
-//  "foundation/components/accordion",
+//@imports
+//3"foundation/components/accordion",
 //"foundation/components/alert-boxes",
 //"foundation/components/block-grid",
 //"foundation/components/breadcrumbs",
@@ -340,6 +340,10 @@ input{
 		&:hover{
 			color:$darkgrey;
 		}
+	}
+	&.loading{
+		background:url('../assets/images/loading.gif') no-repeat;
+		background-position:top left;
 	}
 }
 .postfix{
