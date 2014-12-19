@@ -8,13 +8,15 @@ function initialize() {
 }
 
 function loading() {
-	  console.log("I am shown!");
-	  document.getElementById("loading-btn").style.display = 'inline';  
+	  console.log("I am changing the Inner Html Content");
+	  //$('#signin-btn').innerHTML = "Loading...";
+	  document.getElementById("signin-btn").value = "Loading...";  
 }
 
 function hide(){
-	  console.log("Lets Hide!");	
-	  document.getElementById("loading-btn").style.display = 'none';
+	  console.log("Lets changing the Inner Html Content back!");	
+	  //$('#signin-btn').innerHTML = "Sign In";
+	  document.getElementById("signin-btn").value = "Sign In";
 }
 
 function login() {

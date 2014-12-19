@@ -132,12 +132,12 @@ function addMarker(){
 				    marker = new google.maps.Marker({
 					      position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
 					      map: map,
-                props: mycategory,
-				      	title: object.get('category'),
-                content: object,
-                icon : myicon,
+                          props: mycategory,
+				      	  title: object.get('category'),
+                          content: object,
+                          icon : myicon,
 					      draggable: false,
-        			  animation: google.maps.Animation.DROP
+        			      animation: google.maps.Animation.DROP
 				    });
 
             markers.push(marker);
@@ -150,6 +150,7 @@ function addMarker(){
                          maxWidth: 700,
                          maxHeight: 900
                      });
+
                      var p_timestam=String(object.createdAt);
                      var p_timestamp=p_timestam.split(" ");
                      var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
@@ -160,6 +161,7 @@ function addMarker(){
                      var p_email=object.get('googleId');
                      var p_photo=object.get('photo');
                      infowindow.setContent("You Clicked me!");
+                     DetailsColumn();
                      infowindow.open(map, marker);
                      console.log("Ye Mila:");
                      console.log(object.get('category'));
@@ -171,14 +173,15 @@ function addMarker(){
                      var email=document.getElementById('email');
                      var photo=document.getElementById('photo');
                      photo.src="http://placehold.it/1600x900&text=issueImage";
-                     date.innerHTML = p_date;
-                     time.innerHTML = p_time;
-                     content.innerHTML = p_content;
-                     type.innerHTML = p_type;
-                     location.innerHTML = p_location;
-                     email.innerHTML = p_email;
-                     photo.src=p_photo.url();
-                      
+                     setTimeout(function(){
+                             date.innerHTML = p_date;
+                             time.innerHTML = p_time;
+                             content.innerHTML = p_content;
+                             type.innerHTML = p_type;
+                             location.innerHTML = p_location;
+                             email.innerHTML = p_email;
+                             photo.src=p_photo.url(); 
+                    },300); 
                  }
              })(marker,object));
 			      }
@@ -188,7 +191,11 @@ function addMarker(){
         });
 }
 
-
+function DetailsColumn(){
+    console.log("Effect Starts");
+    $('#details-column').fadeOut(300);
+    $('#details-column').fadeIn(300);
+}
 
 function timeSince(date) {
 

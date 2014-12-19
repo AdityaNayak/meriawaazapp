@@ -34,7 +34,7 @@
           </div>
         </div>
         <input type="submit" value="Sign In" id="signin-btn" class="button fullwidth small" /> 
-        <div id="loading-btn" class="fullwidth text-center" style="display:none;" align="center"><img src="{{site.url}}/assets/images/loading.gif"></div>   
+        <!--<div id="loading-btn" class="fullwidth text-center" style="display:none;" align="center"><img src="{{site.url}}/assets/images/loading.gif"></div>-->
       </form>
       <!--<div class="row">
         <div class="small-12 columns text-center">
@@ -193,8 +193,8 @@
 
       $('#signin-form').submit(function(event){
         event.preventDefault();
-        $('#signin-btn').fadeOut();
-        $('#loading-btn').delay().fadeIn();
+        //$('#signin-btn').fadeOut();
+        //$('#loading-btn').delay().fadeIn();
         login();
       });
     });</script>
