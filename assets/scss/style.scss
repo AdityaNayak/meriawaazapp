@@ -50,6 +50,7 @@
 //"foundation/components/visibility";
 
 @import "daterangepicker";
+@import "nprogress";
 
 //@import "foundation-icons";
 
@@ -342,8 +343,9 @@ input{
 		}
 	}
 	&.loading{
-		background:url('../assets/images/loading.gif') no-repeat;
+		background:url('../images/loading.gif') no-repeat;
 		background-position:top left;
+		outline: none;
 	}
 }
 .postfix{
