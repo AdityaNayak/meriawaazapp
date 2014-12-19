@@ -172,7 +172,7 @@ function addMarker(){
                      var location=document.getElementById('location');
                      var email=document.getElementById('email');
                      var photo=document.getElementById('photo');
-                     photo.src="http://placehold.it/1600x900&text=issueImage";
+                     photo.src="http://placehold.it/400x225&text=No+Image";
                      setTimeout(function(){
                              date.innerHTML = p_date;
                              time.innerHTML = p_time;

@@ -10,7 +10,7 @@ function initialize() {
 function loading() {
 	  console.log("I am changing the Inner Html Content");
 	  //$('#signin-btn').innerHTML = "Loading...";
-	  document.getElementById("signin-btn").value = "Loading...";  
+	  document.getElementById("signin-btn").value = "Loading...";
 }
 
 function hide(){
