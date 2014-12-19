@@ -1,131 +1,211 @@
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard | Meri Awaaz</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <!-- <script src="bower_components/modernizr/modernizr.js"></script> -->
-    <meta name="twitter:card" content="app">
-    <meta name="twitter:description" content="Making governance Accessible and Accountable through mobile access">
-    <meta name="twitter:app:country" content="India">
-	<!--  <meta name="twitter:app:name:iphone" content="Meri Awaaz">
-	<meta name="twitter:app:id:iphone" content="306934135">
-	<meta name="twitter:app:url:iphone" content="example://action/5149e249222f9e600a7540ef">
-	<meta name="twitter:app:name:ipad" content="Meri Awaaz">
-	<meta name="twitter:app:id:ipad" content="306934135">
-	<meta name="twitter:app:url:ipad" content="example://action/5149e249222f9e600a7540ef"> -->
-	<meta name="twitter:app:name:googleplay" content="Meri Awaaz | my voice. my right.">
-	<meta name="twitter:app:id:googleplay" content="com.meriawaaz.mygap">
-	<meta name="twitter:app:url:googleplay" content="https://play.google.com/store/apps/details?id=com.meriawaaz.mygap">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | Meri Awaaz</title>
 
-	<meta property="og:title" content="Meri Awaaz | my voice. my right."/>
-	<meta property="og:image" content="http://dl.dropboxusercontent.com/u/37351082/fb-logo.png"/>
-	<meta property="og:site_name" content="Meri Awaaz | my voice. my right."/>
-	<meta property="og:description" content="Meri Awaaz is a movement of social change to make governance delivery accessible and accountable. Using the app, people can report issues about roads, electricity, water, law and order, sanitation, transportation and the system detects the location automatically and allows users to submit other details like photos and complaints."/>
-	<meta property="og:type" content="website" />
-	<meta property="og:url" content="http://meriawaazapp.com/" />
-	<meta property="fb:app_id" content="261087750752180" />
+  {% include header.html %}
 
-	<link rel="icon" type="image/png" href="http://meriawaazapp.com/assets/images/favicon.png">
-    <!--[if IE]><link rel="shortcut icon" href="http://meriawaazapp.com/assets/images/favicon.ico"/><![endif]-->
-    
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-45177246-4', 'auto');
-      ga('send', 'pageview');
-  </script>
-  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
-  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-  <link rel="stylesheet" href="assets/css/login.css">
-      <script>
-    $(document).ready(function(){
-      $("#filter-form").submit(function(event){
-        event.preventDefault();
-      });
-
-    });
-    </script>
-</head>
-<body class="dashboard" onload="initialize()">
-    <div class="header-top">
+  <div class="row">
+    <div class="small-3 columns text-right">
+      <div class="row">
+        <div class="small-5 small-offset-7 columns s-ws-top">
+          <img src="{{site.url}}/assets/images/politicians/narendra-modi.jpg" class="circle-img">
+        </div>
+      </div>
+      <h3>Narendra Modi</h3>
+      <h5>Bhartiya Janta Party</h5>
+      <h5 class="secondary-color">Lok Sabha 2014</h5>
+      <h5 class="secondary-color">Vadodra, <small>Gujarat</small></h5>
+      <hr>
+      <select>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+        <option value="year">This Year</option>
+        <option value="lifetime">Lifetime</option>
+      </select>
+      <div class="row collapse">
+        <div class="small-6 columns"><span class="f-2x bgc">365 </span>followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
+      </div>
+      <div class="row collapse">
+        <div class="small-6 columns"><span class="f-2x bc">45 </span>interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
+      </div>
+      <div class="row collapse">
+        <div class="small-6 columns"><span class="f-2x dbc">5 </span>actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
+      </div>
+    </div>
+    <div class="small-6 columns">
+      <div class="panel">
+        <h4 class="dbc">Connect with your Voters</h4>
+        <textarea rows="4" placeholder="Say something that inspires change"></textarea>
+        <div class="text-right">
+          <div class="button nm">Send Update</div>
+        </div>
+      </div>
+      
+      <div class="panel">
         <div class="row">
-            <div class="small-2 columns ">
-                <a href="{{site.url}}"><img src="assets/images/logo-full.png" alt="Meri Awaaz"></a>
+          <div class="small-9 columns">
+            <p class="secondary-color">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          </div>
+          <div class="small-3 columns secondary-color">
+            <div class="row">
+              <div class="small-12 columns secondary-color tertiary text-right">
+                44 min ago
+              </div>
             </div>
-            <div class="small-2 columns" align="left">
-                <div id="hello">
-                </div>
-                <div id="logout">
-                    <a onClick="logout();">Logout</a>
-                </div>
+            <hr>
+            <div class="row">
+              <div class="small-8 columns text-right tertiary">
+                Reach
+              </div>
+              <div class="small-4 columns secondary">
+                871
+              </div>
             </div>
-        </div>
-    </div>
-    <!--<div id="legend" style="background: white; padding: 10px;">-->
-    </div>
-    <div class="row s-ws-top">
-    	<div class="small-7 columns">
-        	<div id="map" style="width:100%">
-    		</div>
-    	</div>
-    	<div class="small-5 columns">
-        <div>
-          <div id="filterbox">
-            <h3>Issue Filters</h3>
-            <form class="filter-form" id="filter-form" onSubmit="filter();">
-              <table style="width:100%;">
-                <tr>
-                  <td><img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png"><input type="checkbox" id="sanitation" checked='true'> Sanitation</td>
-                  <td><img src="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"><input type="checkbox" id="law" checked='true'> Law </td>
-                </tr>
-                <tr>
-                  <td><img src="http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"><input type="checkbox" id="road" checked='true'> Road </td>
-                  <td><img src="http://maps.google.com/mapfiles/ms/icons/green-dot.png"><input type="checkbox" id="electricity" checked='true'> Electricity</td>
-                </tr>
-                <tr>
-                  <td><img src="http://maps.google.com/mapfiles/ms/icons/purple-dot.png"><input type="checkbox" id="water" checked='true'> Water </td>
-                  <td><img src="http://maps.google.com/mapfiles/ms/icons/pink-dot.png"><input type="checkbox" id="transportation" checked='true'> Transportation</td>
-                </tr>
-              </table> 
-              <input type="submit" value="Filter" /> </li>
-            </ul>
-            </form>
-        </div>
-        <div id="filterbox">
-        	 	<div id="data">
-              <h3>Click on a marker for more details.</h3>
+            <div class="row">
+              <div class="small-8 columns text-right tertiary">
+                Likes
+              </div>
+              <div class="small-4 columns secondary">
+                87
+              </div>
             </div>
+            <div class="row">
+              <div class="small-8 columns text-right tertiary">
+                Comments
+              </div>
+              <div class="small-4 columns secondary">
+                8
+              </div>
+            </div>
+          </div>
         </div>
-    	</div>
-            
-<div id="map_canvas"></div>
-        
+      </div>
+
+      <div class="panel">
+        <div class="row">
+          <div class="small-9 columns">
+            <p class="secondary-color">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          </div>
+          <div class="small-3 columns secondary-color">
+            <div class="row">
+              <div class="small-12 columns secondary-color tertiary text-right">
+                44 min ago
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="small-8 columns text-right tertiary">
+                Reach
+              </div>
+              <div class="small-4 columns secondary">
+                871
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-8 columns text-right tertiary">
+                Likes
+              </div>
+              <div class="small-4 columns secondary">
+                87
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-8 columns text-right tertiary">
+                Comments
+              </div>
+              <div class="small-4 columns secondary">
+                8
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="row">
-        <hr>
-        <div class="small-7 columns">
-          <ul class="inline-list secondary">
-            <li><a href="{{site.url}}/press.html">Press</a></li>
-            <li><a href="mailto:meriawaaz@mutinylabs.in">Contact</a></li>
-            <li><a href="http://facebook.com/meriAwaazapp" target="_blank">Facebook</a></li>
-            <li><a href="http://twitter.com/meriAwaazapp" target="_blank">Twitter</a></li>
-            <li><a href="https://plus.google.com/b/116904166401766610185" rel="publisher" target="_blank">Google+</a></li>
-        </ul>
+    <div class="small-3 columns">
+      <div class="panel">
+        <div class="row">
+          <div class="small-12 columns">
+            <h5>Get Help</h5>
+          </div>
+          <div class="small-2 columns">
+            <i class="icon-email secondary-color"></i>
+          </div>
+          <div class="small-10 columns"><a href="mailto:mahelp@mutinylabs.in">help@mutinylabs.in</a>
+          </div>
+          <div class="small-2 columns">
+            <i class="icon-call secondary-color"></i>
+          </div>
+          <div class="small-10 columns">
+            +91 9999 999 999
+          </div>
+        </div>
+      </div>
+
+      <hr>
+      <h5>Competitors</h5>
+      <select>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+        <option value="year">This Year</option>
+        <option value="lifetime">Lifetime</option>
+      </select>
+      <div class="row collapse">
+        <div class="small-3 columns">
+          <img src="http://api.randomuser.me/portraits/med/men/12.jpg" class="circle-img gs hv pd">
+        </div>
+        <div class="small-9 columns">
+          <h4>Ghansham Bhai <small>(34)</small></h4>
+          <h6>INC</h6>
+        </div>
+      </div>
+      <div class="row tertiary">
+        <div class="small-6 columns text-right"><span class="f-2x bgc">365 </span>followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
+      </div>
+      <div class="row tertiary">
+        <div class="small-6 columns text-right"><span class="f-2x bc">45 </span>interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
+      </div>
+      <div class="row tertiary">
+        <div class="small-6 columns text-right"><span class="f-2x dbc">5 </span>actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
+      </div>
+
+      <hr>
+
+      <div class="row collapse">
+        <div class="small-3 columns">
+          <img src="http://api.randomuser.me/portraits/med/men/16.jpg" class="circle-img gs hv pd">
+        </div>
+        <div class="small-9 columns">
+          <h4>Mota Bhai <small>(34)</small></h4>
+          <h6>AAP</h6>
+        </div>
+      </div>
+      <div class="row tertiary">
+        <div class="small-6 columns text-right"><span class="f-2x bgc">365 </span>followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
+      </div>
+      <div class="row tertiary">
+        <div class="small-6 columns text-right"><span class="f-2x bc">45 </span>interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
+      </div>
+      <div class="row tertiary">
+        <div class="small-6 columns text-right"><span class="f-2x dbc">5 </span>actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
+      </div>
     </div>
-    <div class="small-5 columns">
-       <ul class="inline-list secondary right">
-          <li><a href="{{site.url}}/privacy-policy.html">Privacy Policy</a></li>
-          <li>Built with love at <a href="http://mutinylabs.in" style="display:inline;">Mutiny Labs</a></li>
-      </ul>
   </div>
-</div>
-</body>
-<script type="text/javascript" src="{{site.url}}/assets/bower_components/jquery/jquery.min.js"></script>
+
+{% include footer.html %} 
 <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
+
+<script type="text/javascript">
+  $(document).foundation();
+</script>
+
+<script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+<script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
+<script>
+  $( document ).ready(function() {
+  });
+</script>
 </html>

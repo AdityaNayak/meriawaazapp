@@ -7,76 +7,23 @@ function initialize() {
     }
 }
 
-function setVisibility(id) {
-      if(id==0){
-          document.getElementById("signup").style.display = 'inline';  
-          document.getElementById("login").style.display = 'none';
-      }
-      else if(id==1){
-          document.getElementById("login").style.display = 'inline';  
-          document.getElementById("signup").style.display = 'none';  
-      }
-}
-
 function loading() {
-	  console.log("I am shown!");
-	  document.getElementById("load").style.display = 'inline';  
+	  console.log("I am changing the Inner Html Content");
+	  //$('#signin-btn').innerHTML = "Loading...";
+	  document.getElementById("signin-btn").value = "Loading...";  
 }
 
 function hide(){
-	  console.log("Lets Hide!");	
-	  document.getElementById("load").style.display = 'none';
+	  console.log("Lets changing the Inner Html Content back!");	
+	  //$('#signin-btn').innerHTML = "Sign In";
+	  document.getElementById("signin-btn").value = "Sign In";
 }
-
-function signup() {
-	  
-	  console.log("Inside Signup");
-	  loading();
-      var user = new Parse.User();
-	  var form = document.getElementById("signup-form")
-
-	  var email = form.email.value;
-	  var password = form.password.value;
-	  var confirmation = form.confirmation.value;
-
-	  if(confirmation != password){
-
-	  	setTimeout(hide, 3000);
-	  	//hide();
-	  	alert("Passwords don't match. Please try again!");
-	  	form.password.value="";
-	  	form.confirmation.value="";
-	  	return false;
-	  }
-
-	  user.set("username", email);
-	  user.set("password", password);
-	  user.set("email", email);
-	  console.log(email);
-
- 	  user.signUp(null, {
-	  	  success: function(user) {
-		    console.log("Sign Up Ho Gaya!");
-		    alert("Account Creation Successful. A verification mail has been sent to you. Please check your inbox to verify your email address after which you can log in here.");
-		    setVisibility(1);
-		    
-		  },
-		  error: function(user, error) {
-		  	
-		  	alert("An Error Occured! "+error.message);
-		    console.log("Error: " + error.code + " " + error.message);
-		  }
-	  });
-	  setTimeout(hide, 3000);
-	  //hide();
-      return false;
-}
-
 
 function login() {
+	  NProgress.start();
 	  console.log("Inside Login");
 	  loading();
-	  var form = document.getElementById("login-form")
+	  var form = document.getElementById("signin-form")
 
 	  var username = form.email.value;
 	  console.log(username);
@@ -87,13 +34,21 @@ function login() {
 	          console.log("Log In Ho Gaya!");
 	          currentUser = Parse.User.current();
 	          self.location="./dashboard.html";
+	          NProgress.done();
 	        },
 		  error: function(user, error) {
-		  	  alert("An Error Occured! "+error.message);
+		  	  NProgress.done();
+		  	  if(error.code==101){
+		  	  	alert("An Error Occured! "+error.message);
+		  	  }	
 		      console.log("Error: " + error.code + " " + error.message);
 		  }
 	  });
-	  setTimeout(hide, 3000);
+
+	  setTimeout(hide, 4000);
+	  $('#signin-btn').focus(function() {
+        this.blur();
+      });
 	  //hide();
       return false;
 }
@@ -101,7 +56,7 @@ function login() {
 function resetPassword() {
 	  console.log("Reset Password");
 	  loading();
-	  var form = document.getElementById("login-form");
+	  var form = document.getElementById("signin-form");
 	  var email = form.email.value;
       if(email === "") {
 	      alert("Looks like you have forgotten your password! Enter your email in this form itself and click this link again. We will send you a mail that will allow you to reset your password.");
@@ -122,7 +77,6 @@ function resetPassword() {
       //hide();
       return false;
 }
-
 
 
 
