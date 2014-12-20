@@ -131,7 +131,7 @@ i{
 	padding:0;
 }
 .panel{
-	border-radius:2px;
+	border-radius:$global-radius;
 	&.small{
 		padding:1rem;
 	}
@@ -146,12 +146,20 @@ i{
 	&.p-fx-btm{
 		padding-bottom:0;
 	}
+	&.br-fx-top{
+		border-top-left-radius: 0 0;
+		border-top-right-radius: 0 0;
+	}
 }
+.br-fx-top{
+		border-top-left-radius: $global-radius $global-radius;
+		border-top-right-radius: $global-radius $global-radius;
+	}
 .nb{
 	border:none;
 }
 .panel-head{
-	background:$darkwhite;
+	background:$lightgrey;
 	padding:0.25rem 1.25rem;
 }
 .timeline-view{
@@ -159,11 +167,11 @@ i{
 		display: block;
 		content: "";
 		position: absolute;
-		top: 360px;
-		bottom: 36px;
+		top: 0px;
+		bottom: 0px;
 		left: 79px;
 		width: 2px;
-		background-color: $grey;
+		background-color: $lightgrey;
 		z-index: 0;
 	}
 }
@@ -326,7 +334,7 @@ input{
 }
 .button{
 	font-weight:bold;
-	border-radius:2px !important;
+	border-radius:$global-radius !important;
 	padding-top:0.5rem;
 	padding-bottom:0.5rem;
 	&:hover{

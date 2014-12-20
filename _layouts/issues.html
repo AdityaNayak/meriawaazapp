@@ -40,203 +40,187 @@
         <label for="transport_cb"><img src="./assets/images/marker-6.png"><br>Transportation</label><input type="checkbox" id="transport_cb" checked='true'>
       </div>
     </div>
-  <div class="row">
-    <div class="small-2 columns panel text-center s-ws-top">
-      <h4>Status</h4>
-      <div class="bbm">
-        <label for="open_it"><div id="fn1" class="f-2x yc">1</div>Open</label><input type="checkbox" id="open_it" checked='true'>
-      </div>
-      <div class="bbm">
-        <label for="prog_it"><div id="fn2" class="f-2x bgc">1</div>In progress</label><input type="checkbox" id="prog_it" checked='true'>
-      </div>
-      <div class="bbm">
-        <label for="review_it"><div id="fn3" class="f-2x bc">1</div>Review</label><input type="checkbox" id="review_it" checked='true'>
-      </div>
-      <div class="bbm">
-        <label for="closed_it"><div id="fn4" class="f-2x dbc">1</div>Closed</label><input type="checkbox" id="closed_it" checked='true'>
-      </div>
-    </div>
-    <div class="small-7 columns s-ws-top">
-      <div id="map-view" class="panel p-fx">
-        <div id="map" class="google-map" style="width:100%">  </div> 
-      </div>
-      <div id="list-view" class="panel p-fx" style="display:none;">
-        <table class="list-table" id="list-view">
-          <thead>
-            <tr>
-              <th width="100">Type</th>
-              <th>Content</th>
-              <th width="100">Status</th>
-              <th width="100">Assignee</th>
-              <th width="100">Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="open">
-              <td>Road</td>
-              <td>Content truncated to a single line and some more</td>
-              <td>Open</td>
-              <td>User 1</td>
-              <td>12 min ago</td>
-            </tr>
-            <tr class="progress">
-              <td>Transportation</td>
-              <td>This is longer Content Goes </td>
-              <td>Review</td>
-              <td>User 1</td>
-              <td>16 min ago</td>
-            </tr>
-            <tr class="closed">
-              <td>Law and Order</td>
-              <td>This is longer Content Goes </td>
-              <td>Open</td>
-              <td>User 1</td>
-              <td>40 min ago</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="updates-view" class="panel" style="display:none;">
-
-        <h2>'Issue Type' Issue<small> Issue ID (incrementally assigned)</small></h2>
-        <div class="row">
-          <div class="small-6 s-ws-top columns">
-            <img src="http://placehold.it/1600x900&text=bigIssueImage">
-          </div>
-          <div class="small-6 columns s-ws-top">
-            <p> A long paragraph that shows the issue content</p>
-          </div>   
+    <div class="row">
+      <div class="small-2 columns panel text-center s-ws-top">
+        <h4>Status</h4>
+        <div class="bbm">
+          <label for="open_it"><div id="fn1" class="f-2x yc">1</div>Open</label><input type="checkbox" id="open_it" checked='true'>
         </div>
-        <div class="row">
-          <div class="small-12 columns">
-            <hr>
-          </div>
+        <div class="bbm">
+          <label for="prog_it"><div id="fn2" class="f-2x bgc">1</div>In progress</label><input type="checkbox" id="prog_it" checked='true'>
         </div>
-        <div class="row">
-          <div class="timeline-view">
-            <div class="small-12 columns b-ws-top">
-              <div class="panel p-fx">
-                <div class="panel-head"><strong>MLA 1</strong> commented <small> 2 days ago</small></div>
-                <p>Comment that is reallly long and is a text paragraph</p>
-              </div>
+        <div class="bbm">
+          <label for="review_it"><div id="fn3" class="f-2x bc">1</div>Review</label><input type="checkbox" id="review_it" checked='true'>
+        </div>
+        <div class="bbm">
+          <label for="closed_it"><div id="fn4" class="f-2x dbc">1</div>Closed</label><input type="checkbox" id="closed_it" checked='true'>
+        </div>
+      </div>
+      <div class="small-7 columns s-ws-top">
+        <div id="map-view" class="panel p-fx" style="display:none;">
+          <div id="map" class="google-map" style="width:100%">  </div> 
+        </div>
+        <div id="list-view" class="panel p-fx" style="display:none;">
+          <table class="list-table" id="list-view">
+            <thead>
+              <tr>
+                <th width="100">Type</th>
+                <th>Content</th>
+                <th width="100">Status</th>
+                <th width="100">Assignee</th>
+                <th width="100">Time</th>
+              </tr>
+            </thead>
+            <tbody>
 
-              <div class="panel p-fx">
-                <div class="panel-head"><strong>User 1</strong> commented <small> 1 day ago</small></div>
-                <p>A second Comment that is really long and is a text paragraph and may contain media</p>
+            </tbody>
+          </table>
+        </div>
+        <div id="updates-view">
+        <img src="http://placehold.it/800x200&text=map+with+single+marker" class="br-fx-top">
+          <div class="panel br-fx-top">
+            <div class="row">
+              <div class="small-8 small-centered columns">
+                <img src="http://placehold.it/1600x900&text=bigIssueImage">
               </div>
+            </div>
+            <h2 class="s-ws-top">Issue Title<small> Issue ID</small></h2>
+            <div class="row">
+              <div class="small-8 columns small-centered">
+                <p>A long paragraph that shows the issue content</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-12 columns">
+                <hr>
+              </div>
+            </div>
+            <div class="row" style="position:relative;">
+              <div class="timeline-view">
+                <div class="small-12 columns b-ws-top">
+                  <div class="panel p-fx">
+                    <div class="panel-head"><strong>MLA 1</strong> commented <small> 2 days ago</small></div>
+                    <p>Comment that is reallly long and is a text paragraph</p>
+                  </div>
 
-              <div class="panel nb">
-                <p><strong>user1</strong> was assigned by <strong>MLA1</strong> <small>2 days ago</small></p>
+                  <div class="panel p-fx">
+                    <div class="panel-head"><strong>User 1</strong> commented <small> 1 day ago</small></div>
+                    <p>A second Comment that is really long and is a text paragraph and may contain media</p>
+                  </div>
+
+                  <div class="panel nb">
+                    <p><strong>user1</strong> was assigned by <strong>MLA1</strong> <small>2 days ago</small></p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div id="details-column" class="small-3 columns panel s-ws-top" style="display:none;">
-      <h4>Details</h4>
-      <div class="row">
-        <div class="small-12 columns">
-          Status: <span class="yc"><strong>Open</strong></span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="small-12 columns s-ws-top">
-          <div class="text-center">
-            <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
-            <div class="button fullwidth" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
-            <div id="claim-st3">Assigned to: <strong>Username</strong></div>
+      <div id="details-column" class="small-3 columns panel s-ws-top" style="display:none;">
+        <h4>Details</h4>
+        <div class="row">
+          <div class="small-12 columns">
+            Status: <span class="yc"><strong>Open</strong></span>
           </div>
-          <ul id="drop1" class="medium f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
-            <datalist id="team">
-              <option value="user 1"></option>
-              <option value="user 3"></option>
-              <option value="user 2"></option>
-            </datalist>
-            <li><input type="text" list="team"></li>
-            <li><a href="#">Username 1</a></li>
-            <li><a href="#">Username 2</a></li>
-            <li><a href="#">Username 3</a></li>
-          </ul>
         </div>
-      </div>
-      <div class="row">
-        <div class="small-12 columns s-ws-top hod text-center">
-          <img id="photo" src="{{site.url}}/assets/images/loading.gif">
+        <div class="row">
+          <div class="small-12 columns s-ws-top">
+            <div class="text-center">
+              <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
+              <div class="button fullwidth" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
+              <div id="claim-st3">Assigned to: <strong>Username</strong></div>
+            </div>
+            <ul id="drop1" class="medium f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
+              <datalist id="team">
+                <option value="user 1"></option>
+                <option value="user 3"></option>
+                <option value="user 2"></option>
+              </datalist>
+              <li><input type="text" list="team"></li>
+              <li><a href="#">Username 1</a></li>
+              <li><a href="#">Username 2</a></li>
+              <li><a href="#">Username 3</a></li>
+            </ul>
+          </div>
         </div>
-      </div>
-      <div class="row secondary">
-        <div class="small-6 columns m-ws-top secondary">
-          <i class="icon-calendar"></i> <span id="date">-</span>
+        <div class="row">
+          <div class="small-12 columns s-ws-top hod text-center">
+            <img id="photo" src="{{site.url}}/assets/images/loading.gif">
+          </div>
         </div>
-        <div class="small-6 columns m-ws-top secondary"><i class="icon-clock"></i> <span id="time">-</span></div>
-      </div>
-      <div class="row hod">
-        <div class="small-12 columns s-ws-top">
-          Type: <strong><span id="type" class="ct">-</span></strong>
+        <div class="row secondary">
+          <div class="small-6 columns m-ws-top secondary">
+            <i class="icon-calendar"></i> <span id="date">-</span>
+          </div>
+          <div class="small-6 columns m-ws-top secondary"><i class="icon-clock"></i> <span id="time">-</span></div>
         </div>
-      </div>
-      <div class="row hod">
-        <div class="small-12 columns">
-          <hr>
-          <p><div id="content">-</div></p>
-          <hr>
+        <div class="row hod">
+          <div class="small-12 columns s-ws-top">
+            Type: <strong><span id="type" class="ct">-</span></strong>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="small-12 columns secondary secondary-color">
-          <i class="icon-location"></i> <span id="location">-</span>
+        <div class="row hod">
+          <div class="small-12 columns">
+            <hr>
+            <p><div id="content">-</div></p>
+            <hr>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="small-12 columns s-ws-top">
-          <p>Address: <div id="email">-</div></p>
+        <div class="row">
+          <div class="small-12 columns secondary secondary-color">
+            <i class="icon-location"></i> <span id="location">-</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="small-12 columns s-ws-top">
+            <p>Address: <div id="email">-</div></p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-{% include footer.html %} 
+    {% include footer.html %} 
 
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
-<script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.dropdown.js"></script>
-<script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.dropdown.js"></script>
+    <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
 
-<script type="text/javascript">
-  $(document).foundation();
-</script>
+    <script type="text/javascript">
+      $(document).foundation();
+    </script>
 
-<script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
-<script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
-<script type="text/javascript" src="{{site.url}}/assets/js/daterangepicker.js"></script>
-<script>
-  $( document ).ready(function() {
-    var numAnim1 = new countUp("fn1", 0, 44);
-    numAnim1.start();
-    var numAnim2 = new countUp("fn2", 0, 12);
-    numAnim2.start();
-    var numAnim3 = new countUp("fn3", 0, 19);
-    numAnim3.start();  
-    var numAnim4 = new countUp("fn4", 0, 108);
-    numAnim4.start();
+    <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+    <script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
+    <script type="text/javascript" src="{{site.url}}/assets/js/daterangepicker.js"></script>
+    <script>
+      $( document ).ready(function() {
+        var numAnim1 = new countUp("fn1", 0, 44);
+        numAnim1.start();
+        var numAnim2 = new countUp("fn2", 0, 12);
+        numAnim2.start();
+        var numAnim3 = new countUp("fn3", 0, 19);
+        numAnim3.start();  
+        var numAnim4 = new countUp("fn4", 0, 108);
+        numAnim4.start();
 
-    $('input[name=maptglgroup]').change(function(){
-      if($(this).is(':checked'))
-      {
-        $('#map-view').fadeIn(300);
-        $('#list-view').delay(400).fadeOut(300);
-        $('#updates-view').delay().fadeOut();
-      }
-      else
-      {
-        $('#map-view').fadeOut();
-        $('#list-view').delay().fadeIn();
-      }    
+        $('input[name=maptglgroup]').change(function(){
+          if($(this).is(':checked'))
+          {
+            $('#map-view').fadeIn(300);
+            $('#list-view').delay(400).fadeOut(300);
+            $('#updates-view').delay().fadeOut();
+          }
+          else
+          {
+            $('#map-view').fadeOut();
+            $('#list-view').delay().fadeIn();
+          }    
 
-    });
-    $('#claim-st1').click(function(){
-      $('#claim-st1').fadeOut(400);
-      $('#claim-st2').delay(400).fadeIn(400);
-    });
+        });
+        $('#claim-st1').click(function(){
+          $('#claim-st1').fadeOut(400);
+          $('#claim-st2').delay(400).fadeIn(400);
+        });
 
     //$('#map').click(function(){
       //$('#details-column').fadeOut(300);
