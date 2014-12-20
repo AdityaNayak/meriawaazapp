@@ -4,6 +4,7 @@ var markers=[];
 var numProps=6;
 var map;
 
+
 function addMarker(){
         console.log('Add Marker!');
         ListItem = Parse.Object.extend("complaint");
@@ -193,8 +194,8 @@ function addMarker(){
 
 function DetailsColumn(){
     console.log("Effect Starts");
-    $('#details-column').fadeOut(300);
-    $('#details-column').fadeIn(300);
+    $('#details-column').delay(400).fadeOut(300);
+    $('#details-column').delay(400).fadeIn(300);
 }
 
 function timeSince(date) {
