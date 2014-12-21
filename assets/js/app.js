@@ -2,6 +2,7 @@
 // Documentation can be found at: http://foundation.zurb.com/docs
 $(document).foundation();
 
+
 function loadingButton_id(id){
 	  var Original=document.getElementById(id).value;
 	  document.getElementById(id).value = "Loading...";
