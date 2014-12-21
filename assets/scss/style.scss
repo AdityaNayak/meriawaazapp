@@ -357,6 +357,9 @@ input{
 		background:url('../images/loading.gif') no-repeat;
 		background-position:top left;
 		outline: none;
+		&:hover{
+			color:$blue;
+		}
 	}
 }
 .postfix{
