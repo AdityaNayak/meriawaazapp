@@ -254,7 +254,19 @@ function categoryCheck(m){
 }
 
 function dateCheck(m){
-    return 1;
+    var combined=document.getElementById('reportrange').innerHTML;
+    combined=combined.substring(36);
+    combined=combined.substring(0,combined.length-7);
+    combined=combined.split(" - ");
+    var startdate = moment(combined[0]).format('MMMM D, YYYY');
+    var enddate = moment(combined[1]).format('MMMM D, YYYY');
+    var sd=moment(startdate).unix();
+    var ed=moment(enddate).unix()+86400;
+    var d=Date.parse((m.content).createdAt)/1000
+    if(d>sd && d<ed){
+        return 1;
+    }
+    return 0;
 }
 
 function statusCheck(m){
@@ -284,8 +296,6 @@ function statusCheck(m){
 function filter(){
     listView.html("");
     for(var m=0;m<markers.length;m++){
-        console.log("Marker Value Category: "+markers[m].category);
-        console.log("Marker Value Status: "+markers[m].status);
         if(statusCheck(markers[m])==1 && categoryCheck(markers[m])==1 && dateCheck(markers[m])==1){
             var d=new Date((markers[m].content).createdAt);
             var ago=timeSince(d);
@@ -301,6 +311,102 @@ $('input[type=checkbox]').change(
     function(){
         filter();
     });
+
+$('input[name=maptglgroup]').change(function(){
+    if($(this).is(':checked'))
+    {
+        view=0;
+        $('#map-view').fadeIn(300);
+        $('#list-view').delay(400).fadeOut(300);
+        $('#updates-view').delay().fadeOut();
+        $('#back').delay(400).fadeOut(300);
+    }
+    else
+    {
+        view=1;
+        $('#map-view').fadeOut();
+        $('#list-view').delay().fadeIn();
+    }    
+
+});
+
+$('#claim-st1').click(function(){
+    $('#claim-st1').fadeOut(400);
+    $('#claim-st2').delay(400).fadeIn(400);
+});
+
+$('#back').click(function(){
+    if(view==1){
+        $('#list-view').delay(400).fadeIn(300);
+        $('#map-view').delay(400).fadeOut(300);
+    }
+    else{
+        $('#map-view').delay(400).fadeIn(300);
+        $('#list-view').delay(400).fadeOut(300);
+    }
+        $('#details-column').delay(400).fadeOut(300);
+        $('#updates-view').delay(400).fadeOut(300);
+        $('#back').delay(400).fadeOut(300);
+});
+
+$('#details').click(function(){
+    $('#list-view').delay(400).fadeOut(300);
+    $('#map-view').delay(400).fadeOut(300);
+    $('#updates-view').delay(400).fadeIn(300);
+    $('#back').delay(400).fadeIn(300);
+});
+
+$('#drop1 li a').click(function(){
+    event.preventDefault();
+    $('#claim-st2').delay(400).fadeOut(300);
+    $('#claim-st3').delay(400).fadeIn(300);
+});
+
+$('.list-table tbody tr').click(function() {
+    DetailsColumn();
+    $('.hod').delay(400).fadeOut(300);
+});
+
+$('#reportrange').daterangepicker(
+    {
+        startDate: moment().subtract('days', 29),
+        endDate: moment(),
+        minDate: '01/01/2012',
+        maxDate: '12/31/2015',
+        dateLimit: { days: 60 },
+        showDropdowns: true,
+        showWeekNumbers: false,
+        timePicker: false,
+        timePickerIncrement: 1,
+        timePicker12Hour: true,
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+            'Last 7 Days': [moment().subtract('days', 6), moment()],
+            'Last 30 Days': [moment().subtract('days', 29), moment()],
+            'This Month': [moment().startOf('month'), moment()],
+            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+            'This Year': [moment().startOf('year'), moment()]
+        },
+        opens: 'left',
+        format: 'MM/DD/YYYY',
+        separator: ' to ',
+        locale: {
+            applyLabel: 'Submit',
+            fromLabel: 'From',
+            toLabel: 'To',
+            customRangeLabel: 'Custom Range',
+            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
+            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            firstDay: 1
+            }
+    },
+    function(start, end) {
+        console.log("Callback has been called!");
+        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        filter();
+    }
+);
 
 
 function initialize() {
@@ -347,4 +453,4 @@ function initialize() {
     }
 }
 
-initialize();
+
