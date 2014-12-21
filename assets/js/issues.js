@@ -149,7 +149,12 @@ function populate(){
 
                 var d=new Date(object.createdAt);
                 var ago=timeSince(d);
-                listView.append( "<tr class='"+object.get('status')+"'><td width='100'>"+object.get('category')+"</td><td width='100'>"+object.get('content')+"</td><td width='100'>"+object.get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                var content=object.get("content");
+                if(object.get("content").length > 30){
+                    content=object.get("content").substring(0,30)+"...";
+                    console.log(content);
+                }
+                listView.append( "<tr class='"+object.get('status')+"'><td>"+object.get('category')+"</td><td>"+content+"</td><td>"+object.get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td>"+ago+" ago</td></tr>");                        
                 markers.push(marker);
                 if((marker.content).get('status')=="open"){
                 no=no+1;
@@ -172,7 +177,7 @@ function populate(){
                             maxWidth: 700,
                             maxHeight: 900
                         });
-
+                        NProgress.start();
                         var p_timestam=String(object.createdAt);
                         var p_timestamp=p_timestam.split(" ");
                         var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
@@ -189,8 +194,9 @@ function populate(){
                         var p_status=object.get('status');
                         infowindow.setContent("You Clicked me!");
                         var photo=document.getElementById('photo');
-                        photo.src="{{site.url}}/assets/images/loading.gif";
-                        DetailsColumn();
+                        
+                        console.log("Effect Starts");
+                        
                         infowindow.open(map, marker);
                         console.log("Ye Mila:");
                         console.log(object.get('category'));
@@ -200,9 +206,10 @@ function populate(){
                         var content=document.getElementById('content');
                         var type=document.getElementById('type');
                         var location=document.getElementById('location');
-                        
+                        $('#details-column').fadeOut(300);
                         
                         setTimeout(function(){
+                                
                                 $("#colorstatus").removeClass();
                                 if(p_status=="open"){
                                     $("#colorstatus").addClass('yc');
@@ -219,13 +226,20 @@ function populate(){
                                 status.innerHTML = '<strong>'+p_status+'</strong>';
                                 date.innerHTML = p_date;
                                 time.innerHTML = p_time;
-                                content.innerHTML = p_content;
+                                if(p_content.length<50){
+                                    content.innerHTML = p_content;
+                                }
+                                else{
+
+                                    content.innerHTML = p_content.substring(0,30)+"...";
+                                }
                                 type.innerHTML = p_type;
                                 location.innerHTML = p_location;
                                 
                                 photo.src=p_photo.url(); 
-                                
-                        },400); 
+                                $('#details-column').fadeIn(300);
+                        },300); 
+                        NProgress.done();
                     }
                 })(marker,object));
              } 
@@ -241,12 +255,6 @@ function populate(){
           error: function(error) {
           }
         });
-}
-
-function DetailsColumn(){
-    console.log("Effect Starts");
-    $('#details-column').delay(400).fadeOut(300);
-    $('#details-column').delay(400).fadeIn(300);
 }
 
 function timeSince(date) {
@@ -278,8 +286,10 @@ function timeSince(date) {
 }
 
 function logout(){
+    NProgress.start();
     Parse.User.logOut();
     currentUser = null;
+    NProgress.done();
     self.location="./login.html";
 }
 
@@ -358,6 +368,7 @@ function statusCheck(m){
 }
 
 function filter(){
+    NProgress.start();
     var no=0;
     var np=0;
     var nr=0;
@@ -367,7 +378,11 @@ function filter(){
         if(statusCheck(markers[m])==1 && categoryCheck(markers[m])==1 && dateCheck(markers[m])==1){
             var d=new Date((markers[m].content).createdAt);
             var ago=timeSince(d);
-            listView.append( "<tr class='"+(markers[m].content).get('status')+"'><td width='100'>"+(markers[m].content).get('category')+"</td><td width='100'>"+(markers[m].content).get('content')+"</td><td width='100'>"+(markers[m].content).get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+            var content=markers[m].content.get('content');
+            if(markers[m].content.get('content').length > 30){
+                    content=markers[m].content.get('content').substring(0,30)+"...";
+            }
+            listView.append( "<tr class='"+(markers[m].content).get('status')+"'><td width='100'>"+(markers[m].content).get('category')+"</td><td width='100'>"+content+"</td><td width='100'>"+(markers[m].content).get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
             markers[m].setMap(map);
             if((markers[m].content).get('status')=="open"){
                 no=no+1;
@@ -393,14 +408,17 @@ function filter(){
         var numAnim4 = new countUp("fn4", 0, nc);
         numAnim4.start();
     }         
+    NProgress.done();
 }  
 
 $('input[type=checkbox]').change(
     function(){
         filter();
+        $('#details-column').delay(400).fadeOut(300);
     });
 
 $('input[name=maptglgroup]').change(function(){
+    NProgress.start();
     if($(this).is(':checked'))
     {
         view=0;
@@ -417,7 +435,7 @@ $('input[name=maptglgroup]').change(function(){
         $('#list-view').delay(400).fadeIn(300);
         $('#details-column').delay(400).fadeOut(300);
     }    
-
+    NProgress.done();
 });
 
 $('#claim-st1').click(function(){
@@ -426,6 +444,7 @@ $('#claim-st1').click(function(){
 });
 
 $('#back').click(function(){
+    NProgress.start();
     if(view==1){
         $('#list-view').delay(400).fadeIn(300);
         $('#map-view').delay(400).fadeOut(300);
@@ -437,13 +456,16 @@ $('#back').click(function(){
         $('#details-column').delay(400).fadeOut(300);
         $('#updates-view').delay(400).fadeOut(300);
         $('#back').delay(400).fadeOut(300);
+        NProgress.done();
 });
 
 $('#details').click(function(){
+    NProgress.start();
     $('#list-view').delay(400).fadeOut(300);
     $('#map-view').delay(400).fadeOut(300);
     $('#updates-view').delay(400).fadeIn(300);
     $('#back').delay(400).fadeIn(300);
+    NProgress.done();
 });
 
 $('#drop1 li a').click(function(){
@@ -453,7 +475,6 @@ $('#drop1 li a').click(function(){
 });
 
 $('.list-table tbody tr').click(function() {
-    DetailsColumn();
     $('.hod').delay(400).fadeOut(300);
 });
 
