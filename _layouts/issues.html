@@ -207,17 +207,7 @@
     <script>
       $( document ).ready(function() {
         initialize();
-
         var view=0;
-        var numAnim1 = new countUp("fn1", 0, 44);
-        numAnim1.start();
-        var numAnim2 = new countUp("fn2", 0, 12);
-        numAnim2.start();
-        var numAnim3 = new countUp("fn3", 0, 19);
-        numAnim3.start();  
-        var numAnim4 = new countUp("fn4", 0, 108);
-        numAnim4.start();
-
         //Set the initial state of the picker label
         $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
 

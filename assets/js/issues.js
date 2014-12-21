@@ -82,7 +82,11 @@ var icons = [
 
 
 function populate(){
-        console.log('Add Marker!');
+        var no=0;
+        var np=0;
+        var nr=0;
+        var nc=0;
+        console.log('Populate!');
         ListItem = Parse.Object.extend("complaint");
         query = new Parse.Query(ListItem);
         
@@ -128,6 +132,18 @@ function populate(){
                 var ago=timeSince(d);
                 listView.append( "<tr class='"+object.get('status')+"'><td width='100'>"+object.get('category')+"</td><td width='100'>"+object.get('content')+"</td><td width='100'>"+object.get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                 markers.push(marker);
+                if((marker.content).get('status')=="open"){
+                no=no+1;
+                }
+                if((marker.content).get('status')=="progress"){
+                    np=np+1;
+                }
+                if((marker.content).get('status')=="review"){
+                    nr=nr+1;
+                }
+                if((marker.content).get('status')=="closed"){
+                    nc=nc+1;
+                }
                 google.maps.event.addListener(marker, 'click', (function(marker,object) {
                     return function() {
                         if(infowindow) {
@@ -173,6 +189,14 @@ function populate(){
                     }
                 })(marker,object));
              } 
+             var numAnim1 = new countUp("fn1", 0, no);
+             numAnim1.start();
+             var numAnim2 = new countUp("fn2", 0, np);
+             numAnim2.start();
+             var numAnim3 = new countUp("fn3", 0, nr);
+             numAnim3.start();  
+             var numAnim4 = new countUp("fn4", 0, nc);
+             numAnim4.start();
           },
           error: function(error) {
           }
@@ -294,6 +318,10 @@ function statusCheck(m){
 }
 
 function filter(){
+    var no=0;
+    var np=0;
+    var nr=0;
+    var nc=0;
     listView.html("");
     for(var m=0;m<markers.length;m++){
         if(statusCheck(markers[m])==1 && categoryCheck(markers[m])==1 && dateCheck(markers[m])==1){
@@ -301,9 +329,29 @@ function filter(){
             var ago=timeSince(d);
             listView.append( "<tr class='"+(markers[m].content).get('status')+"'><td width='100'>"+(markers[m].content).get('category')+"</td><td width='100'>"+(markers[m].content).get('content')+"</td><td width='100'>"+(markers[m].content).get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
             markers[m].setMap(map);
+            if((markers[m].content).get('status')=="open"){
+                no=no+1;
+            }
+            if((markers[m].content).get('status')=="progress"){
+                np=np+1;
+            }
+            if((markers[m].content).get('status')=="review"){
+                nr=nr+1;
+            }
+            if((markers[m].content).get('status')=="closed"){
+                nc=nc+1;
+            }
         }else{
             markers[m].setMap(null);
         }
+        var numAnim1 = new countUp("fn1", 0, no);
+        numAnim1.start();
+        var numAnim2 = new countUp("fn2", 0, np);
+        numAnim2.start();
+        var numAnim3 = new countUp("fn3", 0, nr);
+        numAnim3.start();  
+        var numAnim4 = new countUp("fn4", 0, nc);
+        numAnim4.start();
     }         
 }  
 
@@ -316,23 +364,25 @@ $('input[name=maptglgroup]').change(function(){
     if($(this).is(':checked'))
     {
         view=0;
-        $('#map-view').fadeIn(300);
+        $('#map-view').delay(400).fadeIn(300);
         $('#list-view').delay(400).fadeOut(300);
-        $('#updates-view').delay().fadeOut();
+        $('#updates-view').delay(400).fadeOut(300);
         $('#back').delay(400).fadeOut(300);
+        $('#details-column').delay(400).fadeOut(300);
     }
     else
     {
         view=1;
-        $('#map-view').fadeOut();
-        $('#list-view').delay().fadeIn();
+        $('#map-view').delay(400).fadeOut(300);
+        $('#list-view').delay(400).fadeIn(300);
+        $('#details-column').delay(400).fadeOut(300);
     }    
 
 });
 
 $('#claim-st1').click(function(){
-    $('#claim-st1').fadeOut(400);
-    $('#claim-st2').delay(400).fadeIn(400);
+    $('#claim-st1').delay(400).fadeOut(300);
+    $('#claim-st2').delay(400).fadeIn(300);
 });
 
 $('#back').click(function(){
