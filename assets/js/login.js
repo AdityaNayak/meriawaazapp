@@ -22,7 +22,7 @@ function hide(){
 function login() {
 	  NProgress.start();
 	  console.log("Inside Login");
-	  loading();
+	  //loading();
 	  var form = document.getElementById("signin-form")
 
 	  var username = form.email.value;
@@ -45,7 +45,7 @@ function login() {
 		  }
 	  });
 
-	  setTimeout(hide, 4000);
+	  //setTimeout(hide, 3000);
 	  $('#signin-btn').focus(function() {
         this.blur();
       });

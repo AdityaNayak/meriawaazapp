@@ -32,7 +32,7 @@
             <a onclick="resetPassword();">forgot password?</a>
           </div>
         </div>
-        <input type="submit" value="Sign In" id="signin-btn" class="button fullwidth small" /> 
+        <input type="submit" value="Sign In" id="signin-btn" class="button fullwidth small interactiveLoading" /> 
 
         <!--<div id="loading-btn" class="fullwidth text-center" style="display:none;" align="center"><img src="{{site.url}}/assets/images/loading.gif"></div>-->
       </form>
@@ -193,8 +193,7 @@
 
       $('#signin-form').submit(function(event){
         event.preventDefault();
-        //$('#signin-btn').fadeOut();
-        //$('#loading-btn').delay().fadeIn();
+        //loadingButton("signin-btn");
         login();
       });
     });</script>

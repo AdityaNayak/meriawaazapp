@@ -6,8 +6,10 @@
   <title>Issues | Meri Awaaz</title>
   {% include header.html %}
   <div class="row control-bar b-ws-top">
-    <div class="small-2 columns fx2">
-      <i class="icon-left"></i><a id="back" class="f-1-5x">Back</a>
+    <div class="small-2 columns fx2" >
+      <div id="back" style="display:none;">
+        <i class="icon-left"></i><a  class="f-1-5x">Back</a>
+      </div>
     </div>
     <div class="small-3 small-offset-3 columns text-right">
       <div class="switch radius">
@@ -57,7 +59,7 @@
         </div>
       </div>
       <div class="small-7 columns s-ws-top">
-        <div id="map-view" class="panel p-fx" style="display:none;">
+        <div id="map-view" class="panel p-fx">
           <div id="map" class="google-map" style="width:100%">  </div> 
         </div>
         <div id="list-view" class="panel p-fx" style="display:none;">
@@ -72,11 +74,17 @@
               </tr>
             </thead>
             <tbody>
-
+                <tr>
+                <td>Dummy</td>
+                <td>Dummy</td>
+                <td>Dummy</td>
+                <td>Dummy</td>
+                <td>Dummy</td>
+              </tr>
             </tbody>
           </table>
         </div>
-        <div id="updates-view">
+        <div id="updates-view" style="display:none;">
         <img src="http://placehold.it/800x200&text=map+with+single+marker" class="br-fx-top">
           <div class="panel br-fx-top">
             <div class="row">
@@ -145,8 +153,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="button secondary fullwidth"><i class="icon-left"></i>View Details</div>
-
+          <div id="details" class="button secondary fullwidth"><i class="icon-left"></i>View Details</div>
         </div>
         <div class="row">
           <div class="small-12 columns s-ws-top hod text-center">
@@ -198,6 +205,7 @@
     <script type="text/javascript" src="{{site.url}}/assets/js/daterangepicker.js"></script>
     <script>
       $( document ).ready(function() {
+        var view=0;
         var numAnim1 = new countUp("fn1", 0, 44);
         numAnim1.start();
         var numAnim2 = new countUp("fn2", 0, 12);
@@ -210,12 +218,15 @@
         $('input[name=maptglgroup]').change(function(){
           if($(this).is(':checked'))
           {
+            view=0;
             $('#map-view').fadeIn(300);
             $('#list-view').delay(400).fadeOut(300);
             $('#updates-view').delay().fadeOut();
+            $('#back').delay(400).fadeOut(300);
           }
           else
           {
+            view=1;
             $('#map-view').fadeOut();
             $('#list-view').delay().fadeIn();
           }    
@@ -226,35 +237,37 @@
           $('#claim-st2').delay(400).fadeIn(400);
         });
 
-    //$('#map').click(function(){
-      //$('#details-column').fadeOut(300);
-      //$('#details-column').fadeIn(300);
-      //$('#details-column').animate({ "left": "-=50px" }, "slow" ).fadeOut(300).animate({ "left": "+=100px" }, "slow" );
-      //$('#details-column').fadeIn(300).animate({ "left": "-=50px" }, "slow" );
-    //});
+        $('#back').click(function(){
+          if(view==1){
+              $('#list-view').delay(400).fadeIn(300);
+              $('#map-view').delay(400).fadeOut(300);
+          }
+          else{
+              $('#map-view').delay(400).fadeIn(300);
+              $('#list-view').delay(400).fadeOut(300);
+          }
+          $('#details-column').delay(400).fadeOut(300);
+          $('#updates-view').delay(400).fadeOut(300);
+          $('#back').delay(400).fadeOut(300);
+        });
 
-$('#back').click(function(){
-  $('#list-view').fadeIn(300);
-  $('#map-view').delay(400).fadeOut(300);
-  $('#updates-view').delay(400).fadeOut(300);
-});
+        $('#details').click(function(){
+          $('#list-view').delay(400).fadeOut(300);
+          $('#map-view').delay(400).fadeOut(300);
+          $('#updates-view').delay(400).fadeIn(300);
+          $('#back').delay(400).fadeIn(300);
+        });
 
-$('#drop1 li a').click(function(){
-  event.preventDefault();
-  $('#claim-st2').fadeOut(400);
-  $('#claim-st3').delay(400).fadeIn(400);
-});
-$('.list-table tbody tr').click(function() {
-  $('#list-view').fadeOut();
-  $('label').addClass('gs');
-  $('input[type="checkbox"]').prop("checked", false);
-  $( "#law_cb" ).prop( "checked", true );
-  $('label[for="law_cb"]').removeClass('gs');
-  $( "#open_it" ).prop( "checked", true );
-  $('label[for="open_it"]').removeClass('gs');
-  $('#updates-view').delay().fadeIn();
-  $('.hod').fadeOut();
-});
+        $('#drop1 li a').click(function(){
+          event.preventDefault();
+          $('#claim-st2').delay(400).fadeOut(300);
+          $('#claim-st3').delay(400).fadeIn(300);
+        });
+
+        $('.list-table tbody tr').click(function() {
+          DetailsColumn();
+          $('.hod').delay(400).fadeOut(300);
+        });
 
 $('#reportrange').daterangepicker(
 {
