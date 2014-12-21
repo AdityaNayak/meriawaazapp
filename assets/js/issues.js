@@ -80,6 +80,25 @@ var icons = [
     icon6, 
 ];
 
+function getReverseGeocodingData(lat, lng) {
+    var latlng = new google.maps.LatLng(lat, lng);
+    // This is making the Geocode request
+    var geocoder = new google.maps.Geocoder();
+    var address="-";
+    geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+        if (status !== google.maps.GeocoderStatus.OK) {
+            console.log(status);
+        }
+        // This is checking to see if the Geoeode Status is OK before proceeding
+        if (status == google.maps.GeocoderStatus.OK) {
+            address = (results[0].formatted_address);
+            console.log(address);
+            var p_address=document.getElementById('address');
+            p_address.innerHTML = address;
+        }
+    });
+    
+}
 
 function populate(){
         var no=0;
@@ -160,32 +179,53 @@ function populate(){
                         var p_time=p_timestamp[4];
                         var p_content=object.get('content');
                         var p_type=object.get('category');
-                        var p_location=object.get('location').latitude+","+object.get('location').longitude;
-                        var p_email=object.get('googleId');
+                        
+                        var p_latitude=object.get('location').latitude;
+                        var p_longitude=object.get('location').longitude;
+                        var p_location=p_latitude+","+p_longitude;
+                        getReverseGeocodingData(p_latitude, p_longitude);
+                        
                         var p_photo=object.get('photo');
+                        var p_status=object.get('status');
                         infowindow.setContent("You Clicked me!");
+                        var photo=document.getElementById('photo');
+                        photo.src="{{site.url}}/assets/images/loading.gif";
                         DetailsColumn();
                         infowindow.open(map, marker);
                         console.log("Ye Mila:");
                         console.log(object.get('category'));
+                        var status=document.getElementById('colorstatus');
                         var date=document.getElementById('date');
                         var time=document.getElementById('time');
                         var content=document.getElementById('content');
                         var type=document.getElementById('type');
                         var location=document.getElementById('location');
-                        var email=document.getElementById('email');
-                        var photo=document.getElementById('photo');
                         
-                        photo.src="http://placehold.it/400x225&text=No+Image";
+                        
                         setTimeout(function(){
+                                $("#colorstatus").removeClass();
+                                if(p_status=="open"){
+                                    $("#colorstatus").addClass('yc');
+                                }
+                                else if(p_status=="progress"){
+                                    $("#colorstatus").addClass('bgc');
+                                }
+                                else if(p_status=="review"){
+                                    $("#colorstatus").addClass('bc');
+                                }
+                                else{
+                                    $("#colorstatus").addClass('dbc');
+                                }
+                                status.innerHTML = '<strong>'+p_status+'</strong>';
                                 date.innerHTML = p_date;
                                 time.innerHTML = p_time;
                                 content.innerHTML = p_content;
                                 type.innerHTML = p_type;
                                 location.innerHTML = p_location;
-                                email.innerHTML = p_email;
+                                
                                 photo.src=p_photo.url(); 
-                        },300); 
+                                
+                        },400); 
                     }
                 })(marker,object));
              } 
