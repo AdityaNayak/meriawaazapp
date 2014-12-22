@@ -33,6 +33,6 @@ $('.interactiveLoading').click(function() {
 	  setTimeout(function() {
 	  			$(ref).removeClass('loading');
 		  		document.getElementById(ref.id).value = Original;
-		  }, 2000);
+		  }, 6000);
       console.log("Loading Button was Called!");
 });

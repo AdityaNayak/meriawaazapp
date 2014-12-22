@@ -1,5 +1,7 @@
 Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
 
+var view=0;
+
 var listView=$('#list-view tbody');
 
 var box_r=document.getElementById('road_cb');
@@ -19,6 +21,7 @@ var markers=[];
 
 var numcategory=6;
 var map;
+var map2;
 
 var iconURLPrefix = './assets/images/';
 var width=40;
@@ -80,6 +83,8 @@ var icons = [
     icon6, 
 ];
 
+var selectedicon;
+
 function getReverseGeocodingData(lat, lng) {
     var latlng = new google.maps.LatLng(lat, lng);
     // This is making the Geocode request
@@ -136,7 +141,7 @@ function populate(){
                     myicon=icons[5];
                 }
 
-                
+                selectedicon=myicon;                
                 marker = new google.maps.Marker({
                     position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
                     map: map,
@@ -149,7 +154,12 @@ function populate(){
 
                 var d=new Date(object.createdAt);
                 var ago=timeSince(d);
-                listView.append( "<tr class='"+object.get('status')+"'><td width='100'>"+object.get('category')+"</td><td width='100'>"+object.get('content')+"</td><td width='100'>"+object.get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                var content=object.get("content");
+                if(object.get("content").length > 30){
+                    content=object.get("content").substring(0,30)+"...";
+                    console.log(content);
+                }
+                listView.append( "<tr class='"+object.get('status')+"'><td>"+object.get('category')+"</td><td>"+content+"</td><td>"+object.get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td>"+ago+" ago</td></tr>");                        
                 markers.push(marker);
                 if((marker.content).get('status')=="open"){
                 no=no+1;
@@ -172,7 +182,7 @@ function populate(){
                             maxWidth: 700,
                             maxHeight: 900
                         });
-
+                        NProgress.start();
                         var p_timestam=String(object.createdAt);
                         var p_timestamp=p_timestam.split(" ");
                         var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
@@ -187,10 +197,11 @@ function populate(){
                         
                         var p_photo=object.get('photo');
                         var p_status=object.get('status');
-                        infowindow.setContent("You Clicked me!");
+                        infowindow.setContent(p_status);
                         var photo=document.getElementById('photo');
-                        photo.src="{{site.url}}/assets/images/loading.gif";
-                        DetailsColumn();
+                        
+                        console.log("Effect Starts");
+                        
                         infowindow.open(map, marker);
                         console.log("Ye Mila:");
                         console.log(object.get('category'));
@@ -200,9 +211,21 @@ function populate(){
                         var content=document.getElementById('content');
                         var type=document.getElementById('type');
                         var location=document.getElementById('location');
-                        
+                        var bigphoto=document.getElementById('bigphoto');
+                        var detailedissue=document.getElementById('detailedissue');
+                        $('#details-column').fadeOut(300);
+                        var myLatlng = new google.maps.LatLng(p_latitude,p_longitude); 
+                        map2.setCenter(myLatlng);
+                        var Singlemarker = new google.maps.Marker({ 
+                            position: myLatlng, 
+                            map: map2, 
+                            icon: marker.get("icon"),
+                            title: p_status,
+                            animation: google.maps.Animation.DROP
+                        });
                         
                         setTimeout(function(){
+                                
                                 $("#colorstatus").removeClass();
                                 if(p_status=="open"){
                                     $("#colorstatus").addClass('yc');
@@ -219,34 +242,29 @@ function populate(){
                                 status.innerHTML = '<strong>'+p_status+'</strong>';
                                 date.innerHTML = p_date;
                                 time.innerHTML = p_time;
-                                content.innerHTML = p_content;
+                                if(p_content.length<50){
+                                    content.innerHTML = p_content;
+                                }
+                                else{
+
+                                    content.innerHTML = p_content.substring(0,30)+"...";
+                                }
                                 type.innerHTML = p_type;
                                 location.innerHTML = p_location;
-                                
+                                bigphoto.src=p_photo.url();
+                                detailedissue.innerHTML=p_content;
                                 photo.src=p_photo.url(); 
-                                
-                        },400); 
+                                $('#details-column').fadeIn(300);
+                        },300); 
+                        NProgress.done();
                     }
                 })(marker,object));
              } 
-             var numAnim1 = new countUp("fn1", 0, no);
-             numAnim1.start();
-             var numAnim2 = new countUp("fn2", 0, np);
-             numAnim2.start();
-             var numAnim3 = new countUp("fn3", 0, nr);
-             numAnim3.start();  
-             var numAnim4 = new countUp("fn4", 0, nc);
-             numAnim4.start();
+          statusCounters(no,np,nr,nc);;
           },
           error: function(error) {
           }
         });
-}
-
-function DetailsColumn(){
-    console.log("Effect Starts");
-    $('#details-column').delay(400).fadeOut(300);
-    $('#details-column').delay(400).fadeIn(300);
 }
 
 function timeSince(date) {
@@ -278,8 +296,10 @@ function timeSince(date) {
 }
 
 function logout(){
+    NProgress.start();
     Parse.User.logOut();
     currentUser = null;
+    NProgress.done();
     self.location="./login.html";
 }
 
@@ -357,6 +377,17 @@ function statusCheck(m){
     return 0; 
 }
 
+function statusCounters(no,np,nr,nc){
+    var numAnim1 = new countUp("fn1", 0, no);
+    numAnim1.start();
+    var numAnim2 = new countUp("fn2", 0, np);
+    numAnim2.start();
+    var numAnim3 = new countUp("fn3", 0, nr);
+    numAnim3.start();  
+    var numAnim4 = new countUp("fn4", 0, nc);
+    numAnim4.start();
+}
+
 function filter(){
     var no=0;
     var np=0;
@@ -367,7 +398,11 @@ function filter(){
         if(statusCheck(markers[m])==1 && categoryCheck(markers[m])==1 && dateCheck(markers[m])==1){
             var d=new Date((markers[m].content).createdAt);
             var ago=timeSince(d);
-            listView.append( "<tr class='"+(markers[m].content).get('status')+"'><td width='100'>"+(markers[m].content).get('category')+"</td><td width='100'>"+(markers[m].content).get('content')+"</td><td width='100'>"+(markers[m].content).get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+            var content=markers[m].content.get('content');
+            if(markers[m].content.get('content').length > 30){
+                    content=markers[m].content.get('content').substring(0,30)+"...";
+            }
+            listView.append( "<tr class='"+(markers[m].content).get('status')+"'><td width='100'>"+(markers[m].content).get('category')+"</td><td width='100'>"+content+"</td><td width='100'>"+(markers[m].content).get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
             markers[m].setMap(map);
             if((markers[m].content).get('status')=="open"){
                 no=no+1;
@@ -384,23 +419,32 @@ function filter(){
         }else{
             markers[m].setMap(null);
         }
-        var numAnim1 = new countUp("fn1", 0, no);
-        numAnim1.start();
-        var numAnim2 = new countUp("fn2", 0, np);
-        numAnim2.start();
-        var numAnim3 = new countUp("fn3", 0, nr);
-        numAnim3.start();  
-        var numAnim4 = new countUp("fn4", 0, nc);
-        numAnim4.start();
+        
     }         
+    statusCounters(no,np,nr,nc);
 }  
 
 $('input[type=checkbox]').change(
     function(){
+        NProgress.start();
         filter();
+        $('#details-column').delay(400).fadeOut(300);
+        if(view==1){
+            $('#list-view').delay(400).fadeIn(300);
+            $('#map-view').delay(400).fadeOut(300);
+        }
+        else{
+            $('#map-view').delay(400).fadeIn(300);
+            $('#list-view').delay(400).fadeOut(300);
+        }
+        $('#details-column').delay(400).fadeOut(300);
+        $('#updates-view').delay(400).fadeOut(300);
+        $('#back').delay(400).fadeOut(300);
+        NProgress.done();
     });
 
 $('input[name=maptglgroup]').change(function(){
+    NProgress.start();
     if($(this).is(':checked'))
     {
         view=0;
@@ -417,7 +461,7 @@ $('input[name=maptglgroup]').change(function(){
         $('#list-view').delay(400).fadeIn(300);
         $('#details-column').delay(400).fadeOut(300);
     }    
-
+    NProgress.done();
 });
 
 $('#claim-st1').click(function(){
@@ -426,6 +470,7 @@ $('#claim-st1').click(function(){
 });
 
 $('#back').click(function(){
+    NProgress.start();
     if(view==1){
         $('#list-view').delay(400).fadeIn(300);
         $('#map-view').delay(400).fadeOut(300);
@@ -437,13 +482,16 @@ $('#back').click(function(){
         $('#details-column').delay(400).fadeOut(300);
         $('#updates-view').delay(400).fadeOut(300);
         $('#back').delay(400).fadeOut(300);
+        NProgress.done();
 });
 
 $('#details').click(function(){
+    NProgress.start();
     $('#list-view').delay(400).fadeOut(300);
     $('#map-view').delay(400).fadeOut(300);
     $('#updates-view').delay(400).fadeIn(300);
     $('#back').delay(400).fadeIn(300);
+    NProgress.done();
 });
 
 $('#drop1 li a').click(function(){
@@ -453,7 +501,6 @@ $('#drop1 li a').click(function(){
 });
 
 $('.list-table tbody tr').click(function() {
-    DetailsColumn();
     $('.hod').delay(400).fadeOut(300);
 });
 
@@ -508,14 +555,21 @@ function initialize() {
     else{
         console.log('ho gaya');
         hello.innerHTML = "Hi "+currentUser.get("username");
-          map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        center: new google.maps.LatLng(28.612912,77.22951),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        
+        map2 = new google.maps.Map(document.getElementById('googleMap'), {
+            zoom: 12,
+            center: new google.maps.LatLng(28.612912,77.22951),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+            center: new google.maps.LatLng(28.612912,77.22951),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
         });
         
-          var i=0;
-          setTimeout( function() {
+        var i=0;
+        setTimeout( function() {
             populate();
         }, i * 500);
         if (navigator.geolocation) {
@@ -542,5 +596,3 @@ function initialize() {
         }
     }
 }
-
-
