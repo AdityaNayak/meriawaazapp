@@ -66,11 +66,11 @@
           <table class="list-table" id="list-view">
             <thead>
               <tr>
-                <th width="100">Type</th>
+                <th>Type</th>
                 <th>Content</th>
-                <th width="100">Status</th>
-                <th width="100">Assignee</th>
-                <th width="100">Time</th>
+                <th>Status</th>
+                <th>Assignee</th>
+                <th>Time</th>
               </tr>
             </thead>
             <tbody>
@@ -79,17 +79,19 @@
           </table>
         </div>
         <div id="updates-view" style="display:none;">
-        <img src="http://placehold.it/800x200&text=map+with+single+marker" class="br-fx-top">
+          <div id="map-view2" class="br-fx-top">
+              <div id="googleMap" class="google-map" style="width:100%;height:200px"></div> 
+          </div>
           <div class="panel br-fx-top">
             <div class="row">
-              <div class="small-8 small-centered columns">
-                <img src="http://placehold.it/1600x900&text=bigIssueImage">
+              <div class="small-8 small-centered columns" align="center">
+                <img id="bigphoto" src="{{site.url}}/assets/images/loading.gif">
               </div>
             </div>
             <h2 class="s-ws-top text-center">Issue Title<small> Issue ID</small></h2>
             <div class="row">
               <div class="small-12 columns small-centered">
-                <p>A long paragraph that shows the issue content</p>
+                <p id="detailedissue">A long paragraph that shows the issue content</p>
               </div>
             </div>
             <div class="row">
@@ -179,7 +181,7 @@
         </div>
         <div class="row">
           <div class="small-12 columns s-ws-top">
-            <p>Address: <div id="address">Nothing Changed</div></p>
+            <p>Address: <div id="address">-</div></p>
           </div>
         </div>
       </div>
@@ -201,7 +203,6 @@
     <script>
       $( document ).ready(function() {
         initialize();
-        var view=0;
         //Set the initial state of the picker label
         $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
 

@@ -1,5 +1,7 @@
 Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
 
+var view=0;
+
 var listView=$('#list-view tbody');
 
 var box_r=document.getElementById('road_cb');
@@ -19,6 +21,7 @@ var markers=[];
 
 var numcategory=6;
 var map;
+var map2;
 
 var iconURLPrefix = './assets/images/';
 var width=40;
@@ -80,6 +83,8 @@ var icons = [
     icon6, 
 ];
 
+var selectedicon;
+
 function getReverseGeocodingData(lat, lng) {
     var latlng = new google.maps.LatLng(lat, lng);
     // This is making the Geocode request
@@ -136,7 +141,7 @@ function populate(){
                     myicon=icons[5];
                 }
 
-                
+                selectedicon=myicon;                
                 marker = new google.maps.Marker({
                     position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
                     map: map,
@@ -192,7 +197,7 @@ function populate(){
                         
                         var p_photo=object.get('photo');
                         var p_status=object.get('status');
-                        infowindow.setContent("You Clicked me!");
+                        infowindow.setContent(p_status);
                         var photo=document.getElementById('photo');
                         
                         console.log("Effect Starts");
@@ -206,8 +211,17 @@ function populate(){
                         var content=document.getElementById('content');
                         var type=document.getElementById('type');
                         var location=document.getElementById('location');
+                        var bigphoto=document.getElementById('bigphoto');
+                        var detailedissue=document.getElementById('detailedissue');
                         $('#details-column').fadeOut(300);
-                        
+                        var myLatlng = new google.maps.LatLng(p_latitude,p_longitude); 
+                        var Singlemarker = new google.maps.Marker({ 
+                            position: myLatlng, 
+                            map: map2, 
+                            icon: selectedicon,
+                            title: p_status
+                        });
+                        map2.setCenter(myLatlng);
                         setTimeout(function(){
                                 
                                 $("#colorstatus").removeClass();
@@ -235,7 +249,8 @@ function populate(){
                                 }
                                 type.innerHTML = p_type;
                                 location.innerHTML = p_location;
-                                
+                                bigphoto.src=p_photo.url();
+                                detailedissue.innerHTML=p_content;
                                 photo.src=p_photo.url(); 
                                 $('#details-column').fadeIn(300);
                         },300); 
@@ -243,14 +258,7 @@ function populate(){
                     }
                 })(marker,object));
              } 
-             var numAnim1 = new countUp("fn1", 0, no);
-             numAnim1.start();
-             var numAnim2 = new countUp("fn2", 0, np);
-             numAnim2.start();
-             var numAnim3 = new countUp("fn3", 0, nr);
-             numAnim3.start();  
-             var numAnim4 = new countUp("fn4", 0, nc);
-             numAnim4.start();
+          statusCounters(no,np,nr,nc);;
           },
           error: function(error) {
           }
@@ -367,8 +375,18 @@ function statusCheck(m){
     return 0; 
 }
 
+function statusCounters(no,np,nr,nc){
+    var numAnim1 = new countUp("fn1", 0, no);
+    numAnim1.start();
+    var numAnim2 = new countUp("fn2", 0, np);
+    numAnim2.start();
+    var numAnim3 = new countUp("fn3", 0, nr);
+    numAnim3.start();  
+    var numAnim4 = new countUp("fn4", 0, nc);
+    numAnim4.start();
+}
+
 function filter(){
-    NProgress.start();
     var no=0;
     var np=0;
     var nr=0;
@@ -399,22 +417,28 @@ function filter(){
         }else{
             markers[m].setMap(null);
         }
-        var numAnim1 = new countUp("fn1", 0, no);
-        numAnim1.start();
-        var numAnim2 = new countUp("fn2", 0, np);
-        numAnim2.start();
-        var numAnim3 = new countUp("fn3", 0, nr);
-        numAnim3.start();  
-        var numAnim4 = new countUp("fn4", 0, nc);
-        numAnim4.start();
+        
     }         
-    NProgress.done();
+    statusCounters(no,np,nr,nc);
 }  
 
 $('input[type=checkbox]').change(
     function(){
+        NProgress.start();
         filter();
         $('#details-column').delay(400).fadeOut(300);
+        if(view==1){
+            $('#list-view').delay(400).fadeIn(300);
+            $('#map-view').delay(400).fadeOut(300);
+        }
+        else{
+            $('#map-view').delay(400).fadeIn(300);
+            $('#list-view').delay(400).fadeOut(300);
+        }
+        $('#details-column').delay(400).fadeOut(300);
+        $('#updates-view').delay(400).fadeOut(300);
+        $('#back').delay(400).fadeOut(300);
+        NProgress.done();
     });
 
 $('input[name=maptglgroup]').change(function(){
@@ -529,14 +553,21 @@ function initialize() {
     else{
         console.log('ho gaya');
         hello.innerHTML = "Hi "+currentUser.get("username");
-          map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        center: new google.maps.LatLng(28.612912,77.22951),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        
+        map2 = new google.maps.Map(document.getElementById('googleMap'), {
+            zoom: 12,
+            center: new google.maps.LatLng(28.612912,77.22951),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+            center: new google.maps.LatLng(28.612912,77.22951),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
         });
         
-          var i=0;
-          setTimeout( function() {
+        var i=0;
+        setTimeout( function() {
             populate();
         }, i * 500);
         if (navigator.geolocation) {
@@ -563,5 +594,3 @@ function initialize() {
         }
     }
 }
-
-
