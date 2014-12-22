@@ -215,13 +215,15 @@ function populate(){
                         var detailedissue=document.getElementById('detailedissue');
                         $('#details-column').fadeOut(300);
                         var myLatlng = new google.maps.LatLng(p_latitude,p_longitude); 
+                        map2.setCenter(myLatlng);
                         var Singlemarker = new google.maps.Marker({ 
                             position: myLatlng, 
                             map: map2, 
-                            icon: selectedicon,
-                            title: p_status
+                            icon: marker.get("icon"),
+                            title: p_status,
+                            animation: google.maps.Animation.DROP
                         });
-                        map2.setCenter(myLatlng);
+                        
                         setTimeout(function(){
                                 
                                 $("#colorstatus").removeClass();
