@@ -23,6 +23,8 @@ var numcategory=6;
 var map;
 var map2;
 
+var issuelocation;
+
 var iconURLPrefix = './assets/images/';
 var width=40;
 var height=40;
@@ -103,6 +105,80 @@ function getReverseGeocodingData(lat, lng) {
         }
     });
     
+}
+
+function CurrentLocationControl(controlDiv, map) {
+
+  // Set CSS styles for the DIV containing the control
+  // Setting padding to 5 px will offset the control
+  // from the edge of the map
+  controlDiv.style.padding = '5px';
+
+  // Set CSS for the control border
+  var controlUI = document.createElement('div');
+  controlUI.style.backgroundColor = 'white';
+  controlUI.style.borderStyle = 'solid';
+  controlUI.style.borderWidth = '2px';
+  controlUI.style.cursor = 'pointer';
+  controlUI.style.textAlign = 'center';
+  controlUI.title = 'Click to set the map to Current Location';
+  controlDiv.appendChild(controlUI);
+
+  // Set CSS for the control interior
+  var controlText = document.createElement('div');
+  controlText.style.fontFamily = 'Arial,sans-serif';
+  controlText.style.fontSize = '12px';
+  controlText.style.paddingLeft = '4px';
+  controlText.style.paddingRight = '4px';
+  controlText.innerHTML = '<b>Current Location</b>';
+  controlUI.appendChild(controlText);
+
+  // Setup the click event listeners: simply set the map to
+  // Chicago
+  google.maps.event.addDomListener(controlUI, 'click', function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                var geolocpoint = new google.maps.LatLng(latitude, longitude);
+                map.setCenter(geolocpoint);
+                map.setZoom(16);
+            });
+        }
+  });
+}
+function FixedLocationControl(controlDiv, map, location) {
+
+  // Set CSS styles for the DIV containing the control
+  // Setting padding to 5 px will offset the control
+  // from the edge of the map
+  controlDiv.style.padding = '5px';
+
+  // Set CSS for the control border
+  var controlUI = document.createElement('div');
+  controlUI.style.backgroundColor = 'white';
+  controlUI.style.borderStyle = 'solid';
+  controlUI.style.borderWidth = '2px';
+  controlUI.style.cursor = 'pointer';
+  controlUI.style.textAlign = 'center';
+  controlUI.title = 'Click to set the map Back to Issue Location';
+  controlDiv.appendChild(controlUI);
+
+  // Set CSS for the control interior
+  var controlText = document.createElement('div');
+  controlText.style.fontFamily = 'Arial,sans-serif';
+  controlText.style.fontSize = '12px';
+  controlText.style.paddingLeft = '4px';
+  controlText.style.paddingRight = '4px';
+  controlText.innerHTML = '<b>Issue Location</b>';
+  controlUI.appendChild(controlText);
+
+  // Setup the click event listeners: simply set the map to
+  // Chicago
+  google.maps.event.addDomListener(controlUI, 'click', function() {
+    map.setCenter(issuelocation);
+  });
+
 }
 
 function populate(){
@@ -216,6 +292,7 @@ function populate(){
                         var detailedissue=document.getElementById('detailedissue');
                         $('#details-column').fadeOut(300);
                         var myLatlng = new google.maps.LatLng(p_latitude,p_longitude); 
+                        issuelocation=myLatlng;
                         map2.setCenter(myLatlng);
                         var Singlemarker = new google.maps.Marker({ 
                             position: myLatlng, 
@@ -508,9 +585,6 @@ $('#details').click(function(){
     $('#photo').delay(400).fadeOut(300);
     $('#content').delay(400).fadeOut(300);
     $('#details').delay(400).fadeOut(300);
-    $('#googleMap').height($("#map-view2").height());
-    $('#googleMap').width($("#map-view2").width());
-    google.maps.event.trigger($('#googleMap'), 'resize');
     $('#back').delay(400).fadeIn(300);
     NProgress.done();
 });
@@ -589,6 +663,21 @@ function initialize() {
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
         
+        var homeControlDiv = document.createElement('div');
+        var homeControl = new CurrentLocationControl(homeControlDiv, map);
+
+        homeControlDiv.index = 1;
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
+
+        var homeControlDiv2 = document.createElement('div');
+        var homeControl2 = new FixedLocationControl(homeControlDiv2, map2);
+
+        issuelocation=new google.maps.LatLng(28.612912,77.22951);
+
+        homeControlDiv2.index = 1;
+        map2.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv2);
+
+
         var i=0;
         setTimeout( function() {
             populate();
@@ -601,23 +690,7 @@ function initialize() {
                 map.setCenter(geolocpoint);
                 map.setZoom(16);
                 var iconURLPrefix = './assets/images/';
-                var geoicon = {
-                     url: iconURLPrefix + 'record.png', // url
-                     scaledSize: new google.maps.Size(40, 40), // size
-                     origin: new google.maps.Point(0,0), // origin
-                     anchor: new google.maps.Point(0,0) // anchor 
-                };
-                var geolocation = new google.maps.Marker({
-                    position: geolocpoint,
-                    map: map,
-                    title: 'You are here',
-                    
-                });
             });
-        }
-        $('#googleMap').height($("#map-view2").height());
-        $('#googleMap').width($("#map-view2").width());
-        google.maps.event.trigger($('#googleMap'), 'resize');
-            
+        }            
     }
 }
