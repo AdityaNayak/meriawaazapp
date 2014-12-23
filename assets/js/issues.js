@@ -256,6 +256,9 @@ function populate(){
                                 detailedissue.innerHTML=p_content;
                                 photo.src=p_photo.url(); 
                                 $('#details-column').fadeIn(300);
+                                $('#photo').delay(400).fadeIn(300);
+                                $('#content').delay(400).fadeIn(300);
+                                $('#details').delay(400).fadeIn(300);
                         },300); 
                         NProgress.done();
                     }
@@ -449,6 +452,9 @@ $('input[type=checkbox]').change(
 $('input[name=maptglgroup]').change(function(){
     NProgress.start();
     updateHistory();
+    $('#photo').delay(400).fadeIn(300);
+    $('#content').delay(400).fadeIn(300);
+    $('#details').delay(400).fadeIn(300);
     if($(this).is(':checked'))
     {
         view=0;
@@ -478,6 +484,7 @@ $('#back').click(function(){
     NProgress.start();
     $('#photo').delay(400).fadeIn(300);
     $('#content').delay(400).fadeIn(300);
+    $('#details').delay(400).fadeIn(300);
     if(view==1){
         $('#list-view').delay(400).fadeIn(300);
         $('#map-view').delay(400).fadeOut(300);
@@ -500,6 +507,7 @@ $('#details').click(function(){
     $('#updates-view').delay(400).fadeIn(300);
     $('#photo').delay(400).fadeOut(300);
     $('#content').delay(400).fadeOut(300);
+    $('#details').delay(400).fadeOut(300);
     $('#googleMap').height($("#map-view2").height());
     $('#googleMap').width($("#map-view2").width());
     google.maps.event.trigger($('#googleMap'), 'resize');
