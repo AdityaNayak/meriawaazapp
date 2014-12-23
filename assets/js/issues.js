@@ -198,7 +198,7 @@ function populate(){
                         var p_photo=object.get('photo');
                         var p_status=object.get('status');
                         infowindow.setContent(p_status);
-                        var photo=document.getElementById('photo');
+                        
                         
                         console.log("Effect Starts");
                         
@@ -208,6 +208,7 @@ function populate(){
                         var status=document.getElementById('colorstatus');
                         var date=document.getElementById('date');
                         var time=document.getElementById('time');
+                        var photo=document.getElementById('photo');
                         var content=document.getElementById('content');
                         var type=document.getElementById('type');
                         var location=document.getElementById('location');
@@ -389,6 +390,7 @@ function statusCounters(no,np,nr,nc){
 }
 
 function filter(){
+    updateHistory();
     var no=0;
     var np=0;
     var nr=0;
@@ -426,6 +428,7 @@ function filter(){
 
 $('input[type=checkbox]').change(
     function(){
+        updateHistory();
         NProgress.start();
         filter();
         $('#details-column').delay(400).fadeOut(300);
@@ -445,6 +448,7 @@ $('input[type=checkbox]').change(
 
 $('input[name=maptglgroup]').change(function(){
     NProgress.start();
+    updateHistory();
     if($(this).is(':checked'))
     {
         view=0;
@@ -470,7 +474,10 @@ $('#claim-st1').click(function(){
 });
 
 $('#back').click(function(){
+    updateHistory();
     NProgress.start();
+    $('#photo').delay(400).fadeIn(300);
+    $('#content').delay(400).fadeIn(300);
     if(view==1){
         $('#list-view').delay(400).fadeIn(300);
         $('#map-view').delay(400).fadeOut(300);
@@ -486,10 +493,16 @@ $('#back').click(function(){
 });
 
 $('#details').click(function(){
+    updateHistory();
     NProgress.start();
     $('#list-view').delay(400).fadeOut(300);
     $('#map-view').delay(400).fadeOut(300);
     $('#updates-view').delay(400).fadeIn(300);
+    $('#photo').delay(400).fadeOut(300);
+    $('#content').delay(400).fadeOut(300);
+    $('#googleMap').height($("#map-view2").height());
+    $('#googleMap').width($("#map-view2").width());
+    google.maps.event.trigger($('#googleMap'), 'resize');
     $('#back').delay(400).fadeIn(300);
     NProgress.done();
 });
@@ -594,5 +607,9 @@ function initialize() {
                 });
             });
         }
+        $('#googleMap').height($("#map-view2").height());
+        $('#googleMap').width($("#map-view2").width());
+        google.maps.event.trigger($('#googleMap'), 'resize');
+            
     }
 }

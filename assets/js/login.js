@@ -23,6 +23,7 @@ function login() {
 	  NProgress.start();
 	  console.log("Inside Login");
 	  //loading();
+	  loadingButton_id("signin-btn");
 	  var form = document.getElementById("signin-form")
 
 	  var username = form.email.value;
