@@ -7140,7 +7140,7 @@ meta.foundation-mq-topbar {
   height: 34px;
   line-height: 33px;
   padding: 0 3.0625rem 0 1.5rem;
-  color: #FFFFFF;
+  color: #dcdcdc;
   position: relative;
 }
 /* line 129, ../bower_components/foundation/scss/foundation/components/_global.scss */
@@ -7152,7 +7152,7 @@ meta.foundation-mq-topbar {
   top: 50%;
   margin-top: -8px;
   right: 1.5rem;
-  box-shadow: 0 0 0 1px #FFFFFF, 0 7px 0 1px #FFFFFF, 0 14px 0 1px #FFFFFF;
+  box-shadow: 0 0 0 1px #0071BC, 0 7px 0 1px #0071BC, 0 14px 0 1px #0071BC;
   width: 16px;
 }
 /* line 162, ../bower_components/foundation/scss/foundation/components/_global.scss */
