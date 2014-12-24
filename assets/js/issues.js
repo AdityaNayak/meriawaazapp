@@ -237,7 +237,7 @@ function populateUpdates(){
                         timelineView.append("<div class='panel nb'><p><strong>"+user.get("username")+"</strong> closed the issue <small>"+ago+" ago</small></p></div>"); 
                         
                     }
-                    if(object.get("type")=="comment"){timelineView.append("<div class='panel p-fx'><div class='panel-head'><strong>"+user.get("username")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div>"); 
+                    if(object.get("type")=="comment"){timelineView.append("<div class='row'><div class='small-2 columns wbg-fx'><img src='http://placehold.it/300x300&text=user' class='circle-img'></div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong>"+user.get("username")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div></div></div>"); 
                     }
                     if(object.get("type")=="claim"){timelineView.append("<div class='panel nb'><p><strong>"+user.get("username")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
                     }
