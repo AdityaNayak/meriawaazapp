@@ -4,6 +4,7 @@ var view=0;
 
 var listView=$('#list-view tbody');
 var timelineView=$('#timeline-view');
+var teamView=$('#team');
 
 var box_r=document.getElementById('road_cb');
 var box_e=document.getElementById('electricity_cb');
@@ -26,7 +27,7 @@ var map2;
 var issuelocation;
 var currmarker;
 var currentUser;
-var Team;
+var team=[];
 var markers=[];
 
 var iconURLPrefix = './assets/images/';
@@ -238,7 +239,7 @@ function populateUpdates(){
                     }
                     if(object.get("type")=="comment"){timelineView.append("<div class='panel p-fx'><div class='panel-head'><strong>"+user.get("username")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div>"); 
                     }
-                    if(object.get("type")=="claimed"){timelineView.append("<div class='panel nb'><p><strong>"+user.get("username")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
+                    if(object.get("type")=="claim"){timelineView.append("<div class='panel nb'><p><strong>"+user.get("username")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
                     }
                 }
 
@@ -250,6 +251,27 @@ function populateUpdates(){
 }
 
 function populateTeam(){
+    teamView.html("");    
+    ListItem = Parse.Object.extend("TeamMember");
+    query = new Parse.Query(ListItem);
+    query.include("user");
+    query.include("neta");
+    query.equalTo("neta", currentUser.get("neta"));
+    query.find({
+          success: function(results) {
+                console.log("Size:"+results.length);
+                team=[];
+                for (var i = 0; i < results.length; i++) { 
+                    object= results[i];
+                    team.push(object);
+                    teamView.append("<option id="+object.get('user').get('email')+" value="+object.get('name')+">"+object.get('name')+"</option>");
+                }
+
+            },
+          error: function(error) {
+                console.log("Error:"+error.message);
+          }
+    });
     
 }
 
@@ -297,16 +319,45 @@ function postClaim(){
     });
 }
 
-
-function postAssignment(){
-    populateUpdates();
+function teamMember(email){
+    console.log("Find Team Member with email ID: "+email);
+    var member;
+    for (var i = 0; i < team.length; i++) { 
+        if(team[i].get('user').get('email')==email){
+            member=team[i];
+            console.log("Member Found: "+member.id);
+            return member;
+        }
+    }
 }
 
-function populateTeam(){
+function postAssignment(id){
+    var Assign = Parse.Object.extend("Update");
+    var assign = new Assign();
+    var u = new Parse.Object("User");
+    var i = new Parse.Object("Issue");
+    var a = new Parse.Object("TeamMember");
+    var member=teamMember(id);
+    u.id = currentUser.id;
+    a.id = member.id; 
+    i.id = currmarker.content.id;
+    assign.set("type", "assigned");
+    assign.set("issue", i);
+    assign.set("user", u);
+    assign.set("assignee", a);
     
+    assign.save(null, {
+      success: function(assign) {
+        populateUpdates();
+      },
+      error: function(assign, error) {
+        alert('Failed to Comment! ' + error.message);
+      }
+    });
 }
 
-function claimStatus(){
+
+function IssueStatusButton(){
     
 }
 
@@ -716,6 +767,7 @@ $('#claim-st1').click(function(){
     $('#claim-st2').delay(400).fadeIn(300);
 });
 
+
 $('#back').click(function(){
     updateHistory();
     NProgress.start();
@@ -763,12 +815,6 @@ $('#details-button').click(function(){
     $('#details-button').delay(400).fadeOut(300);
     $('#back').delay(400).fadeIn(300);
     NProgress.done();
-});
-
-$('#drop1 li a').click(function(){
-    event.preventDefault();
-    $('#claim-st2').delay(400).fadeOut(300);
-    $('#claim-st3').delay(400).fadeIn(300);
 });
 
 $('.list-table tbody tr').click(function() {
@@ -857,6 +903,7 @@ function initialize() {
         var i=0;
         setTimeout( function() {
             populate();
+            populateTeam();
         }, i * 500);
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {

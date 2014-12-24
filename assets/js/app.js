@@ -12,11 +12,13 @@ function updateHistory()
 
 function loadingButton_id(id){
 	  var Original=document.getElementById(id).value;
+	  console.log("Original: "+Original );
 	  document.getElementById(id).value = "Loading...";
 	  $("#"+id).addClass('loading');
 	  var ref=this;
 	  setTimeout(function() {
 	  			$("#"+id).removeClass('loading');
+	  			console.log("Changing value to "+Original);
 		  		document.getElementById(id).value = Original;
 		  }, 6000);
       console.log("Loading Button was Called!");

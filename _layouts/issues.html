@@ -149,17 +149,13 @@
               <div class="button fullwidth" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
               <div id="claim-st3">Assigned to: <strong>no one</strong></div>
             </div>
-            <ul id="drop1" class="medium f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
+            <input type="text" id="drop1" class="medium f-dropdown" name="userName" placeholder="Team Member" value="" list="team" required autofocus>
               <datalist id="team">
                 <option value="user 1"></option>
                 <option value="user 3"></option>
                 <option value="user 2"></option>
               </datalist>
-              <li><input type="text" list="team"></li>
-              <li><a href="#">Username 1</a></li>
-              <li><a href="#">Username 2</a></li>
-              <li><a href="#">Username 3</a></li>
-            </ul>
+            <input type="button" id="assign" class="button fullwidth small" value="Select"/>
           </div>
         </div>
         <div class="row">
@@ -225,6 +221,15 @@
           var comment=document.getElementById("comment").value;
           postComment(comment);
         });
+
+        $('#assign').on('click',function(){
+          console.log("Assignment Begins...");
+          var g=$('#drop1').val();  
+          var id = $('#team').find('option').filter(function() { return $.trim( $(this).text() ) === g; }).attr('id');
+          console.log("ID"+id);
+          postAssignment(id);
+        });
+
   });
 </script>
 </html>
