@@ -20,7 +20,7 @@ function loadingButton_id(id){
 	  			$("#"+id).removeClass('loading');
 	  			console.log("Changing value to "+Original);
 		  		document.getElementById(id).value = Original;
-		  }, 6000);
+		  }, 12000);
       console.log("Loading Button was Called!");
 }
 
@@ -31,7 +31,7 @@ function loadingButton_ref(){
 	  setTimeout(function() {
 	  			$(this).removeClass('loading');
 		  		document.getElementById(this.id).value = Original;
-		  }, 6000);
+		  }, 12000);
       console.log("Loading Button was Called!");
 }
 
@@ -43,6 +43,6 @@ $('.interactiveLoading').click(function() {
 	  setTimeout(function() {
 	  			$(ref).removeClass('loading');
 		  		document.getElementById(ref.id).value = Original;
-		  }, 6000);
+		  }, 12000);
       console.log("Loading Button was Called!");
 });
