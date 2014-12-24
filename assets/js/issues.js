@@ -621,7 +621,7 @@ function updateContentWithCurrentMarker(){
                 content.innerHTML = p_content.substring(0,30)+"...";
             }
             type.innerHTML = p_type;
-            titleinnerHTML = p_title+"<small>"+p_id+"</small>";
+            title.innerHTML = p_title+"<small>"+p_id+"</small>";
             location.innerHTML = p_location;
             console.log(p_photo);
             if(p_photo!=undefined){
