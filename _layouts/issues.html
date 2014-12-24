@@ -75,11 +75,11 @@
             </thead>
             <tbody>
                 <tr>
-                <td width="100">Loading...</td>
+                <td width="100px">Loading...</td>
                 <td>Loading...</td>
-                <td width="100">Loading...</td>
-                <td width="100">Loading...</td>
-                <td width="100">Loading...</td>
+                <td width="100px">Loading...</td>
+                <td width="100px">Loading...</td>
+                <td width="100px">Loading...</td>
               </tr>
             </tbody>
           </table>
@@ -94,7 +94,7 @@
                 <img id="bigphoto" src="{{site.url}}/assets/images/loading.gif">
               </div>
             </div>
-            <h2 class="s-ws-top text-center">Issue Title<small> Issue ID</small></h2>
+            <h2 id="ititle" class="s-ws-top text-center">Issue Title<small> Issue ID</small></h2>
             <div class="row">
               <div class="small-12 columns small-centered">
                 <p id="detailedissue">A long paragraph that shows the issue content</p>
@@ -148,14 +148,12 @@
               <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
               <div class="button fullwidth" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
               <div id="claim-st3">Assigned to: <strong>no one</strong></div>
-            </div>
-            <input type="text" id="drop1" class="medium f-dropdown" name="userName" placeholder="Team Member" value="" list="team" required autofocus>
-              <datalist id="team">
+              <select id="team" style="display:none;">
                 <option value="user 1"></option>
                 <option value="user 3"></option>
                 <option value="user 2"></option>
-              </datalist>
-            <input type="button" id="assign" class="button fullwidth small" value="Select"/>
+              </select>
+            </div>            
           </div>
         </div>
         <div class="row">
@@ -216,19 +214,13 @@
         //Set the initial state of the picker label
         $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
 
-        $('#comment-form').submit(function(event){
-          event.preventDefault();
-          var comment=document.getElementById("comment").value;
-          postComment(comment);
-        });
-
-        $('#assign').on('click',function(){
-          console.log("Assignment Begins...");
-          var g=$('#drop1').val();  
-          var id = $('#team').find('option').filter(function() { return $.trim( $(this).text() ) === g; }).attr('id');
-          console.log("ID"+id);
-          postAssignment(id);
-        });
+        // $('#assign').on('click',function(){
+        //   console.log("Assignment Begins...");
+        //   var g=$('#drop1').val();  
+        //   var id = $('#team').find('option').filter(function() { return $.trim( $(this).text() ) === g; }).attr('id');
+        //   console.log("ID"+id);
+        //   postAssignment(id);
+        // });
 
   });
 </script>
