@@ -85,7 +85,7 @@
           </table>
         </div>
         <div id="updates-view" style="display:none;">
-          <div id="map-view2" class="br-fx-top">
+          <div id="map-view2" class="br-fx-top"  style="width:100%;height:200px">
               <div id="googleMap" class="google-map" style="width:100%;height:200px"></div> 
           </div>
           <div class="panel br-fx-top">
@@ -107,7 +107,7 @@
             </div>
             <div class="row" style="position:relative;">
               <div class="timeline-view">
-                <div class="small-12 columns b-ws-top">
+                <div id="timeline-view" class="small-12 columns b-ws-top">
                   <div class="panel p-fx">
                     <div class="panel-head"><strong>MLA 1</strong> commented <small> 2 days ago</small></div>
                     <p>Comment that is reallly long and is a text paragraph</p>
@@ -121,6 +121,14 @@
                   <div class="panel nb">
                     <p><strong>user1</strong> was assigned by <strong>MLA1</strong> <small>2 days ago</small></p>
                   </div>
+                </div>
+                <div id="comment-view" class="small-12 columns b-ws-top">
+                  <form id="comment-form">
+                        <textarea id="comment" rows="3" required >What's on your mind?</textarea>
+                        <br><br>
+                        <input type="submit" value="Comment" class="button fullwidth small">
+                        <input type="reset" value="Clear" class="button fullwidth small">
+                  </form>
                 </div>
               </div>
             </div>
@@ -139,23 +147,19 @@
             <div class="text-center">
               <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
               <div class="button fullwidth" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
-              <div id="claim-st3">Assigned to: <strong>Username</strong></div>
+              <div id="claim-st3">Assigned to: <strong>no one</strong></div>
             </div>
-            <ul id="drop1" class="medium f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
+            <input type="text" id="drop1" class="medium f-dropdown" name="userName" placeholder="Team Member" value="" list="team" required autofocus>
               <datalist id="team">
                 <option value="user 1"></option>
                 <option value="user 3"></option>
                 <option value="user 2"></option>
               </datalist>
-              <li><input type="text" list="team"></li>
-              <li><a href="#">Username 1</a></li>
-              <li><a href="#">Username 2</a></li>
-              <li><a href="#">Username 3</a></li>
-            </ul>
+            <input type="button" id="assign" class="button fullwidth small" value="Select"/>
           </div>
         </div>
         <div class="row">
-          <div id="details" class="button secondary fullwidth"><i class="icon-left"></i>View Details</div>
+          <div id="details-button" class="button secondary fullwidth"><i class="icon-left"></i>View Details</div>
         </div>
         <div class="row">
           <div class="small-12 columns s-ws-top hod text-center">
@@ -211,6 +215,20 @@
         initialize();
         //Set the initial state of the picker label
         $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+
+        $('#comment-form').submit(function(event){
+          event.preventDefault();
+          var comment=document.getElementById("comment").value;
+          postComment(comment);
+        });
+
+        $('#assign').on('click',function(){
+          console.log("Assignment Begins...");
+          var g=$('#drop1').val();  
+          var id = $('#team').find('option').filter(function() { return $.trim( $(this).text() ) === g; }).attr('id');
+          console.log("ID"+id);
+          postAssignment(id);
+        });
 
   });
 </script>
