@@ -107,7 +107,7 @@
             </div>
             <div class="row" style="position:relative;">
               <div class="timeline-view">
-                <div class="small-12 columns b-ws-top">
+                <div id="timeline-view" class="small-12 columns b-ws-top">
                   <div class="panel p-fx">
                     <div class="panel-head"><strong>MLA 1</strong> commented <small> 2 days ago</small></div>
                     <p>Comment that is reallly long and is a text paragraph</p>
@@ -121,6 +121,14 @@
                   <div class="panel nb">
                     <p><strong>user1</strong> was assigned by <strong>MLA1</strong> <small>2 days ago</small></p>
                   </div>
+                </div>
+                <div id="comment-view" class="small-12 columns b-ws-top">
+                  <form id="comment-form">
+                        <textarea id="comment" rows="3" required >What's on your mind?</textarea>
+                        <br><br>
+                        <input type="submit" value="Comment" class="button fullwidth small">
+                        <input type="reset" value="Clear" class="button fullwidth small">
+                  </form>
                 </div>
               </div>
             </div>
@@ -139,7 +147,7 @@
             <div class="text-center">
               <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
               <div class="button fullwidth" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
-              <div id="claim-st3">Assigned to: <strong>Username</strong></div>
+              <div id="claim-st3">Assigned to: <strong>no one</strong></div>
             </div>
             <ul id="drop1" class="medium f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
               <datalist id="team">
@@ -155,7 +163,7 @@
           </div>
         </div>
         <div class="row">
-          <div id="details" class="button secondary fullwidth"><i class="icon-left"></i>View Details</div>
+          <div id="details-button" class="button secondary fullwidth"><i class="icon-left"></i>View Details</div>
         </div>
         <div class="row">
           <div class="small-12 columns s-ws-top hod text-center">
@@ -212,6 +220,11 @@
         //Set the initial state of the picker label
         $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
 
+        $('#comment-form').submit(function(event){
+          event.preventDefault();
+          var comment=document.getElementById("comment").value;
+          postComment(comment);
+        });
   });
 </script>
 </html>

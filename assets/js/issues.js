@@ -3,6 +3,7 @@ Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjs
 var view=0;
 
 var listView=$('#list-view tbody');
+var timelineView=$('#timeline-view');
 
 var box_r=document.getElementById('road_cb');
 var box_e=document.getElementById('electricity_cb');
@@ -17,13 +18,16 @@ var box_cl=document.getElementById('closed_it');
 var box_op=document.getElementById('open_it');
 
 var infowindow;
-var markers=[];
 
 var numcategory=6;
 var map;
 var map2;
 
 var issuelocation;
+var currmarker;
+var currentUser;
+var Team;
+var markers=[];
 
 var iconURLPrefix = './assets/images/';
 var width=40;
@@ -85,8 +89,6 @@ var icons = [
     icon6, 
 ];
 
-var selectedicon;
-
 function getReverseGeocodingData(lat, lng) {
     var latlng = new google.maps.LatLng(lat, lng);
     // This is making the Geocode request
@@ -143,9 +145,19 @@ function CurrentLocationControl(controlDiv, map) {
                 var geolocpoint = new google.maps.LatLng(latitude, longitude);
                 map.setCenter(geolocpoint);
                 map.setZoom(16);
+                marker = new google.maps.Marker({
+                    position: geolocpoint,
+                    map: map,
+                    title: 'Current Location',
+                    draggable: false,
+                    animation: google.maps.Animation.DROP
+                });
             });
+            
         }
+
   });
+
 }
 function FixedLocationControl(controlDiv, map, location) {
 
@@ -181,13 +193,130 @@ function FixedLocationControl(controlDiv, map, location) {
 
 }
 
+function populateUpdates(){
+    timelineView.html("");    
+    ListItem = Parse.Object.extend("Update");
+    query = new Parse.Query(ListItem);
+    var pointer = new Parse.Object("Issue");
+    pointer.id = currmarker.content.id;
+    query.equalTo("issue", pointer);
+    query.include("assignee");
+    query.include("user");
+    query.ascending('createdAt');
+    query.find({
+          success: function(results) {
+                console.log("Size:"+results.length);
+                var d;
+                var ago;
+                var content;
+                var user;
+                var assignee;
+                for (var i = 0; i < results.length; i++) { 
+                    object= results[i];
+                    d=new Date(object.createdAt);
+                    ago=timeSince(d);
+                    if(object.get("content")!=undefined){
+                        content=object.get("content");    
+                    }
+                    else{
+                        content="";
+                    }
+                    user=object.get("user");
+                    if(object.get("assignee")!=undefined){
+                        assignee=object.get("assignee");
+                    }
+                    else{
+                        assignee="";
+                    }
+                    
+                    if(object.get("type")=="assigned"){
+                        timelineView.append("<div class='panel nb'><p><strong>"+assignee.get("name")+"</strong> was assigned by <strong>"+user.get("username")+"</strong> <small>"+ago+" ago</small></p></div>");                        
+                    }
+                    if(object.get("type")=="closed"){
+                        timelineView.append("<div class='panel nb'><p><strong>"+user.get("username")+"</strong> closed the issue <small>"+ago+" ago</small></p></div>"); 
+                        
+                    }
+                    if(object.get("type")=="comment"){timelineView.append("<div class='panel p-fx'><div class='panel-head'><strong>"+user.get("username")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div>"); 
+                    }
+                    if(object.get("type")=="claimed"){timelineView.append("<div class='panel nb'><p><strong>"+user.get("username")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
+                    }
+                }
+
+            },
+          error: function(error) {
+                console.log("Error:"+error.message);
+          }
+    });
+}
+
+function populateTeam(){
+    
+}
+
+function postComment(c){
+    var Comment = Parse.Object.extend("Update");
+    var comment = new Comment();
+    var u = new Parse.Object("User");
+    var i = new Parse.Object("Issue");
+    u.id = currentUser.id;
+    i.id = currmarker.content.id;
+    comment.set("type", "comment");
+    comment.set("content", c);
+    comment.set("issue", i);
+    comment.set("user", u);
+    
+    comment.save(null, {
+      success: function(comment) {
+        populateUpdates();
+      },
+      error: function(comment, error) {
+        alert('Failed to Comment! ' + error.message);
+      }
+    });
+}
+
+
+function postClaim(){
+    var Claim = Parse.Object.extend("Update");
+    var claim = new Claim();
+    var u = new Parse.Object("User");
+    var i = new Parse.Object("Issue");
+    u.id = currentUser.id;
+    i.id = currmarker.content.id;
+    claim.set("type", "claim");
+    claim.set("issue", i);
+    claim.set("user", u);
+    
+    claim.save(null, {
+      success: function(claim) {
+        populateUpdates();
+      },
+      error: function(claim, error) {
+        console.log('Failed to Comment! ' + error.message);
+      }
+    });
+}
+
+
+function postAssignment(){
+    populateUpdates();
+}
+
+function populateTeam(){
+    
+}
+
+function claimStatus(){
+    
+}
+
 function populate(){
         var no=0;
         var np=0;
         var nr=0;
         var nc=0;
         console.log('Populate!');
-        ListItem = Parse.Object.extend("complaint");
+        ListItem = Parse.Object.extend("Issue");
         query = new Parse.Query(ListItem);
         
         query.descending('createdAt');
@@ -196,7 +325,7 @@ function populate(){
             for (var i = 0; i < results.length; i++) { 
                 var object = results[i];
                 var myicon;
-                               
+                
                 //Set Icon
                 if (object.get('category')=="road"){
                     myicon=icons[0];
@@ -217,7 +346,7 @@ function populate(){
                     myicon=icons[5];
                 }
 
-                selectedicon=myicon;                
+                              
                 marker = new google.maps.Marker({
                     position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
                     map: map,
@@ -259,6 +388,7 @@ function populate(){
                             maxHeight: 900
                         });
                         NProgress.start();
+                        currmarker=marker;
                         var p_timestam=String(object.createdAt);
                         var p_timestamp=p_timestam.split(" ");
                         var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
@@ -270,7 +400,7 @@ function populate(){
                         var p_longitude=object.get('location').longitude;
                         var p_location=p_latitude+","+p_longitude;
                         getReverseGeocodingData(p_latitude, p_longitude);
-                        
+                        var p_id=object.id;
                         var p_photo=object.get('photo');
                         var p_status=object.get('status');
                         infowindow.setContent(p_status);
@@ -329,13 +459,22 @@ function populate(){
                                 }
                                 type.innerHTML = p_type;
                                 location.innerHTML = p_location;
-                                bigphoto.src=p_photo.url();
+                                console.log(p_photo);
+                                if(p_photo!=undefined){
+                                    bigphoto.src=p_photo.url();
+                                    photo.src=p_photo.url(); 
+                                }
+                                else{
+                                    bigphoto.src="./assets/images/no_image.jpg";
+                                    photo.src="./assets/images/no_image.jpg"; 
+                                }
                                 detailedissue.innerHTML=p_content;
-                                photo.src=p_photo.url(); 
+                                console.log("find comments for:"+object.id);  
+                                populateUpdates();
                                 $('#details-column').fadeIn(300);
                                 $('#photo').delay(400).fadeIn(300);
                                 $('#content').delay(400).fadeIn(300);
-                                $('#details').delay(400).fadeIn(300);
+                                $('#details-button').delay(400).fadeIn(300);
                         },300); 
                         NProgress.done();
                     }
@@ -410,7 +549,7 @@ function categoryCheck(m){
              return 1;
         }
     }
-    if((m.content).get("category")=="transportation"){
+    if((m.content).get("category")=="transport"){
         if(box_t.checked){
              return 1;
         }
@@ -475,6 +614,8 @@ function filter(){
     var np=0;
     var nr=0;
     var nc=0;
+    var hide=0;
+    var show=0;
     listView.html("");
     for(var m=0;m<markers.length;m++){
         if(statusCheck(markers[m])==1 && categoryCheck(markers[m])==1 && dateCheck(markers[m])==1){
@@ -486,6 +627,8 @@ function filter(){
             }
             listView.append( "<tr class='"+(markers[m].content).get('status')+"'><td width='100'>"+(markers[m].content).get('category')+"</td><td width='100'>"+content+"</td><td width='100'>"+(markers[m].content).get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
             markers[m].setMap(map);
+            show+=1;
+            console.log(show.toString()+" showing:"+markers[m].content.get('content'));
             if((markers[m].content).get('status')=="open"){
                 no=no+1;
             }
@@ -500,6 +643,8 @@ function filter(){
             }
         }else{
             markers[m].setMap(null);
+            hide+=1;
+            console.log(hide.toString()+" hiding:"+markers[m].content.get('content'));
         }
         
     }         
@@ -510,6 +655,9 @@ $('input[type=checkbox]').change(
     function(){
         updateHistory();
         NProgress.start();
+        if(infowindow) {
+            infowindow.close();
+        }
         filter();
         $('#details-column').delay(400).fadeOut(300);
         if(view==1){
@@ -519,6 +667,10 @@ $('input[type=checkbox]').change(
         else{
             $('#map-view').delay(400).fadeIn(300);
             $('#list-view').delay(400).fadeOut(300);
+            setTimeout(function(){
+                google.maps.event.trigger(map, 'resize');
+                map.setZoom( map.getZoom() );
+            },700);
         }
         $('#details-column').delay(400).fadeOut(300);
         $('#updates-view').delay(400).fadeOut(300);
@@ -529,13 +681,20 @@ $('input[type=checkbox]').change(
 $('input[name=maptglgroup]').change(function(){
     NProgress.start();
     updateHistory();
+    if(infowindow) {
+        infowindow.close();
+    }
     $('#photo').delay(400).fadeIn(300);
     $('#content').delay(400).fadeIn(300);
-    $('#details').delay(400).fadeIn(300);
+    $('#details-button').delay(400).fadeIn(300);
     if($(this).is(':checked'))
     {
         view=0;
         $('#map-view').delay(400).fadeIn(300);
+        setTimeout(function(){
+            google.maps.event.trigger(map, 'resize');
+            map.setZoom( map.getZoom() );
+        },700);
         $('#list-view').delay(400).fadeOut(300);
         $('#updates-view').delay(400).fadeOut(300);
         $('#back').delay(400).fadeOut(300);
@@ -552,6 +711,7 @@ $('input[name=maptglgroup]').change(function(){
 });
 
 $('#claim-st1').click(function(){
+    postClaim();
     $('#claim-st1').delay(400).fadeOut(300);
     $('#claim-st2').delay(400).fadeIn(300);
 });
@@ -559,15 +719,22 @@ $('#claim-st1').click(function(){
 $('#back').click(function(){
     updateHistory();
     NProgress.start();
+    if(infowindow) {
+        infowindow.close();
+    }
     $('#photo').delay(400).fadeIn(300);
     $('#content').delay(400).fadeIn(300);
-    $('#details').delay(400).fadeIn(300);
+    $('#details-button').delay(400).fadeIn(300);
     if(view==1){
         $('#list-view').delay(400).fadeIn(300);
         $('#map-view').delay(400).fadeOut(300);
     }
     else{
         $('#map-view').delay(400).fadeIn(300);
+        setTimeout(function(){
+            google.maps.event.trigger(map, 'resize');
+            map.setZoom( map.getZoom() );
+        },700);
         $('#list-view').delay(400).fadeOut(300);
     }
         $('#details-column').delay(400).fadeOut(300);
@@ -576,15 +743,24 @@ $('#back').click(function(){
         NProgress.done();
 });
 
-$('#details').click(function(){
+
+
+$('#details-button').click(function(){
     updateHistory();
     NProgress.start();
+    if(infowindow) {
+        infowindow.close();
+    }
     $('#list-view').delay(400).fadeOut(300);
     $('#map-view').delay(400).fadeOut(300);
     $('#updates-view').delay(400).fadeIn(300);
+    setTimeout(function(){
+        google.maps.event.trigger(map2, 'resize');
+        map2.setZoom( map2.getZoom() );
+    },700);
     $('#photo').delay(400).fadeOut(300);
     $('#content').delay(400).fadeOut(300);
-    $('#details').delay(400).fadeOut(300);
+    $('#details-button').delay(400).fadeOut(300);
     $('#back').delay(400).fadeIn(300);
     NProgress.done();
 });
@@ -690,7 +866,15 @@ function initialize() {
                 map.setCenter(geolocpoint);
                 map.setZoom(16);
                 var iconURLPrefix = './assets/images/';
+                marker = new google.maps.Marker({
+                    position: geolocpoint,
+                    map: map,
+                    title: 'Current Location',
+                    draggable: false,
+                    animation: google.maps.Animation.DROP
+                });
             });
+            
         }            
     }
 }
