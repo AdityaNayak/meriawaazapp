@@ -632,8 +632,7 @@ function updateContentWithCurrentMarker(){
                 bigphoto.src="./assets/images/no_image.jpg";
                 photo.src="./assets/images/no_image.jpg"; 
             }
-            detailedissue.innerHTML=p_content;
-            console.log("find comments for:"+object.id);  
+            detailedissue.innerHTML=p_content; 
             populateUpdates();
             $('#details-column').fadeIn(300);
             $('#photo').delay(400).fadeIn(300);
