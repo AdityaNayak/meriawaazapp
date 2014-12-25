@@ -24,11 +24,11 @@ var numcategory=6;
 var map;
 var map2;
 
-var issuelocation;
 var currmarker;
 var currentUser;
 var team=[];
 var markers=[];
+var singlemarker;
 
 var iconURLPrefix = './assets/images/';
 var width=40;
@@ -89,6 +89,30 @@ var icons = [
     icon5,
     icon6, 
 ];
+
+// Sets the map on all markers in the array.
+function setAllMap(map) {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+  }
+}
+
+// Removes the markers from the map, but keeps them in the array.
+function clearMarkers() {
+  setAllMap(null);
+}
+
+// Shows any markers currently in the array.
+function showMarkers() {
+  setAllMap(map);
+}
+
+// Deletes all markers in the array by removing references to them.
+function deleteMarkers() {
+  clearMarkers();
+  markers = [];
+}
+
 
 function getReverseGeocodingData(lat, lng) {
     var latlng = new google.maps.LatLng(lat, lng);
@@ -160,7 +184,7 @@ function CurrentLocationControl(controlDiv, map) {
   });
 
 }
-function FixedLocationControl(controlDiv, map, location) {
+function FixedLocationControl(controlDiv, map) {
 
   // Set CSS styles for the DIV containing the control
   // Setting padding to 5 px will offset the control
@@ -189,7 +213,8 @@ function FixedLocationControl(controlDiv, map, location) {
   // Setup the click event listeners: simply set the map to
   // Chicago
   google.maps.event.addDomListener(controlUI, 'click', function() {
-    map.setCenter(issuelocation);
+
+    map.setCenter(currmarker.position);
   });
 
 }
@@ -264,7 +289,7 @@ function populateTeam(){
                 for (var i = 0; i < results.length; i++) { 
                     object= results[i];
                     team.push(object);
-                    teamView.append("<option id="+object.get('user').get('email')+" value="+object.get('name')+">"+object.get('name')+"</option>");
+                    teamView.append("<option value="+object.get('user').get('email')+">"+object.get('name')+"</option>");
                 }
 
             },
@@ -289,7 +314,9 @@ function postComment(c){
     
     comment.save(null, {
       success: function(comment) {
+        updateCurrentMarker(currmarker);
         populateUpdates();
+        
       },
       error: function(comment, error) {
         alert('Failed to Comment! ' + error.message);
@@ -305,16 +332,43 @@ function postClaim(){
     var i = new Parse.Object("Issue");
     u.id = currentUser.id;
     i.id = currmarker.content.id;
+    i.status="progress";
     claim.set("type", "claim");
     claim.set("issue", i);
     claim.set("user", u);
     
     claim.save(null, {
       success: function(claim) {
+        updateCurrentMarker(currmarker);
         populateUpdates();
+       
       },
       error: function(claim, error) {
         console.log('Failed to Comment! ' + error.message);
+      }
+    });
+}
+
+function postClose(){
+    var Close = Parse.Object.extend("Update");
+    var close = new Close();
+    var u = new Parse.Object("User");
+    var i = new Parse.Object("Issue");
+    u.id = currentUser.id;
+    i.id = currmarker.content.id;
+    i.status="progress";
+    close.set("type", "closed");
+    close.set("issue", i);
+    close.set("user", u);
+    
+    close.save(null, {
+      success: function(close) {
+        updateCurrentMarker(currmarker);
+        populateUpdates();
+       
+      },
+      error: function(close, error) {
+        console.log('Failed to Close! ' + error.message);
       }
     });
 }
@@ -331,7 +385,35 @@ function teamMember(email){
     }
 }
 
-function postAssignment(id){
+function postAssignment(id){   
+    ListItem = Parse.Object.extend("Update");
+    query = new Parse.Query(ListItem);
+    var pointer = new Parse.Object("Issue");
+    pointer.id = currmarker.content.id;
+    var u = new Parse.Object("User");
+    u.id = currentUser.id;
+    query.equalTo("issue", pointer);
+    query.equalTo("user",u);
+    query.equalTo("type","assigned");
+    query.find({
+          success: function(results) {
+                var countclaims=0;
+                for (var i = 0; i < results.length; i++) {
+                    results[i].destroy({
+                      success: function(myObject) {
+                        console.log("Previous Assignment Deleted!");
+                      },
+                      error: function(myObject, error) {
+                        console.log("Some Error occured during Deletion!");
+                      }
+                    });
+                }
+            },
+          error: function(error) {
+                console.log("Error:"+error.message);
+          }
+    });  
+     
     var Assign = Parse.Object.extend("Update");
     var assign = new Assign();
     var u = new Parse.Object("User");
@@ -345,23 +427,224 @@ function postAssignment(id){
     assign.set("issue", i);
     assign.set("user", u);
     assign.set("assignee", a);
-    
     assign.save(null, {
       success: function(assign) {
+        updateCurrentMarker(currmarker);
         populateUpdates();
+        
       },
       error: function(assign, error) {
-        alert('Failed to Comment! ' + error.message);
+        alert('Failed to Assign! ' + error.message);
       }
     });
 }
 
 
-function IssueStatusButton(){
+function setIssueStatusButton(){
+    if(currmarker.content.get("status")=="closed" || currmarker.content.get("status")=="review"){
+        $('#claim-st1').delay(400).fadeOut(300);
+        $('#claim-st2').delay(400).fadeOut(300);
+        $('#team').delay(400).fadeOut(300);
+        ListItem = Parse.Object.extend("Update");
+        query = new Parse.Query(ListItem);
+        var pointer = new Parse.Object("Issue");
+        pointer.id = currmarker.content.id;
+        var u = new Parse.Object("User");
+        u.id = currentUser.id;
+        query.equalTo("issue", pointer);
+        query.equalTo("user",u);
+        query.include("assignee");
+        query.include("user");
+        query.descending('createdAt');
+
+        query.find({
+              success: function(results) {
+                    var countclaims=0;
+                    for (var i = 0; i < results.length; i++) {
+                        if(results[i].get("type")=="claim"){
+                            countclaims+=1;
+                        }
+                    }
+                    var assignedto=document.getElementById('claim-st3');
+                    assignedto.innerHTML="Assigned to: <strong>no one</strong>";
+                    for (var i = 0; i < results.length; i++) {
+                        if(results[i].get("assignee")!=undefined){
+                            var up=results[i].get("assignee");
+                            assignedto.innerHTML="Assigned to: <strong>"+up.get("name")+"</strong>";
+                            break;
+                        }
+                    } 
+                },
+              error: function(error) {
+                    console.log("Error:"+error.message);
+              }
+        });   
+    }
+    else{
+        ListItem = Parse.Object.extend("Update");
+        query = new Parse.Query(ListItem);
+        var pointer = new Parse.Object("Issue");
+        pointer.id = currmarker.content.id;
+        var u = new Parse.Object("User");
+        u.id = currentUser.id;
+        query.equalTo("issue", pointer);
+        query.equalTo("user",u);
+        query.include("assignee");
+        query.include("user");
+        query.descending('createdAt');
+
+        query.find({
+              success: function(results) {
+                    var countclaims=0;
+                    for (var i = 0; i < results.length; i++) {
+                        if(results[i].get("type")=="claim"){
+                            countclaims+=1;
+                        }
+                    }
+                    var assignedto=document.getElementById('claim-st3');
+                    assignedto.innerHTML="Assigned to: <strong>no one</strong>";
+                    for (var i = 0; i < results.length; i++) {
+                        if(results[i].get("assignee")!=undefined){
+                            var up=results[i].get("assignee");
+                            assignedto.innerHTML="Assigned to: <strong>"+up.get("name")+"</strong>";
+                            break;
+                        }
+                    } 
+                    
+                    console.log("Size:"+countclaims);
+                    if(countclaims==0){
+                        $('#claim-st1').delay(400).fadeIn(300);
+                        $('#claim-st2').delay(400).fadeOut(300);
+                        $('#team').delay(400).fadeOut(300);
+                    }
+                    else{
+                        $('#claim-st1').delay(400).fadeOut(300);
+                        $('#claim-st2').delay(400).fadeIn(300);
+                        $('#team').delay(400).fadeIn(300);
+                    }
+                },
+              error: function(error) {
+                    console.log("Error:"+error.message);
+              }
+        });   
+    }
+}
+
+function updateCurrentMarker(m){
+    ListItem = Parse.Object.extend("Issue");
+    query = new Parse.Query(ListItem);
+    query.equalTo("objectId", m.content.id);
+    query.find({
+      success: function(results) {
+        console.log("current marker updated: "+results.length);
+            currmarker.content = results[0];
+            updateContentWithCurrentMarker();
+            setIssueStatusButton();
+            infowindow.open(map, currmarker);
+        },
+      error: function(error) {
+            console.log("Error:"+error.message);
+        }
+    }); 
+}
+
+function updateContentWithCurrentMarker(){
+    var p_timestam=String(currmarker.content.createdAt);
+    var p_timestamp=p_timestam.split(" ");
+    var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
+    var p_time=p_timestamp[4];
+    var p_content=currmarker.content.get('content');
+    var p_type=currmarker.content.get('category');
     
+    var p_latitude=currmarker.content.get('location').latitude;
+    var p_longitude=currmarker.content.get('location').longitude;
+    var p_location=p_latitude+","+p_longitude;
+    getReverseGeocodingData(p_latitude, p_longitude);
+    var p_id=currmarker.content.id;
+    var p_photo=currmarker.content.get('photo');
+    var p_status=currmarker.content.get('status');
+    var p_title=currmarker.content.get('title');
+    infowindow.setContent(p_status);
+    
+    
+    console.log("Effect Starts");
+    
+    infowindow.open(map, marker);
+    console.log("Ye Mila:");
+    console.log(currmarker.content.get('category'));
+    var status=document.getElementById('colorstatus');
+    var date=document.getElementById('date');
+    var time=document.getElementById('time');
+    var photo=document.getElementById('photo');
+    var content=document.getElementById('content');
+    var type=document.getElementById('type');
+    var title=document.getElementById('ititle');
+    
+    var location=document.getElementById('location');
+    var bigphoto=document.getElementById('bigphoto');
+    var detailedissue=document.getElementById('detailedissue');
+    $('#details-column').fadeOut(300);
+    var myLatlng = new google.maps.LatLng(p_latitude,p_longitude); 
+    map2.setCenter(myLatlng);
+    singlemarker.setMap(null);
+    singlemarker = new google.maps.Marker({ 
+        position: myLatlng, 
+        map: map2, 
+        icon: marker.get("icon"),
+        title: p_status,
+        animation: google.maps.Animation.DROP
+    });
+    
+    setTimeout(function(){
+            
+            $("#colorstatus").removeClass();
+            if(p_status=="open"){
+                $("#colorstatus").addClass('yc');
+            }
+            else if(p_status=="progress"){
+                $("#colorstatus").addClass('bgc');
+            }
+            else if(p_status=="review"){
+                $("#colorstatus").addClass('bc');
+            }
+            else{
+                $("#colorstatus").addClass('dbc');
+            }
+            status.innerHTML = '<strong>'+p_status+'</strong>';
+            date.innerHTML = p_date;
+            time.innerHTML = p_time;
+            if(p_content.length<50){
+                content.innerHTML = p_content;
+            }
+            else{
+
+                content.innerHTML = p_content.substring(0,30)+"...";
+            }
+            type.innerHTML = p_type;
+            title.innerHTML = p_title+"<small>"+p_id+"</small>";
+            location.innerHTML = p_location;
+            console.log(p_photo);
+            if(p_photo!=undefined){
+                bigphoto.src=p_photo.url();
+                photo.src=p_photo.url(); 
+            }
+            else{
+                bigphoto.src="./assets/images/no_image.jpg";
+                photo.src="./assets/images/no_image.jpg"; 
+            }
+            detailedissue.innerHTML=p_content;
+            console.log("find comments for:"+object.id);  
+            populateUpdates();
+            $('#details-column').fadeIn(300);
+            $('#photo').delay(400).fadeIn(300);
+            $('#content').delay(400).fadeIn(300);
+            $('#details-button').delay(400).fadeIn(300);
+    },300); 
 }
 
 function populate(){
+        deleteMarkers();
+        listView.html("");
         var no=0;
         var np=0;
         var nr=0;
@@ -440,93 +723,9 @@ function populate(){
                         });
                         NProgress.start();
                         currmarker=marker;
-                        var p_timestam=String(object.createdAt);
-                        var p_timestamp=p_timestam.split(" ");
-                        var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
-                        var p_time=p_timestamp[4];
-                        var p_content=object.get('content');
-                        var p_type=object.get('category');
+                        updateCurrentMarker(currmarker);                        
+                        infowindow.setContent(currmarker.content.get('status'));
                         
-                        var p_latitude=object.get('location').latitude;
-                        var p_longitude=object.get('location').longitude;
-                        var p_location=p_latitude+","+p_longitude;
-                        getReverseGeocodingData(p_latitude, p_longitude);
-                        var p_id=object.id;
-                        var p_photo=object.get('photo');
-                        var p_status=object.get('status');
-                        infowindow.setContent(p_status);
-                        
-                        
-                        console.log("Effect Starts");
-                        
-                        infowindow.open(map, marker);
-                        console.log("Ye Mila:");
-                        console.log(object.get('category'));
-                        var status=document.getElementById('colorstatus');
-                        var date=document.getElementById('date');
-                        var time=document.getElementById('time');
-                        var photo=document.getElementById('photo');
-                        var content=document.getElementById('content');
-                        var type=document.getElementById('type');
-                        var location=document.getElementById('location');
-                        var bigphoto=document.getElementById('bigphoto');
-                        var detailedissue=document.getElementById('detailedissue');
-                        $('#details-column').fadeOut(300);
-                        var myLatlng = new google.maps.LatLng(p_latitude,p_longitude); 
-                        issuelocation=myLatlng;
-                        map2.setCenter(myLatlng);
-                        var Singlemarker = new google.maps.Marker({ 
-                            position: myLatlng, 
-                            map: map2, 
-                            icon: marker.get("icon"),
-                            title: p_status,
-                            animation: google.maps.Animation.DROP
-                        });
-                        
-                        setTimeout(function(){
-                                
-                                $("#colorstatus").removeClass();
-                                if(p_status=="open"){
-                                    $("#colorstatus").addClass('yc');
-                                }
-                                else if(p_status=="progress"){
-                                    $("#colorstatus").addClass('bgc');
-                                }
-                                else if(p_status=="review"){
-                                    $("#colorstatus").addClass('bc');
-                                }
-                                else{
-                                    $("#colorstatus").addClass('dbc');
-                                }
-                                status.innerHTML = '<strong>'+p_status+'</strong>';
-                                date.innerHTML = p_date;
-                                time.innerHTML = p_time;
-                                if(p_content.length<50){
-                                    content.innerHTML = p_content;
-                                }
-                                else{
-
-                                    content.innerHTML = p_content.substring(0,30)+"...";
-                                }
-                                type.innerHTML = p_type;
-                                location.innerHTML = p_location;
-                                console.log(p_photo);
-                                if(p_photo!=undefined){
-                                    bigphoto.src=p_photo.url();
-                                    photo.src=p_photo.url(); 
-                                }
-                                else{
-                                    bigphoto.src="./assets/images/no_image.jpg";
-                                    photo.src="./assets/images/no_image.jpg"; 
-                                }
-                                detailedissue.innerHTML=p_content;
-                                console.log("find comments for:"+object.id);  
-                                populateUpdates();
-                                $('#details-column').fadeIn(300);
-                                $('#photo').delay(400).fadeIn(300);
-                                $('#content').delay(400).fadeIn(300);
-                                $('#details-button').delay(400).fadeIn(300);
-                        },300); 
                         NProgress.done();
                     }
                 })(marker,object));
@@ -702,165 +901,7 @@ function filter(){
     statusCounters(no,np,nr,nc);
 }  
 
-$('input[type=checkbox]').change(
-    function(){
-        updateHistory();
-        NProgress.start();
-        if(infowindow) {
-            infowindow.close();
-        }
-        filter();
-        $('#details-column').delay(400).fadeOut(300);
-        if(view==1){
-            $('#list-view').delay(400).fadeIn(300);
-            $('#map-view').delay(400).fadeOut(300);
-        }
-        else{
-            $('#map-view').delay(400).fadeIn(300);
-            $('#list-view').delay(400).fadeOut(300);
-            setTimeout(function(){
-                google.maps.event.trigger(map, 'resize');
-                map.setZoom( map.getZoom() );
-            },700);
-        }
-        $('#details-column').delay(400).fadeOut(300);
-        $('#updates-view').delay(400).fadeOut(300);
-        $('#back').delay(400).fadeOut(300);
-        NProgress.done();
-    });
 
-$('input[name=maptglgroup]').change(function(){
-    NProgress.start();
-    updateHistory();
-    if(infowindow) {
-        infowindow.close();
-    }
-    $('#photo').delay(400).fadeIn(300);
-    $('#content').delay(400).fadeIn(300);
-    $('#details-button').delay(400).fadeIn(300);
-    if($(this).is(':checked'))
-    {
-        view=0;
-        $('#map-view').delay(400).fadeIn(300);
-        setTimeout(function(){
-            google.maps.event.trigger(map, 'resize');
-            map.setZoom( map.getZoom() );
-        },700);
-        $('#list-view').delay(400).fadeOut(300);
-        $('#updates-view').delay(400).fadeOut(300);
-        $('#back').delay(400).fadeOut(300);
-        $('#details-column').delay(400).fadeOut(300);
-    }
-    else
-    {
-        view=1;
-        $('#map-view').delay(400).fadeOut(300);
-        $('#list-view').delay(400).fadeIn(300);
-        $('#details-column').delay(400).fadeOut(300);
-    }    
-    NProgress.done();
-});
-
-$('#claim-st1').click(function(){
-    postClaim();
-    $('#claim-st1').delay(400).fadeOut(300);
-    $('#claim-st2').delay(400).fadeIn(300);
-});
-
-
-$('#back').click(function(){
-    updateHistory();
-    NProgress.start();
-    if(infowindow) {
-        infowindow.close();
-    }
-    $('#photo').delay(400).fadeIn(300);
-    $('#content').delay(400).fadeIn(300);
-    $('#details-button').delay(400).fadeIn(300);
-    if(view==1){
-        $('#list-view').delay(400).fadeIn(300);
-        $('#map-view').delay(400).fadeOut(300);
-    }
-    else{
-        $('#map-view').delay(400).fadeIn(300);
-        setTimeout(function(){
-            google.maps.event.trigger(map, 'resize');
-            map.setZoom( map.getZoom() );
-        },700);
-        $('#list-view').delay(400).fadeOut(300);
-    }
-        $('#details-column').delay(400).fadeOut(300);
-        $('#updates-view').delay(400).fadeOut(300);
-        $('#back').delay(400).fadeOut(300);
-        NProgress.done();
-});
-
-
-
-$('#details-button').click(function(){
-    updateHistory();
-    NProgress.start();
-    if(infowindow) {
-        infowindow.close();
-    }
-    $('#list-view').delay(400).fadeOut(300);
-    $('#map-view').delay(400).fadeOut(300);
-    $('#updates-view').delay(400).fadeIn(300);
-    setTimeout(function(){
-        google.maps.event.trigger(map2, 'resize');
-        map2.setZoom( map2.getZoom() );
-    },700);
-    $('#photo').delay(400).fadeOut(300);
-    $('#content').delay(400).fadeOut(300);
-    $('#details-button').delay(400).fadeOut(300);
-    $('#back').delay(400).fadeIn(300);
-    NProgress.done();
-});
-
-$('.list-table tbody tr').click(function() {
-    $('.hod').delay(400).fadeOut(300);
-});
-
-$('#reportrange').daterangepicker(
-    {
-        startDate: moment().subtract('days', 29),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: { days: 60 },
-        showDropdowns: true,
-        showWeekNumbers: false,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
-            'Last 7 Days': [moment().subtract('days', 6), moment()],
-            'Last 30 Days': [moment().subtract('days', 29), moment()],
-            'This Month': [moment().startOf('month'), moment()],
-            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-            'This Year': [moment().startOf('year'), moment()]
-        },
-        opens: 'left',
-        format: 'MM/DD/YYYY',
-        separator: ' to ',
-        locale: {
-            applyLabel: 'Submit',
-            fromLabel: 'From',
-            toLabel: 'To',
-            customRangeLabel: 'Custom Range',
-            daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
-            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            firstDay: 1
-            }
-    },
-    function(start, end) {
-        console.log("Callback has been called!");
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-        filter();
-    }
-);
 
 
 function initialize() {
@@ -870,7 +911,7 @@ function initialize() {
         self.location="./login.html";
     }
     else{
-        console.log('ho gaya');
+        console.log('Initialization Begins...');
         hello.innerHTML = "Hi "+currentUser.get("username");
         
         map2 = new google.maps.Map(document.getElementById('googleMap'), {
@@ -891,10 +932,16 @@ function initialize() {
         homeControlDiv.index = 1;
         map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
 
+        singlemarker= new google.maps.Marker({
+                    position: new google.maps.LatLng(28.612912,77.22951),
+                    map: map2,
+                    title: 'Current Location',
+                    draggable: false,
+                    animation: google.maps.Animation.DROP
+                });
+
         var homeControlDiv2 = document.createElement('div');
         var homeControl2 = new FixedLocationControl(homeControlDiv2, map2);
-
-        issuelocation=new google.maps.LatLng(28.612912,77.22951);
 
         homeControlDiv2.index = 1;
         map2.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv2);
@@ -924,4 +971,173 @@ function initialize() {
             
         }            
     }
+
+    $('input[type=checkbox]').change(
+        function(){
+            updateHistory();
+            NProgress.start();
+            if(infowindow) {
+                infowindow.close();
+            }
+            filter();
+            $('#details-column').delay(400).fadeOut(300);
+            if(view==1){
+                $('#list-view').delay(400).fadeIn(300);
+                $('#map-view').delay(400).fadeOut(300);
+            }
+            else{
+                $('#map-view').delay(400).fadeIn(300);
+                $('#list-view').delay(400).fadeOut(300);
+                setTimeout(function(){
+                    google.maps.event.trigger(map, 'resize');
+                    map.setZoom( map.getZoom() );
+                },700);
+            }
+            $('#details-column').delay(400).fadeOut(300);
+            $('#updates-view').delay(400).fadeOut(300);
+            $('#back').delay(400).fadeOut(300);
+            NProgress.done();
+        });
+
+    $('input[name=maptglgroup]').change(function(){
+        NProgress.start();
+        updateHistory();
+        if(infowindow) {
+            infowindow.close();
+        }
+        $('#photo').delay(400).fadeIn(300);
+        $('#content').delay(400).fadeIn(300);
+        $('#details-button').delay(400).fadeIn(300);
+        if($(this).is(':checked'))
+        {
+            view=0;
+            $('#map-view').delay(400).fadeIn(300);
+            setTimeout(function(){
+                google.maps.event.trigger(map, 'resize');
+                map.setZoom( map.getZoom() );
+            },700);
+            $('#list-view').delay(400).fadeOut(300);
+            $('#updates-view').delay(400).fadeOut(300);
+            $('#back').delay(400).fadeOut(300);
+            $('#details-column').delay(400).fadeOut(300);
+        }
+        else
+        {
+            view=1;
+            $('#map-view').delay(400).fadeOut(300);
+            $('#list-view').delay(400).fadeIn(300);
+            $('#details-column').delay(400).fadeOut(300);
+        }    
+        NProgress.done();
+    });
+
+    $('#claim-st1').click(function(){
+        postClaim();
+    });
+
+    $('#claim-st2').click(function(){
+        var q= $('#team').val();
+        console.log(q);
+        postAssignment(q);
+    });
+
+    $('#comment-form').submit(function(event){
+          event.preventDefault();
+          var comment=document.getElementById("comment").value;
+          postComment(comment);
+    });
+
+    $('#back').click(function(){
+        updateHistory();
+        NProgress.start();
+        if(infowindow) {
+            infowindow.close();
+        }
+        $('#photo').delay(400).fadeIn(300);
+        $('#content').delay(400).fadeIn(300);
+        $('#details-button').delay(400).fadeIn(300);
+        if(view==1){
+            $('#list-view').delay(400).fadeIn(300);
+            $('#map-view').delay(400).fadeOut(300);
+        }
+        else{
+            $('#map-view').delay(400).fadeIn(300);
+            setTimeout(function(){
+                google.maps.event.trigger(map, 'resize');
+                map.setZoom( map.getZoom() );
+            },700);
+            $('#list-view').delay(400).fadeOut(300);
+        }
+            $('#details-column').delay(400).fadeOut(300);
+            $('#updates-view').delay(400).fadeOut(300);
+            $('#back').delay(400).fadeOut(300);
+            NProgress.done();
+    });
+
+
+
+    $('#details-button').click(function(){
+        updateHistory();
+        NProgress.start();
+        if(infowindow) {
+            infowindow.close();
+        }
+        $('#list-view').delay(400).fadeOut(300);
+        $('#map-view').delay(400).fadeOut(300);
+        $('#updates-view').delay(400).fadeIn(300);
+        setTimeout(function(){
+            google.maps.event.trigger(map2, 'resize');
+            map2.setZoom( map2.getZoom() );
+        },700);
+        $('#photo').delay(400).fadeOut(300);
+        $('#content').delay(400).fadeOut(300);
+        $('#details-button').delay(400).fadeOut(300);
+        $('#back').delay(400).fadeIn(300);
+        NProgress.done();
+    });
+
+    $('.list-table tbody tr').click(function() {
+        $('.hod').delay(400).fadeOut(300);
+    });
+
+    $('#reportrange').daterangepicker(
+        {
+            startDate: moment().subtract('days', 29),
+            endDate: moment(),
+            minDate: '01/01/2012',
+            maxDate: '12/31/2015',
+            dateLimit: { days: 60 },
+            showDropdowns: true,
+            showWeekNumbers: false,
+            timePicker: false,
+            timePickerIncrement: 1,
+            timePicker12Hour: true,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment()],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                'This Year': [moment().startOf('year'), moment()]
+            },
+            opens: 'left',
+            format: 'MM/DD/YYYY',
+            separator: ' to ',
+            locale: {
+                applyLabel: 'Submit',
+                fromLabel: 'From',
+                toLabel: 'To',
+                customRangeLabel: 'Custom Range',
+                daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr','Sa'],
+                monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                firstDay: 1
+                }
+        },
+        function(start, end) {
+            console.log("Callback has been called!");
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            filter();
+        }
+    );
 }
