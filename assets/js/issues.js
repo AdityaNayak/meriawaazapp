@@ -698,7 +698,7 @@ function populate(){
                     content=object.get("content").substring(0,30)+"...";
                     console.log(content);
                 }
-                listView.append( "<tr class='"+object.get('status')+"'><td>"+object.get('category')+"</td><td>"+content+"</td><td>"+object.get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td>"+ago+" ago</td></tr>");                        
+                listView.append( "<tr class='"+object.get('status')+"'><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+object.get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                 markers.push(marker);
                 if((marker.content).get('status')=="open"){
                 no=no+1;
@@ -875,7 +875,7 @@ function filter(){
             if(markers[m].content.get('content').length > 30){
                     content=markers[m].content.get('content').substring(0,30)+"...";
             }
-            listView.append( "<tr class='"+(markers[m].content).get('status')+"'><td width='100'>"+(markers[m].content).get('category')+"</td><td width='100'>"+content+"</td><td width='100'>"+(markers[m].content).get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+            listView.append( "<tr class='"+(markers[m].content).get('status')+"'><td width='100'>"+(markers[m].content).get('category')+"</td><td>"+content+"</td><td width='100'>"+(markers[m].content).get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
             markers[m].setMap(map);
             show+=1;
             console.log(show.toString()+" showing:"+markers[m].content.get('content'));
