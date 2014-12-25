@@ -29,6 +29,7 @@ var currentUser;
 var team=[];
 var markers=[];
 var singlemarker;
+var geomarker1;
 
 var iconURLPrefix = './assets/images/';
 var width=40;
@@ -92,6 +93,7 @@ var icons = [
 
 // Sets the map on all markers in the array.
 function setAllMap(map) {
+  console.log("setAllMap");
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(map);
   }
@@ -99,22 +101,26 @@ function setAllMap(map) {
 
 // Removes the markers from the map, but keeps them in the array.
 function clearMarkers() {
+  console.log("clearMarkers");
   setAllMap(null);
 }
 
 // Shows any markers currently in the array.
 function showMarkers() {
+  console.log("showMarkers");
   setAllMap(map);
 }
 
 // Deletes all markers in the array by removing references to them.
 function deleteMarkers() {
+  console.log("deleteMarkers");
   clearMarkers();
   markers = [];
 }
 
 
 function getReverseGeocodingData(lat, lng) {
+    console.log("getReverseGeocodingData");
     var latlng = new google.maps.LatLng(lat, lng);
     // This is making the Geocode request
     var geocoder = new google.maps.Geocoder();
@@ -135,7 +141,7 @@ function getReverseGeocodingData(lat, lng) {
 }
 
 function CurrentLocationControl(controlDiv, map) {
-
+  console.log("CurrentLocationControl");
   // Set CSS styles for the DIV containing the control
   // Setting padding to 5 px will offset the control
   // from the edge of the map
@@ -170,7 +176,10 @@ function CurrentLocationControl(controlDiv, map) {
                 var geolocpoint = new google.maps.LatLng(latitude, longitude);
                 map.setCenter(geolocpoint);
                 map.setZoom(16);
-                marker = new google.maps.Marker({
+                if(geomarker1!=undefined){
+                  geomarker1.setMap(null);
+                }
+                geomarker1 = new google.maps.Marker({
                     position: geolocpoint,
                     map: map,
                     title: 'Current Location',
@@ -185,7 +194,7 @@ function CurrentLocationControl(controlDiv, map) {
 
 }
 function FixedLocationControl(controlDiv, map) {
-
+  console.log("FixedLocationControl");
   // Set CSS styles for the DIV containing the control
   // Setting padding to 5 px will offset the control
   // from the edge of the map
@@ -220,6 +229,7 @@ function FixedLocationControl(controlDiv, map) {
 }
 
 function populateUpdates(){
+    console.log("populateUpdates");
     timelineView.html("");    
     ListItem = Parse.Object.extend("Update");
     query = new Parse.Query(ListItem);
@@ -276,6 +286,7 @@ function populateUpdates(){
 }
 
 function populateTeam(){
+    console.log("populateTeam");
     teamView.html("");    
     ListItem = Parse.Object.extend("TeamMember");
     query = new Parse.Query(ListItem);
@@ -284,7 +295,6 @@ function populateTeam(){
     query.equalTo("neta", currentUser.get("neta"));
     query.find({
           success: function(results) {
-                console.log("Size:"+results.length);
                 team=[];
                 for (var i = 0; i < results.length; i++) { 
                     object= results[i];
@@ -301,6 +311,7 @@ function populateTeam(){
 }
 
 function postComment(c){
+    console.log("postComment");
     var Comment = Parse.Object.extend("Update");
     var comment = new Comment();
     var u = new Parse.Object("User");
@@ -326,13 +337,14 @@ function postComment(c){
 
 
 function postClaim(){
+    console.log("postClaim");
     var Claim = Parse.Object.extend("Update");
     var claim = new Claim();
     var u = new Parse.Object("User");
     var i = new Parse.Object("Issue");
     u.id = currentUser.id;
     i.id = currmarker.content.id;
-    i.status="progress";
+    i.set("status", "progress");
     claim.set("type", "claim");
     claim.set("issue", i);
     claim.set("user", u);
@@ -350,13 +362,14 @@ function postClaim(){
 }
 
 function postClose(){
+    console.log("postClose");
     var Close = Parse.Object.extend("Update");
     var close = new Close();
     var u = new Parse.Object("User");
     var i = new Parse.Object("Issue");
     u.id = currentUser.id;
     i.id = currmarker.content.id;
-    i.status="progress";
+    i.set("status", "review");
     close.set("type", "closed");
     close.set("issue", i);
     close.set("user", u);
@@ -374,6 +387,7 @@ function postClose(){
 }
 
 function teamMember(email){
+    console.log("teamMember");
     console.log("Find Team Member with email ID: "+email);
     var member;
     for (var i = 0; i < team.length; i++) { 
@@ -386,6 +400,7 @@ function teamMember(email){
 }
 
 function postAssignment(id){   
+    console.log("postAssignment");
     ListItem = Parse.Object.extend("Update");
     query = new Parse.Query(ListItem);
     var pointer = new Parse.Object("Issue");
@@ -441,9 +456,11 @@ function postAssignment(id){
 
 
 function setIssueStatusButton(){
+    console.log("setIssueStatusButton");
     if(currmarker.content.get("status")=="closed" || currmarker.content.get("status")=="review"){
         $('#claim-st1').delay(400).fadeOut(300);
         $('#claim-st2').delay(400).fadeOut(300);
+        $('#close').delay(400).fadeOut(300);
         $('#team').delay(400).fadeOut(300);
         ListItem = Parse.Object.extend("Update");
         query = new Parse.Query(ListItem);
@@ -511,15 +528,16 @@ function setIssueStatusButton(){
                         }
                     } 
                     
-                    console.log("Size:"+countclaims);
                     if(countclaims==0){
                         $('#claim-st1').delay(400).fadeIn(300);
                         $('#claim-st2').delay(400).fadeOut(300);
+                        $('#close').delay(400).fadeOut(300);
                         $('#team').delay(400).fadeOut(300);
                     }
                     else{
                         $('#claim-st1').delay(400).fadeOut(300);
                         $('#claim-st2').delay(400).fadeIn(300);
+                        $('#close').delay(400).fadeIn(300);
                         $('#team').delay(400).fadeIn(300);
                     }
                 },
@@ -531,6 +549,7 @@ function setIssueStatusButton(){
 }
 
 function updateCurrentMarker(m){
+  console.log("updateCurrentMarker");
     ListItem = Parse.Object.extend("Issue");
     query = new Parse.Query(ListItem);
     query.equalTo("objectId", m.content.id);
@@ -539,7 +558,6 @@ function updateCurrentMarker(m){
         console.log("current marker updated: "+results.length);
             currmarker.content = results[0];
             updateContentWithCurrentMarker();
-            setIssueStatusButton();
             infowindow.open(map, currmarker);
         },
       error: function(error) {
@@ -549,6 +567,7 @@ function updateCurrentMarker(m){
 }
 
 function updateContentWithCurrentMarker(){
+    console.log("updateContentWithCurrentMarker");
     var p_timestam=String(currmarker.content.createdAt);
     var p_timestamp=p_timestam.split(" ");
     var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
@@ -565,13 +584,7 @@ function updateContentWithCurrentMarker(){
     var p_status=currmarker.content.get('status');
     var p_title=currmarker.content.get('title');
     infowindow.setContent(p_status);
-    
-    
-    console.log("Effect Starts");
-    
     infowindow.open(map, marker);
-    console.log("Ye Mila:");
-    console.log(currmarker.content.get('category'));
     var status=document.getElementById('colorstatus');
     var date=document.getElementById('date');
     var time=document.getElementById('time');
@@ -623,7 +636,6 @@ function updateContentWithCurrentMarker(){
             type.innerHTML = p_type;
             title.innerHTML = p_title+"<small>"+p_id+"</small>";
             location.innerHTML = p_location;
-            console.log(p_photo);
             if(p_photo!=undefined){
                 bigphoto.src=p_photo.url();
                 photo.src=p_photo.url(); 
@@ -634,21 +646,27 @@ function updateContentWithCurrentMarker(){
             }
             detailedissue.innerHTML=p_content; 
             populateUpdates();
-            $('#details-column').fadeIn(300);
-            $('#photo').delay(400).fadeIn(300);
-            $('#content').delay(400).fadeIn(300);
-            $('#details-button').delay(400).fadeIn(300);
+            showDetailsView();
+            setIssueStatusButton();
     },300); 
 }
 
+function showDetailsView(){
+        console.log("showDetailsView");
+        $('#details-column').fadeIn(300);
+        $('#photo').delay(400).fadeIn(300);
+        $('#content').delay(400).fadeIn(300);
+        $('#details-button').delay(400).fadeIn(300);
+}
+
 function populate(){
+        console.log("populate");
         deleteMarkers();
         listView.html("");
         var no=0;
         var np=0;
         var nr=0;
         var nc=0;
-        console.log('Populate!');
         ListItem = Parse.Object.extend("Issue");
         query = new Parse.Query(ListItem);
         
@@ -695,7 +713,6 @@ function populate(){
                 var content=object.get("content");
                 if(object.get("content").length > 30){
                     content=object.get("content").substring(0,30)+"...";
-                    console.log(content);
                 }
                 listView.append( "<tr class='"+object.get('status')+"'><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+object.get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                 markers.push(marker);
@@ -724,7 +741,6 @@ function populate(){
                         currmarker=marker;
                         updateCurrentMarker(currmarker);                        
                         infowindow.setContent(currmarker.content.get('status'));
-                        
                         NProgress.done();
                     }
                 })(marker,object));
@@ -765,6 +781,7 @@ function timeSince(date) {
 }
 
 function logout(){
+    console.log("Logout");
     NProgress.start();
     Parse.User.logOut();
     currentUser = null;
@@ -773,6 +790,7 @@ function logout(){
 }
 
 function categoryCheck(m){
+    console.log("CategoryCheck");
     if((m.content).get("category")=="road"){
         if(box_r.checked){
              return 1;
@@ -807,6 +825,7 @@ function categoryCheck(m){
 }
 
 function dateCheck(m){
+    console.log("dateCheck");
     var combined=document.getElementById('reportrange').innerHTML;
     combined=combined.substring(36);
     combined=combined.substring(0,combined.length-7);
@@ -823,6 +842,7 @@ function dateCheck(m){
 }
 
 function statusCheck(m){
+    console.log("StatusCheck");
     if((m.content).get("status")=="open"){
         if(box_op.checked){
              return 1;
@@ -847,6 +867,7 @@ function statusCheck(m){
 }
 
 function statusCounters(no,np,nr,nc){
+    console.log("statusCounter");
     var numAnim1 = new countUp("fn1", 0, no);
     numAnim1.start();
     var numAnim2 = new countUp("fn2", 0, np);
@@ -858,6 +879,7 @@ function statusCounters(no,np,nr,nc){
 }
 
 function filter(){
+    console.log("filter");
     updateHistory();
     var no=0;
     var np=0;
@@ -877,7 +899,6 @@ function filter(){
             listView.append( "<tr class='"+(markers[m].content).get('status')+"'><td width='100'>"+(markers[m].content).get('category')+"</td><td>"+content+"</td><td width='100'>"+(markers[m].content).get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
             markers[m].setMap(map);
             show+=1;
-            console.log(show.toString()+" showing:"+markers[m].content.get('content'));
             if((markers[m].content).get('status')=="open"){
                 no=no+1;
             }
@@ -893,7 +914,7 @@ function filter(){
         }else{
             markers[m].setMap(null);
             hide+=1;
-            console.log(hide.toString()+" hiding:"+markers[m].content.get('content'));
+          
         }
         
     }         
@@ -904,13 +925,13 @@ function filter(){
 
 
 function initialize() {
+    console.log("initialize");
     currentUser = Parse.User.current();
     if(!currentUser) {
         alert("You need to sign in ");
         self.location="./login.html";
     }
     else{
-        console.log('Initialization Begins...');
         hello.innerHTML = "Hi "+currentUser.get("username");
         
         map2 = new google.maps.Map(document.getElementById('googleMap'), {
@@ -959,7 +980,10 @@ function initialize() {
                 map.setCenter(geolocpoint);
                 map.setZoom(16);
                 var iconURLPrefix = './assets/images/';
-                marker = new google.maps.Marker({
+                if(geomarker1!=undefined){
+                  geomarker1.setMap(null);
+                }
+                geomarker1 = new google.maps.Marker({
                     position: geolocpoint,
                     map: map,
                     title: 'Current Location',
@@ -1036,8 +1060,11 @@ function initialize() {
 
     $('#claim-st2').click(function(){
         var q= $('#team').val();
-        console.log(q);
         postAssignment(q);
+    });
+
+    $('#close').click(function(){
+        postClose();
     });
 
     $('#comment-form').submit(function(event){
@@ -1134,7 +1161,6 @@ function initialize() {
                 }
         },
         function(start, end) {
-            console.log("Callback has been called!");
             $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
             filter();
         }
