@@ -340,7 +340,7 @@ function populateUpdates(){
 
 function populateTeam(){
     console.log("populateTeam");
-    teamView.html("");    
+    teamView.html("<option selected disabled hidden value='Assign a Team Member'></option>");    
     ListItem = Parse.Object.extend("TeamMember");
     query = new Parse.Query(ListItem);
     query.include("user");

@@ -169,7 +169,9 @@ i{
 		border-top-right-radius: $global-radius $global-radius;
 	}
 .wd-fx{
-	width:75%;
+	img{
+		width:60%;
+	}
 }
 .nb{
 	border:none;
