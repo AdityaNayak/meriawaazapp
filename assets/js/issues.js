@@ -195,11 +195,11 @@ function CurrentLocationControl(controlDiv, map) {
 }
 
 function enableDetailsView(){
-  //$('#details-panel').children().prop('disabled',false);
+  $('#details-panel').children().prop('disabled',false);
 }
 
 function disableDetailsView(){
-  //$('#details-panel').children().prop('disabled',true);
+  $('#details-panel').children().prop('disabled',true);
 }
 
 function enableCheckPoints(){
