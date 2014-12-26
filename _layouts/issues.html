@@ -34,7 +34,7 @@
       <label for="water_cb"><img src="./assets/images/marker-3.png"><br>Water</label><input type="checkbox" id="water_cb" checked='true'>
     </div>
     <div class="small-2 columns">
-      <label for="law_cb"><img src="./assets/images/marker-4.png"><br>Road</label><input type="checkbox" id="law_cb" checked='true'>
+      <label for="law_cb"><img src="./assets/images/marker-4.png"><br>Law</label><input type="checkbox" id="law_cb" checked='true'>
     </div>
     <div class="small-2 columns">
       <label for="sanitation_cb"><img src="./assets/images/marker-5.png"><br>Sanitation</label><input type="checkbox" id="sanitation_cb" checked='true'>  </div>
@@ -46,16 +46,16 @@
       <div class="small-2 columns panel text-center s-ws-top">
         <h4>Status</h4>
         <div class="bbm">
-          <label for="open_it"><div id="fn1" class="f-2x yc">1</div>Open</label><input type="checkbox" id="open_it" checked='true'>
+          <label for="open_it"><div id="fn1" class="f-2x yc">0</div>Open</label><input type="checkbox" id="open_it" checked='true'>
         </div>
         <div class="bbm">
-          <label for="prog_it"><div id="fn2" class="f-2x bgc">1</div>In progress</label><input type="checkbox" id="prog_it" checked='true'>
+          <label for="prog_it"><div id="fn2" class="f-2x bgc">0</div>In progress</label><input type="checkbox" id="prog_it" checked='true'>
         </div>
         <div class="bbm">
-          <label for="review_it"><div id="fn3" class="f-2x bc">1</div>Review</label><input type="checkbox" id="review_it" checked='true'>
+          <label for="review_it"><div id="fn3" class="f-2x bc">0</div>Review</label><input type="checkbox" id="review_it" checked='true'>
         </div>
         <div class="bbm">
-          <label for="closed_it"><div id="fn4" class="f-2x dbc">1</div>Closed</label><input type="checkbox" id="closed_it" checked='true'>
+          <label for="closed_it"><div id="fn4" class="f-2x dbc">0</div>Closed</label><input type="checkbox" id="closed_it" checked='true'>
         </div>
       </div>
       <div class="small-7 columns s-ws-top">
@@ -66,18 +66,18 @@
           <table class="list-table" id="list-view-table">
             <thead>
               <tr>
+                <th>Issue Number</th>
                 <th>Type</th>
                 <th>Content</th>
                 <th>Status</th>
-                <th>Assignee</th>
                 <th>Time</th>
               </tr>
             </thead>
             <tbody>
                 <tr>
                 <td width="100px">Loading...</td>
-                <td>Loading...</td>
                 <td width="100px">Loading...</td>
+                <td>Loading...</td>
                 <td width="100px">Loading...</td>
                 <td width="100px">Loading...</td>
               </tr>
@@ -132,7 +132,7 @@
             <h4>Add a Comment</h4>
             </div>
               <div class="small-2 columns s-ws-top">
-              <img src="http://placehold.it/300x300&text=user" class="circle-img">
+              <img id="profilepic" src="http://placehold.it/300x300&text=user" width="300" class="circle-img">
               </div>
               <div id="comment-view" class="small-10 columns s-ws-top">
                 <form id="comment-form">
@@ -153,17 +153,18 @@
         </div>
         <div class="row">
           <div class="small-12 columns s-ws-top">
-            <div class="text-center">
-              <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
-              
+            <div class="text-center" id="details-panel">
               <div class="button fullwidth" data-options="align:left" data-dropdown="drop1" id="close" style="display:none;"><strong>Mark as Completed</strong></div>
-              <div id="claim-st3">Assigned to: <strong>no one</strong></div>
-              <select id="team" style="display:none;">
-                <option value="user 1"></option>
-                <option value="user 3"></option>
-                <option value="user 2"></option>
-              </select>
-              <div class="button fullwidth" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
+              <div id="neta-panel" style="display:none;">
+                <div id="claim-st3">Assigned to: <strong>no one</strong></div>
+                <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
+                <select id="team" style="display:none;">
+                  <option value="user 1"></option>
+                  <option value="user 3"></option>
+                  <option value="user 2"></option>
+                </select>
+                <div class="button fullwidth" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
+              </div>
             </div>
           </div>
         </div>
@@ -189,8 +190,8 @@
         <div class="row hod">
           <div class="small-12 columns">
             <hr>
-            <p><div id="content">-</div></p>
-            <hr>
+            <p><div id="content">-<hr></div></p>
+            
           </div>
         </div>
         <div class="row">
@@ -200,7 +201,7 @@
         </div>
         <div class="row">
           <div class="small-12 columns s-ws-top">
-            <p>Address: <div id="address">-</div></p>
+            <p id="address" class="secondary">-</p>
           </div>
         </div>
       </div>
@@ -225,6 +226,22 @@
         //Set the initial state of the picker label
         $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
 
+        $('#list-view-table tbody tr').click(function() {
+         NProgress.start();
+         var trid = $(this).attr('id');
+         var marker;
+         for (var i = 0; i < markers.length; i++) { 
+            if(markers.content.id==trid){
+              marker=markers[i];
+              break;
+            }
+         }
+         currmarker=marker;
+         updateCurrentMarker(currmarker);                        
+         infowindow.setContent(currmarker.content.get('status'));
+         NProgress.done(); 
+         console.log('test');
+        });
         // $('#assign').on('click',function(){
         //   console.log("Assignment Begins...");
         //   var g=$('#drop1').val();  

@@ -193,6 +193,49 @@ function CurrentLocationControl(controlDiv, map) {
   });
 
 }
+
+function enableDetailsView(){
+  $('#details-panel').children().prop('disabled',false);
+}
+
+function disableDetailsView(){
+  $('#details-panel').children().prop('disabled',true);
+}
+
+function enableCheckPoints(){
+  box_r.disabled = false;
+  box_e.disabled = false;
+  box_w.disabled = false;
+  box_l.disabled = false;
+  box_s.disabled = false;
+  box_t.disabled = false;
+  box_pr.disabled = false;
+  box_rv.disabled = false;
+  box_cl.disabled = false;
+  box_op.disabled = false;
+}
+
+function disableCheckPoints(){
+  box_r.disabled = true;
+  box_e.disabled = true;
+  box_w.disabled = true;
+  box_l.disabled = true;
+  box_s.disabled = true;
+  box_t.disabled = true;
+  box_pr.disabled = true;
+  box_rv.disabled = true;
+  box_cl.disabled = true;
+  box_op.disabled = true;
+}
+
+function enableCategoryIcons(){
+  
+}
+
+function disbleCategoryIcons(i){
+  
+}
+
 function FixedLocationControl(controlDiv, map) {
   console.log("FixedLocationControl");
   // Set CSS styles for the DIV containing the control
@@ -264,17 +307,27 @@ function populateUpdates(){
                     else{
                         assignee="";
                     }
+                    var pphoto1;
+                    if(user.get("pic")!=undefined){
+                      pphoto1=user.get("pic").url(); 
+                    }
+                    else{
+                      pphoto1="http://placehold.it/300x300&text=user";
+                    }
                     
                     if(object.get("type")=="assigned"){
-                        timelineView.append("<div class='panel nb'><p><strong>"+assignee.get("name")+"</strong> was assigned by <strong>"+user.get("username")+"</strong> <small>"+ago+" ago</small></p></div>");                        
+                        var ass=assignee.get("user");
+                        timelineView.append("<div class='panel nb'><p><strong>"+ass.get("uname")+"</strong> was assigned by <strong>"+user.get("uname")+"</strong> <small>"+ago+" ago</small></p></div>");                        
                     }
                     if(object.get("type")=="closed"){
-                        timelineView.append("<div class='panel nb'><p><strong>"+user.get("username")+"</strong> closed the issue <small>"+ago+" ago</small></p></div>"); 
+                        timelineView.append("<div class='panel nb'><p><strong>"+user.get("uname")+"</strong> closed the issue <small>"+ago+" ago</small></p></div>"); 
                         
                     }
-                    if(object.get("type")=="comment"){timelineView.append("<div class='row'><div class='small-2 columns wbg-fx'><img src='http://placehold.it/300x300&text=user' class='circle-img'></div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong>"+user.get("username")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div></div></div>"); 
+                    if(object.get("type")=="comment"){
+                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx'><img width='300' src='"+pphoto1+"' class='circle-img'></div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong>"+user.get("uname")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div></div></div>"); 
                     }
-                    if(object.get("type")=="claim"){timelineView.append("<div class='panel nb'><p><strong>"+user.get("username")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
+                    if(object.get("type")=="claim"){
+                        timelineView.append("<div class='panel nb'><p><strong>"+user.get("uname")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
                     }
                 }
 
@@ -299,7 +352,7 @@ function populateTeam(){
                 for (var i = 0; i < results.length; i++) { 
                     object= results[i];
                     team.push(object);
-                    teamView.append("<option value="+object.get('user').get('email')+">"+object.get('name')+"</option>");
+                    teamView.append("<option value="+object.get('user').get('email')+">"+object.get('user').get('name')+"</option>");
                 }
 
             },
@@ -311,6 +364,7 @@ function populateTeam(){
 }
 
 function postComment(c){
+    NProgress.start();
     console.log("postComment");
     var Comment = Parse.Object.extend("Update");
     var comment = new Comment();
@@ -327,16 +381,25 @@ function postComment(c){
       success: function(comment) {
         updateCurrentMarker(currmarker);
         populateUpdates();
+        document.getElementById("comment").value="";
+        enableDetailsView();
         
       },
       error: function(comment, error) {
         alert('Failed to Comment! ' + error.message);
+        enableDetailsView();
       }
     });
+    NProgress.done();
 }
 
 
 function postClaim(){
+    NProgress.start();
+    if(currentUser.get("type")!="neta"){
+      alert("You do not have the required permissions");
+      return;
+    }
     console.log("postClaim");
     var Claim = Parse.Object.extend("Update");
     var claim = new Claim();
@@ -353,15 +416,23 @@ function postClaim(){
       success: function(claim) {
         updateCurrentMarker(currmarker);
         populateUpdates();
+        enableDetailsView();
        
       },
       error: function(claim, error) {
         console.log('Failed to Comment! ' + error.message);
+        enableDetailsView();
       }
     });
+    NProgress.done();
 }
 
 function postClose(){
+    NProgress.start();
+    if(currentUser.get("type")!="neta"){
+      alert("You do not have the required permissions");
+      return;
+    }
     console.log("postClose");
     var Close = Parse.Object.extend("Update");
     var close = new Close();
@@ -378,10 +449,12 @@ function postClose(){
       success: function(close) {
         updateCurrentMarker(currmarker);
         populateUpdates();
+        enableDetailsView();
        
       },
       error: function(close, error) {
         console.log('Failed to Close! ' + error.message);
+        enableDetailsView();
       }
     });
 }
@@ -397,9 +470,15 @@ function teamMember(email){
             return member;
         }
     }
+    NProgress.done();
 }
 
 function postAssignment(id){   
+    NProgress.start();
+    if(currentUser.get("type")!="neta"){
+      alert("You do not have the required permissions");
+      return;
+    }
     console.log("postAssignment");
     ListItem = Parse.Object.extend("Update");
     query = new Parse.Query(ListItem);
@@ -423,9 +502,11 @@ function postAssignment(id){
                       }
                     });
                 }
+                
             },
           error: function(error) {
                 console.log("Error:"+error.message);
+
           }
     });  
      
@@ -446,12 +527,15 @@ function postAssignment(id){
       success: function(assign) {
         updateCurrentMarker(currmarker);
         populateUpdates();
+        enableDetailsView();
         
       },
       error: function(assign, error) {
         alert('Failed to Assign! ' + error.message);
+        enableDetailsView();
       }
     });
+    NProgress.done();
 }
 
 
@@ -476,6 +560,7 @@ function setIssueStatusButton(){
 
         query.find({
               success: function(results) {
+                    console.log("check:"+results.length);
                     var countclaims=0;
                     for (var i = 0; i < results.length; i++) {
                         if(results[i].get("type")=="claim"){
@@ -486,8 +571,10 @@ function setIssueStatusButton(){
                     assignedto.innerHTML="Assigned to: <strong>no one</strong>";
                     for (var i = 0; i < results.length; i++) {
                         if(results[i].get("assignee")!=undefined){
+                            console.log(results[i].get("assignee"));
                             var up=results[i].get("assignee");
-                            assignedto.innerHTML="Assigned to: <strong>"+up.get("name")+"</strong>";
+                            var dp=up.get("user");
+                            assignedto.innerHTML="Assigned to: <strong>"+dp.get("name")+"</strong>";
                             break;
                         }
                     } 
@@ -523,7 +610,8 @@ function setIssueStatusButton(){
                     for (var i = 0; i < results.length; i++) {
                         if(results[i].get("assignee")!=undefined){
                             var up=results[i].get("assignee");
-                            assignedto.innerHTML="Assigned to: <strong>"+up.get("name")+"</strong>";
+                            var dp=up.get("user");
+                            assignedto.innerHTML="Assigned to: <strong>"+dp.get("name")+"</strong>";
                             break;
                         }
                     } 
@@ -583,7 +671,7 @@ function updateContentWithCurrentMarker(){
     var p_photo=currmarker.content.get('photo');
     var p_status=currmarker.content.get('status');
     var p_title=currmarker.content.get('title');
-    infowindow.setContent(p_status);
+    infowindow.setContent(p_id);
     infowindow.open(map, marker);
     var status=document.getElementById('colorstatus');
     var date=document.getElementById('date');
@@ -659,6 +747,104 @@ function showDetailsView(){
         $('#details-button').delay(400).fadeIn(300);
 }
 
+function populateTM(){
+        console.log("populate for Team Member");
+        deleteMarkers();
+        listView.html("");
+        var no=0;
+        var np=0;
+        var nr=0;
+        var nc=0;
+        ListItem = Parse.Object.extend("Update");
+        query = new Parse.Query(ListItem);
+        query.descending('createdAt');
+        var pointer = new Parse.Object("TeamMember");
+        pointer.id = currentUser.get("teamMember").id;
+        query.equalTo("teamMember", pointer);
+        query.equalTo("type", "assigned");
+        query.include("issue");
+        query.find({
+          success: function(results) {
+            for (var i = 0; i < results.length; i++) { 
+                var object = results[i].get("issue");
+                var myicon;
+                
+                //Set Icon
+                if (object.get('category')=="road"){
+                    myicon=icons[0];
+                }
+                else if(object.get('category')=="electricity"){
+                    myicon=icons[1];
+                }
+                else if(object.get('category')=="water"){
+                    myicon=icons[2];
+                }
+                else if(object.get('category')=="law"){
+                    myicon=icons[3];
+                }
+                else if(object.get('category')=="sanitation"){
+                    myicon=icons[4];
+                }
+                else{
+                    myicon=icons[5];
+                }
+
+                              
+                marker = new google.maps.Marker({
+                    position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
+                    map: map,
+                    title: object.get('category'),
+                    content: object,
+                    icon : myicon,
+                    draggable: false,
+                    animation: google.maps.Animation.DROP
+                });
+
+                var d=new Date(object.createdAt);
+                var ago=timeSince(d);
+                var content=object.get("content");
+                if(object.get("content").length > 30){
+                    content=object.get("content").substring(0,30)+"...";
+                }
+                listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"'><td width='100'>"+object.id+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+object.get('status')+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                markers.push(marker);
+                if((marker.content).get('status')=="open"){
+                no=no+1;
+                }
+                if((marker.content).get('status')=="progress"){
+                    np=np+1;
+                }
+                if((marker.content).get('status')=="review"){
+                    nr=nr+1;
+                }
+                if((marker.content).get('status')=="closed"){
+                    nc=nc+1;
+                }
+                google.maps.event.addListener(marker, 'click', (function(marker,object) {
+                    return function() {
+                        if(infowindow) {
+                            infowindow.close();
+                        }
+                        infowindow = new google.maps.InfoWindow({
+                            maxWidth: 700,
+                            maxHeight: 900
+                        });
+                        NProgress.start();
+                        currmarker=marker;
+                        updateCurrentMarker(currmarker);                        
+                        infowindow.setContent(currmarker.content.get('status'));
+
+                        NProgress.done();
+                    }
+                })(marker,object));
+             } 
+          statusCounters(no,np,nr,nc);;
+          },
+          error: function(error) {
+          }
+        });
+}
+
 function populate(){
         console.log("populate");
         deleteMarkers();
@@ -669,7 +855,6 @@ function populate(){
         var nc=0;
         ListItem = Parse.Object.extend("Issue");
         query = new Parse.Query(ListItem);
-        
         query.descending('createdAt');
         query.find({
           success: function(results) {
@@ -714,7 +899,7 @@ function populate(){
                 if(object.get("content").length > 30){
                     content=object.get("content").substring(0,30)+"...";
                 }
-                listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"'><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+object.get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"'><td width='100'>"+object.id+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+object.get('status')+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                 markers.push(marker);
                 if((marker.content).get('status')=="open"){
                 no=no+1;
@@ -741,6 +926,7 @@ function populate(){
                         currmarker=marker;
                         updateCurrentMarker(currmarker);                        
                         infowindow.setContent(currmarker.content.get('status'));
+
                         NProgress.done();
                     }
                 })(marker,object));
@@ -881,12 +1067,6 @@ function statusCounters(no,np,nr,nc){
 function filter(){
     console.log("filter");
     updateHistory();
-    var no=0;
-    var np=0;
-    var nr=0;
-    var nc=0;
-    var hide=0;
-    var show=0;
     listView.html("");
     for(var m=0;m<markers.length;m++){
         if(statusCheck(markers[m])==1 && categoryCheck(markers[m])==1 && dateCheck(markers[m])==1){
@@ -896,29 +1076,14 @@ function filter(){
             if(markers[m].content.get('content').length > 30){
                     content=markers[m].content.get('content').substring(0,30)+"...";
             }
-            listView.append( "<tr id='"+(markers[m].content).id+"' class='"+(markers[m].content).get('status')+"'><td width='100'>"+(markers[m].content).get('category')+"</td><td>"+content+"</td><td width='100'>"+(markers[m].content).get('status')+"</td><td width='100'>"+"object.get('Assignee')"+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+            listView.append( "<tr id='"+(markers[m].content).id+"' class='"+(markers[m].content).get('status')+"'><td width='100'>"+(markers[m].content).id+"</td><td width='100'>"+(markers[m].content).get('category')+"</td><td>"+content+"</td><td width='100'>"+(markers[m].content).get('status')+"</td><td width='100'>"+ago+" ago</td></tr>");                        
             markers[m].setMap(map);
-            show+=1;
-            if((markers[m].content).get('status')=="open"){
-                no=no+1;
-            }
-            if((markers[m].content).get('status')=="progress"){
-                np=np+1;
-            }
-            if((markers[m].content).get('status')=="review"){
-                nr=nr+1;
-            }
-            if((markers[m].content).get('status')=="closed"){
-                nc=nc+1;
-            }
         }else{
             markers[m].setMap(null);
-            hide+=1;
           
         }
         
     }         
-    statusCounters(no,np,nr,nc);
 }  
 
 
@@ -932,8 +1097,23 @@ function initialize() {
         self.location="./login.html";
     }
     else{
-        hello.innerHTML = "Hi "+currentUser.get("username");
+        hello.innerHTML = "Hi "+currentUser.get("uname");
+        var pphoto=document.getElementById('profilepic');
+        if(currentUser.get("pic")!=undefined){
+          pphoto.src=currentUser.get("pic").url(); 
+        }
+        else{
+          pphoto.src="http://placehold.it/300x300&text=user";
+        }
         
+        if (currentUser.get("type")=="neta"){
+            console.log("Current User is a Neta");
+            document.getElementById("neta-panel").style.display="block";
+        }
+        else{
+            console.log("Current User is a Team Member");
+            document.getElementById("neta-panel").style.display="none";
+        }
         map2 = new google.maps.Map(document.getElementById('googleMap'), {
             zoom: 12,
             center: new google.maps.LatLng(28.612912,77.22951),
@@ -969,7 +1149,12 @@ function initialize() {
 
         var i=0;
         setTimeout( function() {
-            populate();
+            if(currentUser.get("type")=="teamMember"){
+              populateTM();
+            }
+            else if(currentUser.get("type")=="neta"){
+              populate();
+            }
             populateTeam();
         }, i * 500);
         if (navigator.geolocation) {
@@ -1024,6 +1209,7 @@ function initialize() {
 
     $('input[name=maptglgroup]').change(function(){
         NProgress.start();
+        enableCheckPoints();
         updateHistory();
         if(infowindow) {
             infowindow.close();
@@ -1038,7 +1224,7 @@ function initialize() {
             setTimeout(function(){
                 google.maps.event.trigger(map, 'resize');
                 map.setZoom( map.getZoom() );
-            },700);
+            },1000);
             $('#list-view').delay(400).fadeOut(300);
             $('#updates-view').delay(400).fadeOut(300);
             $('#back').delay(400).fadeOut(300);
@@ -1055,15 +1241,18 @@ function initialize() {
     });
 
     $('#claim-st1').click(function(){
+        disableDetailsView();
         postClaim();
     });
 
     $('#claim-st2').click(function(){
+        disableDetailsView();
         var q= $('#team').val();
         postAssignment(q);
     });
 
     $('#close').click(function(){
+        disableDetailsView();
         postClose();
     });
 
@@ -1094,10 +1283,11 @@ function initialize() {
             },700);
             $('#list-view').delay(400).fadeOut(300);
         }
-            $('#details-column').delay(400).fadeOut(300);
-            $('#updates-view').delay(400).fadeOut(300);
-            $('#back').delay(400).fadeOut(300);
-            NProgress.done();
+        $('#details-column').delay(400).fadeOut(300);
+        $('#updates-view').delay(400).fadeOut(300);
+        $('#back').delay(400).fadeOut(300);
+        enableCheckPoints();
+        NProgress.done();
     });
 
 
@@ -1105,6 +1295,7 @@ function initialize() {
     $('#details-button').click(function(){
         updateHistory();
         NProgress.start();
+        disableCheckPoints();
         if(infowindow) {
             infowindow.close();
         }
@@ -1122,21 +1313,7 @@ function initialize() {
         NProgress.done();
     });
 
-     $('#list-view-table tbody tr').click(function() {
-         NProgress.start();
-         var trid = $(this).attr('id');
-         var marker;
-         for (var i = 0; i < markers.length; i++) { 
-            if(markers.content.id==trid){
-              marker=markers[i];
-              break;
-            }
-         }
-         currmarker=marker;
-         updateCurrentMarker(currmarker);                        
-         infowindow.setContent(currmarker.content.get('status'));
-         NProgress.done(); 
-     });
+     
 
 
 
