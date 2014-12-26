@@ -195,11 +195,11 @@ function CurrentLocationControl(controlDiv, map) {
 }
 
 function enableDetailsView(){
-  $('#details-panel').children().prop('disabled',false);
+  //$('#details-panel').children().prop('disabled',false);
 }
 
 function disableDetailsView(){
-  $('#details-panel').children().prop('disabled',true);
+  //$('#details-panel').children().prop('disabled',true);
 }
 
 function enableCheckPoints(){
@@ -280,6 +280,7 @@ function populateUpdates(){
     pointer.id = currmarker.content.id;
     query.equalTo("issue", pointer);
     query.include("assignee");
+    query.include(["assignee.user"]);
     query.include("user");
     query.ascending('createdAt');
     query.find({
@@ -303,6 +304,7 @@ function populateUpdates(){
                     user=object.get("user");
                     if(object.get("assignee")!=undefined){
                         assignee=object.get("assignee");
+                        console.log("comments"+ assignee.get("user"));
                     }
                     else{
                         assignee="";
@@ -317,17 +319,17 @@ function populateUpdates(){
                     
                     if(object.get("type")=="assigned"){
                         var ass=assignee.get("user");
-                        timelineView.append("<div class='panel nb'><p><strong>"+ass.get("uname")+"</strong> was assigned by <strong>"+user.get("uname")+"</strong> <small>"+ago+" ago</small></p></div>");                        
+                        timelineView.append("<div class='panel nb'><p><strong>"+ass.get("name")+"</strong> was assigned by <strong>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
                     }
                     if(object.get("type")=="closed"){
-                        timelineView.append("<div class='panel nb'><p><strong>"+user.get("uname")+"</strong> closed the issue <small>"+ago+" ago</small></p></div>"); 
+                        timelineView.append("<div class='panel nb'><p><strong>"+user.get("name")+"</strong> closed the issue <small>"+ago+" ago</small></p></div>"); 
                         
                     }
                     if(object.get("type")=="comment"){
                         timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='"+pphoto1+"' class='circle-img'></div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong>"+user.get("uname")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div></div></div>"); 
                     }
                     if(object.get("type")=="claim"){
-                        timelineView.append("<div class='panel nb'><p><strong>"+user.get("uname")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
+                        timelineView.append("<div class='panel nb'><p><strong>"+user.get("name")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
                     }
                 }
 
@@ -429,7 +431,7 @@ function postClaim(){
 
 function postClose(){
     NProgress.start();
-    if(currentUser.get("type")!="neta"){
+    if(currentUser.get("type")!="neta" && currentUser.get("type")!="teamMember"){
       alert("You do not have the required permissions");
       return;
     }
@@ -457,6 +459,7 @@ function postClose(){
         enableDetailsView();
       }
     });
+    NProgress.done();
 }
 
 function teamMember(email){
@@ -555,6 +558,7 @@ function setIssueStatusButton(){
         query.equalTo("issue", pointer);
         query.equalTo("user",u);
         query.include("assignee");
+        query.include(["assignee.user"]);
         query.include("user");
         query.descending('createdAt');
 
@@ -595,12 +599,15 @@ function setIssueStatusButton(){
         query.equalTo("user",u);
         query.include("assignee");
         query.include("user");
+        query.include(["assignee.user"]);
         query.descending('createdAt');
 
         query.find({
               success: function(results) {
                     var countclaims=0;
+                    
                     for (var i = 0; i < results.length; i++) {
+                        
                         if(results[i].get("type")=="claim"){
                             countclaims+=1;
                         }
@@ -608,7 +615,9 @@ function setIssueStatusButton(){
                     var assignedto=document.getElementById('claim-st3');
                     assignedto.innerHTML="Assigned to: <strong>no one</strong>";
                     for (var i = 0; i < results.length; i++) {
+                        
                         if(results[i].get("assignee")!=undefined){
+                            
                             var up=results[i].get("assignee");
                             var dp=up.get("user");
                             assignedto.innerHTML="Assigned to: <strong>"+dp.get("name")+"</strong>";
@@ -633,6 +642,16 @@ function setIssueStatusButton(){
                     console.log("Error:"+error.message);
               }
         });   
+    }
+}
+
+function setIssueStatusButtonTM(){
+    console.log("setIssueStatusButton");
+    if(currmarker.content.get("status")=="closed" || currmarker.content.get("status")=="review"){
+        $('#close').delay(400).fadeOut(300);  
+    }
+    else{
+        $('#close').delay(400).fadeIn(300);  
     }
 }
 
@@ -735,7 +754,13 @@ function updateContentWithCurrentMarker(){
             detailedissue.innerHTML=p_content; 
             populateUpdates();
             showDetailsView();
-            setIssueStatusButton();
+            if(currentUser.get("type")=="neta"){
+                setIssueStatusButton();
+            }
+            else if(currentUser.get("type")=="teamMember"){
+                setIssueStatusButtonTM();
+            }
+            
     },300); 
 }
 
@@ -760,7 +785,7 @@ function populateTM(){
         query.descending('createdAt');
         var pointer = new Parse.Object("TeamMember");
         pointer.id = currentUser.get("teamMember").id;
-        query.equalTo("teamMember", pointer);
+        query.equalTo("assignee", pointer);
         query.equalTo("type", "assigned");
         query.include("issue");
         query.find({
@@ -809,7 +834,7 @@ function populateTM(){
                 listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"'><td width='100'>"+object.id+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+object.get('status')+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                 markers.push(marker);
                 if((marker.content).get('status')=="open"){
-                no=no+1;
+                    no=no+1;
                 }
                 if((marker.content).get('status')=="progress"){
                     np=np+1;
