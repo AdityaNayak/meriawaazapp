@@ -154,15 +154,17 @@
         <div class="row">
           <div class="small-12 columns s-ws-top">
             <div class="text-center" id="details-panel">
-              <div class="button fullwidth" data-options="align:left" data-dropdown="drop1" id="close" style="display:none;"><strong>Mark as Completed</strong></div>
+              <div class="button fullwidth success" data-options="align:left" data-dropdown="drop1" id="close" style="display:none;"><strong>Mark as Completed</strong></div>
               <div id="neta-panel" style="display:none;">
-                <div id="claim-st3">Assigned to: <strong>no one</strong></div>
-                <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
+              <div class="text-left">
+              <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
                 <select id="team" style="display:none;">
                   <option value="user 1"></option>
                   <option value="user 3"></option>
                   <option value="user 2"></option>
                 </select>
+                <div id="claim-st3">Assigned to: <strong>no one</strong></div>
+                </div>
                 <div class="button fullwidth" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
               </div>
             </div>
@@ -201,7 +203,9 @@
         </div>
         <div class="row">
           <div class="small-12 columns s-ws-top">
-            <p id="address" class="secondary">-</p>
+          <div class="secondary">
+            <p id="address">-</p>
+            </div>
           </div>
         </div>
       </div>

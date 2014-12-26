@@ -324,7 +324,7 @@ function populateUpdates(){
                         
                     }
                     if(object.get("type")=="comment"){
-                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx'><img width='300' src='"+pphoto1+"' class='circle-img'></div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong>"+user.get("uname")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div></div></div>"); 
+                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='"+pphoto1+"' class='circle-img'></div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong>"+user.get("uname")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div></div></div>"); 
                     }
                     if(object.get("type")=="claim"){
                         timelineView.append("<div class='panel nb'><p><strong>"+user.get("uname")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
@@ -665,7 +665,7 @@ function updateContentWithCurrentMarker(){
     
     var p_latitude=currmarker.content.get('location').latitude;
     var p_longitude=currmarker.content.get('location').longitude;
-    var p_location=p_latitude+","+p_longitude;
+    var p_location=p_latitude.toString().substring(0, 10)+", "+p_longitude.toString().substring(0, 10);
     getReverseGeocodingData(p_latitude, p_longitude);
     var p_id=currmarker.content.id;
     var p_photo=currmarker.content.get('photo');
@@ -722,7 +722,7 @@ function updateContentWithCurrentMarker(){
                 content.innerHTML = p_content.substring(0,30)+"...";
             }
             type.innerHTML = p_type;
-            title.innerHTML = p_title+"<small>"+p_id+"</small>";
+            title.innerHTML = p_id+"<small>"+p_title+"</small>";
             location.innerHTML = p_location;
             if(p_photo!=undefined){
                 bigphoto.src=p_photo.url();

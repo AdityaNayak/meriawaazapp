@@ -58,7 +58,10 @@
 	font-size:0.9em;
 	margin-top:0.4em;
 	line-height:1;
-
+	p{
+		font-size: 0.9em;
+		line-height: 1.25;
+	}
 }
 .secondary-color{
 	color:scale-color($grey, $lightness:-25%) !important;
@@ -165,6 +168,9 @@ i{
 		border-top-left-radius: $global-radius $global-radius;
 		border-top-right-radius: $global-radius $global-radius;
 	}
+.wd-fx{
+	width:75%;
+}
 .nb{
 	border:none;
 }
