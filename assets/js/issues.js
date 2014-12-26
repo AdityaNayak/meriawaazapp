@@ -203,6 +203,8 @@ function disableDetailsView(){
 }
 
 function enableCheckPoints(){
+  console.log("enableCheckPoints");
+  enableCategoryIcons();
   box_r.disabled = false;
   box_e.disabled = false;
   box_w.disabled = false;
@@ -215,7 +217,9 @@ function enableCheckPoints(){
   box_op.disabled = false;
 }
 
-function disableCheckPoints(){
+function disableCheckPoints(c){
+  console.log("disableCheckPoints");
+  disbleCategoryIcons(c);
   box_r.disabled = true;
   box_e.disabled = true;
   box_w.disabled = true;
@@ -229,11 +233,35 @@ function disableCheckPoints(){
 }
 
 function enableCategoryIcons(){
-  
+  console.log("enableCategoryIcons");
+  $("#road_cb").closest("label").toggleClass("gs", false); 
+  $("#electricity_cb").closest("label").toggleClass("gs", false); 
+  $("#water_cb").closest("label").toggleClass("gs", false); 
+  $("#law_cb").closest("label").toggleClass("gs", false); 
+  $("#sanitation_cb").closest("label").toggleClass("gs", false); 
+  $("#transport_cb").closest("label").toggleClass("gs", false); 
 }
 
 function disbleCategoryIcons(i){
-  
+  console.log("disableCategoryIcons");
+  if(i!="road"){
+    $("#road_cb").closest("label").toggleClass("gs", true); 
+  }
+  if(i!="electricity"){
+    $("#electricity_cb").closest("label").toggleClass("gs", true); 
+  }
+  if(i!="water"){
+    $("#water_cb").closest("label").toggleClass("gs", true); 
+  }
+  if(i!="law"){
+    $("#law_cb").closest("label").toggleClass("gs", true); 
+  }
+  if(i!="sanitation"){
+    $("#sanitation_cb").closest("label").toggleClass("gs", true); 
+  }
+  if(i!="transport"){
+    $("#transport_cb").closest("label").toggleClass("gs", true); 
+  }
 }
 
 function FixedLocationControl(controlDiv, map) {
@@ -464,6 +492,16 @@ function postClose(){
     NProgress.done();
 }
 
+function appropriateStatus(s){
+    if(s=="progress"){
+      return "in progress";
+    }
+    if(s=="review"){
+      return "under review"
+    }
+    return s;
+}
+
 function teamMember(email){
     console.log("teamMember");
     console.log("Find Team Member with email ID: "+email);
@@ -489,10 +527,10 @@ function postAssignment(id){
     query = new Parse.Query(ListItem);
     var pointer = new Parse.Object("Issue");
     pointer.id = currmarker.content.id;
-    var u = new Parse.Object("User");
-    u.id = currentUser.id;
+    var u1 = new Parse.Object("User");
+    u1.id = currentUser.id;
     query.equalTo("issue", pointer);
-    query.equalTo("user",u);
+    query.equalTo("user",u1);
     query.equalTo("type","assigned");
     query.find({
           success: function(results) {
@@ -507,6 +545,31 @@ function postAssignment(id){
                       }
                     });
                 }
+                var Assign = Parse.Object.extend("Update");
+                var assign = new Assign();
+                var u = new Parse.Object("User");
+                var i = new Parse.Object("Issue");
+                var a = new Parse.Object("TeamMember");
+                var member=teamMember(id);
+                u.id = currentUser.id;
+                a.id = member.id; 
+                i.id = currmarker.content.id;
+                assign.set("type", "assigned");
+                assign.set("issue", i);
+                assign.set("user", u);
+                assign.set("assignee", a);
+                assign.save(null, {
+                  success: function(assign) {
+                    updateCurrentMarker(currmarker);
+                    populateUpdates();
+                    enableDetailsView();
+                    
+                  },
+                  error: function(assign, error) {
+                    alert('Failed to Assign! ' + error.message);
+                    enableDetailsView();
+                  }
+                });
                 
             },
           error: function(error) {
@@ -515,31 +578,7 @@ function postAssignment(id){
           }
     });  
      
-    var Assign = Parse.Object.extend("Update");
-    var assign = new Assign();
-    var u = new Parse.Object("User");
-    var i = new Parse.Object("Issue");
-    var a = new Parse.Object("TeamMember");
-    var member=teamMember(id);
-    u.id = currentUser.id;
-    a.id = member.id; 
-    i.id = currmarker.content.id;
-    assign.set("type", "assigned");
-    assign.set("issue", i);
-    assign.set("user", u);
-    assign.set("assignee", a);
-    assign.save(null, {
-      success: function(assign) {
-        updateCurrentMarker(currmarker);
-        populateUpdates();
-        enableDetailsView();
-        
-      },
-      error: function(assign, error) {
-        alert('Failed to Assign! ' + error.message);
-        enableDetailsView();
-      }
-    });
+    
     NProgress.done();
 }
 
@@ -692,7 +731,8 @@ function updateContentWithCurrentMarker(){
     var p_photo=currmarker.content.get('photo');
     var p_status=currmarker.content.get('status');
     var p_title=currmarker.content.get('title');
-    infowindow.setContent(p_id);
+    var p_issueId=currmarker.content.get('issueId').toString();
+    infowindow.setContent(p_issueId);
     infowindow.open(map, marker);
     var status=document.getElementById('colorstatus');
     var date=document.getElementById('date');
@@ -732,7 +772,7 @@ function updateContentWithCurrentMarker(){
             else{
                 $("#colorstatus").addClass('dbc');
             }
-            status.innerHTML = '<strong>'+p_status+'</strong>';
+            status.innerHTML = '<strong>'+appropriateStatus(p_status)+'</strong>';
             date.innerHTML = p_date;
             time.innerHTML = p_time;
             if(p_content.length<50){
@@ -743,7 +783,7 @@ function updateContentWithCurrentMarker(){
                 content.innerHTML = p_content.substring(0,30)+"...";
             }
             type.innerHTML = p_type;
-            title.innerHTML = p_id+"<small>"+p_title+"</small>";
+            title.innerHTML = p_issueId+"<small> "+p_title+"</small>";
             location.innerHTML = p_location;
             if(p_photo!=undefined){
                 bigphoto.src=p_photo.url();
@@ -926,7 +966,8 @@ function populate(){
                 if(object.get("content").length > 30){
                     content=object.get("content").substring(0,30)+"...";
                 }
-                listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"'><td width='100'>"+object.id+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+object.get('status')+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                console.log(object.id);
+                listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                 markers.push(marker);
                 if((marker.content).get('status')=="open"){
                 no=no+1;
@@ -1103,7 +1144,7 @@ function filter(){
             if(markers[m].content.get('content').length > 30){
                     content=markers[m].content.get('content').substring(0,30)+"...";
             }
-            listView.append( "<tr id='"+(markers[m].content).id+"' class='"+(markers[m].content).get('status')+"'><td width='100'>"+(markers[m].content).id+"</td><td width='100'>"+(markers[m].content).get('category')+"</td><td>"+content+"</td><td width='100'>"+(markers[m].content).get('status')+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+            listView.append( "<tr id='"+(markers[m].content).id+"' class='"+(markers[m].content).get('status')+"'><td width='100'>"+((markers[m].content).get('issueId')).toString()+"</td><td width='100'>"+(markers[m].content).get('category')+"</td><td>"+content+"</td><td width='100'>"+appropriateStatus((markers[m].content).get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
             markers[m].setMap(map);
         }else{
             markers[m].setMap(null);
@@ -1323,7 +1364,7 @@ function initialize() {
     $('#details-button').click(function(){
         updateHistory();
         NProgress.start();
-        disableCheckPoints();
+        disableCheckPoints(currmarker.content.get("category"));
         if(infowindow) {
             infowindow.close();
         }
