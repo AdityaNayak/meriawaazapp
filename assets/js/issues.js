@@ -175,7 +175,7 @@ function CurrentLocationControl(controlDiv, map) {
                 var longitude = position.coords.longitude;
                 var geolocpoint = new google.maps.LatLng(latitude, longitude);
                 map.setCenter(geolocpoint);
-                map.setZoom(16);
+                map.setZoom(12);
                 if(geomarker1!=undefined){
                   geomarker1.setMap(null);
                 }
@@ -195,11 +195,11 @@ function CurrentLocationControl(controlDiv, map) {
 }
 
 function enableDetailsView(){
-  //$('#details-panel').children().prop('disabled',false);
+  $('#details-panel').children().prop('disabled',false);
 }
 
 function disableDetailsView(){
-  //$('#details-panel').children().prop('disabled',true);
+  $('#details-panel').children().prop('disabled',true);
 }
 
 function enableCheckPoints(){
@@ -266,7 +266,9 @@ function FixedLocationControl(controlDiv, map) {
   // Chicago
   google.maps.event.addDomListener(controlUI, 'click', function() {
 
-    map.setCenter(currmarker.position);
+    map2.setCenter(currmarker.position);
+    map2.setZoom(12);
+
   });
 
 }
@@ -311,10 +313,10 @@ function populateUpdates(){
                     }
                     var pphoto1;
                     if(user.get("pic")!=undefined){
-                      pphoto1=user.get("pic").url(); 
+                        pphoto1=user.get("pic").url(); 
                     }
                     else{
-                      pphoto1="http://placehold.it/300x300&text=user";
+                        pphoto1="http://placehold.it/300x300&text=user";
                     }
                     
                     if(object.get("type")=="assigned"){
@@ -1188,7 +1190,7 @@ function initialize() {
                 var longitude = position.coords.longitude;
                 var geolocpoint = new google.maps.LatLng(latitude, longitude);
                 map.setCenter(geolocpoint);
-                map.setZoom(16);
+                map.setZoom(12);
                 var iconURLPrefix = './assets/images/';
                 if(geomarker1!=undefined){
                   geomarker1.setMap(null);
@@ -1249,6 +1251,7 @@ function initialize() {
             setTimeout(function(){
                 google.maps.event.trigger(map, 'resize');
                 map.setZoom( map.getZoom() );
+                map2.setCenter(singlemarker.getPosition());
             },1000);
             $('#list-view').delay(400).fadeOut(300);
             $('#updates-view').delay(400).fadeOut(300);
@@ -1330,6 +1333,7 @@ function initialize() {
         setTimeout(function(){
             google.maps.event.trigger(map2, 'resize');
             map2.setZoom( map2.getZoom() );
+            map2.setCenter(singlemarker.getPosition());
         },700);
         $('#photo').delay(400).fadeOut(300);
         $('#content').delay(400).fadeOut(300);
