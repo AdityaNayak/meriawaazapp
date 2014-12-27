@@ -456,7 +456,6 @@ function postComment(c){
     comment.save(null, {
       success: function(comment) {
         updateCurrentMarker(currmarker);
-        populateUpdates();
         document.getElementById("comment").value="";
         enableDetailsView();
         
@@ -491,7 +490,6 @@ function postClaim(){
     claim.save(null, {
       success: function(claim) {
         updateCurrentMarker(currmarker);
-        populateUpdates();
         enableDetailsView();
        
       },
@@ -524,7 +522,6 @@ function postClose(){
     close.save(null, {
       success: function(close) {
         updateCurrentMarker(currmarker);
-        populateUpdates();
         enableDetailsView();
        
       },
