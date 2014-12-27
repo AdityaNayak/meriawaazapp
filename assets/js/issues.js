@@ -205,6 +205,7 @@ function disableDetailsView(){
 function enableCheckPoints(){
   console.log("enableCheckPoints");
   enableCategoryIcons();
+  enableStatusIcons();
   box_r.disabled = false;
   box_e.disabled = false;
   box_w.disabled = false;
@@ -217,9 +218,10 @@ function enableCheckPoints(){
   box_op.disabled = false;
 }
 
-function disableCheckPoints(c){
+function disableCheckPoints(c,i){
   console.log("disableCheckPoints");
   disbleCategoryIcons(c);
+  disbleStatusIcons(i);
   box_r.disabled = true;
   box_e.disabled = true;
   box_w.disabled = true;
@@ -261,6 +263,48 @@ function disbleCategoryIcons(i){
   }
   if(i!="transport"){
     $("#transport_cb").closest("label").toggleClass("gs", true); 
+  }
+}
+
+function enableStatusIcons(){
+  console.log("enableStatusIcons");
+  $('#fn2').closest("label").toggleClass("gs", false); 
+  $('#fn3').closest("label").toggleClass("gs", false); 
+  $('#fn4').closest("label").toggleClass("gs", false); 
+  $('#fn1').closest("label").toggleClass("gs", false); 
+}
+
+function refresh1(){
+  if(currentUser.get("type")=="neta"){
+    populate();
+  }
+  else if(currentUser.get("type")=="teamMember"){
+    populateTM();
+  }
+}
+
+function refresh2(){
+  updateCurrentMarker(currmarker);
+}
+
+function disbleStatusIcons(i){
+
+  console.log("disableStatusIcons"+i);
+  if(i!="progress"){
+    console.log("adding to progress");
+    $('#fn2').closest("label").toggleClass("gs", true); 
+  }
+  if(i!="review"){
+    console.log("adding to review");
+    $('#fn3').closest("label").toggleClass("gs", true); 
+  }
+  if(i!="closed"){
+    console.log("adding to closed");
+    $('#fn4').closest("label").toggleClass("gs", true); 
+  }
+  if(i!="open"){
+    console.log("adding to open");
+    $('#fn1').closest("label").toggleClass("gs", true); 
   }
 }
 
@@ -705,6 +749,12 @@ function updateCurrentMarker(m){
       success: function(results) {
         console.log("current marker updated: "+results.length);
             currmarker.content = results[0];
+            for(var i=0;i<markers.length;i++){
+              if(markers[i].content.id==currmarker.content.id){
+                markers[i].content=results[0];
+                break;
+              }
+            }
             updateContentWithCurrentMarker();
             infowindow.open(map, currmarker);
         },
@@ -873,7 +923,7 @@ function populateTM(){
                 if(object.get("content").length > 30){
                     content=object.get("content").substring(0,30)+"...";
                 }
-                listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"'><td width='100'>"+object.id+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+object.get('status')+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                listView.append( "<tr  id='"+object.id+"' class='"+object.get('status')+"'><td width='100' onClick='listViewClick("+object.id.toString()+");'>"+object.id+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+object.get('status')+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                 markers.push(marker);
                 if((marker.content).get('status')=="open"){
                     no=no+1;
@@ -967,7 +1017,7 @@ function populate(){
                     content=object.get("content").substring(0,30)+"...";
                 }
                 console.log(object.id);
-                listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                 markers.push(marker);
                 if((marker.content).get('status')=="open"){
                 no=no+1;
@@ -1144,7 +1194,8 @@ function filter(){
             if(markers[m].content.get('content').length > 30){
                     content=markers[m].content.get('content').substring(0,30)+"...";
             }
-            listView.append( "<tr id='"+(markers[m].content).id+"' class='"+(markers[m].content).get('status')+"'><td width='100'>"+((markers[m].content).get('issueId')).toString()+"</td><td width='100'>"+(markers[m].content).get('category')+"</td><td>"+content+"</td><td width='100'>"+appropriateStatus((markers[m].content).get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+
+            listView.append( "<tr id='"+(markers[m].content).id+"' class='"+(markers[m].content).get('status')+"' onClick='listViewClick("+(markers[m].content).id.toString()+");'><td width='100'>"+((markers[m].content).get('issueId')).toString()+"</td><td width='100'>"+(markers[m].content).get('category')+"</td><td>"+content+"</td><td width='100'>"+appropriateStatus((markers[m].content).get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
             markers[m].setMap(map);
         }else{
             markers[m].setMap(null);
@@ -1154,8 +1205,55 @@ function filter(){
     }         
 }  
 
+function updateCounters(){
+    var no=0;
+    var np=0;
+    var nr=0;
+    var nc=0;
+    for(var m=0;m<markers.length;m++){
+        if(markers[m].getMap()!=null){
+          if((markers[m].content).get('status')=="open"){
+              no=no+1;
+          }
+          if((markers[m].content).get('status')=="progress"){
+              np=np+1;
+          }
+          if((markers[m].content).get('status')=="review"){
+              nr=nr+1;
+          }
+          if((markers[m].content).get('status')=="closed"){
+              nc=nc+1;
+          }
+        }
+    }  
+    statusCounters(no,np,nr,nc);
+}
 
-
+function listViewClick(p) {
+         NProgress.start();
+         var trid = p.id;
+         var marker;
+         console.log("you clicked on-"+p.id);
+         for (var i = 0; i < markers.length; i++) { 
+            console.log(markers[i].content.id);
+            if(markers[i].content.id==trid){
+              marker=markers[i];
+              break;
+            }
+         }
+         currmarker=marker;
+         updateCurrentMarker(currmarker);   
+         if(infowindow) {
+            infowindow.close();
+        }
+        infowindow = new google.maps.InfoWindow({
+            maxWidth: 700,
+            maxHeight: 900
+        });                     
+         infowindow.setContent(currmarker.content.get('status'));
+         NProgress.done(); 
+         console.log('test');
+        }
 
 function initialize() {
     console.log("initialize");
@@ -1248,6 +1346,9 @@ function initialize() {
         }            
     }
 
+
+    
+
     $('input[type=checkbox]').change(
         function(){
             updateHistory();
@@ -1256,6 +1357,10 @@ function initialize() {
                 infowindow.close();
             }
             filter();
+            
+            if ($(this).attr('id')=="law_cb" || $(this).attr('id')=="road_cb" || $(this).attr('id')=="electricity_cb" || $(this).attr('id')=="sanitation_cb" || $(this).attr('id')=="transport_cb" || $(this).attr('id')=="water_cb"){
+                updateCounters();
+            }
             $('#details-column').delay(400).fadeOut(300);
             if(view==1){
                 $('#list-view').delay(400).fadeIn(300);
@@ -1364,7 +1469,7 @@ function initialize() {
     $('#details-button').click(function(){
         updateHistory();
         NProgress.start();
-        disableCheckPoints(currmarker.content.get("category"));
+        disableCheckPoints(currmarker.content.get("category"),currmarker.content.get("status"));
         if(infowindow) {
             infowindow.close();
         }
@@ -1424,6 +1529,7 @@ function initialize() {
         function(start, end) {
             $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
             filter();
+            updateCounters();
         }
     );
 }
