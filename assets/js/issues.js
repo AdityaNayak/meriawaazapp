@@ -1263,7 +1263,6 @@ function initialize() {
         self.location="./login.html";
     }
     else{
-        hello.innerHTML = "Hi "+currentUser.get("uname");
         var pphoto=document.getElementById('profilepic');
         if(currentUser.get("pic")!=undefined){
           pphoto.src=currentUser.get("pic").url(); 
