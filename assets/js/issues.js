@@ -274,7 +274,31 @@ function enableStatusIcons(){
   $('#fn1').closest("label").toggleClass("gs", false); 
 }
 
+//Starts NProgress
 function refresh1(){
+  NProgress.start();
+  if(infowindow) {
+            infowindow.close();
+  }
+  $('#photo').delay(400).fadeIn(300);
+  $('#content').delay(400).fadeIn(300);
+  $('#details-button').delay(400).fadeIn(300);
+  if(view==1){
+      $('#list-view').delay(400).fadeIn(300);
+      $('#map-view').delay(400).fadeOut(300);
+  }
+  else{
+      $('#map-view').delay(400).fadeIn(300);
+      setTimeout(function(){
+          google.maps.event.trigger(map, 'resize');
+          map.setZoom( map.getZoom() );
+      },700);
+      $('#list-view').delay(400).fadeOut(300);
+  }
+  $('#details-column').delay(400).fadeOut(300);
+  $('#updates-view').delay(400).fadeOut(300);
+  $('#back').delay(400).fadeOut(300);
+  enableCheckPoints();
   if(currentUser.get("type")=="neta"){
     populate();
   }
@@ -439,6 +463,7 @@ function populateTeam(){
     
 }
 
+//Starts NProgress
 function postComment(c){
     NProgress.start();
     console.log("postComment");
@@ -468,7 +493,7 @@ function postComment(c){
     NProgress.done();
 }
 
-
+//Starts NProgress
 function postClaim(){
     NProgress.start();
     if(currentUser.get("type")!="neta"){
@@ -498,9 +523,9 @@ function postClaim(){
         enableDetailsView();
       }
     });
-    NProgress.done();
 }
 
+//Starts NProgress
 function postClose(){
     NProgress.start();
     if(currentUser.get("type")!="neta" && currentUser.get("type")!="teamMember"){
@@ -530,7 +555,6 @@ function postClose(){
         enableDetailsView();
       }
     });
-    NProgress.done();
 }
 
 function appropriateStatus(s){
@@ -554,9 +578,9 @@ function teamMember(email){
             return member;
         }
     }
-    NProgress.done();
 }
 
+//Starts NProgress
 function postAssignment(id){   
     NProgress.start();
     if(currentUser.get("type")!="neta"){
@@ -602,7 +626,6 @@ function postAssignment(id){
                 assign.save(null, {
                   success: function(assign) {
                     updateCurrentMarker(currmarker);
-                    populateUpdates();
                     enableDetailsView();
                     
                   },
@@ -618,9 +641,6 @@ function postAssignment(id){
 
           }
     });  
-     
-    
-    NProgress.done();
 }
 
 
@@ -737,6 +757,7 @@ function setIssueStatusButtonTM(){
     }
 }
 
+
 function updateCurrentMarker(m){
   console.log("updateCurrentMarker");
     ListItem = Parse.Object.extend("Issue");
@@ -761,6 +782,7 @@ function updateCurrentMarker(m){
     }); 
 }
 
+//Close NProgress
 function updateContentWithCurrentMarker(){
     console.log("updateContentWithCurrentMarker");
     var p_timestam=String(currmarker.content.createdAt);
@@ -849,7 +871,7 @@ function updateContentWithCurrentMarker(){
             else if(currentUser.get("type")=="teamMember"){
                 setIssueStatusButtonTM();
             }
-            
+            NProgress.done();
     },300); 
 }
 
@@ -861,6 +883,7 @@ function showDetailsView(){
         $('#details-button').delay(400).fadeIn(300);
 }
 
+//Starts and Ends NProgress
 function populateTM(){
         console.log("populate for Team Member");
         deleteMarkers();
@@ -947,18 +970,17 @@ function populateTM(){
                         currmarker=marker;
                         updateCurrentMarker(currmarker);                        
                         infowindow.setContent(currmarker.content.get('status'));
-
-                        NProgress.done();
                     }
                 })(marker,object));
              } 
-          statusCounters(no,np,nr,nc);;
+          statusCounters(no,np,nr,nc);
+          NProgress.done();
           },
           error: function(error) {
           }
         });
 }
-
+//Starts and Ends NProgress
 function populate(){
         console.log("populate");
         deleteMarkers();
@@ -1046,7 +1068,7 @@ function populate(){
                     }
                 })(marker,object));
              } 
-          statusCounters(no,np,nr,nc);;
+          statusCounters(no,np,nr,nc);
           },
           error: function(error) {
           }
@@ -1248,7 +1270,7 @@ function listViewClick(p) {
             maxHeight: 900
         });                     
          infowindow.setContent(currmarker.content.get('status'));
-         NProgress.done(); 
+          
          console.log('test');
         }
 
