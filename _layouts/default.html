@@ -1,21 +1,23 @@
 {% include header-landing.html %}
 <div class="row">
-  <div class="small-6 columns text-right b-ws-top">
+<div class="icon-bg">
+</div>
+  <div class="small-6 columns text-right b-ws-top icon-bg-fx">
     <h3 class="hero-heading m-ws-top">
       <div><span class="bgbg wc">Connecting Citizens with</span></div>
       <div><span class="bbg wc">Governments and Elected Officials</span></div>
       <div><span class="dbbg wc">through a Mobile platform</span></div>
     </h3>
   </div>
-  <div class="small-3 columns">
+  <div class="small-3 columns icon-bg-fx">
     <img src="assets/images/placeholder.png">
   </div>
-  <div class="small-3 columns">
+  <div class="small-3 columns icon-bg-fx">
     <a href="https://play.google.com/store/apps/details?id=com.meriawaaz.mygap" target="_blank"><img src="assets/images/playstore.png" style="margin-top:12em;"></a>
     <p class="s-ws-top">Are you an elected representative? <br>Signup for our <a href="{{site.url}}/login.html" class="button tiny secondary">Dashboard</a></p>
   </div>
 </div>
-<div class="panel p-fx-btm">
+<div class="panel p-fx-btm icon-bg-fx">
   <div class="row home-showcase">
     <div class="small-4 columns text-center" data-orbit-link="slide-1">
       <img src="{{site.url}}/assets/images/report-issues.png">
@@ -132,6 +134,10 @@
    {% include footer.html %}
    <script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.orbit.js"></script>
    <script type="text/javascript">
+   $( document ).ready(function() {
+      icon_bg();
+      icon_bg();
+    });
     $(document).foundation({
       orbit: {
         animation: 'slide',

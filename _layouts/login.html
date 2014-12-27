@@ -1,16 +1,18 @@
 {% include header-out.html %}
 <div class="row">
-  <div class="hide-for-small small-12 large-6 columns text-right b-ws-top">
+<div class="icon-bg">
+</div>
+  <div class="hide-for-small small-12 large-6 columns text-right b-ws-top icon-bg-fx">
     <h3 class="hero-heading b-ws-top">
       <div><span class="bgbg wc">Connecting Citizens with</span></div>
       <div><span class="bbg wc">Governments and Elected Officials</span></div>
       <div><span class="dbbg wc">through the Mobile platform</span></div>
     </h3>
   </div>
-  <div class="small-12 large-3 hide-for-small columns b-ws-top">
+  <div class="small-12 large-3 hide-for-small columns b-ws-top icon-bg-fx">
     <img src="{{site.url}}/assets/images/phone.png">
   </div>
-  <div class="small-12 large-3 columns panel s-ws-top">
+  <div class="small-12 large-3 columns panel b-ws-top icon-bg-fx">
     <div id="signin">
       <form class="s-ws-top" id="signin-form">
         <div class="row">
@@ -81,7 +83,7 @@
 
   </div>
 </div>
-<div class="panel">
+<div class="panel icon-bg-fx">
   <div class="row">
     <div class="large-4 small-12 columns text-center">
       <div id="num1" class="f-3x bgc">1</div>
@@ -195,6 +197,9 @@
         event.preventDefault();
         login();
       });
+      icon_bg();
+      icon_bg();
+      //icon_bg();
     });</script>
     <script type="text/javascript">
       $(document).foundation();
