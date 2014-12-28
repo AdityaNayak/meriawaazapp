@@ -324,8 +324,7 @@ function initialize() {
     }
     else{
         console.log('ho gaya');
-        hello.innerHTML = "Hi "+currentUser.get("username");
-          map = new google.maps.Map(document.getElementById('map'), {
+        map = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,
         center: new google.maps.LatLng(28.612912,77.22951),
         mapTypeId: google.maps.MapTypeId.ROADMAP

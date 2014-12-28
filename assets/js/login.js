@@ -29,22 +29,62 @@ function login() {
 	  var username = form.email.value;
 	  console.log(username);
 	  var password = form.password.value;
-      
- 	  Parse.User.logIn(username, password, {
-		  success: function(user) {
-	          console.log("Log In Ho Gaya!");
-	          currentUser = Parse.User.current();
-	          self.location="./dashboard.html";
-	          NProgress.done();
-	        },
-		  error: function(user, error) {
-		  	  NProgress.done();
-		  	  if(error.code==101){
-		  	  	alert("An Error Occured! "+error.message);
-		  	  }	
-		      console.log("Error: " + error.code + " " + error.message);
-		  }
-	  });
+      if(username.indexOf('@') === -1){
+      		console.log("Username used");
+      		ListItem = Parse.Object.extend("User");
+		    query = new Parse.Query(ListItem);
+		    query.equalTo("uname", username);
+		    query.ascending('createdAt');
+		    query.find({
+		          success: function(results) {
+		          		if(results.length==0){
+		          			NProgress.done();
+		          			alert("An Error Occured! "+"invalid login parameters");
+		          		}
+		          		else{
+		          			username=results[0].get("email");
+		          			Parse.User.logIn(username, password, {
+							  success: function(user) {
+							  	  NProgress.done();	
+						          console.log("Log In Ho Gaya!");
+						          currentUser = Parse.User.current();
+						          self.location="./dashboard.html";
+						          NProgress.done();
+						        },
+							  error: function(user, error) {
+							  	  NProgress.done();
+							  	  if(error.code==101){
+							  	  	alert("An Error Occured! "+error.message);
+							  	  }	
+							      console.log("Error: " + error.code + " " + error.message);
+							  }
+						  	});
+						  }
+		          		},
+				  error: function(error) {
+		                alert("An Error Occured! "+error.message);
+		          }
+		   });		          		
+		          
+      }
+      else{
+      		Parse.User.logIn(username, password, {
+			  success: function(user) {
+		          console.log("Log In Ho Gaya!");
+		          currentUser = Parse.User.current();
+		          self.location="./dashboard.html";
+		          NProgress.done();
+		        },
+			  error: function(user, error) {
+			  	  NProgress.done();
+			  	  if(error.code==101){
+			  	  	alert("An Error Occured! "+error.message);
+			  	  }	
+			      console.log("Error: " + error.code + " " + error.message);
+			  }
+		  	});
+      }
+ 	  
 
 	  //setTimeout(hide, 3000);
 	  $('#signin-btn').focus(function() {

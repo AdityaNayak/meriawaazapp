@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Issues | Meri Awaaz</title>
   {% include header.html %}
+  <a onClick="refresh1();">Refresh Data</a>
   <div class="row control-bar b-ws-top">
     <div class="small-2 columns fx2" >
       <div id="back" style="display:none;">
         <i class="icon-left"></i><a  class="f-1-5x">Back</a>
       </div>
+      
     </div>
     <div class="small-3 small-offset-3 columns text-right">
       <div class="switch radius">
@@ -74,13 +76,6 @@
               </tr>
             </thead>
             <tbody>
-                <tr>
-                <td width="100px">Loading...</td>
-                <td width="100px">Loading...</td>
-                <td>Loading...</td>
-                <td width="100px">Loading...</td>
-                <td width="100px">Loading...</td>
-              </tr>
             </tbody>
           </table>
         </div>
@@ -135,7 +130,8 @@
         <h4>Overview</h4>
         <div class="row">
           <div class="small-12 columns ct">
-            Status: <span id="colorstatus">Loading...</span>
+            <a onClick="refresh2();">Refresh Issue Data</a><br>
+            Status: <span id="colorstatus"><strong>Loading...</strong></span>
           </div>
         </div>
         <div class="row">
@@ -217,22 +213,7 @@
         //Set the initial state of the picker label
         $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
 
-        $('#list-view-table tbody tr').click(function() {
-         NProgress.start();
-         var trid = $(this).attr('id');
-         var marker;
-         for (var i = 0; i < markers.length; i++) { 
-            if(markers.content.id==trid){
-              marker=markers[i];
-              break;
-            }
-         }
-         currmarker=marker;
-         updateCurrentMarker(currmarker);                        
-         infowindow.setContent(currmarker.content.get('status'));
-         NProgress.done(); 
-         console.log('test');
-        });
+        
         // $('#assign').on('click',function(){
         //   console.log("Assignment Begins...");
         //   var g=$('#drop1').val();  
