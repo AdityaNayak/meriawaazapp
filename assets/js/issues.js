@@ -152,6 +152,8 @@ function CurrentLocationControl(controlDiv, map) {
   controlUI.style.backgroundColor = 'white';
   controlUI.style.borderStyle = 'solid';
   controlUI.style.borderWidth = '2px';
+  controlUI.style.borderColor = '#dedede';
+  controlUI.style.borderRadius = '50%';
   controlUI.style.cursor = 'pointer';
   controlUI.style.textAlign = 'center';
   controlUI.title = 'Click to set the map to Current Location';
@@ -160,10 +162,11 @@ function CurrentLocationControl(controlDiv, map) {
   // Set CSS for the control interior
   var controlText = document.createElement('div');
   controlText.style.fontFamily = 'Arial,sans-serif';
-  controlText.style.fontSize = '12px';
-  controlText.style.paddingLeft = '4px';
-  controlText.style.paddingRight = '4px';
-  controlText.innerHTML = '<i class="icon-location"></i>';
+  controlText.style.fontSize = '18px';
+  controlText.style.paddingLeft = '8px';
+  controlText.style.paddingRight = '8px';
+  controlText.style.paddingTop = '7px';
+  controlText.innerHTML = '<i class="icon-pin"></i>';
   controlUI.appendChild(controlText);
 
   // Setup the click event listeners: simply set the map to
