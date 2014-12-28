@@ -155,12 +155,15 @@
         <div class="row">
           <div class="large-12 columns">
             <div class="row collapse">
+              <form action="./sentmail.php" method="post">
               <div class="small-10 columns">
-               <input type="text" placeholder="Drop your Phone or Email" class="lead">
+
+               <input type="text" name="detail" placeholder="Drop your Phone or Email" class="lead" required>
               </div>
               <div class="small-2 columns">
-                <a href="#" class="postfix lead">Go</a>
+                <input type="submit" class="button right small">
               </div>
+              </form>
             </div>
           </div>
         </div>
@@ -181,17 +184,13 @@
   <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
   <script>
     $( document ).ready(function() {
-      updateCounters();
+      initialize();
 
       //$('#signup-form').submit(function(){
       //  $('#signup-btn').fadeOut();
       //  $('#loading-btn').delay().fadeIn();
       //});
 
-      $('#signin-form').submit(function(event){
-        event.preventDefault();
-        login();
-      });
       icon_bg();
       icon_bg();
       //icon_bg();

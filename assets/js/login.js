@@ -1,13 +1,24 @@
 Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
 
 function initialize() {
+	NProgress.start();
+	$('#signin-form').submit(function(event){
+		event.preventDefault();
+		login();
+	});
+	updateCounters();
     currentUser = Parse.User.current();
     if(currentUser) {
         self.location="./dashboard.html";
+        NProgress.done();
     }
 }
 
+
+
+
 function updateCounters(){
+	
 	var Issues = Parse.Object.extend("Issue");
 	var Users = Parse.Object.extend("User");
 	var query1 = new Parse.Query(Issues);
@@ -43,6 +54,7 @@ function updateCounters(){
 		numAnim2.start();
 		var numAnim3 = new countUp("num3", 0, c);
 		numAnim3.start();
+		NProgress.done();
 	  },
 	  error: function(error) {
 	    alert("Error: " + error.code + " " + error.message);
