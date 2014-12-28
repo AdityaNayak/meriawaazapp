@@ -163,7 +163,7 @@ function CurrentLocationControl(controlDiv, map) {
   controlText.style.fontSize = '12px';
   controlText.style.paddingLeft = '4px';
   controlText.style.paddingRight = '4px';
-  controlText.innerHTML = '<b>Current Location</b>';
+  controlText.innerHTML = '<i class="icon-location"></i>';
   controlUI.appendChild(controlText);
 
   // Setup the click event listeners: simply set the map to
@@ -613,13 +613,13 @@ function setIssueStatusButton(){
                         }
                     }
                     var assignedto=document.getElementById('claim-st3');
-                    assignedto.innerHTML="Assigned to: <strong>no one</strong>";
+                    assignedto.innerHTML="Assigned to: <strong>No One</strong>";
                     for (var i = 0; i < results.length; i++) {
                         if(results[i].get("assignee")!=undefined){
                             console.log(results[i].get("assignee"));
                             var up=results[i].get("assignee");
                             var dp=up.get("user");
-                            assignedto.innerHTML="Assigned to: <strong>"+dp.get("name")+"</strong>";
+                            assignedto.innerHTML="Assigned to: <strong><span class='ct'>"+dp.get("name")+"</span></strong>";
                             break;
                         }
                     } 

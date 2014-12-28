@@ -91,7 +91,7 @@
 .top-bar {
 	.secondary-color{
 		font-size: 0.9em;
-		margin-top: 1.75em;
+		margin-top: 1.5em;
 		margin-right: 1em;
 		background:none;
 	}
@@ -436,8 +436,8 @@ input{
 	width:50%;
 }
 #map{
-	height:400px;
-	width:680px;
+	height:450px;
+	width:800px;
 }
 .fx1{
 	vertical-align:super;
@@ -487,4 +487,19 @@ input{
 .icon-bg-fx{
 	z-index:9;
 	position:relative;
+}
+.coming-soon{
+	&:before{
+		content: " Coming Soon";
+		color: #333;
+		z-index: 999;
+		position: absolute;
+		background: rgba(255, 255, 255,0.8);
+		width: 100%;
+		max-width: 1200px;
+		height: 100%;
+		text-align: center;
+		padding-top: 16rem;
+		font-size: 6em;
+	}
 }
