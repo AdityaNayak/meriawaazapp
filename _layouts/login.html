@@ -86,15 +86,15 @@
 <div class="panel icon-bg-fx">
   <div class="row">
     <div class="large-4 small-12 columns text-center">
-      <div id="num1" class="f-3x bgc">1</div>
+      <div id="num1" class="f-3x bgc">0</div>
       <div>Issues Reported</div>
     </div>
     <div class="large-4 small-12 columns text-center">
-      <div id="num2" class="f-3x bc">2</div>
+      <div id="num2" class="f-3x bc">0</div>
       <div>Users</div>
     </div>
     <div class="small-12 large-4 columns text-center">
-      <div id="num3" class="f-3x dbc">3</div>
+      <div id="num3" class="f-3x dbc">0</div>
       <div>Public officials</div>
     </div>
   </div>
@@ -181,12 +181,7 @@
   <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
   <script>
     $( document ).ready(function() {
-      var numAnim1 = new countUp("num1", 0, 448);
-      numAnim1.start();
-      var numAnim2 = new countUp("num2", 0, 832);
-      numAnim2.start();
-      var numAnim3 = new countUp("num3", 0, 19);
-      numAnim3.start();
+      updateCounters();
 
       //$('#signup-form').submit(function(){
       //  $('#signup-btn').fadeOut();

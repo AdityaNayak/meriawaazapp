@@ -7,6 +7,50 @@ function initialize() {
     }
 }
 
+function updateCounters(){
+	var Issues = Parse.Object.extend("Issue");
+	var Users = Parse.Object.extend("User");
+	var query1 = new Parse.Query(Issues);
+	var query2 = new Parse.Query(Users);
+	var a=0;
+	var b=0;
+	var c=0;
+	query1.find({
+	  success: function(results) {
+	  	console.log(results.length);
+	    a=results.length;
+	    var numAnim1 = new countUp("num1", 0, a);
+		numAnim1.start();
+	  },
+	  error: function(error) {
+	    alert("Error: " + error.code + " " + error.message);
+	  }
+
+		
+	});
+	query2.find({
+	  success: function(results) {
+	  	console.log(results.length);
+	    for(var i=0;i<results.length;i++){
+	    	if(results[i].get("type")=="neta" || results[i].get("type")=="teamMember"){
+	    		c+=1;
+	    	}
+	    	else{
+	    		b+=1;
+	    	}
+	    }
+	    var numAnim2 = new countUp("num2", 0, b);
+		numAnim2.start();
+		var numAnim3 = new countUp("num3", 0, c);
+		numAnim3.start();
+	  },
+	  error: function(error) {
+	    alert("Error: " + error.code + " " + error.message);
+	  }
+	});
+	
+}
+
 function loading() {
 	  console.log("I am changing the Inner Html Content");
 	  //$('#signin-btn').innerHTML = "Loading...";
