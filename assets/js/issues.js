@@ -430,6 +430,7 @@ function populateUpdates(){
                         timelineView.append("<div class='panel nb'><p><strong>"+user.get("name")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
                     }
                 }
+                NProgress.done();
 
             },
           error: function(error) {
@@ -491,7 +492,6 @@ function postComment(c){
         enableDetailsView();
       }
     });
-    NProgress.done();
 }
 
 //Starts NProgress
@@ -872,7 +872,7 @@ function updateContentWithCurrentMarker(){
             else if(currentUser.get("type")=="teamMember"){
                 setIssueStatusButtonTM();
             }
-            NProgress.done();
+            
     },300); 
 }
 
