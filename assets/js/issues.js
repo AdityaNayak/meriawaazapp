@@ -433,6 +433,7 @@ function populateUpdates(){
                         timelineView.append("<div class='panel nb'><p><strong>"+user.get("name")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
                     }
                 }
+                NProgress.done();
 
             },
           error: function(error) {
@@ -470,6 +471,7 @@ function populateTeam(){
 function postComment(c){
     NProgress.start();
     console.log("postComment");
+    loadingButton_id("commit_btn",4);
     var Comment = Parse.Object.extend("Update");
     var comment = new Comment();
     var u = new Parse.Object("User");
@@ -493,7 +495,6 @@ function postComment(c){
         enableDetailsView();
       }
     });
-    NProgress.done();
 }
 
 //Starts NProgress
@@ -874,7 +875,7 @@ function updateContentWithCurrentMarker(){
             else if(currentUser.get("type")=="teamMember"){
                 setIssueStatusButtonTM();
             }
-            NProgress.done();
+            
     },300); 
 }
 

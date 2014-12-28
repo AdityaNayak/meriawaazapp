@@ -1,10 +1,66 @@
 Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
 
 function initialize() {
+	NProgress.start();
+	$('#signin-form').submit(function(event){
+		event.preventDefault();
+		login();
+	});
+	updateCounters();
     currentUser = Parse.User.current();
     if(currentUser) {
         self.location="./dashboard.html";
+        NProgress.done();
     }
+}
+
+
+
+
+function updateCounters(){
+	
+	var Issues = Parse.Object.extend("Issue");
+	var Users = Parse.Object.extend("User");
+	var query1 = new Parse.Query(Issues);
+	var query2 = new Parse.Query(Users);
+	var a=0;
+	var b=0;
+	var c=0;
+	query1.find({
+	  success: function(results) {
+	  	console.log(results.length);
+	    a=results.length;
+	    var numAnim1 = new countUp("num1", 0, a);
+		numAnim1.start();
+	  },
+	  error: function(error) {
+	    alert("Error: " + error.code + " " + error.message);
+	  }
+
+		
+	});
+	query2.find({
+	  success: function(results) {
+	  	console.log(results.length);
+	    for(var i=0;i<results.length;i++){
+	    	if(results[i].get("type")=="neta" || results[i].get("type")=="teamMember"){
+	    		c+=1;
+	    	}
+	    	else{
+	    		b+=1;
+	    	}
+	    }
+	    var numAnim2 = new countUp("num2", 0, b);
+		numAnim2.start();
+		var numAnim3 = new countUp("num3", 0, c);
+		numAnim3.start();
+		NProgress.done();
+	  },
+	  error: function(error) {
+	    alert("Error: " + error.code + " " + error.message);
+	  }
+	});
+	
 }
 
 function loading() {
@@ -23,7 +79,7 @@ function login() {
 	  NProgress.start();
 	  console.log("Inside Login");
 	  //loading();
-	  loadingButton_id("signin-btn");
+	  loadingButton_id("signin-btn",12);
 	  var form = document.getElementById("signin-form")
 
 	  var username = form.email.value;
