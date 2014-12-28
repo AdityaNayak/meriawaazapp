@@ -50,7 +50,7 @@ if(location.pathname.split('/').slice(-1)[0]!="login.html"){
 	}
 }
 
-function loadingButton_id(id){
+function loadingButton_id(id,d){
 	var Original=document.getElementById(id).value;
 	console.log("Original: "+Original );
 	document.getElementById(id).value = "Loading...";
@@ -60,18 +60,18 @@ function loadingButton_id(id){
 		$("#"+id).removeClass('loading');
 		console.log("Changing value to "+Original);
 		document.getElementById(id).value = Original;
-	}, 12000);
+	}, d*1000);
 	console.log("Loading Button was Called!");
 }
 
-function loadingButton_ref(){
+function loadingButton_ref(d){
 	var Original=document.getElementById(this.id).value;
 	document.getElementById(this.id).value = "Loading...";
 	$(this).addClass('loading');
 	setTimeout(function() {
 		$(this).removeClass('loading');
 		document.getElementById(this.id).value = Original;
-	}, 12000);
+	}, d*1000);
 	console.log("Loading Button was Called!");
 }
 
