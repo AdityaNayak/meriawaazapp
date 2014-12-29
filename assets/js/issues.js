@@ -1508,7 +1508,6 @@ function initialize() {
             $('#list-view').delay(400).fadeIn(300);
             $('#details-column').delay(400).fadeOut(300);
         }    
-        populate();
         NProgress.done();
         if(currentUser.get("type")=="teamMember"){
           populateTM();
