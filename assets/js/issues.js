@@ -1062,6 +1062,8 @@ function populateTM(){
                 }
                 google.maps.event.addListener(marker, 'click', (function(marker,object) {
                     return function() {
+                        NProgress.start();
+                        console.log("NProgress start");
                         if(infowindow) {
                             infowindow.close();
                         }
@@ -1136,6 +1138,8 @@ function populate(){
                 }
                 google.maps.event.addListener(marker, 'click', (function(marker,object) {
                     return function() {
+                        NProgress.start();
+                        console.log("NProgress start");
                         if(infowindow) {
                             infowindow.close();
                         }
