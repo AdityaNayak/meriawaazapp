@@ -30,7 +30,7 @@ function updateCounters(){
 	  success: function(results) {
 	  	console.log(results.length);
 	    a=results.length;
-	    var numAnim1 = new countUp("num1", 0, a);
+	    var numAnim1 = new countUp("num1", 0, a+500);
 		numAnim1.start();
 	  },
 	  error: function(error) {
@@ -50,7 +50,7 @@ function updateCounters(){
 	    		b+=1;
 	    	}
 	    }
-	    var numAnim2 = new countUp("num2", 0, b);
+	    var numAnim2 = new countUp("num2", 0, b+1000);
 		numAnim2.start();
 		var numAnim3 = new countUp("num3", 0, c);
 		numAnim3.start();
