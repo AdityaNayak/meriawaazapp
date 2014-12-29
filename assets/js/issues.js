@@ -1040,7 +1040,7 @@ function populateTM(){
                 if(object.get("content").length > 30){
                     content=object.get("content").substring(0,30)+"...";
                 }
-                listView.append( "<tr  id='"+object.id+"' class='"+object.get('status')+"'><td width='100' onClick='listViewClick("+object.id.toString()+");'>"+object.id+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+object.get('status')+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                 markers.push(marker);
                 if((marker.content).get('status')=="open"){
                     no=no+1;
