@@ -335,6 +335,7 @@ function enableStatusIcons(){
 //Starts NProgress
 function refresh1(){
   NProgress.start();
+  console.log("NProgress Start");
   if(infowindow) {
             infowindow.close();
   }
@@ -489,6 +490,7 @@ function populateUpdates(){
                     }
                 }
                 NProgress.done();
+                console.log("NProgress Stop");
 
             },
           error: function(error) {
@@ -525,6 +527,7 @@ function populateTeam(){
 //Starts NProgress
 function postComment(c){
     NProgress.start();
+    console.log("NProgress Start");
     console.log("postComment");
     loadingButton_id("commit_btn",4);
     var Comment = Parse.Object.extend("Update");
@@ -555,6 +558,7 @@ function postComment(c){
 //Starts NProgress
 function postClaim(){
     NProgress.start();
+    console.log("NProgress Start");
     if(currentUser.get("type")!="neta"){
       alert("You do not have the required permissions");
       return;
@@ -587,6 +591,7 @@ function postClaim(){
 //Starts NProgress
 function postClose(){
     NProgress.start();
+    console.log("NProgress Start");
     if(currentUser.get("type")!="neta" && currentUser.get("type")!="teamMember"){
       alert("You do not have the required permissions");
       return;
@@ -642,6 +647,7 @@ function teamMember(email){
 //Starts NProgress
 function postAssignment(id){   
     NProgress.start();
+    console.log("NProgress Start");
     if(currentUser.get("type")!="neta"){
       alert("You do not have the required permissions");
       return;
@@ -1063,7 +1069,6 @@ function populateTM(){
                             maxWidth: 700,
                             maxHeight: 900
                         });
-                        NProgress.start();
                         currmarker=marker;
                         updateCurrentMarker(currmarker);                        
                         infowindow.setContent(currmarker.content.get('status'));
@@ -1072,6 +1077,7 @@ function populateTM(){
              } 
           statusCounters(no,np,nr,nc);
           NProgress.done();
+          console.log("NProgress Stop");
           },
           error: function(error) {
           }
@@ -1114,7 +1120,6 @@ function populate(){
                 if(object.get("content").length > 30){
                     content=object.get("content").substring(0,30)+"...";
                 }
-                console.log(object.id);
                 listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                 markers.push(marker);
                 if((marker.content).get('status')=="open"){
@@ -1138,16 +1143,17 @@ function populate(){
                             maxWidth: 700,
                             maxHeight: 900
                         });
-                        NProgress.start();
+                        
                         currmarker=marker;
                         updateCurrentMarker(currmarker);                        
                         infowindow.setContent(currmarker.content.get('status'));
-
-                        NProgress.done();
+                        
                     }
                 })(marker,object));
              } 
           statusCounters(no,np,nr,nc);
+          NProgress.done();
+          console.log("NProgress Stop");
           },
           error: function(error) {
           }
@@ -1185,9 +1191,11 @@ function timeSince(date) {
 function logout(){
     console.log("Logout");
     NProgress.start();
+    console.log("NProgress Start");
     Parse.User.logOut();
     currentUser = null;
     NProgress.done();
+    console.log("NProgress Stop");
     self.location="./login.html";
 }
 
@@ -1329,6 +1337,7 @@ function updateCounters(){
 
 function listViewClick(p) {
          NProgress.start();
+         console.log("NProgress Start");
          var trid = p.id;
          var marker;
          console.log("you clicked on-"+p.id);
@@ -1361,6 +1370,8 @@ function initialize() {
         self.location="./login.html";
     }
     else{
+        NProgress.start();
+        console.log("NProgress Start");
         var pphoto=document.getElementById('profilepic');
         if(currentUser.get("pic")!=undefined){
           pphoto.src=currentUser.get("pic").url(); 
@@ -1450,6 +1461,7 @@ function initialize() {
         function(){
             updateHistory();
             NProgress.start();
+            console.log("NProgress Start");
             if(infowindow) {
                 infowindow.close();
             }
@@ -1475,10 +1487,12 @@ function initialize() {
             $('#updates-view').delay(400).fadeOut(300);
             $('#back').delay(400).fadeOut(300);
             NProgress.done();
+            console.log("NProgress Stop");
         });
 
     $('input[name=maptglgroup]').change(function(){
         NProgress.start();
+        console.log("NProgress Start");
         enableCheckPoints();
         updateHistory();
         if(infowindow) {
@@ -1508,7 +1522,7 @@ function initialize() {
             $('#list-view').delay(400).fadeIn(300);
             $('#details-column').delay(400).fadeOut(300);
         }    
-        NProgress.done();
+        
         if(currentUser.get("type")=="teamMember"){
           populateTM();
         }
@@ -1542,6 +1556,7 @@ function initialize() {
     $('#back').click(function(){
         updateHistory();
         NProgress.start();
+        console.log("NProgress Start");
         if(infowindow) {
             infowindow.close();
         }
@@ -1565,7 +1580,7 @@ function initialize() {
         $('#back').delay(400).fadeOut(300);
         
         enableCheckPoints();
-        NProgress.done();
+        
         if(currentUser.get("type")=="teamMember"){
           populateTM();
         }
@@ -1579,6 +1594,7 @@ function initialize() {
     $('#details-button').click(function(){
         updateHistory();
         NProgress.start();
+        console.log("NProgress Start");
         disableCheckPoints(currmarker.content.get("category"),currmarker.content.get("status"));
         if(infowindow) {
             infowindow.close();
@@ -1596,10 +1612,8 @@ function initialize() {
         $('#details-button').delay(400).fadeOut(300);
         $('#back').delay(400).fadeIn(300);
         NProgress.done();
+        console.log("NProgress Stop");
     });
-
-     
-
 
 
     $('#reportrange').daterangepicker(

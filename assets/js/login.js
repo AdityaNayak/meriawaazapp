@@ -2,6 +2,7 @@ Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjs
 
 function initialize() {
 	NProgress.start();
+	console.log("NProgress Start");
 	$('#signin-form').submit(function(event){
 		event.preventDefault();
 		login();
