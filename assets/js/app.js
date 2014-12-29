@@ -2,6 +2,7 @@
 // Documentation can be found at: http://foundation.zurb.com/docs
 
 var count = 0 ;
+var CU;
 Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
 function updateHistory()
 {
