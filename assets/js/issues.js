@@ -45,6 +45,15 @@ var icons_url = [
     iconURLPrefix + 'marker-6.png', 
 ]
 
+var icons_url_close = [
+    iconURLPrefix + 'marker-1-o.png',
+    iconURLPrefix + 'marker-2-o.png',
+    iconURLPrefix + 'marker-3-o.png',
+    iconURLPrefix + 'marker-4-o.png',
+    iconURLPrefix + 'marker-5-o.png',
+    iconURLPrefix + 'marker-6-o.png', 
+]
+
 var icon1 = {
     url: icons_url[0], // url
     scaledSize: new google.maps.Size(width, height), // size
@@ -82,6 +91,43 @@ var icon6 = {
     anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
 }; 
 
+var icon1o = {
+    url: icons_url_close[0], // url
+    scaledSize: new google.maps.Size(width, height), // size
+    origin: new google.maps.Point(0,0), // origin
+    anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
+};
+var icon2o = {
+    url: icons_url_close[1], // url
+    scaledSize: new google.maps.Size(width, height), // size
+    origin: new google.maps.Point(0,0), // origin
+    anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
+};
+var icon3o = {
+    url: icons_url_close[2], // url
+    scaledSize: new google.maps.Size(width, height), // size
+    origin: new google.maps.Point(0,0), // origin
+    anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
+};
+var icon4o = {
+    url: icons_url_close[3], // url
+    scaledSize: new google.maps.Size(width, height), // size
+    origin: new google.maps.Point(0,0), // origin
+    anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
+};
+var icon5o = {
+    url: icons_url_close[4], // url
+    scaledSize: new google.maps.Size(width, height), // size
+    origin: new google.maps.Point(0,0), // origin
+    anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
+};
+var icon6o = {
+    url: icons_url_close[5], // url
+    scaledSize: new google.maps.Size(width, height), // size
+    origin: new google.maps.Point(0,0), // origin
+    anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
+};
+
 var icons = [
     icon1,
     icon2,
@@ -89,6 +135,15 @@ var icons = [
     icon4,
     icon5,
     icon6, 
+];
+
+var iconso = [
+    icon1o,
+    icon2o,
+    icon3o,
+    icon4o,
+    icon5o,
+    icon6o, 
 ];
 
 // Sets the map on all markers in the array.
@@ -822,10 +877,12 @@ function updateContentWithCurrentMarker(){
     var myLatlng = new google.maps.LatLng(p_latitude,p_longitude); 
     map2.setCenter(myLatlng);
     singlemarker.setMap(null);
+    var myicon;
+    myicon=getIcon(p_type,p_status);
     singlemarker = new google.maps.Marker({ 
         position: myLatlng, 
         map: map2, 
-        icon: marker.get("icon"),
+        icon: myicon,
         title: p_status,
         animation: google.maps.Animation.DROP
     });
@@ -887,6 +944,59 @@ function showDetailsView(){
         $('#details-button').delay(400).fadeIn(300);
 }
 
+function getIcon(category,status){
+  var myicon;
+  if (category=="road"){
+        if(status=="closed" || status=="review"){
+          myicon=iconso[0];
+        }
+        else{
+          myicon=icons[0];
+        }
+    }
+    else if(category=="electricity"){
+        if(status=="closed" || status=="review"){
+          myicon=iconso[1];
+        }
+        else{
+          myicon=icons[1];
+        }
+    }
+    else if(category=="water"){
+        if(status=="closed" || status=="review"){
+          myicon=iconso[2];
+        }
+        else{
+          myicon=icons[2];
+        }
+    }
+    else if(category=="law"){
+        if(status=="closed" || status=="review"){
+          myicon=iconso[3];
+        }
+        else{
+          myicon=icons[3];
+        }
+    }
+    else if(category=="sanitation"){
+        if(status=="closed" || status=="review"){
+          myicon=iconso[4];
+        }
+        else{
+          myicon=icons[4];
+        }
+    }
+    else{
+        if(status=="closed" || status=="review"){
+          myicon=iconso[5];
+        }
+        else{
+          myicon=icons[5];
+        }
+    }
+    return myicon;
+}
+
 //Starts and Ends NProgress
 function populateTM(){
         console.log("populate for Team Member");
@@ -911,24 +1021,7 @@ function populateTM(){
                 var myicon;
                 
                 //Set Icon
-                if (object.get('category')=="road"){
-                    myicon=icons[0];
-                }
-                else if(object.get('category')=="electricity"){
-                    myicon=icons[1];
-                }
-                else if(object.get('category')=="water"){
-                    myicon=icons[2];
-                }
-                else if(object.get('category')=="law"){
-                    myicon=icons[3];
-                }
-                else if(object.get('category')=="sanitation"){
-                    myicon=icons[4];
-                }
-                else{
-                    myicon=icons[5];
-                }
+                myicon=getIcon(object.get("category"),object.get("status"));
 
                               
                 marker = new google.maps.Marker({
@@ -1003,25 +1096,7 @@ function populate(){
                 var myicon;
                 
                 //Set Icon
-                if (object.get('category')=="road"){
-                    myicon=icons[0];
-                }
-                else if(object.get('category')=="electricity"){
-                    myicon=icons[1];
-                }
-                else if(object.get('category')=="water"){
-                    myicon=icons[2];
-                }
-                else if(object.get('category')=="law"){
-                    myicon=icons[3];
-                }
-                else if(object.get('category')=="sanitation"){
-                    myicon=icons[4];
-                }
-                else{
-                    myicon=icons[5];
-                }
-
+                myicon=getIcon(object.get("category"),object.get("status"));
                               
                 marker = new google.maps.Marker({
                     position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
@@ -1433,7 +1508,14 @@ function initialize() {
             $('#list-view').delay(400).fadeIn(300);
             $('#details-column').delay(400).fadeOut(300);
         }    
+        populate();
         NProgress.done();
+        if(currentUser.get("type")=="teamMember"){
+          populateTM();
+        }
+        else if(currentUser.get("type")=="neta"){
+          populate();
+        }
     });
 
     $('#claim-st1').click(function(){
@@ -1482,8 +1564,15 @@ function initialize() {
         $('#details-column').delay(400).fadeOut(300);
         $('#updates-view').delay(400).fadeOut(300);
         $('#back').delay(400).fadeOut(300);
+        
         enableCheckPoints();
         NProgress.done();
+        if(currentUser.get("type")=="teamMember"){
+          populateTM();
+        }
+        else if(currentUser.get("type")=="neta"){
+          populate();
+        }
     });
 
 
