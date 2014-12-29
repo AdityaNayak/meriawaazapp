@@ -118,7 +118,10 @@ function login() {
 						  }
 		          		},
 				  error: function(error) {
-		                alert("An Error Occured! "+error.message);
+				  		if(error.code==101){
+					  	  	alert("An Error Occured! "+error.message);
+					  	}	
+		                console.log("Error: " + error.code + " " + error.message);
 		          }
 		   });		          		
 		          

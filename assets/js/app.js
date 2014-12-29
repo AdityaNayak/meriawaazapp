@@ -7,48 +7,65 @@ function updateHistory()
 {
 	
 }
-
-if(location.pathname.split('/').slice(-1)[0]!="login.html"){
-	CU = Parse.User.current();
-	if(!CU) {
-	    alert("You need to sign in ");
-	    self.location="./login.html";
+var a=location.pathname.split('/').slice(-1)[0];
+console.log(a);
+if(a.length==0){
+	
+}
+else{
+	if(a=="login.html"){
+		CU = Parse.User.current();
+		if(!CU) {  
+		    
+		}
+		else{
+		    self.location="./dashboard.html";
+		}
 	}
-	else{
-	    hello.innerHTML = "Hi "+CU.get("uname");
-	    ListItem = Parse.Object.extend("User");
-	    query = new Parse.Query(ListItem);
-	    query.equalTo("objectId", CU.id);
-	    query.include("neta");
-	    query.include(["neta.party"]);
-	    query.include("teamMember");
-	    query.include(["teamMember.party"]);
-	    query.ascending('createdAt');
-	    query.find({
-	          success: function(results) {
-	                console.log("Size:"+results.length);
-	                var plogo=document.getElementById('plogo');
-	                object=results[0];
-	                var p;
-	                if(object.get("type")=="neta"){
-	                	var n=object.get("neta");
-	                	p=n.get("party");	                	
-	                }
-	                if(object.get("type")=="teamMember"){
-	                	var t=object.get("teamMember");
-	                	p=t.get("party");
-	                }
-	                if(p.get("logo").url()!=undefined){
-                		plogo.src=p.get("logo").url();
-                	}
-	                
-	            },
-	          error: function(error) {
-	                console.log("Error:"+error.message);
-	          }
-	    });
+	if(a!="login.html"){
+		CU = Parse.User.current();
+		if(!CU) {
+		    alert("You need to sign in ");
+		    self.location="./login.html";
+		}
+		else{
+		    hello.innerHTML = "Hi "+CU.get("uname");
+		    ListItem = Parse.Object.extend("User");
+		    query = new Parse.Query(ListItem);
+		    query.equalTo("objectId", CU.id);
+		    query.include("neta");
+		    query.include(["neta.party"]);
+		    query.include("teamMember");
+		    query.include(["teamMember.neta"]);
+		    query.include(["teamMember.neta.party"]);
+		    query.ascending('createdAt');
+		    query.find({
+		          success: function(results) {
+		                console.log("Size:"+results.length);
+		                var plogo=document.getElementById('plogo');
+		                object=results[0];
+		                var p;
+		                if(object.get("type")=="neta"){
+		                	var n=object.get("neta");
+		                	p=n.get("party");	                	
+		                }
+		                if(object.get("type")=="teamMember"){
+		                	var t=object.get("teamMember");
+		                	p=t.get("neta").get("party");
+		                }
+		                if(p.get("logo").url()!=undefined){
+	                		plogo.src=p.get("logo").url();
+	                	}
+		                
+		            },
+		          error: function(error) {
+		                console.log("Error:"+error.message);
+		          }
+		    });
+		}
 	}
 }
+
 
 function loadingButton_id(id,d){
 	var Original=document.getElementById(id).value;
