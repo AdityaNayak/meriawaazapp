@@ -96,8 +96,8 @@ function login() {
 		          success: function(results) {
 		          		if(results.length==0){
 		          			NProgress.done();
-		          			alert("An Error Occured! "+"invalid login parameters");
-		          		}
+		          			alert("An Error Occured! Username or Password are Invalid");
+			          		}
 		          		else{
 		          			username=results[0].get("email");
 		          			Parse.User.logIn(username, password, {
@@ -111,8 +111,8 @@ function login() {
 							  error: function(user, error) {
 							  	  NProgress.done();
 							  	  if(error.code==101){
-							  	  	alert("An Error Occured! "+error.message);
-							  	  }	
+							  	  	alert("An Error Occured!"+error.message);
+		          					}	
 							      console.log("Error: " + error.code + " " + error.message);
 							  }
 						  	});
@@ -120,7 +120,7 @@ function login() {
 		          		},
 				  error: function(error) {
 				  		if(error.code==101){
-					  	  	alert("An Error Occured! "+error.message);
+					  	  	alert("An Error Occured!"+error.message);
 					  	}	
 		                console.log("Error: " + error.code + " " + error.message);
 		          }
@@ -138,7 +138,7 @@ function login() {
 			  error: function(user, error) {
 			  	  NProgress.done();
 			  	  if(error.code==101){
-			  	  	alert("An Error Occured! "+error.message);
+			  	  	alert("An Error Occured!"+error.message);
 			  	  }	
 			      console.log("Error: " + error.code + " " + error.message);
 			  }
@@ -170,8 +170,7 @@ function resetPassword() {
               alert("Reset instructions have been emailed to you.");
           },
           error:function(error) {
-              alert("An Error Occured! "+error.message);
-              
+            alert("An Error Occured!"+error.message);
           }
       });
       setTimeout(hide, 3000);

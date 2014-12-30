@@ -10446,3 +10446,10 @@ input.lead {
   padding-top: 16rem;
   font-size: 6em;
 }
+
+/* line 510, ../scss/style.scss */
+.alert-box {
+  position: fixed;
+  width: 40%;
+  z-index: 999;
+}
