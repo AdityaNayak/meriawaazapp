@@ -1,4 +1,4 @@
-Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
+
 
 var view=0;
 
@@ -483,7 +483,7 @@ function populateUpdates(){
                         
                     }
                     if(object.get("type")=="comment"){
-                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='"+pphoto1+"' class='circle-img'></div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong>"+user.get("uname")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div></div></div>"); 
+                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='"+pphoto1+"' class='circle-img'></div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong>"+user.get("name")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div></div></div>"); 
                     }
                     if(object.get("type")=="claim"){
                         timelineView.append("<div class='panel nb'><p><strong>"+user.get("name")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
@@ -1078,6 +1078,7 @@ function populateTM(){
                 })(marker,object));
              } 
           statusCounters(no,np,nr,nc);
+          filter();
           NProgress.done();
           console.log("NProgress Stop");
           },
@@ -1156,6 +1157,7 @@ function populate(){
                 })(marker,object));
              } 
           statusCounters(no,np,nr,nc);
+          filter();
           NProgress.done();
           console.log("NProgress Stop");
           },
@@ -1190,17 +1192,6 @@ function timeSince(date) {
         return interval + " minutes";
     }
     return Math.floor(seconds) + " seconds";
-}
-
-function logout(){
-    console.log("Logout");
-    NProgress.start();
-    console.log("NProgress Start");
-    Parse.User.logOut();
-    currentUser = null;
-    NProgress.done();
-    console.log("NProgress Stop");
-    self.location="./login.html";
 }
 
 function categoryCheck(m){
@@ -1368,98 +1359,89 @@ function listViewClick(p) {
 
 function initialize() {
     console.log("initialize");
-    currentUser = Parse.User.current();
-    if(!currentUser) {
-        alert("You need to sign in ");
-        self.location="./login.html";
+    currentUser = CU;
+    NProgress.start();
+    console.log("NProgress Start");
+    var pphoto=document.getElementById('profilepic');
+    if(currentUser.get("pic")!=undefined){
+      pphoto.src=currentUser.get("pic").url(); 
     }
     else{
-        NProgress.start();
-        console.log("NProgress Start");
-        var pphoto=document.getElementById('profilepic');
-        if(currentUser.get("pic")!=undefined){
-          pphoto.src=currentUser.get("pic").url(); 
-        }
-        else{
-          pphoto.src="http://placehold.it/300x300&text=user";
-        }
-        
-        if (currentUser.get("type")=="neta"){
-            console.log("Current User is a Neta");
-            document.getElementById("neta-panel").style.display="block";
-        }
-        else{
-            console.log("Current User is a Team Member");
-            document.getElementById("neta-panel").style.display="none";
-        }
-        map2 = new google.maps.Map(document.getElementById('googleMap'), {
-            zoom: 12,
-            center: new google.maps.LatLng(28.612912,77.22951),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-
-        map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 12,
-            center: new google.maps.LatLng(28.612912,77.22951),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-        
-        var homeControlDiv = document.createElement('div');
-        var homeControl = new CurrentLocationControl(homeControlDiv, map);
-
-        homeControlDiv.index = 1;
-        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
-
-        singlemarker= new google.maps.Marker({
-                    position: new google.maps.LatLng(28.612912,77.22951),
-                    map: map2,
-                    title: 'Current Location',
-                    draggable: false,
-                    animation: google.maps.Animation.DROP
-                });
-
-        var homeControlDiv2 = document.createElement('div');
-        var homeControl2 = new FixedLocationControl(homeControlDiv2, map2);
-
-        homeControlDiv2.index = 1;
-        map2.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv2);
-
-
-        var i=0;
-        setTimeout( function() {
-            if(currentUser.get("type")=="teamMember"){
-              populateTM();
-            }
-            else if(currentUser.get("type")=="neta"){
-              populate();
-            }
-            populateTeam();
-        }, i * 500);
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var latitude = position.coords.latitude;
-                var longitude = position.coords.longitude;
-                var geolocpoint = new google.maps.LatLng(latitude, longitude);
-                map.setCenter(geolocpoint);
-                map.setZoom(12);
-                var iconURLPrefix = './assets/images/';
-                if(geomarker1!=undefined){
-                  geomarker1.setMap(null);
-                }
-                geomarker1 = new google.maps.Marker({
-                    position: geolocpoint,
-                    map: map,
-                    title: 'Current Location',
-                    draggable: false,
-                    animation: google.maps.Animation.DROP
-                });
-            });
-            
-        }            
+      pphoto.src="http://placehold.it/300x300&text=user";
     }
-
-
     
+    if (currentUser.get("type")=="neta"){
+        console.log("Current User is a Neta");
+        document.getElementById("neta-panel").style.display="block";
+    }
+    else{
+        console.log("Current User is a Team Member");
+        document.getElementById("neta-panel").style.display="none";
+    }
+    map2 = new google.maps.Map(document.getElementById('googleMap'), {
+        zoom: 12,
+        center: new google.maps.LatLng(28.612912,77.22951),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: new google.maps.LatLng(28.612912,77.22951),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    
+    var homeControlDiv = document.createElement('div');
+    var homeControl = new CurrentLocationControl(homeControlDiv, map);
+
+    homeControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
+
+    singlemarker= new google.maps.Marker({
+                position: new google.maps.LatLng(28.612912,77.22951),
+                map: map2,
+                title: 'Current Location',
+                draggable: false,
+                animation: google.maps.Animation.DROP
+            });
+
+    var homeControlDiv2 = document.createElement('div');
+    var homeControl2 = new FixedLocationControl(homeControlDiv2, map2);
+
+    homeControlDiv2.index = 1;
+    map2.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv2);
+
+
+    var i=0;
+    setTimeout( function() {
+        if(currentUser.get("type")=="teamMember"){
+          populateTM();
+        }
+        else if(currentUser.get("type")=="neta"){
+          populate();
+        }
+        populateTeam();
+    }, i * 500);
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            var geolocpoint = new google.maps.LatLng(latitude, longitude);
+            map.setCenter(geolocpoint);
+            map.setZoom(12);
+            var iconURLPrefix = './assets/images/';
+            if(geomarker1!=undefined){
+              geomarker1.setMap(null);
+            }
+            geomarker1 = new google.maps.Marker({
+                position: geolocpoint,
+                map: map,
+                title: 'Current Location',
+                draggable: false,
+                animation: google.maps.Animation.DROP
+            });
+        });
+        
+    }            
 
     $('input[type=checkbox]').change(
         function(){

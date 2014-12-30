@@ -8,24 +8,24 @@
   {% include header.html %}
   <div class="row" style="margin-top:12em;">
     <div class="small-offset-3 small-2 columns">
-      <span class="f-3x yc">378 </span><span class="secondary secondary-color"> supporters</span>
+      <span id="bsupport" class="f-3x yc">Loading...</span><span class="secondary secondary-color"> supporters</span>
     </div>
     <div class="small-4 columns m-ws-top">
-      <div class="l-lc text-right secondary-color" style="width:63%">378 supporters</div>
-      <div class="d-lc secondary-color" style="width:35%">skeptics</div>
+      <div id="support" class="l-lc text-right secondary-color" style="width:63%">Loading...</div>
+      <div id="skeptics" class="d-lc secondary-color" style="width:35%">Loading...</div>
     </div>
     <div class="small-3 columns text-right s-ws-top">
-      <h3 class="subheader">Lok Sabha 2014</h3>
+      <h3 id="election" class="subheader">Lok Sabha 2014</h3>
     </div>
   </div>
   <div class="panel">
     <div class="row">
       <div class="small-3 columns text-right">
-        <img src="{{site.url}}/assets/images/politicians/narendra-modi.jpg" class="circle-img top-push">
-        <h3 class="m-ws-top yc">Narendra Modi <small>(63)</small></h3>
-        <h4>Bhartiya Janta Party</h4>
-        <h4 class="s-ws-top">Vadodra,<small> Gujarat</small></h4>
-        <h5 class="subheader">Social and Political activity</h5>
+        <img id="photo" src="" class="circle-img top-push">
+        <h3 id="nameage" class="m-ws-top yc">Loading...</h3>
+        <h4 id="party">Loading...</h4>
+        <h4 id="cstate" class="s-ws-top">Loading...</h4>
+        <h5 id="profession" class="subheader">Loading...</h5>
         <a href="#" class="button v2">Edit</a>
       </div>
       <div class="small-3 columns m-ws-top">
@@ -35,10 +35,8 @@
           <div class="small-5 columns secondary-color">
             Education:
           </div>
-          <div class="small-7 columns">
-            Post Graduate
-            <br>
-            M.A., Gujarat University, Ahmedabad
+          <div id="education" class="small-7 columns">
+            Loading...
           </div>
         </div>
         <hr>
@@ -46,16 +44,16 @@
           <div class="small-5 columns secondary-color">
             Total Assets:
           </div>
-          <div class="small-7 columns">
-            1.65 Crores
+          <div id="assets" class="small-7 columns">
+            Loading...
           </div>
         </div>
         <div class="row">
           <div class="small-5 columns secondary-color">
             Liabilities:
           </div>
-          <div class="small-7 columns">
-            None
+          <div id="liabilities" class="small-7 columns">
+            Loading...
           </div>
         </div>
         <hr>
@@ -63,8 +61,8 @@
           <div class="small-5 columns secondary-color">
             Criminal Cases:
           </div>
-          <div class="small-7 columns">
-            None
+          <div id="ccases" class="small-7 columns">
+            Loading...
           </div>
         </div>
       </div>
@@ -75,16 +73,16 @@
           <div class="small-5 columns secondary-color">
             New followers:
           </div>
-          <div class="small-7 columns">
-            378
+          <div id="num-followers" class="small-7 columns">
+            Loading...
           </div>
         </div>
         <div class="row">
           <div class="small-5 columns secondary-color">
             Reach:
           </div>
-          <div class="small-7 columns">
-            378
+          <div id="num-reach" class="small-7 columns">
+            Loading...
           </div>
         </div>
         <hr>
@@ -92,8 +90,8 @@
           <div class="small-5 columns secondary-color">
             Comments:
           </div>
-          <div class="small-7 columns">
-            36
+          <div id="num-comments" class="small-7 columns">
+            Loading...
           </div>
         </div>
         <hr>
@@ -101,16 +99,16 @@
           <div class="small-5 columns secondary-color">
             Questions Asked to:
           </div>
-          <div class="small-7 columns">
-            78
+          <div id="num-qat" class="small-7 columns">
+            Loading...
           </div>
         </div>
         <div class="row">
           <div class="small-5 columns secondary-color">
             Questions Answered:
           </div>
-          <div class="small-7 columns">
-            3
+          <div id="num-qa"class="small-7 columns">
+            Loading...
           </div>
         </div>
       </div>
@@ -121,8 +119,8 @@
           <div class="small-5 columns secondary-color">
             Team size:
           </div>
-          <div class="small-7 columns">
-            37
+          <div id="teamsize" class="small-7 columns">
+            Loading...
           </div>
         </div>
         <hr>
@@ -130,31 +128,32 @@
           <div class="small-5 columns secondary-color">
             Issues claimed:
           </div>
-          <div class="small-7 columns">
-            78
+          <div id="num-iclaimed" class="small-7 columns">
+            Loading...
           </div>
         </div>
         <div class="row">
           <div class="small-5 columns secondary-color">
             Issues closed:
           </div>
-          <div class="small-7 columns">
-            37
+          <div id="num-iclosed" class="small-7 columns">
+            Loading...
           </div>
         </div>
         <div class="row">
           <div class="small-5 columns secondary-color">
             Issues Validated:
           </div>
-          <div class="small-7 columns">
-            3
+          <div id="num-ivalidated" class="small-7 columns">
+            Loading...
           </div>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="small-3 columns text-right s-ws-top">
-        <h5>History</h4>
+      <h5>History</h4>
+      <div id='history' class="small-3 columns text-right s-ws-top">
+        
           <h5 class="secondary-color">Delhi Assembly Elections 2014 (Seat name)</h5>
           <h5 class="secondary-color">Lok Sabha 2014 (seat name)</h5>
       </div>
@@ -231,7 +230,7 @@
   </div>
 
   {% include footer.html %} 
-  <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
+  <script type="text/javascript" src="{{site.url}}/assets/js/profile.js"></script>
 
   <script type="text/javascript">
     $(document).foundation();

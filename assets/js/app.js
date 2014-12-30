@@ -2,6 +2,7 @@
 // Documentation can be found at: http://foundation.zurb.com/docs
 
 var count = 0 ;
+var CU;
 Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
 function updateHistory()
 {
@@ -64,6 +65,17 @@ else{
 		    });
 		}
 	}
+}
+
+function logout(){
+    console.log("Logout");
+    NProgress.start();
+    console.log("NProgress Start");
+    Parse.User.logOut();
+    CU = null;
+    NProgress.done();
+    console.log("NProgress Stop");
+    self.location="./login.html";
 }
 
 

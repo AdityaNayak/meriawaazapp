@@ -1,364 +1,226 @@
-Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
-var infowindow;
-var markers=[];
-var numProps=6;
-var map;
+var currentUser;
+var neta;
 
-function addMarker(){
-        console.log('Add Marker!');
-        ListItem = Parse.Object.extend("complaint");
-        query = new Parse.Query(ListItem);
-        var iconURLPrefix = './assets/images/';
-        var width=40;
-        var height=40;
-        var anchor_left=0;
-        var anchor_top=0;
-        var icon1 = {
-                url: iconURLPrefix + 'marker-1.png', // url
-                scaledSize: new google.maps.Size(width, height), // size
-                origin: new google.maps.Point(0,0), // origin
-                anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
-        };
-        var icon2 = {
-                url: iconURLPrefix + 'marker-2.png', // url
-                scaledSize: new google.maps.Size(width, height), // size
-                origin: new google.maps.Point(0,0), // origin
-                anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
-        };
-        var icon3 = {
-                url: iconURLPrefix + 'marker-3.png', // url
-                scaledSize: new google.maps.Size(width, height), // size
-                origin: new google.maps.Point(0,0), // origin
-                anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
-        };
-        var icon4 = {
-                url: iconURLPrefix + 'marker-4.png', // url
-                scaledSize: new google.maps.Size(width, height), // size
-                origin: new google.maps.Point(0,0), // origin
-                anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
-        };
-        var icon5 = {
-                url: iconURLPrefix + 'marker-5.png', // url
-                scaledSize: new google.maps.Size(width, height), // size
-                origin: new google.maps.Point(0,0), // origin
-                anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
-        };
-        var icon6 = {
-                url: iconURLPrefix + 'marker-6.png', // url
-                scaledSize: new google.maps.Size(width, height), // size
-                origin: new google.maps.Point(0,0), // origin
-                anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
-        }; 
-        var icons = [
-                icon1,
-                icon2,
-                icon3,
-                icon4,
-                icon5,
-                icon6, 
-        ]
+//Query User -> Neta Table
+var netaPhoto=document.getElementById('photo');
+var np;
 
-        var icons_url = [
-                iconURLPrefix + 'marker-1.png',
-                iconURLPrefix + 'marker-2.png',
-                iconURLPrefix + 'marker-3.png',
-                iconURLPrefix + 'marker-4.png',
-                iconURLPrefix + 'marker-5.png',
-                iconURLPrefix + 'marker-6.png', 
-        ]
-       
-        var legend = document.getElementById('legend');
-                for (var i=0;i<6;i++) {
-                    var name;
-                    var icon;
-                    if (i==0){
-                        name="road";
-                        icon=icons_url[0]; 
-                    }
-                    else if(i==1){
-                        name="electricity";
-                        icon=icons_url[1]; 
-                    }
-                    else if(i==2){
-                        name="water";
-                        icon=icons_url[2]; 
-                    }
-                    else if(i==3){
-                        name="law";
-                        icon=icons_url[3]; 
-                    }
-                    else if(i==4){
-                        name="sanitation";
-                        icon=icons_url[4]; 
-                    }
-                    else{
-                        name="transport";
-                        icon=icons_url[5]; 
-                    }
-                }
-        query.descending('createdAt');
-        query.find({
-          success: function(results) {
-            for (var i = 0; i < results.length; i++) { 
-                        var object = results[i];
-                var myicon;
-                var mycategory;
-                if (object.get('category')=="road"){
-                    myicon=icons[0];
-                    mycategory=0; 
-                }
-                else if(object.get('category')=="electricity"){
-                    myicon=icons[1];
-                    mycategory=1;
-                }
-                else if(object.get('category')=="water"){
-                    myicon=icons[2];
-                    mycategory=2;
-                }
-                else if(object.get('category')=="law"){
-                    myicon=icons[3];
-                    mycategory=3;
-                }
-                else if(object.get('category')=="sanitation"){
-                    myicon=icons[4];
-                    mycategory=4;
-                }
-                else{
-                    myicon=icons[5];
-                    mycategory=5;
-                }
-                
-                
-                    marker = new google.maps.Marker({
-                          position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
-                          map: map,
-                          props: mycategory,
-                          title: object.get('category'),
-                          content: object,
-                          icon : myicon,
-                          draggable: false,
-                          animation: google.maps.Animation.DROP
-                    });
+var netaNameAge=document.getElementById('nameage');
+var nNA;
 
-            markers.push(marker);
-            google.maps.event.addListener(marker, 'click', (function(marker,object) {
-                return function() {
-                    if(infowindow) {
-                       infowindow.close();
-                     }
-                     infowindow = new google.maps.InfoWindow({
-                         maxWidth: 700,
-                         maxHeight: 900
-                     });
+//Query User -> Neta  Table
+var party=document.getElementById('party');;
+var py;
 
-                     var p_timestam=String(object.createdAt);
-                     var p_timestamp=p_timestam.split(" ");
-                     var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
-                     var p_time=p_timestamp[4];
-                     var p_content=object.get('content');
-                     var p_type=object.get('category');
-                     var p_location=object.get('location').latitude+","+object.get('location').longitude;
-                     var p_email=object.get('googleId');
-                     var p_photo=object.get('photo');
-                     infowindow.setContent("You Clicked me!");
-                     DetailsColumn();
-                     infowindow.open(map, marker);
-                     console.log("Ye Mila:");
-                     console.log(object.get('category'));
-                     var date=document.getElementById('date');
-                     var time=document.getElementById('time');
-                     var content=document.getElementById('content');
-                     var type=document.getElementById('type');
-                     var location=document.getElementById('location');
-                     var email=document.getElementById('email');
-                     var photo=document.getElementById('photo');
-                     photo.src="http://placehold.it/400x225&text=No+Image";
-                     setTimeout(function(){
-                             date.innerHTML = p_date;
-                             time.innerHTML = p_time;
-                             content.innerHTML = p_content;
-                             type.innerHTML = p_type;
-                             location.innerHTML = p_location;
-                             email.innerHTML = p_email;
-                             photo.src=p_photo.url(); 
-                    },300); 
-                 }
-             })(marker,object));
-                  }
-          },
-          error: function(error) {
-          }
-        });
-}
+//Query User -> Neta Table
+var cstate=document.getElementById('cstate');;
+var cs;
 
-function DetailsColumn(){
-    console.log("Effect Starts");
-    $('#details-column').fadeOut(300);
-    $('#details-column').fadeIn(300);
-}
+//Query Assembly Table
+var history=document.getElementById('history');;
+var his;
 
-function timeSince(date) {
+//Query User -> Neta Table
+var education=document.getElementById('education');;
+var edu;
 
-    var seconds = Math.floor((new Date() - date) / 1000);
+//Query User -> Neta Table
+var assets=document.getElementById('assets');;
+var ass;
 
-    var interval = Math.floor(seconds / 31536000);
+//Query User -> Neta Table
+var liabilities=document.getElementById('liabilities');;
+var lia;
 
-    if (interval > 1) {
-        return interval + " years";
-    }
-    interval = Math.floor(seconds / 2592000);
-    if (interval > 1) {
-        return interval + " months";
-    }
-    interval = Math.floor(seconds / 86400);
-    if (interval > 1) {
-        return interval + " days";
-    }
-    interval = Math.floor(seconds / 3600);
-    if (interval > 1) {
-        return interval + " hours";
-    }
-    interval = Math.floor(seconds / 60);
-    if (interval > 1) {
-        return interval + " minutes";
-    }
-    return Math.floor(seconds) + " seconds";
-}
+//Query User -> Neta Table
+var criminalCases=document.getElementById('ccases');;
+var cri;
 
+//Query User -> Neta Table
+var followers=document.getElementById('num-followers');;
+var fol;
 
+//Query User -> Neta Table
+var comments=document.getElementById('num-comments');;
+var com;
 
-function populateList(){
-    ListItem = Parse.Object.extend("DummyList");
-    query = new Parse.Query(ListItem);    
-    query.descending('createdAt');
-    var listView=$('#list-view tbody');
+//Query User -> Neta Table
+var questionsAsked=document.getElementById('num-qat');;
+var qa;
+
+//Query User -> Neta Table
+var questionsAnswered=document.getElementById('num-qa');;
+var qat;
+
+var profession=document.getElementById('profession');;
+var pro;
+
+//Query User -> Neta Table
+var teamSize=document.getElementById('teamsize');;
+var ts;
+
+//Query User -> Neta Table
+var issuesClaimed=document.getElementById('num-iclaimed');;
+var icl;
+
+//Query User -> Neta Table
+var issuesClosed=document.getElementById('num-iclosed');;
+var ico;
+
+//Query User -> Neta Table
+var election=document.getElementById('election');;
+var ele;
+
+//Query User -> Neta Table
+var issuesValidated=document.getElementById('num-ivalidated');;
+var icv;
+
+//Query Posts Table
+var reach=document.getElementById('num-reach');;
+var rea;
+
+//Query Posts Table
+var supporters2=document.getElementById('bsupport');;
+var supporters=document.getElementById('support');;
+var sup;
+
+//Query Posts Table
+var skeptics=document.getElementById('skeptics');;
+var ske;
+
+function queryUserTable(){
+    console.log('QueryUserTable');
+    ListItem = Parse.Object.extend("User");
+    query = new Parse.Query(ListItem);
+    query.equalTo("objectId", currentUser.id);
+    query.include("neta");
+    query.include(["neta.mla"]);
+    query.include(["neta.user"]);
+    query.include(["neta.mla.constituency"]);
+    query.include(["neta.party"]);
+    query.include("teamMember");
+    query.include(["teamMember.neta"]);
+    query.include(["teamMember.neta.user"]);
+    query.include(["teamMember.neta.mla"]);
+    query.include(["teamMember.neta.party"]);
+    query.include(["teamMember.neta.mla.constituency"]);
+    
     query.find({
       success: function(results) {
-        for (var i = 0; i < results.length; i++) { 
-            var object = results[i];            
-            console.log('lol');
-            var d=new Date(object.createdAt);
-            var ago=timeSince(d);
-            listView.append( "<tr class='"+object.get('Status')+"'><td>"+object.get('Type')+"</td><td>"+object.get('Content')+"</td><td>"+object.get('Status')+"</td><td>"+object.get('Assignee')+"</td><td>"+ago+" ago</td></tr>");                        
+        var object = results[0];
+        
+        if(object.get("type")=="neta"){
+          neta=object.get("neta");
+
         }
-      console.log('ho gaya');
-    },
+        else if(object.get("type")=="teamMember"){
+          var teammember=object.get("teamMember");
+          neta=teammember.get("neta");
+        }
+        var p=neta.get("party");
+        var mla=neta.get("mla");
+        var con=mla.get("constituency");
+        if(mla!=undefined){
+          ele=mla.get("name")+" "+mla.get("year")
+          cs=con.get("name")+", "+"<small>("+con.get("state")+")</small>";
+        }
+        else{
+          ele="-";
+          cs="-";
+        }
+        if(neta.get("user").get("pic")!=undefined){
+          np=neta.get("user").get("pic").url();
+        }
+        else{
+          np="./assets/images/no_image.jpg";
+        }
+        nNA=neta.get("user").get("name")+"<small>("+neta.get("age")+")</small>";
+        edu=neta.get("education");
+        ass=neta.get("assets");
+        lia=neta.get("liabilities");
+        cri=neta.get("criminalCases");
+        pro=neta.get("profession");
+        com=neta.get("numComments");
+        fol=neta.get("numFollowers");
+        icl=neta.get("numIsClaimed");
+        ico=neta.get("numIsClosed");
+        icv=neta.get("numIsValidated");
+        ts=neta.get("numMembers");
+        qa=neta.get("numQsAnswered");
+        qat=neta.get("numQsAskedTo");
+        py=p.get("name");
+        queryPostTable();
+      },
       error: function(error) {
+      }
+    });
+}
+
+function queryPostTable(){
+    console.log('QueryPostTable');
+    ListItem = Parse.Object.extend("Post");
+    query = new Parse.Query(ListItem);
+    var pointer = new Parse.Object("Neta");
+    pointer.id = neta.id;
+    query.equalTo("neta", pointer);
+    query.descending('createdAt');
+    query.find({
+      success: function(results) {
+        var likes=0;
+        var dislikes=0;
+        var reach=0;
+        for (var i = 0; i < results.length; i++) { 
+            var object = results[i];
+            likes+=object.get("likes");
+            dislikes+=object.get("dislikes");
+            reach+=object.get("reach");
         }
+        sup=likes;
+        ske=dislikes;
+        rea=reach;
+        displayData();
+      },
+      error: function(error) {
+      }
     });
 }
 
-function logout(){
-    Parse.User.logOut();
-    currentUser = null;
-    self.location="./login.html";
+function displayData(){
+    console.log('QueryUpdateTable');
+    netaPhoto.src=np;
+    netaNameAge.innerHTML=nNA;
+    party.innerHTML=py;
+    election.innerHTML=ele;
+    cstate.innerHTML=cs;
+    history.innerHTML=his;
+    education.innerHTML=edu;
+    assets.innerHTML=ass;
+    liabilities.innerHTML=lia;
+    criminalCases.innerHTML=cri;
+    followers.innerHTML=fol;
+    comments.innerHTML=com;
+    questionsAsked.innerHTML=qa;
+    questionsAnswered.innerHTML=qat;
+    teamSize.innerHTML=ts;
+    profession.innerHTML=pro;
+    issuesClaimed.innerHTML=icl;
+    issuesClosed.innerHTML=ico;
+    issuesValidated.innerHTML=icv;
+    reach.innerHTML=rea;
+    supporters.innerHTML=sup+" supporters";
+    supporters.style.width=(Math.floor((sup/(sup+ske))*100)-2)+"%";
+    supporters2.innerHTML=sup;
+    skeptics.innerHTML=ske+" skeptics";
+    skeptics.style.width=(Math.floor((ske/(sup+ske))*100)-2)+"%";
+    NProgress.done();
 }
-
-function filter(){
-    var box_r=document.getElementById('road_cb');
-    var box_e=document.getElementById('electricity_cb');
-    var box_w=document.getElementById('water_cb');
-    var box_l=document.getElementById('law_cb');
-    var box_s=document.getElementById('sanitation_cb');
-    var box_t=document.getElementById('transport_cb');
-            
-            for(var m=0;m<markers.length;m++){
-                console.log("Marker Value "+markers[m].props);
-                if(markers[m].props==4){
-                    if(box_s.checked){
-                        markers[m].setMap(map);
-                    }else{
-                        markers[m].setMap(null);
-                    }
-                }
-                if(markers[m].props==3){
-                    if(box_l.checked){
-                        markers[m].setMap(map);
-                    }else{
-                        markers[m].setMap(null);
-                    }
-                }
-                if(markers[m].props==0){
-                    if(box_r.checked){
-                        markers[m].setMap(map);
-                    }else{
-                        markers[m].setMap(null);
-                    }
-                }
-                if(markers[m].props==1){
-                    if(box_e.checked){
-                        markers[m].setMap(map);
-                    }else{
-                        markers[m].setMap(null);
-                    }
-                }
-                if(markers[m].props==2){
-                    if(box_w.checked){
-                        markers[m].setMap(map);
-                    }else{
-                        markers[m].setMap(null);
-                    }
-                }
-                if(markers[m].props==5){
-                    if(box_t.checked){
-                        markers[m].setMap(map);
-                    }else{
-                        markers[m].setMap(null);
-                    }
-                }
-
-            }
-      }  
-
-$('input[type=checkbox]').change(
-    function(){
-        filter();
-    });
-
 
 function initialize() {
-    currentUser = Parse.User.current();
-    if(!currentUser) {
-        alert("You need to sign in ");
-        self.location="./login.html";
-    }
-    else{
-        console.log('ho gaya');
-        hello.innerHTML = "Hi "+currentUser.get("username");
-          map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        center: new google.maps.LatLng(28.612912,77.22951),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-        
-          var i=0;
-          setTimeout( function() {
-            addMarker();
-            populateList();
-        }, i * 500);
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var latitude = position.coords.latitude;
-                var longitude = position.coords.longitude;
-                var geolocpoint = new google.maps.LatLng(latitude, longitude);
-                map.setCenter(geolocpoint);
-                map.setZoom(16);
-                var iconURLPrefix = './assets/images/';
-                var geoicon = {
-                     url: iconURLPrefix + 'record.png', // url
-                     scaledSize: new google.maps.Size(40, 40), // size
-                     origin: new google.maps.Point(0,0), // origin
-                     anchor: new google.maps.Point(0,0) // anchor 
-                };
-                var geolocation = new google.maps.Marker({
-                    position: geolocpoint,
-                    map: map,
-                    title: 'You are here',
-                    
-                });
-            });
-        }
-    }
+    console.log("initialize");
+    currentUser = CU;
+    NProgress.start();
+    console.log("NProgress Start");
+    queryUserTable();
 }
 
 initialize();
