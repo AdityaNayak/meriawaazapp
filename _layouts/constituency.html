@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Simple Polygon</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
+    <script>
+    var poly=[];
+    var map;
+    function plotConstituency(c){
+        console.log("Lets Plot a Constituency");
+        ListItem = Parse.Object.extend("Coordinates");
+        query = new Parse.Query(ListItem);
+        query.equalTo("ac", c);
+        query.limit(1000);
+        query.find({
+              success: function(results) {
+                    console.log(c+","+"Number of Coordinates for "+results[0].get("ac_name")+":"+results.length);
+                    var Coords=[];
+                    for (var i = 0; i < results.length; i++) { 
+                        object= results[i];
+                        Coords.push(new google.maps.LatLng(object.get("YCOORD"),object.get("XCOORD")));
+                    }
+                    if(results.length==1000){
+                        console.log("Need to Query Parse Again for this one!");
+                        ListItem2 = Parse.Object.extend("Coordinates");
+                        query2 = new Parse.Query(ListItem);
+                        query2.equalTo("ac", c);
+                        query2.limit(1000);
+                        query2.skip(1000);
+                        query2.find({
+                          success: function(results2) {
+                            console.log(c+","+"Number of Coordinates for "+results2[0].get("ac_name")+":"+results2.length);
+                            for (var i = 0; i < results2.length; i++) { 
+                                object2= results2[i];
+                                Coords.push(new google.maps.LatLng(object2.get("YCOORD"),object2.get("XCOORD")));
+                            }
+                            Poly = new google.maps.Polygon({
+                                paths: Coords,
+                                strokeColor: '#FF0000',
+                                strokeOpacity: 0.8,
+                                strokeWeight: 2,
+                                constituency: results[0].get("ac_name"),
+                                fillColor: '#FF0000',
+                                fillOpacity: 0.35
+                              });
+
+                              poly.push(Poly);
+                              console.log("Polygon Created!");
+
+                              Poly.setMap(map);
+                          },
+                          error: function(error) {
+                            console.log("Error:"+error.message);
+                          }
+                        });
+                    }
+                    else{
+                        Poly = new google.maps.Polygon({
+                          paths: Coords,
+                          strokeColor: '#FF0000',
+                          strokeOpacity: 0.8,
+                          strokeWeight: 2,
+                          constituency: results[0].get("ac_name"),
+                          fillColor: '#FF0000',
+                          fillOpacity: 0.35
+                        });
+
+                        poly.push(Poly);
+                        console.log("Polygon Created!");
+
+                        Poly.setMap(map);                      
+                    }
+                    
+                },
+              error: function(error) {
+                    console.log("Error:"+error.message);
+              }
+        });
+    }
+
+    function initialize() {
+      Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
+      
+      var mapOptions = {
+        zoom: 11,
+        center: new google.maps.LatLng(28.667508, 77.121255),
+        mapTypeId: google.maps.MapTypeId.TERRAIN
+      };
+      
+      map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+      
+      for(var i=1;i<71;i++){
+        plotConstituency(i.toString());
+      }
+      
+      var dragable_marker = new google.maps.Marker({
+        position : new google.maps.LatLng(28.667508, 77.1212552),
+        map : map,
+        draggable : true
+      });
+
+      google.maps.event.addListener( dragable_marker, 'dragend', function( e ) {
+         for(var i=0;i<70;i++){
+           if(google.maps.geometry.poly.containsLocation(dragable_marker.getPosition(), poly[i])==true){
+             alert("I am in "+poly[i].constituency);
+           }
+         }
+      });
+
+    }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>
+
