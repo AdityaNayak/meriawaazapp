@@ -67,6 +67,17 @@ else{
 	}
 }
 
+function logout(){
+    console.log("Logout");
+    NProgress.start();
+    console.log("NProgress Start");
+    Parse.User.logOut();
+    CU = null;
+    NProgress.done();
+    console.log("NProgress Stop");
+    self.location="./login.html";
+}
+
 
 function loadingButton_id(id,d){
 	var Original=document.getElementById(id).value;

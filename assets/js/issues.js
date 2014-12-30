@@ -1194,17 +1194,6 @@ function timeSince(date) {
     return Math.floor(seconds) + " seconds";
 }
 
-function logout(){
-    console.log("Logout");
-    NProgress.start();
-    console.log("NProgress Start");
-    Parse.User.logOut();
-    currentUser = null;
-    NProgress.done();
-    console.log("NProgress Stop");
-    self.location="./login.html";
-}
-
 function categoryCheck(m){
     console.log("CategoryCheck");
     if((m.content).get("category")=="road"){
