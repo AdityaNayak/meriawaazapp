@@ -21,7 +21,7 @@
     	var fb=new google.maps.LatLng(lat, lng);
     	ListItem = Parse.Object.extend("Polygon");
         query = new Parse.Query(ListItem);
-        query.limit(3);
+        query.limit(7);
         query.near("center", gp);
         query.find({
               success: function(results) {
