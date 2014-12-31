@@ -17,6 +17,7 @@
     var poly=[];
     var nogoogle=[];
     var map;
+    var ready=0;
 
     function isPointInPoly(pol, pt){
         for(var c = false, i = -1, l = ((nogoogle[pol])[0]).length, j = l - 1; ++i < l; j = i)
@@ -60,6 +61,7 @@
                     var points=[]
                     for (var i = 0; i < results.length; i++) { 
                         object= results[i];
+                        console.log(object.get("YCOORD")+" "+object.get("XCOORD"));
                         Coords.push(new google.maps.LatLng(object.get("YCOORD"),object.get("XCOORD")));
                         points.push({x:object.get("YCOORD"),y:object.get("XCOORD")});
                     }
@@ -75,10 +77,11 @@
                             console.log(c+","+"Number of Coordinates for "+results2[0].get("ac_name")+":"+results2.length);
                             for (var i = 0; i < results2.length; i++) { 
                                 object2= results2[i];
+                                console.log(object2.get("YCOORD")+" "+object2.get("XCOORD"))
                                 Coords.push(new google.maps.LatLng(object2.get("YCOORD"),object2.get("XCOORD")));
-                                points.push({x:object.get("YCOORD"),y:object.get("XCOORD")});
+                                points.push({x:object2.get("YCOORD"),y:object2.get("XCOORD")});
                             }
-                            Poly = new google.maps.Polygon({
+                             Poly = new google.maps.Polygon({
                                 paths: Coords,
                                 strokeColor: '#FF0000',
                                 strokeOpacity: 0.8,
@@ -87,10 +90,36 @@
                                 fillColor: '#FF0000',
                                 fillOpacity: 0.35
                               });
-                              nogoogle.push([points,results[0].get("ac_name")]);
+                              
                               poly.push(Poly);
                               console.log("Polygon Created!");
-
+                              var l=[]
+                              for(var k=0;k<points.length;k++){
+                                l.push(new Parse.GeoPoint({latitude: parseFloat(points[k].x), longitude: parseFloat(points[k].y)}));
+                              }
+                              var polyPoint = Parse.Object.extend("Polygon");
+                              var cp = new polyPoint();
+                              cp.set("points", l);
+                              cp.set("index", parseInt(c));
+                              cp.set("name", results[0].get("ac_name"));
+                              cp.set("pc",results[0].get("pc_name"))
+                              
+                              var bounds = new google.maps.LatLngBounds();
+                              for (var i = 0; i < Coords.length; i++) {
+                                bounds.extend(Coords[i]);
+                              }
+                              var gp=new Parse.GeoPoint({latitude: bounds.getCenter().lat(), longitude: bounds.getCenter().lng()});
+                              cp.set("center",gp);
+                              console.log(bounds.getCenter());
+                                                
+                              cp.save(null, {
+                                success: function(cp) {
+                                  console.log("Saved to Database!");
+                                },
+                                error: function(comment, error) {
+                                  alert('Failed to Comment! ' + error.message);
+                                }
+                              });
                               Poly.setMap(map);
                           },
                           error: function(error) {
@@ -108,7 +137,32 @@
                           fillColor: '#FF0000',
                           fillOpacity: 0.35
                         });
-
+                        var l=[]
+                        for(var k=0;k<points.length;k++){
+                          l.push(new Parse.GeoPoint({latitude: parseFloat(points[k].x), longitude: parseFloat(points[k].y)}));
+                        }
+                        var polyPoint = Parse.Object.extend("Polygon");
+                        var cp = new polyPoint();
+                        cp.set("points", l);
+                        cp.set("index", parseInt(c));
+                        cp.set("name", results[0].get("ac_name"));
+                        cp.set("pc",results[0].get("pc_name"))
+                        var bounds = new google.maps.LatLngBounds();
+                        for (var i = 0; i < Coords.length; i++) {
+                          bounds.extend(Coords[i]);
+                        }
+                        var gp=new Parse.GeoPoint({latitude: bounds.getCenter().lat(), longitude: bounds.getCenter().lng()});
+                        cp.set("center",gp);
+                        console.log(bounds.getCenter());
+                                          
+                        cp.save(null, {
+                          success: function(cp) {
+                            console.log("Saved to Database!");
+                          },
+                          error: function(comment, error) {
+                            alert('Failed to Comment! ' + error.message);
+                          }
+                        });
                         poly.push(Poly);
                         nogoogle.push([points,results[0].get("ac_name")]);
                         console.log("Polygon Created!");
@@ -134,10 +188,10 @@
       
       map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
       
+
       for(var i=1;i<71;i++){
         plotConstituency(i.toString());
       }
-      
       var dragable_marker = new google.maps.Marker({
         position : new google.maps.LatLng(28.667508, 77.1212552),
         map : map,
