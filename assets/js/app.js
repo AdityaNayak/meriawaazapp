@@ -30,7 +30,7 @@ else{
 		    self.location="./login.html";
 		}
 		else{
-		    hello.innerHTML = "Hi "+CU.get("uname");
+		    hello.innerHTML = "Namaskar "+CU.get("uname");
 		    ListItem = Parse.Object.extend("User");
 		    query = new Parse.Query(ListItem);
 		    query.equalTo("objectId", CU.id);
