@@ -15,7 +15,38 @@
     <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
     <script>
     var poly=[];
+    var nogoogle=[];
     var map;
+
+    function isPointInPoly(pol, pt){
+        for(var c = false, i = -1, l = ((nogoogle[pol])[0]).length, j = l - 1; ++i < l; j = i)
+            ((((nogoogle[pol])[0])[i].y <= pt.y && pt.y < ((nogoogle[pol])[0])[j].y) || (((nogoogle[pol])[0])[j].y <= pt.y && pt.y < ((nogoogle[pol])[0])[i].y))
+            && (pt.x < (((nogoogle[pol])[0])[j].x - ((nogoogle[pol])[0])[i].x) * (pt.y - ((nogoogle[pol])[0])[i].y) / (((nogoogle[pol])[0])[j].y - ((nogoogle[pol])[0])[i].y) + ((nogoogle[pol])[0])[i].x)
+            && (c = !c);
+        return c;
+    }
+
+    function PointInPolygon(pol, point)
+    {
+        var j = nogoogle[pol][0].length - 1;
+        var oddNodes = false;
+
+        for (var i = 0; i < nogoogle[pol][0].length; i++)
+        {
+            if (nogoogle[pol][0][i].y < point.y && nogoogle[pol][0][j].x >= point.y)
+            {
+                if (_vertices[i].x +
+                    (point.x - nogoogle[pol][0][i].y)/(nogoogle[pol][0][j].y - nogoogle[pol][0][i].y)*(nogoogle[pol][0][j].x - nogoogle[pol][0][i].x) < point.x)
+                {
+                    oddNodes = !oddNodes;
+                }
+            }
+            j = i;
+        }
+
+        return oddNodes;
+    }
+
     function plotConstituency(c){
         console.log("Lets Plot a Constituency");
         ListItem = Parse.Object.extend("Coordinates");
@@ -26,9 +57,11 @@
               success: function(results) {
                     console.log(c+","+"Number of Coordinates for "+results[0].get("ac_name")+":"+results.length);
                     var Coords=[];
+                    var points=[]
                     for (var i = 0; i < results.length; i++) { 
                         object= results[i];
                         Coords.push(new google.maps.LatLng(object.get("YCOORD"),object.get("XCOORD")));
+                        points.push({x:object.get("YCOORD"),y:object.get("XCOORD")});
                     }
                     if(results.length==1000){
                         console.log("Need to Query Parse Again for this one!");
@@ -43,6 +76,7 @@
                             for (var i = 0; i < results2.length; i++) { 
                                 object2= results2[i];
                                 Coords.push(new google.maps.LatLng(object2.get("YCOORD"),object2.get("XCOORD")));
+                                points.push({x:object.get("YCOORD"),y:object.get("XCOORD")});
                             }
                             Poly = new google.maps.Polygon({
                                 paths: Coords,
@@ -53,7 +87,7 @@
                                 fillColor: '#FF0000',
                                 fillOpacity: 0.35
                               });
-
+                              nogoogle.push([points,results[0].get("ac_name")]);
                               poly.push(Poly);
                               console.log("Polygon Created!");
 
@@ -76,6 +110,7 @@
                         });
 
                         poly.push(Poly);
+                        nogoogle.push([points,results[0].get("ac_name")]);
                         console.log("Polygon Created!");
 
                         Poly.setMap(map);                      
@@ -111,8 +146,14 @@
 
       google.maps.event.addListener( dragable_marker, 'dragend', function( e ) {
          for(var i=0;i<70;i++){
+           pt={
+             x:dragable_marker.getPosition().lat(),
+             y:dragable_marker.getPosition().lng()
+           }
            if(google.maps.geometry.poly.containsLocation(dragable_marker.getPosition(), poly[i])==true){
-             alert("I am in "+poly[i].constituency);
+           //if(isPointInPoly(i, pt)==true){
+           //if(PointInPolygon(i, pt)==true){
+                alert("I am in "+nogoogle[i][1]);
            }
          }
       });
