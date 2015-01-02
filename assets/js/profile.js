@@ -118,9 +118,9 @@ function queryUserTable(){
           neta=teammember.get("neta");
         }
         var p=neta.get("party");
-        var mla=neta.get("mla");
-        var con=mla.get("constituency");
-        if(mla!=undefined){
+        if(neta.get("mla")!=undefined){
+          var mla=neta.get("mla");
+          var con=mla.get("constituency");  
           ele=mla.get("name")+" "+mla.get("year")
           cs=con.get("name")+", "+"<small>("+con.get("state")+")</small>";
         }
@@ -134,7 +134,7 @@ function queryUserTable(){
         else{
           np="./assets/images/no_image.jpg";
         }
-        nNA=neta.get("user").get("name")+"<small>("+neta.get("age")+")</small>";
+        nNA=neta.get("user").get("name")+"<small>("+parseFloat(timeSince(neta.get("age"))).toString()+")</small>";
         edu=neta.get("education");
         ass=neta.get("assets");
         lia=neta.get("liabilities");
