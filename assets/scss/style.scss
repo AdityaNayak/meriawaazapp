@@ -249,6 +249,7 @@ i{
 }
 .top-push{
 	margin-top:-10em;
+	width:100%;
 }
 .s-ws-top{
 	margin-top:1em;
@@ -315,6 +316,10 @@ i{
 }
 .f-4x{
 	font-size:4em;
+}
+.s-ws-side{
+	padding-right:1em;
+	padding-left:1em;
 }
 .filters{
 	img{
@@ -511,4 +516,41 @@ input{
 	position: fixed;
 	width: 40%;
 	z-index: 999;
+}
+ul.timeline{
+	position:relative;
+	&:before{
+		display: block;
+		content: "";
+		position: absolute;
+		top: 0px;
+		bottom: 0px;
+		left: 7px;
+		width: 2px;
+		background-color: #f9f8f8;
+		z-index: 0;
+	}
+	li{
+		padding-left:1em;
+		margin-left: 0.5em;
+		margin-top:0.5em;
+		&:before{
+			content: "v";
+			font-family: "meriawaaz" !important;
+			font-style: normal !important;
+			font-weight: normal !important;
+			font-variant: normal !important;
+			text-transform: none !important;
+			speak: none;
+			line-height: 1;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			color: $white;
+			margin-left: -1.5em;
+			z-index: 99;
+			position: absolute;
+			background: $darkwhite;
+			margin-top: 10px;
+		}
+	}
 }
