@@ -16,10 +16,51 @@
     <script>
     var map;
     var markings=[];
+
+    function pointInPolygon(point, polygon, name, Vertex) {
+        var pov = Vertex;
+        if (pov == true && pointOnVertex(point, polygon) == true) {
+            return true;
+        }
+        intersections = 0; 
+        vertices_count = polygon.length;
+ 
+        for (var i=1; i < vertices_count; i++) {
+            var vertex1 = polygon[i-1]; 
+            var vertex2 = polygon[i];
+            if (vertex1.y == vertex2.y && vertex1.y == point.y && point.x > Math.min(vertex1.x, vertex2.x) && point.x < Math.max(vertex1.x,vertex2.x)) { // Check if point is on an horizontal polygon boundary
+                return true;
+            }
+            if (point.y > Math.min(vertex1.y, vertex2.y) && point.y <= Math.max(vertex1.y, vertex2.y) && point.x <= Math.max(vertex1.x, vertex2.x) && vertex1.y != vertex2.y) { 
+                var xinters = (point.y - vertex1.y) * (vertex2.x - vertex1.x) / (vertex2.y - vertex1.y) + vertex1.x; 
+                if (xinters == point.x) { 
+                    
+                    return true;
+                }
+                if (vertex1.x == vertex2.x || point.x <= xinters) {
+                    intersections++; 
+                }
+            } 
+        } 
+        if (intersections % 2 != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+ 
+    function pointOnVertex(point, vertices) {
+        for(var i=0;i<vertices.length;i++) {
+            if (point.x == vertices[i].x && point.y==vertices[i].y) {
+                return true;
+            }
+        }
+ 
+    }
     function getConstituency(lat,lng){
     	var gp=new Parse.GeoPoint({latitude: lat, longitude: lng});
     	var fb=new google.maps.LatLng(lat, lng);
-    	ListItem = Parse.Object.extend("Polygon");
+    	ListItem = Parse.Object.extend("Constituency");
         query = new Parse.Query(ListItem);
         query.limit(7);
         query.near("center", gp);
@@ -63,20 +104,22 @@
 
     function plotConstituency(c){
         console.log("Lets Plot a Constituency");
-        ListItem = Parse.Object.extend("Polygon");
+        ListItem = Parse.Object.extend("Constituency");
         query = new Parse.Query(ListItem);
         query.equalTo("index", c);    
         query.find({
               success: function(results) {
                     console.log("Starting Plotting: "+results[0].get("name"));
                     var Coords=[];
-                    
+                    var pints=[];
                     var points=results[0].get("points");
                     console.log(points.length);
                     for (var i = 0; i < points.length; i++) { 
-                    	
                         Coords.push(new google.maps.LatLng(points[i].latitude,points[i].longitude));
+                        pints.push({x:points[i].latitude,y:points[i].longitude});
                     }
+                    console.log("First:"+points[0].longitude);
+                    console.log("Last:"+points[points.length-1].longitude);
                     Poly = new google.maps.Polygon({
                       paths: Coords,
                       strokeColor: '#FF0000',
@@ -88,8 +131,7 @@
                     });
                     console.log("Polygon Created!");
                     Poly.setMap(map);                      
-                    markings.push(Poly);
-                    
+                    markings.push([pints,results[0].get("name")]);                    
                 },
               error: function(error) {
                     console.log("Error:"+error.message);
@@ -98,7 +140,7 @@
     }
 
     function initialize() {
-      Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
+      Parse.initialize("km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt", "BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI");
       
       var mapOptions = {
         zoom: 11,
@@ -119,7 +161,22 @@
       });
 
       google.maps.event.addListener( dragable_marker, 'dragend', function( e ) {
-         	getConstituency(dragable_marker.getPosition().lat(),dragable_marker.getPosition().lng());
+         	//getConstituency(dragable_marker.getPosition().lat(),dragable_marker.getPosition().lng());
+          
+           pt={
+             x:dragable_marker.getPosition().lat(),
+             y:dragable_marker.getPosition().lng()
+           }
+           
+           Parse.Cloud.run('getConstituencyName', {lat: pt.x ,lng: pt.y }, {
+              success: function(result) {
+                console.log(result);
+              },
+              error: function(error) {
+                console.log(error);
+              }
+            });
+         
       });
 
     }

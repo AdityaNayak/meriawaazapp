@@ -134,7 +134,7 @@ function queryUserTable(){
         else{
           np="./assets/images/no_image.jpg";
         }
-        nNA=neta.get("user").get("name")+"<small>("+parseFloat(timeSince(neta.get("age"))).toString()+")</small>";
+        nNA=neta.get("user").get("name")+"<small>("+neta.get("age").toString()+")</small>";
         edu=neta.get("education");
         ass=neta.get("assets");
         lia=neta.get("liabilities");
@@ -208,10 +208,10 @@ function displayData(){
     issuesValidated.innerHTML=icv;
     reach.innerHTML=rea;
     supporters.innerHTML=sup+" supporters";
-    supporters.style.width=(Math.floor((sup/(sup+ske))*100)-2)+"%";
+    supporters.style.width=(Math.floor((sup/(sup+ske))*99))+"%";
     supporters2.innerHTML=sup;
     skeptics.innerHTML=ske+" skeptics";
-    skeptics.style.width=(Math.floor((ske/(sup+ske))*100)-2)+"%";
+    skeptics.style.width=(Math.floor((ske/(sup+ske))*99))+"%";
     NProgress.done();
 }
 
