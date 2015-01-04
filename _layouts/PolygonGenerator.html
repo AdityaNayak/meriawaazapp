@@ -97,7 +97,7 @@
                               for(var k=0;k<points.length;k++){
                                 l.push(new Parse.GeoPoint({latitude: parseFloat(points[k].x), longitude: parseFloat(points[k].y)}));
                               }
-                              var polyPoint = Parse.Object.extend("Polygon");
+                              var polyPoint = Parse.Object.extend("Constituency");
                               var cp = new polyPoint();
                               cp.set("points", l);
                               cp.set("index", parseInt(c));
@@ -141,7 +141,7 @@
                         for(var k=0;k<points.length;k++){
                           l.push(new Parse.GeoPoint({latitude: parseFloat(points[k].x), longitude: parseFloat(points[k].y)}));
                         }
-                        var polyPoint = Parse.Object.extend("Polygon");
+                        var polyPoint = Parse.Object.extend("Constituency");
                         var cp = new polyPoint();
                         cp.set("points", l);
                         cp.set("index", parseInt(c));
@@ -178,7 +178,7 @@
     }
 
     function initialize() {
-      Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
+      Parse.initialize("km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt", "BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI");
       
       var mapOptions = {
         zoom: 11,
@@ -189,9 +189,9 @@
       map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
       
       // uncomment these lines to populate Parse Database with Polygon Data
-      // for(var i=1;i<71;i++){
-      //   plotConstituency(i.toString());
-      // }
+       for(var i=1;i<71;i++){
+         plotConstituency(i.toString());
+       }
       var dragable_marker = new google.maps.Marker({
         position : new google.maps.LatLng(28.667508, 77.1212552),
         map : map,
