@@ -188,10 +188,10 @@
       
       map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
       
-
-      for(var i=1;i<71;i++){
-        plotConstituency(i.toString());
-      }
+      // uncomment these lines to populate Parse Database with Polygon Data
+      // for(var i=1;i<71;i++){
+      //   plotConstituency(i.toString());
+      // }
       var dragable_marker = new google.maps.Marker({
         position : new google.maps.LatLng(28.667508, 77.1212552),
         map : map,
