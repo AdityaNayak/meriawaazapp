@@ -1,15 +1,84 @@
-var currentUser;
-var politicians;
+var thisPolitician;
+var allPoliticians;
+var currentNeta;
 
 function calculateFollowers(){
     
 }
 
-function fetchConstituencyData(){
+function fetchConstituencyData(c){
     
 }
 
 function populateStatus(){
+    var postView=$('#posts');
+    console.log("populateStatus");
+    postView.html("");    
+    ListItem = Parse.Object.extend("Post");
+    query = new Parse.Query(ListItem);
+    var pointer = new Parse.Object("Neta");
+    pointer.id = currentNeta.id;
+    query.descending('createdAt');
+    query.find({
+          success: function(results) {
+                console.log("Size:"+results.length);
+                var d;
+                var ago;
+                var content;
+                var user;
+                var assignee;
+                for (var i = 0; i < results.length; i++) { 
+                    object= results[i];
+                    d=new Date(object.createdAt);
+                    ago=timeSince(d);
+                    if(object.get("content")!=undefined){
+                        content=object.get("content");    
+                    }
+                    else{
+                        content="";
+                    }
+                    user=object.get("user");
+                    if(object.get("assignee")!=undefined){
+                        assignee=object.get("assignee");
+                        console.log("comments"+ assignee.get("user"));
+                    }
+                    else{
+                        assignee="";
+                    }
+                    var pphoto1;
+                    if(user.get("pic")!=undefined){
+                        pphoto1=user.get("pic").url(); 
+                    }
+                    else{
+                        pphoto1="http://placehold.it/300x300&text=user";
+                    }
+                    
+                    if(object.get("type")=="assigned"){
+                        var ass=assignee.get("user");
+                        timelineView.append("<div class='panel nb'><p><strong>"+ass.get("name")+"</strong> was assigned by <strong>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
+                    }
+                    if(object.get("type")=="closed"){
+                        timelineView.append("<div class='panel nb'><p><strong>"+user.get("name")+"</strong> closed the issue <small>"+ago+" ago</small></p></div>"); 
+                        
+                    }
+                    if(object.get("type")=="comment"){
+                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='"+pphoto1+"' class='circle-img'></div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong>"+user.get("name")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div></div></div>"); 
+                    }
+                    if(object.get("type")=="claim"){
+                        timelineView.append("<div class='panel nb'><p><strong>"+user.get("name")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
+                    }
+                }
+                NProgress.done();
+                console.log("NProgress Stop");
+
+            },
+          error: function(error) {
+                console.log("Error:"+error.message);
+          }
+    });
+}
+
+function fetchComments(){
     
 }
 
@@ -17,48 +86,16 @@ function postStatus() {
     
 }
 
-function initialize() {
-    currentUser = Parse.User.current();
-    if(!currentUser) {
-        alert("You need to sign in ");
-        self.location="./login.html";
-    }
-    else{
-        console.log('ho gaya');
-        map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        center: new google.maps.LatLng(28.612912,77.22951),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-        
-          var i=0;
-          setTimeout( function() {
-            addMarker();
-            populateList();
-        }, i * 500);
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var latitude = position.coords.latitude;
-                var longitude = position.coords.longitude;
-                var geolocpoint = new google.maps.LatLng(latitude, longitude);
-                map.setCenter(geolocpoint);
-                map.setZoom(16);
-                var iconURLPrefix = './assets/images/';
-                var geoicon = {
-                     url: iconURLPrefix + 'record.png', // url
-                     scaledSize: new google.maps.Size(40, 40), // size
-                     origin: new google.maps.Point(0,0), // origin
-                     anchor: new google.maps.Point(0,0) // anchor 
-                };
-                var geolocation = new google.maps.Marker({
-                    position: geolocpoint,
-                    map: map,
-                    title: 'You are here',
-                    
-                });
-            });
-        }
-    }
+function setCurrentNeta(){
+    
 }
 
+function initialize() {
+    console.log("initialize");
+    fetchConstituencyData();
+    currentUser = CU;
+    fetchConstituencyData();
+    populateStatus();
+}
+        
 initialize();
