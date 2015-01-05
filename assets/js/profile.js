@@ -134,7 +134,7 @@ function queryUserTable(){
         else{
           np="./assets/images/no_image.jpg";
         }
-        nNA=neta.get("user").get("name")+"<small>("+neta.get("age").toString()+")</small>";
+        nNA=neta.get("user").get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
         edu=neta.get("education");
         ass=neta.get("assets");
         lia=neta.get("liabilities");
