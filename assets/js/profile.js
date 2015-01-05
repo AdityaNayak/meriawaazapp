@@ -127,9 +127,13 @@ function queryUserTable(){
         else{
           np="./assets/images/no_image.jpg";
         }
+<<<<<<< HEAD
 
         p=neta.get("party");
         nNA=neta.get("user").get("name")+"<small>("+neta.get("age").toString()+")</small>";
+=======
+        nNA=neta.get("user").get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
+>>>>>>> origin/feature-redesignv2
         edu=neta.get("education");
         ass=neta.get("assets");
         lia=neta.get("liabilities");
