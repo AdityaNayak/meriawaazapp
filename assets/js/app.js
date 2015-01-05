@@ -147,6 +147,10 @@ $('.interactiveLoading').click(function() {
 	console.log("Loading Button was Called!");
 });
 
+$('#logout').click(function() {
+	logout();
+});
+
 function icon_bg(){
 	var iconBg = $('.icon-bg');
 	var iconArray = ['calendar','clock',

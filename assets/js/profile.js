@@ -17,7 +17,7 @@ var cstate=document.getElementById('cstate');;
 var cs;
 
 //Query Assembly Table
-var history=$('#history');
+var histor=document.getElementById('history2');;
 var his=[];
 
 //Query User -> Neta Table
@@ -127,13 +127,12 @@ function queryUserTable(){
         else{
           np="./assets/images/no_image.jpg";
         }
-<<<<<<< HEAD
+
 
         p=neta.get("party");
-        nNA=neta.get("user").get("name")+"<small>("+neta.get("age").toString()+")</small>";
-=======
+
         nNA=neta.get("user").get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
->>>>>>> origin/feature-redesignv2
+
         edu=neta.get("education");
         ass=neta.get("assets");
         lia=neta.get("liabilities");
@@ -216,6 +215,7 @@ function queryElectionTable(){
     pointer.id = neta.id;
     query.equalTo("arrayCandidates", pointer);
     query.include("arrayCandidates");
+    query.include("constituency");
     query.descending('createdAt');
     his=[];
     query.find({
@@ -239,16 +239,16 @@ function queryElectionTable(){
                         }
                     }
                     cs=results[0].get("constituency").get("name")+"<small> "+results[0].get("constituency").get("state")+"</small>";
-                    
-                }
-                for(var i=1;i<results.length;i++){
-                    if(results[i].get("winner").id==neta.id){
-                        ele=results[i].get("name")+" "+results[0].get("year").toString()+" (Winner)";
+                    var chp;
+                    for(var i=1;i<results.length;i++){
+                        if(results[i].get("winner").id==neta.id){
+                            chp=results[i].get("name")+" "+results[0].get("year").toString()+" (Winner)";
+                        }
+                        else{
+                            chp=results[i].get("name")+" "+results[0].get("year").toString()+" (Contested)";
+                        }
+                        his.push(chp);
                     }
-                    else{
-                        ele=results[i].get("name")+" "+results[0].get("year").toString()+" (Contested)";
-                    }
-                    his.push(ele);
                 }
                 displayData();
           },
@@ -265,12 +265,13 @@ function displayData(){
     party.innerHTML=py;
     election.innerHTML=ele;
     cstate.innerHTML=cs;
-    history.innerHTML="";
-    var str=""
+    histor.innerHTML="";
+    var str="";
     for(var i=0;i<his.length;i++){
-        str+=("<h5 class='secondary-color'>"+his[i]+"</h5>");
+        str=str+"<h5 class='secondary-color'>"+his[i].toString()+"</h5>";
+        console.log(str);
     }
-    history.innerHTML=str;
+    histor.innerHTML=str;
     education.innerHTML=edu;
     assets.innerHTML=ass;
     liabilities.innerHTML=lia;
