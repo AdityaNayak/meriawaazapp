@@ -3,6 +3,7 @@
 
 var count = 0 ;
 var CU;
+
 Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
 
 function updateHistory()
@@ -38,28 +39,37 @@ else{
 		    query.equalTo("objectId", CU.id);
 		    query.include("neta");
 		    query.include(["neta.party"]);
+		    query.include(["neta.constituency"]);
 		    query.include("teamMember");
 		    query.include(["teamMember.neta"]);
 		    query.include(["teamMember.neta.party"]);
+		    query.include(["teamMember.neta.constituency"]);
 		    query.ascending('createdAt');
 		    query.find({
 		          success: function(results) {
 
 		                console.log("Size:"+results.length);
 		                var plogo=document.getElementById('plogo');
+		                var consti=document.getElementById('consti');
+		                CU=results[0];
 		                object=results[0];
 		                var p;
 		                if(object.get("type")=="neta"){
 		                	var n=object.get("neta");
-		                	p=n.get("party");	                	
+		                	p=n.get("party");	
+		                	consti.innerHTML=n.get("constituency").get("name");
+		                	constituency=n.get("constituency");
 		                }
 		                if(object.get("type")=="teamMember"){
 		                	var t=object.get("teamMember");
 		                	p=t.get("neta").get("party");
+		                	consti.innerHTML=t.get("neta").get("constituency").get("name");
+		                	constituency=t.get("neta").get("constituency");
 		                }
 		                if(p.get("logo").url()!=undefined){
 	                		plogo.src=p.get("logo").url();
 	                	}
+
 	                	object.set("lastFetched",new Date());
 	                	object.save();
 		            },
@@ -76,6 +86,7 @@ function logout(){
     NProgress.start();
     console.log("NProgress Start");
     Parse.User.logOut();
+
     CU = null;
     NProgress.done();
     console.log("NProgress Stop");

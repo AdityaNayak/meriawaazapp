@@ -1,8 +1,11 @@
-var thisPolitician;
-var allPoliticians;
 var currentNeta;
 var EC;
 var currentUser;
+var currentPost;
+
+function fetchComments(){
+    
+}
 
 function calculateNetaStats(n){
     
@@ -52,10 +55,6 @@ function populateStatus(){
                 console.log("Error:"+error.message);
           }
     });
-}
-
-function fetchComments(){
-    
 }
 
 function postStatus(c) {
@@ -151,6 +150,7 @@ function queryUserTable(){
         fetchECStatus(object);
       },
       error: function(error) {
+
       }
     });
 }
@@ -191,7 +191,6 @@ function initialize() {
     console.log("initialize");
     NProgress.start();
     queryUserTable();
-    
 
     $('#post-form').submit(function(event){
           event.preventDefault();
