@@ -4,10 +4,12 @@
 var count = 0 ;
 var CU;
 Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
+
 function updateHistory()
 {
 	
 }
+
 var a=location.pathname.split('/').slice(-1)[0];
 console.log(a);
 if(a.length==0){
@@ -42,6 +44,7 @@ else{
 		    query.ascending('createdAt');
 		    query.find({
 		          success: function(results) {
+
 		                console.log("Size:"+results.length);
 		                var plogo=document.getElementById('plogo');
 		                object=results[0];
@@ -57,7 +60,8 @@ else{
 		                if(p.get("logo").url()!=undefined){
 	                		plogo.src=p.get("logo").url();
 	                	}
-		                
+	                	object.set("lastFetched",new Date());
+	                	object.save();
 		            },
 		          error: function(error) {
 		                console.log("Error:"+error.message);

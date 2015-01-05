@@ -11,119 +11,40 @@
     <div class="small-3 columns text-right">
       <div class="row">
         <div class="small-5 small-offset-7 columns s-ws-top">
-          <img src="{{site.url}}/assets/images/politicians/narendra-modi.jpg" class="circle-img">
+          <img id="photo" src="./assets/images/no_image.jpg" class="circle-img">
         </div>
       </div>
-      <h3>Narendra Modi</h3>
-      <h5>Bhartiya Janta Party</h5>
-      <h5 class="secondary-color">Lok Sabha 2014</h5>
-      <h5 class="secondary-color">Vadodra, <small>Gujarat</small></h5>
+      <h3 id="myname">Loading...</h3>
+      <h5 id="myparty">Loading...</h5>
+      <h5 id="ele" class="secondary-color">Loading...</h5>
+      <h5 id="cs" class="secondary-color">Loading...</h5>
       <hr>
       <select>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-        <option value="year">This Year</option>
-        <option value="lifetime">Lifetime</option>
+        <option value="week">Loading...</option>
+        <option value="month">Loading...</option>
+        <option value="year">Loading...</option>
+        <option value="lifetime">Loading...</option>
       </select>
       <div class="row collapse">
-        <div class="small-6 columns"><span class="f-2x bgc">365 </span>followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
+        <div class="small-6 columns"><span class="f-2x bgc">Loading...</span>followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
       </div>
       <div class="row collapse">
-        <div class="small-6 columns"><span class="f-2x bc">45 </span>interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
+        <div class="small-6 columns"><span class="f-2x bc">Loading...</span>interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
       </div>
       <div class="row collapse">
-        <div class="small-6 columns"><span class="f-2x dbc">5 </span>actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
+        <div class="small-6 columns"><span class="f-2x dbc">Loading...</span>actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
       </div>
     </div>
     <div class="small-6 columns">
       <div class="panel">
         <h4 class="dbc">Connect with your Voters</h4>
-        <textarea rows="4" placeholder="Say something inspiring"></textarea>
-        <div class="text-right">
-          <div class="button nm">Send Update</div>
-        </div>
+        <form id="post-form">
+          <textarea id="postArea" rows="4" required placeholder="Say something inspiring"></textarea>
+          <input id="post" type="submit" value="Send Update" class="button nm">
+        </form>
       </div>
       <div id="posts">
-        <div class="panel">
-          <div class="row">
-            <div class="small-9 columns">
-              <p class="secondary-color">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-            </div>
-            <div class="small-3 columns secondary-color">
-              <div class="row">
-                <div class="small-12 columns secondary-color tertiary text-right">
-                  44 min ago
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="small-8 columns text-right tertiary">
-                  Reach
-                </div>
-                <div class="small-4 columns secondary">
-                  871
-                </div>
-              </div>
-              <div class="row">
-                <div class="small-8 columns text-right tertiary">
-                  Likes
-                </div>
-                <div class="small-4 columns secondary">
-                  87
-                </div>
-              </div>
-              <div class="row">
-                <div class="small-8 columns text-right tertiary">
-                  Comments
-                </div>
-                <div class="small-4 columns secondary">
-                  8
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      
-
-        <div class="panel">
-          <div class="row">
-            <div class="small-9 columns">
-              <p class="secondary-color">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-            </div>
-            <div class="small-3 columns secondary-color">
-              <div class="row">
-                <div class="small-12 columns secondary-color tertiary text-right">
-                  44 min ago
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="small-8 columns text-right tertiary">
-                  Reach
-                </div>
-                <div class="small-4 columns secondary">
-                  871
-                </div>
-              </div>
-              <div class="row">
-                <div class="small-8 columns text-right tertiary">
-                  Likes
-                </div>
-                <div class="small-4 columns secondary">
-                  87
-                </div>
-              </div>
-              <div class="row">
-                <div class="small-8 columns text-right tertiary">
-                  Comments
-                </div>
-                <div class="small-4 columns secondary">
-                  8
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </div>
     <div class="small-3 columns">
