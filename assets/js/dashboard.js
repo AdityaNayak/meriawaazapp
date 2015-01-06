@@ -308,6 +308,10 @@ function initialize() {
           var p=document.getElementById("postArea").value;
           postStatus(p);
     });
+    $('#postArea').focus(function(){
+        $(this).animate({'height': '160px'}).removeClass('nm');
+        $('#sh-ltr1').delay(800).fadeIn();
+    });
 }
         
 initialize();
