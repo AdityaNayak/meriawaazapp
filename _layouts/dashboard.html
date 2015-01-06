@@ -37,9 +37,9 @@
     </div>
     <div class="small-6 columns">
       <div class="panel">
-        <h4 class="dbc">Connect with your Voters</h4>
-        <textarea rows="4" placeholder="Say something inspiring"></textarea>
-        <div class="text-right">
+        <h5 class="dbc">Connect with your Voters</h5>
+        <textarea id="clk1" rows="2" placeholder="Say something inspiring" class="nm"></textarea>
+        <div class="text-right" id="sh-ltr1" style="display:none;">
           <div class="button nm">Send Update</div>
         </div>
       </div>
@@ -208,6 +208,10 @@
 <script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
 <script>
   $( document ).ready(function() {
+    $('#clk1').focus(function(){
+        $(this).animate({'height': '160px'}).removeClass('nm');
+        $('#sh-ltr1').delay(800).fadeIn();
+    });
   });
 </script>
 </html>
