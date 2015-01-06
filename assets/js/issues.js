@@ -1,5 +1,5 @@
 var constituency;
-
+var poly;
 var view=0;
 
 var listView=$('#list-view tbody');
@@ -34,8 +34,8 @@ var geomarker1;
 var iconURLPrefix = './assets/images/';
 var width=40;
 var height=40;
-var anchor_left=0;
-var anchor_top=0;
+var anchor_left=20;
+var anchor_top=40;
 var icons_url = [
     iconURLPrefix + 'marker-1.png',
     iconURLPrefix + 'marker-2.png',
@@ -1031,7 +1031,18 @@ function plotConstituency(c){
                     fillOpacity: 0.35
                   });
                   console.log("Polygon Created!");
-                  Poly.setMap(map);                   
+                  poly=Poly;
+                  Poly.setMap(map);   
+                  var i=0;
+                  setTimeout( function() {
+                      if(currentUser.get("type")=="teamMember"){
+                        populateTM();
+                      }
+                      else if(currentUser.get("type")=="neta"){
+                        populate();
+                      }
+                      populateTeam();
+                  }, i * 500);                
               },
             error: function(error) {
                   console.log("Error:"+error.message);
@@ -1060,58 +1071,60 @@ function populateTM(){
           success: function(results) {
             for (var i = 0; i < results.length; i++) { 
                 var object = results[i].get("issue");
+
                 var myicon;
-                
-                //Set Icon
-                myicon=getIcon(object.get("category"),object.get("status"));
+                if(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly)==true){
+                    //Set Icon
+                    myicon=getIcon(object.get("category"),object.get("status"));
 
-                              
-                marker = new google.maps.Marker({
-                    position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
-                    map: map,
-                    title: object.get('category'),
-                    content: object,
-                    icon : myicon,
-                    draggable: false,
-                    animation: google.maps.Animation.DROP
-                });
+                                  
+                    marker = new google.maps.Marker({
+                        position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
+                        map: map,
+                        title: object.get('category'),
+                        content: object,
+                        icon : myicon,
+                        draggable: false,
+                        animation: google.maps.Animation.DROP
+                    });
 
-                var d=new Date(object.createdAt);
-                var ago=timeSince(d);
-                var content=object.get("content");
-                if(object.get("content").length > 30){
-                    content=object.get("content").substring(0,30)+"...";
-                }
-                listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
-                markers.push(marker);
-                if((marker.content).get('status')=="open"){
-                    no=no+1;
-                }
-                if((marker.content).get('status')=="progress"){
-                    np=np+1;
-                }
-                if((marker.content).get('status')=="review"){
-                    nr=nr+1;
-                }
-                if((marker.content).get('status')=="closed"){
-                    nc=nc+1;
-                }
-                google.maps.event.addListener(marker, 'click', (function(marker,object) {
-                    return function() {
-                        NProgress.start();
-                        console.log("NProgress start");
-                        if(infowindow) {
-                            infowindow.close();
-                        }
-                        infowindow = new google.maps.InfoWindow({
-                            maxWidth: 700,
-                            maxHeight: 900
-                        });
-                        currmarker=marker;
-                        updateCurrentMarker(currmarker);                        
-                        infowindow.setContent(currmarker.content.get('status'));
+                    var d=new Date(object.createdAt);
+                    var ago=timeSince(d);
+                    var content=object.get("content");
+                    if(object.get("content").length > 30){
+                        content=object.get("content").substring(0,30)+"...";
                     }
-                })(marker,object));
+                    listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                    markers.push(marker);
+                    if((marker.content).get('status')=="open"){
+                        no=no+1;
+                    }
+                    if((marker.content).get('status')=="progress"){
+                        np=np+1;
+                    }
+                    if((marker.content).get('status')=="review"){
+                        nr=nr+1;
+                    }
+                    if((marker.content).get('status')=="closed"){
+                        nc=nc+1;
+                    }
+                    google.maps.event.addListener(marker, 'click', (function(marker,object) {
+                        return function() {
+                            NProgress.start();
+                            console.log("NProgress start");
+                            if(infowindow) {
+                                infowindow.close();
+                            }
+                            infowindow = new google.maps.InfoWindow({
+                                maxWidth: 700,
+                                maxHeight: 900
+                            });
+                            currmarker=marker;
+                            updateCurrentMarker(currmarker);                        
+                            infowindow.setContent(currmarker.content.get('status'));
+                        }
+                    })(marker,object));
+                }
              } 
           statusCounters(no,np,nr,nc);
           filter();
@@ -1139,58 +1152,59 @@ function populate(){
             for (var i = 0; i < results.length; i++) { 
                 var object = results[i];
                 var myicon;
-                
-                //Set Icon
-                myicon=getIcon(object.get("category"),object.get("status"));
-                              
-                marker = new google.maps.Marker({
-                    position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
-                    map: map,
-                    title: object.get('category'),
-                    content: object,
-                    icon : myicon,
-                    draggable: false,
-                    animation: google.maps.Animation.DROP
-                });
+                if(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly)==true){
+                    //Set Icon
+                    myicon=getIcon(object.get("category"),object.get("status"));
+                                  
+                    marker = new google.maps.Marker({
+                        position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
+                        map: map,
+                        title: object.get('category'),
+                        content: object,
+                        icon : myicon,
+                        draggable: false,
+                        animation: google.maps.Animation.DROP
+                    });
 
-                var d=new Date(object.createdAt);
-                var ago=timeSince(d);
-                var content=object.get("content");
-                if(object.get("content").length > 30){
-                    content=object.get("content").substring(0,30)+"...";
-                }
-                listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
-                markers.push(marker);
-                if((marker.content).get('status')=="open"){
-                no=no+1;
-                }
-                if((marker.content).get('status')=="progress"){
-                    np=np+1;
-                }
-                if((marker.content).get('status')=="review"){
-                    nr=nr+1;
-                }
-                if((marker.content).get('status')=="closed"){
-                    nc=nc+1;
-                }
-                google.maps.event.addListener(marker, 'click', (function(marker,object) {
-                    return function() {
-                        NProgress.start();
-                        console.log("NProgress start");
-                        if(infowindow) {
-                            infowindow.close();
-                        }
-                        infowindow = new google.maps.InfoWindow({
-                            maxWidth: 700,
-                            maxHeight: 900
-                        });
-                        
-                        currmarker=marker;
-                        updateCurrentMarker(currmarker);                        
-                        infowindow.setContent(currmarker.content.get('status'));
-                        
+                    var d=new Date(object.createdAt);
+                    var ago=timeSince(d);
+                    var content=object.get("content");
+                    if(object.get("content").length > 30){
+                        content=object.get("content").substring(0,30)+"...";
                     }
-                })(marker,object));
+                    listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                    markers.push(marker);
+                    if((marker.content).get('status')=="open"){
+                    no=no+1;
+                    }
+                    if((marker.content).get('status')=="progress"){
+                        np=np+1;
+                    }
+                    if((marker.content).get('status')=="review"){
+                        nr=nr+1;
+                    }
+                    if((marker.content).get('status')=="closed"){
+                        nc=nc+1;
+                    }
+                    google.maps.event.addListener(marker, 'click', (function(marker,object) {
+                        return function() {
+                            NProgress.start();
+                            console.log("NProgress start");
+                            if(infowindow) {
+                                infowindow.close();
+                            }
+                            infowindow = new google.maps.InfoWindow({
+                                maxWidth: 700,
+                                maxHeight: 900
+                            });
+                            
+                            currmarker=marker;
+                            updateCurrentMarker(currmarker);                        
+                            infowindow.setContent(currmarker.content.get('status'));
+                            
+                        }
+                    })(marker,object));
+                }
              } 
           statusCounters(no,np,nr,nc);
           filter();
@@ -1468,38 +1482,27 @@ function initialize() {
     homeControlDiv2.index = 1;
     map2.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv2);
 
-
-    var i=0;
-    setTimeout( function() {
-        if(currentUser.get("type")=="teamMember"){
-          populateTM();
-        }
-        else if(currentUser.get("type")=="neta"){
-          populate();
-        }
-        populateTeam();
-    }, i * 500);
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var latitude = position.coords.latitude;
-            var longitude = position.coords.longitude;
-            var geolocpoint = new google.maps.LatLng(latitude, longitude);
-            map.setCenter(geolocpoint);
-            map.setZoom(12);
-            var iconURLPrefix = './assets/images/';
-            if(geomarker1!=undefined){
-              geomarker1.setMap(null);
-            }
-            geomarker1 = new google.maps.Marker({
-                position: geolocpoint,
-                map: map,
-                title: 'Current Location',
-                draggable: false,
-                animation: google.maps.Animation.DROP
-            });
-        });
+    // if (navigator.geolocation) {
+    //     navigator.geolocation.getCurrentPosition(function(position) {
+    //         var latitude = position.coords.latitude;
+    //         var longitude = position.coords.longitude;
+    //         var geolocpoint = new google.maps.LatLng(latitude, longitude);
+    //         map.setCenter(geolocpoint);
+    //         map.setZoom(12);
+    //         var iconURLPrefix = './assets/images/';
+    //         if(geomarker1!=undefined){
+    //           geomarker1.setMap(null);
+    //         }
+    //         geomarker1 = new google.maps.Marker({
+    //             position: geolocpoint,
+    //             map: map,
+    //             title: 'Current Location',
+    //             draggable: false,
+    //             animation: google.maps.Animation.DROP
+    //         });
+    //     });
         
-    }            
+    // }            
 
     $('input[type=checkbox]').change(
         function(){
