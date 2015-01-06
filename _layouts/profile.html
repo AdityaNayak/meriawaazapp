@@ -8,7 +8,7 @@
   {% include header.html %}
   <div class="row" style="margin-top:12em;">
     <div class="small-offset-3 small-2 columns">
-      <span id="bsupport" class="f-3x yc">...</span><span class="secondary secondary-color"> supporters</span>
+      <span id="bsupport" class="f-3x yc">...</span><span class="secondary secondary-color"> followers</span>
     </div>
     <div class="small-4 columns m-ws-top">
       <div id="support" class="l-lc text-right secondary-color" style="width:63%">Loading...</div>
@@ -21,12 +21,12 @@
   <div class="panel">
     <div class="row">
       <div class="small-3 columns text-right">
-        <img id="photo" src="" height="300px" class="circle-img top-push">
+        <img id="photo" src="./assets/images/no_image.jpg" height="300px" class="circle-img top-push">
         <h3 id="nameage" class="m-ws-top yc">Loading...</h3>
         <h4 id="party">Loading...</h4>
         <h4 id="cstate" class="s-ws-top">Loading...</h4>
         <h5 id="profession" class="subheader">Loading...</h5>
-        <a href="#" class="button v2">Edit</a>
+        <!--<a href="#" class="button v2">Edit</a>-->
       </div>
       <div class="small-3 columns m-ws-top">
         <h4 class="bgc">Statistics</h4>
@@ -71,7 +71,7 @@
         <hr>
         <div class="row">
           <div class="small-8 columns secondary-color">
-            Followers:
+            New Followers:
           </div>
           <div id="num-followers" class="small-4 columns">
             Loading...
@@ -91,6 +91,15 @@
             Comments:
           </div>
           <div id="num-comments" class="small-4 columns">
+            Loading...
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="small-8 columns secondary-color">
+            Posts:
+          </div>
+          <div id="num-posts" class="small-4 columns">
             Loading...
           </div>
         </div>
@@ -150,11 +159,13 @@
         </div>
       </div>
     </div>
+    
     <div class="row">
-      <div id='history' class="small-3 columns text-right s-ws-top">
-          <h4>History</h4>
-          <h5 class="secondary-color">Delhi Assembly Elections 2014 (Seat name)</h5>
-          <h5 class="secondary-color">Lok Sabha 2014 (seat name)</h5>
+      <div class="small-3 columns text-right s-ws-top">
+        <h5>History</h5>
+        <div id="history2">
+          -
+        </div>
       </div>
       <div class="small-3 columns m-ws-top">
         <div class="row secondary-panel">
@@ -167,6 +178,7 @@
           </div>
         </div>
       </div>
+      <!--
       <div class="small-3 columns m-ws-top">
         <div class="row secondary-panel">
           <div class="small-2 columns">
@@ -225,6 +237,7 @@
           </div>
         </div>
       </div>
+      -->
     </div>
   </div>
 

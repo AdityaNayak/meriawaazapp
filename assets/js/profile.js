@@ -17,8 +17,8 @@ var cstate=document.getElementById('cstate');;
 var cs;
 
 //Query Assembly Table
-var history=document.getElementById('history');;
-var his;
+var histor=document.getElementById('history2');;
+var his=[];
 
 //Query User -> Neta Table
 var education=document.getElementById('education');;
@@ -37,8 +37,8 @@ var criminalCases=document.getElementById('ccases');;
 var cri;
 
 //Query User -> Neta Table
-var followers=document.getElementById('num-followers');;
-var fol;
+var newFollowers=document.getElementById('num-followers');;
+var nfol;
 
 //Query User -> Neta Table
 var comments=document.getElementById('num-comments');;
@@ -64,6 +64,10 @@ var issuesClaimed=document.getElementById('num-iclaimed');;
 var icl;
 
 //Query User -> Neta Table
+var numPosts=document.getElementById('num-posts');;
+var npo;
+
+//Query User -> Neta Table
 var issuesClosed=document.getElementById('num-iclosed');;
 var ico;
 
@@ -80,9 +84,8 @@ var reach=document.getElementById('num-reach');;
 var rea;
 
 //Query Posts Table
-var supporters2=document.getElementById('bsupport');;
-var supporters=document.getElementById('support');;
-var sup;
+var followers2=document.getElementById('bsupport');;
+var followers=document.getElementById('support');;
 
 //Query Posts Table
 var skeptics=document.getElementById('skeptics');;
@@ -117,24 +120,19 @@ function queryUserTable(){
           var teammember=object.get("teamMember");
           neta=teammember.get("neta");
         }
-        var p=neta.get("party");
-        if(neta.get("mla")!=undefined){
-          var mla=neta.get("mla");
-          var con=mla.get("constituency");  
-          ele=mla.get("name")+" "+mla.get("year")
-          cs=con.get("name")+", "+"<small>("+con.get("state")+")</small>";
-        }
-        else{
-          ele="-";
-          cs="-";
-        }
+        
         if(neta.get("user").get("pic")!=undefined){
           np=neta.get("user").get("pic").url();
         }
         else{
           np="./assets/images/no_image.jpg";
         }
+
+
+        p=neta.get("party");
+
         nNA=neta.get("user").get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
+
         edu=neta.get("education");
         ass=neta.get("assets");
         lia=neta.get("liabilities");
@@ -142,9 +140,11 @@ function queryUserTable(){
         pro=neta.get("profession");
         com=neta.get("numComments");
         fol=neta.get("numFollowers");
+        ske=neta.get("numSkeptics");
         icl=neta.get("numIsClaimed");
         ico=neta.get("numIsClosed");
         icv=neta.get("numIsValidated");
+        npo=neta.get("numPosts");
         ts=neta.get("numMembers");
         qa=neta.get("numQsAnswered");
         qat=neta.get("numQsAskedTo");
@@ -152,6 +152,7 @@ function queryUserTable(){
         queryPostTable();
       },
       error: function(error) {
+        console.log("Error: "+error.message);
       }
     });
 }
@@ -171,17 +172,89 @@ function queryPostTable(){
         var reach=0;
         for (var i = 0; i < results.length; i++) { 
             var object = results[i];
-            likes+=object.get("likes");
-            dislikes+=object.get("dislikes");
             reach+=object.get("reach");
         }
-        sup=likes;
-        ske=dislikes;
         rea=reach;
-        displayData();
+        queryFollowerTable();
       },
       error: function(error) {
+        console.log("Error: "+error.message);
       }
+    });
+}
+
+//for New Followers
+function queryFollowerTable(){
+    console.log('QueryFollowerTable');
+    ListItem = Parse.Object.extend("Follower");
+    query = new Parse.Query(ListItem);
+    var pointer = new Parse.Object("Neta");
+    pointer.id = neta.id;
+    query.equalTo("neta", pointer);
+    query.equalTo("type", "like");
+    var date=new Date(currentUser.get("lastFetched"));
+    var d = new Date(date.getTime());
+    //query.greaterThan("createdAt", d);
+    query.find({
+      success: function(results) {
+        nfol=results.length;
+        queryElectionTable();
+      },
+      error: function(error) {
+        console.log("Error: "+error.message);
+      }
+    });
+}
+
+//Election History
+function queryElectionTable(){
+    console.log("queryElectionTable");    
+    ListItem = Parse.Object.extend("Election");
+    query = new Parse.Query(ListItem);
+    var pointer = new Parse.Object("Neta");
+    pointer.id = neta.id;
+    query.equalTo("arrayCandidates", pointer);
+    query.include("arrayCandidates");
+    query.include("constituency");
+    query.descending('createdAt');
+    his=[];
+    query.find({
+          success: function(results) {
+                console.log("Size:"+results.length);
+                if(results.length==0){
+                    ele="-";
+                    cs="-";
+                }
+                else{
+                    //Check if some new election has held in this constituency before
+                    if(results[0].get("winner")==undefined){
+                        ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Candidate)";
+                    }
+                    else{
+                        if(results[0].get("winner").id==currentNeta.id){
+                            ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Winner)";
+                        }
+                        else{
+                            ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Contested)";
+                        }
+                    }
+                    cs=results[0].get("constituency").get("name")+"<small> "+results[0].get("constituency").get("state")+"</small>";
+                    var chp;
+                    for(var i=1;i<results.length;i++){
+                        if(results[i].get("winner").id==neta.id){
+                            chp=results[i].get("name")+" "+results[0].get("year").toString()+" (Winner)";
+                        }
+                        else{
+                            chp=results[i].get("name")+" "+results[0].get("year").toString()+" (Contested)";
+                        }
+                        his.push(chp);
+                    }
+                }
+                displayData();
+          },
+          error: function(error) {
+                console.log("Error:"+error.message);
+          }
     });
 }
 
@@ -192,14 +265,21 @@ function displayData(){
     party.innerHTML=py;
     election.innerHTML=ele;
     cstate.innerHTML=cs;
-    history.innerHTML=his;
+    histor.innerHTML="";
+    var str="";
+    for(var i=0;i<his.length;i++){
+        str=str+"<h5 class='secondary-color'>"+his[i].toString()+"</h5>";
+        console.log(str);
+    }
+    histor.innerHTML=str;
     education.innerHTML=edu;
     assets.innerHTML=ass;
     liabilities.innerHTML=lia;
     criminalCases.innerHTML=cri;
-    followers.innerHTML=fol;
+    newFollowers.innerHTML=nfol;
     comments.innerHTML=com;
     questionsAsked.innerHTML=qa;
+    numPosts.innerHTML=npo;
     questionsAnswered.innerHTML=qat;
     teamSize.innerHTML=ts;
     profession.innerHTML=pro;
@@ -207,11 +287,11 @@ function displayData(){
     issuesClosed.innerHTML=ico;
     issuesValidated.innerHTML=icv;
     reach.innerHTML=rea;
-    supporters.innerHTML=sup+" supporters";
-    supporters.style.width=(Math.floor((sup/(sup+ske))*99))+"%";
-    supporters2.innerHTML=sup;
+    followers.innerHTML=fol+" followers";
+    followers.style.width=(Math.floor((fol/(fol+ske))*99))+"%";
+    followers2.innerHTML=fol;
     skeptics.innerHTML=ske+" skeptics";
-    skeptics.style.width=(Math.floor((ske/(sup+ske))*99))+"%";
+    skeptics.style.width=(Math.floor((ske/(fol+ske))*99))+"%";
     NProgress.done();
 }
 

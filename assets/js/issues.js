@@ -1,4 +1,4 @@
-
+var constituency;
 
 var view=0;
 
@@ -1003,6 +1003,42 @@ function getIcon(category,status){
     return myicon;
 }
 
+function plotConstituency(c){
+      console.log("Lets Plot a Constituency");
+      ListItem = Parse.Object.extend("Polygon");
+      query = new Parse.Query(ListItem);
+      query.equalTo("index", c);    
+      query.find({
+            success: function(results) {
+                  console.log("Starting Plotting: "+results[0].get("name"));
+                  var Coords=[];
+                  var pints=[];
+                  var points=results[0].get("points");
+                  console.log(points.length);
+                  for (var i = 0; i < points.length; i++) { 
+                      Coords.push(new google.maps.LatLng(points[i].latitude,points[i].longitude));
+                      pints.push({x:points[i].latitude,y:points[i].longitude});
+                  }
+                  console.log("First:"+points[0].longitude);
+                  console.log("Last:"+points[points.length-1].longitude);
+                  Poly = new google.maps.Polygon({
+                    paths: Coords,
+                    strokeColor: '#0E629B',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    constituency: results[0].get("name"),
+                    fillColor: '#0071BC',
+                    fillOpacity: 0.35
+                  });
+                  console.log("Polygon Created!");
+                  Poly.setMap(map);                   
+              },
+            error: function(error) {
+                  console.log("Error:"+error.message);
+            }
+      });
+  }
+
 //Starts and Ends NProgress
 function populateTM(){
         console.log("populate for Team Member");
@@ -1329,7 +1365,51 @@ function listViewClick(p) {
          infowindow.setContent(currmarker.content.get('status'));
           
          console.log('test');
-        }
+}
+
+function initializeMap(){
+  var constituency;
+  if (currentUser.get("type")=="neta"){
+        ListItem = Parse.Object.extend("User");
+        query = new Parse.Query(ListItem);
+        query.equalTo("objectId", CU.id);
+        query.include("neta");
+        query.include(["neta.party"]);
+        query.include(["neta.constituency"]);
+        query.ascending('createdAt');
+        query.find({
+              success: function(results) {
+                constituency=results[0].get("neta").get("constituency");
+                plotConstituency(constituency.get("index"));
+                map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+              },
+              error: function(error){
+                console.log("Error: "+error.message); 
+              }
+        });
+  }
+  else{
+        ListItem = Parse.Object.extend("User");
+        query = new Parse.Query(ListItem);
+        query.equalTo("objectId", CU.id);
+        query.include("teamMember");
+        query.include(["teamMember.neta"]);
+        query.include(["teamMember.neta.party"]);
+        query.include(["teamMember.neta.constituency"]);
+        query.ascending('createdAt');
+        query.find({
+              success: function(results) {
+                constituency=results[0].get("teamMember").get("neta").get("constituency");
+                plotConstituency(constituency.get("index"));
+                map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+              },
+              error: function(error){
+                console.log("Error: "+error.message);
+              }
+        });
+      
+  }
+}
 
 function initialize() {
     console.log("initialize");
@@ -1343,14 +1423,16 @@ function initialize() {
     else{
       pphoto.src="http://placehold.it/300x300&text=user";
     }
-    
+
     if (currentUser.get("type")=="neta"){
         console.log("Current User is a Neta");
         document.getElementById("neta-panel").style.display="block";
+
     }
     else{
         console.log("Current User is a Team Member");
         document.getElementById("neta-panel").style.display="none";
+
     }
     map2 = new google.maps.Map(document.getElementById('googleMap'), {
         zoom: 12,
@@ -1363,6 +1445,8 @@ function initialize() {
         center: new google.maps.LatLng(28.612912,77.22951),
         mapTypeId: google.maps.MapTypeId.ROADMAP
     });
+
+    initializeMap();
     
     var homeControlDiv = document.createElement('div');
     var homeControl = new CurrentLocationControl(homeControlDiv, map);
