@@ -97,16 +97,14 @@ function queryUserTable(){
     query = new Parse.Query(ListItem);
     query.equalTo("objectId", currentUser.id);
     query.include("neta");
-    query.include(["neta.mla"]);
     query.include(["neta.user"]);
-    query.include(["neta.mla.constituency"]);
+    query.include(["neta.constituency"]);
     query.include(["neta.party"]);
     query.include("teamMember");
     query.include(["teamMember.neta"]);
     query.include(["teamMember.neta.user"]);
-    query.include(["teamMember.neta.mla"]);
     query.include(["teamMember.neta.party"]);
-    query.include(["teamMember.neta.mla.constituency"]);
+    query.include(["teamMember.neta.constituency"]);
     
     query.find({
       success: function(results) {

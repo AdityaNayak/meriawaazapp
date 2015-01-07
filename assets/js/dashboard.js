@@ -7,16 +7,88 @@ function fetchComments(){
     
 }
 
-function calculateNetaStats(n){
-    
-}
-
-function fetchConstituencyData(c){
+function postComment(){
     
 }
 
 function updateCurrentPost(p){
     
+}
+
+function calculateNetaStats(n){
+    console.log("calculateNetaStats");
+    var actions;
+    var interactions;
+    var followers;
+    var photo;
+    var partyname;
+    var name;
+    var age;
+
+    ListItem = Parse.Object.extend("Neta");
+    query = new Parse.Query(ListItem);
+    query.equalTo("objectId", n.id);
+    query.include("party");
+    query.include("user");
+    query.find({
+      success: function(results) {
+        actions=results[0].get("numIsClaimed")+results[0].get("numIsClosed");
+        interactions=results[0].get("numPosts")+results[0].get("numComments")+results[0].get("numQsAnswered");
+        followers=results[0].get("numFollowers");
+        name=results[0].get("user").get("name");
+        partyname=results[0].get("party").get("name");
+        age=results[0].get("age");
+        if(results[0].get("user").get("pic")!=undefined){
+            photo=results[0].get("user").get("pic").url();
+        }
+        else{
+            photo="./assets/images/no_image.jpg";
+        }
+        $("#competitorlist").append("<div class='row collapse'><div class='small-3 columns'><img src="+photo+" class='circle-img gs hv pd'></div><div class='small-9 columns'><h4>"+name+"<small>("+age+")</small></h4><h6>"+partyname+"</h6></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x bgc'>"+followers+" </span>followers </div><div class='small-6 columns s-ws-top'><i class='icon-up gc'></i><span class='secondary secondary-color'>23 this week</span></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x bc'>"+interactions+"</span>interactions </div><div class='small-6 columns s-ws-top'><i class='icon-down rc'></i><span class='secondary secondary-color'>31 this week</span></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x dbc'>"+actions+" </span>actions </div><div class='small-6 columns s-ws-top'><i class='icon-down rc'></i><span class='secondary secondary-color'>2 this week</span></div></div><hr>");
+      },
+      error: function(error) {
+
+      }
+    });
+
+}
+
+function calculateCurrentNetaStats(){
+        console.log("calculateCurrentNetaStats");
+        actions=currentNeta.get("numIsClaimed")+currentNeta.get("numIsClosed");
+        interactions=currentNeta.get("numPosts")+currentNeta.get("numComments")+currentNeta.get("numQsAnswered");
+        followers=currentNeta.get("numFollowers");
+        var mapping={a:actions,i:interactions,f:followers};
+        document.getElementById('f').innerHTML=mapping.f.toString();
+        document.getElementById('i').innerHTML=mapping.i.toString();
+        document.getElementById('a').innerHTML=mapping.a.toString();
+}
+
+function fetchConstituencyData(c){
+        console.log("fetchConstituencyData");
+        $("#competitorlist").innerHTML="";
+        ListItem = Parse.Object.extend("Election");
+        query = new Parse.Query(ListItem);
+        var pointer = new Parse.Object("Neta");
+        pointer.id = currentNeta.id;
+        query.equalTo("arrayCandidates", pointer);
+        query.include("arrayCandidates");
+        query.include("constituency");
+        query.descending('createdAt');
+        query.find({
+          success: function(results) {
+                netas=results[0].get("arrayCandidates");
+                for(var i=0;i<netas.length;i++){
+                    if(netas[i].id!=currentNeta.id){
+                        calculateNetaStats(netas[i]);
+                    }
+                }
+                NProgress.done();
+            },
+          error: function(error){
+                console.log("Error: "+error.message);
+            } 
+          });
 }
 
 function populateStatus(){
@@ -48,7 +120,9 @@ function populateStatus(){
                     comments=object.get("numComments");
                     postView.append("<div class='panel'><div class='row'><div class='small-9 columns'><p class='secondary-color'>"+content+"</p></div><div class='small-3 columns secondary-color'><div class='row'><div class='small-12 columns secondary-color tertiary text-right'>"+ago+"</div></div><hr><div class='row'><div class='small-8 columns text-right tertiary'>Reach</div><div class='small-4 columns secondary'>"+reach+"</div></div><div class='row'><div class='small-8 columns text-right tertiary'>Likes</div><div class='small-4 columns secondary'>"+likes+"</div></div><div class='row'><div class='small-8 columns text-right tertiary'>Comments</div><div class='small-4 columns secondary'>"+comments+"</div></div></div><div class='row'><br><div name="+object.id+" id='expand' class='f-1-3x' align='center'>Expand</div></div></div></div>");
                 }
-                NProgress.done();
+
+                fetchConstituencyData(currentNeta.get("constituency"));
+                
                 console.log("NProgress Stop");
           },
           error: function(error) {
@@ -58,6 +132,10 @@ function populateStatus(){
 }
 
 function postStatus(c) {
+    if(CU.get("type")!="neta"){
+        alert("You do not have the required permissions");
+        return;
+    }
     console.log('postStatus');
     NProgress.start();
     console.log("NProgress Start");
@@ -88,7 +166,13 @@ function fetchECStatus(u){
     console.log("fetchECStatus");    
     ListItem = Parse.Object.extend("Election");
     query = new Parse.Query(ListItem);
-    currentNeta=u.get("neta");
+    if(u.get("type")=="neta"){
+        currentNeta=u.get("neta");
+    }
+    else{
+        currentNeta=u.get("teamMember").get("neta");
+    }
+    
     var pointer = new Parse.Object("Neta");
     pointer.id = currentNeta.id;
     query.equalTo("arrayCandidates", pointer);
@@ -118,7 +202,12 @@ function fetchECStatus(u){
                     }
                     EC.c=results[0].get("constituency").get("name")+"<small> "+results[0].get("constituency").get("state")+"</small>";
                 }
-                setCurrentNeta(u);
+                if(u.get("type")=="neta"){
+                    setCurrentNeta(u);
+                }
+                else{
+                    setCurrentNetaTM(currentNeta);
+                }
                 console.log("NProgress Stop");
           },
           error: function(error) {
@@ -133,17 +222,13 @@ function queryUserTable(){
     query = new Parse.Query(ListItem);
     query.equalTo("objectId", CU.id);
     query.include("neta");
-    query.include(["neta.mla"]);
-    query.include(["neta.user"]);
-    query.include(["neta.mla.constituency"]);
     query.include(["neta.party"]);
+    query.include(["neta.constituency"]);
     query.include("teamMember");
     query.include(["teamMember.neta"]);
     query.include(["teamMember.neta.user"]);
-    query.include(["teamMember.neta.mla"]);
     query.include(["teamMember.neta.party"]);
-    query.include(["teamMember.neta.mla.constituency"]);
-    
+    query.include(["teamMember.neta.constituency"]);
     query.find({
       success: function(results) {
         var object = results[0];
@@ -155,18 +240,41 @@ function queryUserTable(){
     });
 }
 
+
+//given neta
+function setCurrentNetaTM(n){
+    console.log("setCurrentNeta");
+    currentUser=n.get("user");
+    currentNeta=n;
+    console.log("I was called Team Member!");
+    if(currentUser.get("pic")!=undefined){
+          var photo=currentUser.get("pic").url();
+    }
+    else{
+          var photo="./assets/images/no_image.jpg";
+    }
+    
+    var name=currentUser.get("name");
+    var party=currentNeta.get("party");
+    var partyname=party.get("name");
+    var ele=EC.e;
+    var cs=EC.c;
+    document.getElementById('photo').src=photo;
+    document.getElementById('myname').innerHTML=name;
+    document.getElementById('myparty').innerHTML=partyname;
+    document.getElementById('ele').innerHTML=ele;
+    document.getElementById('cs').innerHTML=cs;
+    calculateCurrentNetaStats();
+    
+    populateStatus();
+}
+
+//given user
 function setCurrentNeta(u){
     console.log("setCurrentNeta");
     currentUser=u;
-    if(currentUser.get("type")=="neta"){
-        currentNeta=currentUser.get("neta");
-        console.log("I was called Neta!");
-    }
-    else if(currentUser.get("type")=="teamMember"){
-        var tm= currentUser.get("teamMember");
-        var currentNeta= tm.get("neta");
-        console.log("I was called!");
-    }
+    currentNeta=currentUser.get("neta");
+    console.log("I was called Neta!");
     if(currentUser.get("pic")!=undefined){
           var photo=currentUser.get("pic").url();
     }
@@ -190,6 +298,9 @@ function setCurrentNeta(u){
 function initialize() {
     console.log("initialize");
     NProgress.start();
+    if(CU.get("type")!="neta"){
+        $("#netapost").fadeOut();
+    }
     queryUserTable();
 
     $('#post-form').submit(function(event){
