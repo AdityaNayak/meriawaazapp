@@ -42,7 +42,7 @@ function calculateNetaStats(n){
             photo=results[0].get("user").get("pic").url();
         }
         else{
-            photo="./assets/images/no_image.jpg";
+            photo="./assets/images/neta.png";
         }
         $("#competitorlist").append("<div class='row collapse'><div class='small-3 columns'><img src="+photo+" class='circle-img gs hv pd'></div><div class='small-9 columns'><h4>"+name+"<small>("+age+")</small></h4><h6>"+partyname+"</h6></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x bgc'>"+followers+" </span>followers </div><div class='small-6 columns s-ws-top'><i class='icon-up gc'></i><span class='secondary secondary-color'>23 this week</span></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x bc'>"+interactions+"</span>interactions </div><div class='small-6 columns s-ws-top'><i class='icon-down rc'></i><span class='secondary secondary-color'>31 this week</span></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x dbc'>"+actions+" </span>actions </div><div class='small-6 columns s-ws-top'><i class='icon-down rc'></i><span class='secondary secondary-color'>2 this week</span></div></div><hr>");
       },
@@ -118,7 +118,7 @@ function populateStatus(){
                     reach=object.get("reach");
                     likes=object.get("likes");
                     comments=object.get("numComments");
-                    postView.append("<div class='panel'><div class='row'><div class='small-9 columns'><p class='secondary-color'>"+content+"</p></div><div class='small-3 columns secondary-color'><div class='row'><div class='small-12 columns secondary-color tertiary text-right'>"+ago+"</div></div><hr><div class='row'><div class='small-8 columns text-right tertiary'>Reach</div><div class='small-4 columns secondary'>"+reach+"</div></div><div class='row'><div class='small-8 columns text-right tertiary'>Likes</div><div class='small-4 columns secondary'>"+likes+"</div></div><div class='row'><div class='small-8 columns text-right tertiary'>Comments</div><div class='small-4 columns secondary'>"+comments+"</div></div></div><div class='row'><br><div name="+object.id+" id='expand' class='f-1-3x' align='center'>Expand</div></div></div></div>");
+                    postView.append("<div class='panel nm'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2'><div class='row' name="+object.id+" id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-view'><div class='row'><div class='small-2 columns text-right s-ws-top'><img src='./assets/images/neta.png' class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>some long assontent</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> time ago</div></div></div><div class='row'><div class='small-2 columns text-right s-ws-top'><img src='./assets/images/user.png' class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>some long assontent</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> time ago</div></div></div></div></div>");
                 }
 
                 fetchConstituencyData(currentNeta.get("constituency"));
@@ -251,7 +251,7 @@ function setCurrentNetaTM(n){
           var photo=currentUser.get("pic").url();
     }
     else{
-          var photo="./assets/images/no_image.jpg";
+          var photo="./assets/images/neta.png";
     }
     
     var name=currentUser.get("name");
@@ -279,7 +279,7 @@ function setCurrentNeta(u){
           var photo=currentUser.get("pic").url();
     }
     else{
-          var photo="./assets/images/no_image.jpg";
+          var photo="./assets/images/neta.png";
     }
     
     var name=currentUser.get("name");

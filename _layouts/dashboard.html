@@ -11,7 +11,7 @@
     <div class="small-3 columns text-right">
       <div class="row">
         <div class="small-5 small-offset-7 columns s-ws-top">
-          <img id="photo" src="./assets/images/no_image.jpg" class="circle-img">
+          <img id="photo" src="./assets/images/neta.png" class="circle-img">
         </div>
       </div>
       <h3 id="myname">Loading...</h3>
@@ -39,60 +39,61 @@
       <div id="netapost" class="panel">
         <h5 class="dbc">Connect with your Voters</h4>
 
-        <form id="post-form">
-          <textarea id="postArea" class="nm" rows="2" required placeholder="Say something inspiring"></textarea>
-          <div class="text-right" id="sh-ltr1" style="display:none;">
-          <input id="post" type="submit" value="Send Update" class="button nm">
-          </div>
-        </form>
-      </div>
-      <div id="posts">
-        
-      </div>
-    </div>
-    <div class="small-3 columns">
-      <div class="panel">
-        <div class="row">
-          <div class="small-12 columns">
-            <h5>Get Help</h5>
-          </div>
-          <div class="small-2 columns">
-            <i class="icon-email secondary-color"></i>
-          </div>
-          <div class="small-10 columns"><a href="mailto:mahelp@mutinylabs.in">help@mutinylabs.in</a>
-          </div>
-          <div class="small-2 columns">
-            <i class="icon-call secondary-color"></i>
-          </div>
-          <div class="small-10 columns">
-            +91 9999 999 999
-          </div>
+          <form id="post-form">
+            <textarea id="postArea" class="nm" rows="2" required placeholder="Say something inspiring"></textarea>
+            <div class="text-right" id="sh-ltr1" style="display:none;">
+              <input id="post" type="submit" value="Send Update" class="button nm">
+            </div>
+          </form>
+        </div>
+        <div id="posts">
+        <h4 class="text-center secondary-color b-ws-top">Loading...</h4>
+          
         </div>
       </div>
+      <div class="small-3 columns">
+        <div class="panel">
+          <div class="row">
+            <div class="small-12 columns">
+              <h5>Get Help</h5>
+            </div>
+            <div class="small-2 columns">
+              <i class="icon-email secondary-color"></i>
+            </div>
+            <div class="small-10 columns"><a href="mailto:mahelp@mutinylabs.in">help@mutinylabs.in</a>
+            </div>
+            <div class="small-2 columns">
+              <i class="icon-call secondary-color"></i>
+            </div>
+            <div class="small-10 columns">
+              +91 9999 999 999
+            </div>
+          </div>
+        </div>
 
-      <hr>
-      <h5>Competitors</h5>
-      <select>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-        <option value="year">This Year</option>
-        <option value="lifetime">Lifetime</option>
-      </select>
-      <div id="competitorlist">
+        <hr>
+        <h5>Competitors</h5>
+        <select>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+          <option value="year">This Year</option>
+          <option value="lifetime">Lifetime</option>
+        </select>
+        <div id="competitorlist">
+        </div>
+
+
+
       </div>
-
-      
-      
     </div>
-  </div>
 
-{% include footer.html %} 
-<script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
+    {% include footer.html %} 
+    <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
 
-<script type="text/javascript">
-  $(document).foundation();
-</script>
+    <script type="text/javascript">
+      $(document).foundation();
+    </script>
 
-<script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
-<script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
-</html>
+    <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+    <script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
+    </html>

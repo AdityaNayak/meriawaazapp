@@ -528,7 +528,7 @@ body {
 
 /* line 417, ../bower_components/foundation/scss/foundation/components/_global.scss */
 body {
-  background: #f1f0ef;
+  background: #f9f8f8;
   color: #5d5650;
   padding: 0;
   margin: 0;
@@ -10504,6 +10504,13 @@ ul.timeline li:before {
   margin-left: -1.5em;
   z-index: 99;
   position: absolute;
-  background: #f1f0ef;
+  background: #eae9e7;
   margin-top: 10px;
+}
+
+/* line 560, ../scss/style.scss */
+.bg2 {
+  background: #eae9e7;
+  margin-bottom: 1em;
+  padding: 0.75em;
 }
