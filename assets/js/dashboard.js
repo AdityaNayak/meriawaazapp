@@ -3,12 +3,94 @@ var EC;
 var currentUser;
 var currentPost;
 
-function fetchComments(pid){
+function postComment(pid){
+    console.log("postComment");
+    NProgress.start();
+    console.log("NProgress Start");
+    console.log("postComment");
+    loadingButton_id("commit_btn",4);
+    var Comment = Parse.Object.extend("Update");
+    var comment = new Comment();
+    var u = new Parse.Object("User");
+    var i = new Parse.Object("Issue");
+    u.id = currentUser.id;
+    i.id = currmarker.content.id;
+    comment.set("type", "comment");
+    comment.set("content", c);
+    comment.set("issue", i);
+    comment.set("user", u);
     
+    comment.save(null, {
+      success: function(comment) {
+        updateCurrentMarker(currmarker);
+        document.getElementById("comment").value="";
+        enableDetailsView();
+        
+      },
+      error: function(comment, error) {
+        alert('Failed to Comment! ' + error.message);
+        enableDetailsView();
+      }
+    });
 }
 
-function postComment(pid){
-    
+function updatePost(pid){
+    console.log("updatePost");
+    ListItem1 = Parse.Object.extend("Post");
+    query1 = new Parse.Query(ListItem);
+    query1.equalTo("objectId", pid);
+    query1.find({
+          success: function(results1) {
+                var d;
+                var ago;
+                var content;
+                var reach;
+                var likes;
+                var comments;
+                object= results1[0];
+                d=new Date(object.createdAt);
+                ago=timeSince(d);
+                content=object.get("content");
+                reach=object.get("reach");
+                likes=object.get("likes");
+                comments=object.get("numComments");
+                ListItem2 = Parse.Object.extend("PostComment");
+                query2 = new Parse.Query(ListItem2);
+                var pointer1 = new Parse.Object("Post");
+                pointer1.id = pid;
+                query2.equalTo("post", pointer1);
+                query2.include("post");
+                query2.include("user");
+                query2.find({
+                    success: function(results2) {
+                        var chaincomments ="";
+                        for(var j=0;j<results2.length;j++){
+                            var time;
+                            var photo;
+                            var comm;
+                            time=timeSince(new Date(results2[j].createdAt));
+                            if(results2[j].get("user").get("pic")==undefined){
+                                photo=getDefaultIcon(results2[j].get("user").get("type"));
+                            }
+                            else{
+                                photo=results2[j].get("user").get("pic").url();
+                            } 
+                            comm=results2[j].get("content");
+                            chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i>"+time+"</div></div></div>";
+                        }
+                        var thisview=document.getElementById("post-"+pid);
+                        thisview.innerHTML="<div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top'><div class='row' name="+object.id+" id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-'"+object.id+">"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src='"+getDefaultIcon(currentUser.get('type'))+"' class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form onsubmit='postComment("+object.id+")'><textarea id='text-"+object.id+"' class='secondary' rows='3'></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny right'></form></div></div>");
+                        NProgress.done();
+                    },
+                    error: function(error2){
+                        console.log("Error2:"+error2.message);
+                    }
+                });
+            },
+          error: function(error1) {
+            console.log("Error1:"+error1.message);
+          }
+    });
 }
 
 function calculateNetaStats(n){
@@ -67,22 +149,27 @@ function fetchConstituencyData(c){
         query = new Parse.Query(ListItem);
         var pointer = new Parse.Object("Neta");
         pointer.id = currentNeta.id;
-        query.equalTo("arrayCandidates", pointer);
-        query.include("arrayCandidates");
+        query.equalTo("arrayNetas", pointer);
+        query.include("arrayNetas");
         query.include("constituency");
         query.descending('createdAt');
+        console.log("I am here!");
         query.find({
           success: function(results) {
-                netas=results[0].get("arrayCandidates");
-                for(var i=0;i<netas.length;i++){
-                    if(netas[i].id!=currentNeta.id){
-                        calculateNetaStats(netas[i]);
+                if(results[0]!=undefined){
+                    console.log("I am here! 78");
+                    netas=results[0].get("arrayNetas");
+                    for(var i=0;i<netas.length;i++){
+                        if(netas[i].id!=currentNeta.id){
+                            calculateNetaStats(netas[i]);
+                        }
                     }
                 }
+                
                 NProgress.done();
             },
           error: function(error){
-                console.log("Error: "+error.message);
+                console.log("Error99: "+error.message);
             } 
           });
 }
@@ -96,25 +183,67 @@ function populateStatus(){
     var pointer = new Parse.Object("Neta");
     pointer.id = currentNeta.id;
     query.equalTo("neta", pointer);
+    console.log("I am here104!");
     query.descending('createdAt');
     query.find({
           success: function(results) {
-                console.log("Size:"+results.length);
-                var d;
-                var ago;
-                var content;
-                var reach;
-                var likes;
-                var comments;
-                for (var i = 0; i < results.length; i++) { 
-                    object= results[i];
-                    d=new Date(object.createdAt);
-                    ago=timeSince(d);
-                    content=object.get("content");
-                    reach=object.get("reach");
-                    likes=object.get("likes");
-                    comments=object.get("numComments");
-                    postView.append("<div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top'><div class='row' name="+object.id+" id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-view'><div class='row'><div class='small-2 columns text-right s-ws-top'><img src='./assets/images/neta.png' class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>some long assontent</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> time ago</div></div></div><div class='row'><div class='small-2 columns text-right s-ws-top'><img src='./assets/images/user.png' class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>some long assontent</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> time ago</div></div></div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src='./assets/images/user.png' class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><textarea class='secondary' rows='3'></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny right'></div></div></div></div>");
+                for (var i = 0; i < results.length; i++) {
+                    ListItem1 = Parse.Object.extend("Post");
+                    query1 = new Parse.Query(ListItem);
+                    query1.equalTo("objectId", results[i].id);
+                    query1.find({
+                          success: function(results1) {
+                                var d;
+                                var ago;
+                                var content;
+                                var reach;
+                                var likes;
+                                var comments;
+                                object= results1[0];
+                                console.log("I am here!120");
+                                d=new Date(object.createdAt);
+                                ago=timeSince(d);
+                                content=object.get("content");
+                                reach=object.get("reach");
+                                likes=object.get("likes");
+                                comments=object.get("numComments");
+                                ListItem2 = Parse.Object.extend("PostComment");
+                                query2 = new Parse.Query(ListItem2);
+                                var pointer1 = new Parse.Object("Post");
+                                pointer1.id = object.id;
+                                query2.equalTo("post", pointer1);
+                                query2.include("post");
+                                query2.include("user");
+                                query2.find({
+                                    success: function(results2) {
+                                        var chaincomments ="";
+                                        for(var j=0;j<results2.length;j++){
+                                            var time;
+                                            var photo;
+                                            var comm;
+                                            console.log("I am here!142");
+                                            time=timeSince(new Date(results2[j].createdAt));
+                                            if(results2[j].get("user").get("pic")==undefined){
+                                                photo=getDefaultIcon(results2[j].get("user").get("type"));
+                                            }
+                                            else{
+                                                photo=results2[j].get("user").get("pic").url();
+                                            } 
+                                            comm=results2[j].get("content");
+                                            chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i>"+time+"</div></div></div>";
+                                        }
+                                        postView.append("<div id='post-"+object.id+"' class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top'><div class='row' name="+object.id+" id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-'"+object.id+">"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src='"+getDefaultIcon(currentUser.get('type'))+"' class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form onsubmit='postComment("+object.id+")'><textarea class='secondary' rows='3' required></textarea><input type='submit' id='text-"+object.id+"' value='comment' placeholder='add a comment' class='tiny right'></form></div></div></div>");
+                                    },
+                                    error: function(error2){
+                                        console.log("Error2:"+error2.message);
+                                    }
+                                });
+                            },
+                          error: function(error1) {
+                            console.log("Error1:"+error1.message);
+                          }
+                    });
+                    
                 }
 
                 fetchConstituencyData(currentNeta.get("constituency"));
@@ -122,7 +251,7 @@ function populateStatus(){
                 console.log("NProgress Stop");
           },
           error: function(error) {
-                console.log("Error:"+error.message);
+                console.log("Error0:"+error.message);
           }
     });
 }
@@ -171,8 +300,8 @@ function fetchECStatus(u){
     
     var pointer = new Parse.Object("Neta");
     pointer.id = currentNeta.id;
-    query.equalTo("arrayCandidates", pointer);
-    query.include("arrayCandidates");
+    query.equalTo("arrayNetas", pointer);
+    query.include("arrayNetas");
     query.include("constituency");
     query.descending('createdAt');
     EC={e:"",c:""};

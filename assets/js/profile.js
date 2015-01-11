@@ -123,7 +123,7 @@ function queryUserTable(){
           np=neta.get("user").get("pic").url();
         }
         else{
-          np="./assets/images/no_image.jpg";
+          np="./assets/images/neta.png";
         }
 
 
@@ -211,8 +211,8 @@ function queryElectionTable(){
     query = new Parse.Query(ListItem);
     var pointer = new Parse.Object("Neta");
     pointer.id = neta.id;
-    query.equalTo("arrayCandidates", pointer);
-    query.include("arrayCandidates");
+    query.equalTo("arrayNetas", pointer);
+    query.include("arrayNetas");
     query.include("constituency");
     query.descending('createdAt');
     his=[];

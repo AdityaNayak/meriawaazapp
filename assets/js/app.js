@@ -4,7 +4,7 @@
 var count = 0 ;
 var CU;
 
-Parse.initialize('jlQ5tv6KHzbRWhGcI0qXLAMsCVPf45efzqHBaqOt', 'q6AfL8e41Rl1vtYrjsDOVLpdFkgxT1mAH87wkqZH');
+Parse.initialize("km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt", "BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI");
 
 function updateHistory()
 {
@@ -33,7 +33,13 @@ else{
 		    self.location="./login.html";
 		}
 		else{
-		    hello.innerHTML = "Namaskar "+CU.get("uname");
+			if(CU.get("uname")!=undefined){
+				hello.innerHTML = "Namaskar "+CU.get("uname");
+			}
+			else{
+				hello.innerHTML = "Namaskar "+CU.get("name");
+			}
+		    
 		    ListItem = Parse.Object.extend("User");
 		    query = new Parse.Query(ListItem);
 		    query.equalTo("objectId", CU.id);
@@ -91,6 +97,18 @@ function logout(){
     NProgress.done();
     console.log("NProgress Stop");
     self.location="./login.html";
+}
+
+function getDefaultIcon(type){
+	if(type=="neta"){
+		return "./assets/images/neta.png";
+	}
+	else if(type=="teamMember"){
+		return "./assets/images/neta.png";
+	}
+	else{
+		return "./assets/images/user.png";
+	}
 }
 
 function timeSince(date) {
