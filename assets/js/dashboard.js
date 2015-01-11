@@ -3,15 +3,11 @@ var EC;
 var currentUser;
 var currentPost;
 
-function fetchComments(){
+function fetchComments(pid){
     
 }
 
-function postComment(){
-    
-}
-
-function updateCurrentPost(p){
+function postComment(pid){
     
 }
 
