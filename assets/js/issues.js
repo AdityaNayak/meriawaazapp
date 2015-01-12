@@ -513,7 +513,7 @@ function populateTeam(){
                 for (var i = 0; i < results.length; i++) { 
                     object= results[i];
                     team.push(object);
-                    teamView.append("<option value="+object.get('user').get('email')+">"+object.get('user').get('name')+"</option>");
+                    teamView.append("<option value="+object.get('user').id+">"+object.get('user').get('name')+"</option>");
                 }
 
             },
@@ -631,12 +631,12 @@ function appropriateStatus(s){
     return s;
 }
 
-function teamMember(email){
+function teamMember(id){
     console.log("teamMember");
-    console.log("Find Team Member with email ID: "+email);
+    console.log("Find Team Member with ID: "+id);
     var member;
     for (var i = 0; i < team.length; i++) { 
-        if(team[i].get('user').get('email')==email){
+        if(team[i].get('user').id==id){
             member=team[i];
             console.log("Member Found: "+member.id);
             return member;
@@ -926,8 +926,8 @@ function updateContentWithCurrentMarker(){
                 photo.src=p_photo.url(); 
             }
             else{
-                bigphoto.src="./assets/images/no_image.jpg";
-                photo.src="./assets/images/no_image.jpg"; 
+                bigphoto.src=getDefaultIcon(currentUser.get("type"));
+                photo.src=getDefaultIcon(currentUser.get("type")); 
             }
             detailedissue.innerHTML=p_content; 
             populateUpdates();
@@ -1094,7 +1094,7 @@ function populateTM(){
                     if(object.get("content").length > 30){
                         content=object.get("content").substring(0,30)+"...";
                     }
-                    listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                    listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                     markers.push(marker);
                     if((marker.content).get('status')=="open"){
                         no=no+1;
@@ -1152,7 +1152,7 @@ function populate(){
             for (var i = 0; i < results.length; i++) { 
                 var object = results[i];
                 var myicon;
-                if(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly)==true){
+                if(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly)==true || currentUser.get("username")=="admin"){
                     //Set Icon
                     myicon=getIcon(object.get("category"),object.get("status"));
                                   
@@ -1172,7 +1172,7 @@ function populate(){
                     if(object.get("content").length > 30){
                         content=object.get("content").substring(0,30)+"...";
                     }
-                    listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                    listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                     markers.push(marker);
                     if((marker.content).get('status')=="open"){
                     no=no+1;
@@ -1320,7 +1320,7 @@ function filter(){
                     content=markers[m].content.get('content').substring(0,30)+"...";
             }
 
-            listView.append( "<tr id='"+(markers[m].content).id+"' class='"+(markers[m].content).get('status')+"' onClick='listViewClick("+(markers[m].content).id.toString()+");'><td width='100'>"+((markers[m].content).get('issueId')).toString()+"</td><td width='100'>"+(markers[m].content).get('category')+"</td><td>"+content+"</td><td width='100'>"+appropriateStatus((markers[m].content).get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+            listView.append( "<tr id='"+(markers[m].content).id+"' class='"+(markers[m].content).get('status')+"' onClick='listViewClick("+(markers[m].content).id.toString()+");'><td width='100' class='ct'>"+((markers[m].content).get('issueId')).toString()+"</td><td width='100' class='ct'>"+(markers[m].content).get('category')+"</td><td class='ct'>"+content+"</td><td width='100' class='ct'>"+appropriateStatus((markers[m].content).get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
             markers[m].setMap(map);
         }else{
             markers[m].setMap(null);
@@ -1435,7 +1435,7 @@ function initialize() {
       pphoto.src=currentUser.get("pic").url(); 
     }
     else{
-      pphoto.src="http://placehold.it/300x300&text=user";
+      pphoto.src=getDefaultIcon(currentUser.get("type"));
     }
 
     if (currentUser.get("type")=="neta"){

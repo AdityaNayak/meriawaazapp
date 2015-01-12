@@ -33,8 +33,8 @@ else{
 		    self.location="./login.html";
 		}
 		else{
-			if(CU.get("uname")!=undefined){
-				hello.innerHTML = "Namaskar "+CU.get("uname");
+			if(CU.get("username")!=undefined){
+				hello.innerHTML = "Namaskar "+CU.get("username");
 			}
 			else{
 				hello.innerHTML = "Namaskar "+CU.get("name");

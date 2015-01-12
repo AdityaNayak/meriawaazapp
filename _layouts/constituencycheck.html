@@ -168,8 +168,9 @@
              y:dragable_marker.getPosition().lng()
            }
            
-           Parse.Cloud.run('getConstituencyName', {lat: pt.x ,lng: pt.y }, {
+           Parse.Cloud.run('getConstituency', {lat: pt.x ,lng: pt.y }, {
               success: function(result) {
+                alert("lat:"+pt.x+" "+"lng:"+pt.y);
                 console.log(result);
               },
               error: function(error) {
