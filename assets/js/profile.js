@@ -137,8 +137,8 @@ function queryUserTable(){
         cri=neta.get("criminalCases");
         pro=neta.get("profession");
         com=neta.get("numComments");
-        fol=neta.get("numFollowers");
-        ske=neta.get("numSkeptics");
+        fol=neta.get("numLikes");
+        ske=neta.get("numDislikes");
         icl=neta.get("numIsClaimed");
         ico=neta.get("numIsClosed");
         icv=neta.get("numIsValidated");

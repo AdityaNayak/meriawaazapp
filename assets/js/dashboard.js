@@ -8,28 +8,22 @@ function postComment(pid){
     NProgress.start();
     console.log("NProgress Start");
     console.log("postComment");
-    loadingButton_id("commit_btn",4);
-    var Comment = Parse.Object.extend("Update");
+    var Comment = Parse.Object.extend("postComment");
     var comment = new Comment();
+    var p = new Parse.Object("Post");
     var u = new Parse.Object("User");
-    var i = new Parse.Object("Issue");
+    p.id = pid;
     u.id = currentUser.id;
-    i.id = currmarker.content.id;
-    comment.set("type", "comment");
+    var c=document.getElementById("text-"+pid).value;
     comment.set("content", c);
-    comment.set("issue", i);
+    comment.set("post", p);
     comment.set("user", u);
-    
     comment.save(null, {
       success: function(comment) {
-        updateCurrentMarker(currmarker);
-        document.getElementById("comment").value="";
-        enableDetailsView();
-        
+        updatePost(pid);        
       },
       error: function(comment, error) {
-        alert('Failed to Comment! ' + error.message);
-        enableDetailsView();
+        alert('Failed to Comment!' + error.message);
       }
     });
 }
@@ -79,7 +73,7 @@ function updatePost(pid){
                             chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i>"+time+"</div></div></div>";
                         }
                         var thisview=document.getElementById("post-"+pid);
-                        thisview.innerHTML="<div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top'><div class='row' name="+object.id+" id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-'"+object.id+">"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src='"+getDefaultIcon(currentUser.get('type'))+"' class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form onsubmit='postComment("+object.id+")'><textarea id='text-"+object.id+"' class='secondary' rows='3'></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny right'></form></div></div>");
+                        thisview.innerHTML="<div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top'><div class='row' name='"+object.id+"' id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src='"+getDefaultIcon(currentUser.get('type'))+"' class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form onSubmit='postComment('"+object.id+"')'><textarea id='text-"+object.id+"' class='secondary' rows='3'></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny right'></form></div></div>";
                         NProgress.done();
                     },
                     error: function(error2){
@@ -112,7 +106,7 @@ function calculateNetaStats(n){
       success: function(results) {
         actions=results[0].get("numIsClaimed")+results[0].get("numIsClosed");
         interactions=results[0].get("numPosts")+results[0].get("numComments")+results[0].get("numQsAnswered");
-        followers=results[0].get("numFollowers");
+        followers=results[0].get("numLikes");
         name=results[0].get("user").get("name");
         partyname=results[0].get("party").get("name");
         age=results[0].get("age");
@@ -135,11 +129,11 @@ function calculateCurrentNetaStats(){
         console.log("calculateCurrentNetaStats");
         actions=currentNeta.get("numIsClaimed")+currentNeta.get("numIsClosed");
         interactions=currentNeta.get("numPosts")+currentNeta.get("numComments")+currentNeta.get("numQsAnswered");
-        followers=currentNeta.get("numFollowers");
-        var mapping={a:actions,i:interactions,f:followers};
-        document.getElementById('f').innerHTML=mapping.f.toString();
-        document.getElementById('i').innerHTML=mapping.i.toString();
-        document.getElementById('a').innerHTML=mapping.a.toString();
+        followers=currentNeta.get("numLikes");
+        
+        document.getElementById('f').innerHTML=followers.toString();
+        document.getElementById('i').innerHTML=interactions.toString();
+        document.getElementById('a').innerHTML=actions.toString();
 }
 
 function fetchConstituencyData(c){
@@ -232,7 +226,7 @@ function populateStatus(){
                                             comm=results2[j].get("content");
                                             chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i>"+time+"</div></div></div>";
                                         }
-                                        postView.append("<div id='post-"+object.id+"' class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top'><div class='row' name="+object.id+" id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-'"+object.id+">"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src='"+getDefaultIcon(currentUser.get('type'))+"' class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form onsubmit='postComment("+object.id+")'><textarea class='secondary' rows='3' required></textarea><input type='submit' id='text-"+object.id+"' value='comment' placeholder='add a comment' class='tiny right'></form></div></div></div>");
+                                        postView.append("<div id='post-"+object.id+"' class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top'><div class='row' name='"+object.id+"' id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src='"+getDefaultIcon(currentUser.get('type'))+"' class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form onSubmit='postComment('"+object.id+"')'><textarea class='secondary' rows='3' required></textarea><input type='submit' id='text-"+object.id+"' value='comment' placeholder='add a comment' class='tiny right'></form></div></div></div>");
                                     },
                                     error: function(error2){
                                         console.log("Error2:"+error2.message);
@@ -330,7 +324,7 @@ function fetchECStatus(u){
                 if(u.get("type")=="neta"){
                     setCurrentNeta(u);
                 }
-                else{
+                else if(u.get("type")=="teamMember"){
                     setCurrentNetaTM(currentNeta);
                 }
                 console.log("NProgress Stop");
@@ -417,6 +411,8 @@ function setCurrentNeta(u){
     document.getElementById('myparty').innerHTML=partyname;
     document.getElementById('ele').innerHTML=ele;
     document.getElementById('cs').innerHTML=cs;
+    calculateCurrentNetaStats();
+
     populateStatus();
 }
 
