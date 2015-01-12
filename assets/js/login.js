@@ -86,11 +86,11 @@ function login() {
 	  var username = form.email.value;
 	  console.log(username);
 	  var password = form.password.value;
-      if(username.indexOf('@') === -1){
-      		console.log("Username used");
+      if(username.indexOf('@') === 1){
+      		console.log("Email used");
       		ListItem = Parse.Object.extend("User");
 		    query = new Parse.Query(ListItem);
-		    query.equalTo("uname", username);
+		    query.equalTo("email", username);
 		    query.ascending('createdAt');
 		    query.find({
 		          success: function(results) {
@@ -99,7 +99,7 @@ function login() {
 		          			alert("An Error Occured! Username or Password are Invalid");
 			          		}
 		          		else{
-		          			username=results[0].get("email");
+		          			username=results[0].get("username");
 		          			Parse.User.logIn(username, password, {
 							  success: function(user) {
 							  	  NProgress.done();	
@@ -125,7 +125,6 @@ function login() {
 		                console.log("Error: " + error.code + " " + error.message);
 		          }
 		   });		          		
-		          
       }
       else{
       		Parse.User.logIn(username, password, {
