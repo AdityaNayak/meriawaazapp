@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Press Kit | Meri Awaaz</title>
+    <title>Board the Ship | Meri Awaaz</title>
     <link rel="stylesheet" href="assets/css/style.css" />
     <link href="https://fontastic.s3.amazonaws.com/8Qdq3qjYhFhJLC24tseVVc/icons.css" rel="stylesheet">
     <!-- <script src="bower_components/modernizr/modernizr.js"></script> -->
@@ -47,22 +47,7 @@
             <a href="{{site.url}}"><img src="assets/images/logo-full.png" alt="Meri Awaaz"></a>
         </div>
     </div>
-    <div data-magellan-expedition="fixed" class="b-ws-bottom">
-        <div class="press-nav row">
-            <div class="text-center">
-                <dl class="sub-nav">
-                    <dd data-magellan-arrival="1"><a href="#1">Quick View</a></dd>
-                    <dd data-magellan-arrival="2"><a href="#2">About</a></dd>
-                    <dd data-magellan-arrival="3"><a href="#3">Our Story</a></dd>
-                    <dd data-magellan-arrival="4"><a href="#4">Team</a></dd>
-                    <dd data-magellan-arrival="5"><a href="#5">Brand</a></dd>
-                    <dd data-magellan-arrival="6"><a href="#6">Good word</a></dd>
-                    <dd data-magellan-arrival="7"><a href="#7">Future Quest</a></dd>
-                    <dd data-magellan-arrival="9"><a href="#9">Contact</a></dd>
-                </dl>
-            </div>
-        </div>
-    </div>
+    
     <div class="row">
         <div class="small-12 columns text-center b-ws-bottom">
         <h3 class="nm s-ws-top">India's first platform that </h3>
@@ -259,35 +244,14 @@
 </body>
 <script type="text/javascript" src="{{site.url}}/assets/bower_components/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.js"></script>
+<script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.topbar.js"></script>
 <script src="assets/bower_components/foundation/js/foundation/foundation.magellan.js"></script>
 <script src="assets/js/jquery.countdown.min.js"></script>
 <script>
-    $(document).foundation({
-        magellan: {
-            active_class: 'active',
-            threshold: 0,
-            destination_threshold: 20,
-            throttle_delay: 50 
-        },
-        /*orbit: {
-            animation: 'fade', 
-            timer: false,
-        } */
-    });
-    $(document).ready(function(){
-        /* $('.walkthrough .circles').click(function(event){
-            $('.circles.active').removeClass('active');
-            $(this).addClass('active');event.preventDefault();
-        });  */ 
-    $('#countdown').countdown('2015/1/26').on('update.countdown', function(event) {
-        var $this = $(this).html(event.strftime(''
-         + '<span class="s-ws-side"><span class="f-4x">%-w</span> week%!w</span>'
-         + '<span class="s-ws-side"><span class="f-4x yc">%-d</span> day%!d</span>'
-         + '<span class="s-ws-side"><span class="f-4x bgc">%H</span> hours</span>'
-         + '<span class="s-ws-side"><span class="f-4x bc">%M</span> mins</span>'
-         + '<span class="s-ws-side"><span class="f-4x dbc">%S</span> sec</span>'));
-        });
-    });
+    /*$(document).foundation(
+    );
+    $(document).ready(function(){ 
+    }); */
 </script>
 </body>
 </html>

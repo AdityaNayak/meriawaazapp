@@ -1,22 +1,24 @@
 {% include header-out.html %}
 <div class="row">
-  <div class="small-6 columns text-right b-ws-top">
+<div class="icon-bg">
+</div>
+  <div class="hide-for-small small-12 large-6 columns text-right b-ws-top icon-bg-fx">
     <h3 class="hero-heading b-ws-top">
       <div><span class="bgbg wc">Connecting Citizens with</span></div>
-      <div><span class="bbg wc">Governments and Elected Officials</span></div>
+      <div><span class="bbg wc">their Netas and Governments Officials</span></div>
       <div><span class="dbbg wc">through the Mobile platform</span></div>
     </h3>
   </div>
-  <div class="small-3 columns b-ws-top">
+  <div class="small-12 large-3 hide-for-small columns b-ws-top icon-bg-fx">
     <img src="{{site.url}}/assets/images/phone.png">
   </div>
-  <div class="small-3 columns panel s-ws-top">
+  <div class="small-12 large-3 columns panel b-ws-top icon-bg-fx">
     <div id="signin">
-      <form class="s-ws-top" id="signin-form" onSubmit="login();">
+      <form class="s-ws-top" id="signin-form">
         <div class="row">
           <div class="large-12 columns">
-            <label>Email
-              <input type="email" placeholder="you@example.com" id="email" required />
+            <label>Email/Username
+              <input type="text" placeholder="you@example.com/username" id="email" required />
             </label>
           </div>
         </div>
@@ -81,40 +83,40 @@
 
   </div>
 </div>
-<div class="panel">
+<div class="panel icon-bg-fx">
   <div class="row">
-    <div class="small-4 columns text-center">
-      <div id="num1" class="f-3x bgc">1</div>
+    <div class="large-4 small-12 columns text-center">
+      <div id="num1" class="f-3x bgc">0</div>
       <div>Issues Reported</div>
     </div>
-    <div class="small-4 columns text-center">
-      <div id="num2" class="f-3x bc">2</div>
-      <div>Users</div>
+    <div class="large-4 small-12 columns text-center">
+      <div id="num2" class="f-3x bc">0</div>
+      <div>Citizens</div>
     </div>
-    <div class="small-4 columns text-center">
-      <div id="num3" class="f-3x dbc">3</div>
-      <div>Public officials</div>
+    <div class="small-12 large-4 columns text-center">
+      <div id="num3" class="f-3x dbc">0</div>
+      <div>Netas</div>
     </div>
   </div>
 </div>
 <div class="row">
   <div class="small-12 columns text-center">
     <div class="row">
-      <div class="small-4 columns b-ws-top">
+      <div class="small-12 large-4 columns b-ws-top">
         <i class="icon-broadcast f-4x dbc"></i>
         <h4>Reach out to more Voters</h4>
         <p class="secondary-color">
           Spread your message directly to your voters by constituency level targeting
         </p>
       </div>
-      <div class="small-4 columns b-ws-top">
+      <div class="small-12 large-4 columns b-ws-top">
         <i class="icon-trophy f-4x dbc"></i>
         <h4>Showcase your Work</h4>
         <p class="secondary-color">
           Let your voters know about the work done by you in their area and let them share it with their friends
         </p>
       </div>
-      <div class="small-4 columns b-ws-top">
+      <div class="small-12 large-4 columns b-ws-top">
         <i class="icon-network f-4x dbc"></i>
         <h4>Digital Politics</h4>
         <p class="secondary-color">
@@ -124,20 +126,20 @@
       
     </div>
     <div class="row b-ws-top">
-      <div class="small-4 columns b-ws-top">
+      <div class="small-12 large-4 columns b-ws-top">
         <i class="icon-phone f-4x dbc"></i>
         <h4>Connect with your People</h4>
         <p class="secondary-color">
           Gain a direct connect with your voters where you can answer their questions and interact with them</p>
         </div>
-        <div class="small-4 columns b-ws-top">
+        <div class="small-12 large-4 columns b-ws-top">
           <i class="icon-organization f-4x dbc"></i>
           <h4>Manage your Volunteers</h4>
           <p class="secondary-color">Mobilize your team effectively and assign tasks for a better campaign</p>
         </div>
-        <div class="small-4 columns b-ws-top">
+        <div class="small-12 large-4 columns b-ws-top">
           <i class="icon-alert f-4x dbc"></i>
-          <h4>Identify the Local Issues</h4>
+          <h4>Identify Local Issues</h4>
           <p class="secondary-color">Gain a pulse of the most pressing problems faced by your voters and strategize accordingly</p>
         </div>
       </div>
@@ -145,20 +147,22 @@
   </div>
   <div class="panel m-ws-top">
     <div class="row">
-      <div class="small-7 columns text-right s-ws-top">
+      <div class="small-12 large-7 columns text-right s-ws-top">
         <h2 class="dbc">Need help getting starting?</h2>
         <p class="secondary secondary-color">Drop your details and we will get back within 24 hours</p>
       </div>
-      <div class="small-5 columns s-ws-top">
+      <div class="small-12 large-5 columns s-ws-top">
         <div class="row">
           <div class="large-12 columns">
             <div class="row collapse">
+              <form action="//formspree.io/neta@mutinylabs.in" method="post">
               <div class="small-10 columns">
-               <input type="text" placeholder="Drop your Phone or Email" class="lead">
+               <input type="text" name="detail" placeholder="Drop your Phone or Email" class="lead" required>
               </div>
               <div class="small-2 columns">
-                <a href="#" class="postfix lead">Go</a>
+                <input type="submit" class="button right small" value="Go">
               </div>
+              </form>
             </div>
           </div>
         </div>
@@ -179,24 +183,16 @@
   <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
   <script>
     $( document ).ready(function() {
-      var numAnim1 = new countUp("num1", 0, 448);
-      numAnim1.start();
-      var numAnim2 = new countUp("num2", 0, 832);
-      numAnim2.start();
-      var numAnim3 = new countUp("num3", 0, 19);
-      numAnim3.start();
+      initialize();
 
       //$('#signup-form').submit(function(){
       //  $('#signup-btn').fadeOut();
       //  $('#loading-btn').delay().fadeIn();
       //});
 
-      $('#signin-form').submit(function(event){
-        event.preventDefault();
-        //$('#signin-btn').fadeOut();
-        //$('#loading-btn').delay().fadeIn();
-        login();
-      });
+      icon_bg();
+      icon_bg();
+      //icon_bg();
     });</script>
     <script type="text/javascript">
       $(document).foundation();

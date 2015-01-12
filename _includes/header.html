@@ -3,7 +3,7 @@
   <link href="https://fontastic.s3.amazonaws.com/8Qdq3qjYhFhJLC24tseVVc/icons.css" rel="stylesheet">
   <!-- <script src="bower_components/modernizr/modernizr.js"></script> -->
   <meta name="twitter:card" content="app">
-  <meta name="twitter:description" content="Making governance Accessible and Accountable through mobile access">
+  <meta name="twitter:description" content="A Mobile-first platform that connects Citizens with their Netas and Government officials for Open, Accessible and Accountable governance">
   <meta name="twitter:app:country" content="India">
   <!--  <meta name="twitter:app:name:iphone" content="Meri Awaaz">
   <meta name="twitter:app:id:iphone" content="306934135">
@@ -18,12 +18,12 @@
   <meta property="og:title" content="Meri Awaaz | my voice. my right."/>
   <meta property="og:image" content="http://dl.dropboxusercontent.com/u/37351082/fb-logo.png"/>
   <meta property="og:site_name" content="Meri Awaaz | my voice. my right."/>
-  <meta property="og:description" content="Meri Awaaz is a movement of social change to make governance delivery accessible and accountable. Using the app, people can report issues about roads, electricity, water, law and order, sanitation, transportation and the system detects the location automatically and allows users to submit other details like photos and complaints."/>
+  <meta property="og:description" content="A Mobile-first platform that connects Citizens with their Netas and Government officials for Open, Accessible and Accountable governance"/>
   <meta property="og:type" content="website" />
   <meta property="og:url" content="http://meriawaazapp.com/" />
   <meta property="fb:app_id" content="261087750752180" />
 
-  <link rel="icon" type="image/png" href="http://meriawaazapp.com/assets/images/favicon.png">
+  <link rel="icon" type="image/png" href="{{site.url}}/assets/images/favicon.png">
   <!--[if IE]><link rel="shortcut icon" href="http://meriawaazapp.com/assets/images/favicon.ico"/><![endif]-->
   <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
 </head>
@@ -32,14 +32,17 @@
   <nav class="top-bar" data-topbar role="navigation">
     <ul class="title-area">
       <li class="name">
-        <h1><a href="{{site.url}}"><img src="assets/images/logo.png" alt="Meri Awaaz"></a></h1>
+        <h1><a href="{{site.url}}"><img src="{{site.url}}/assets/images/logo.png"  alt="Meri Awaaz" id="plogo"></a></h1>
       </li>
       <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
     </ul>
     <section class="top-bar-section">
+    <ul class="left">
+    <h5 id="consti" class="s-ws-top secondary-color ct"></h5>
+    </ul>
       <ul class="right">
-        <li class="secondary-color" id="hello">
-          Hi example@email.com
+        <li class="secondary-color sc" id="hello">
+          Namaskar Loading...
         </li>
         <li>
         <a href="{{site.url}}/dashboard.html">Dashboard</a>
@@ -54,10 +57,9 @@
         <a href="{{site.url}}/profile.html">Profile</a>
         </li>
         <li id="logout">
-            <a onClick="logout();">Logout</a>
+            <a><i class="icon-off"></i></a>
         </li>
       </ul>
     </section>
   </nav>
 </div>
-  

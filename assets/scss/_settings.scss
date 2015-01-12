@@ -121,8 +121,10 @@ $include-html-global-classes: $include-html-classes;
 
 
 $grey: #dcdcdc;
-$lightgrey: scale-color($black, $lightness:96%);
-$darkgrey: scale-color($black, $lightness:30%);
+$lightgrey:#f9f8f8;
+$darkgrey:#928880;
+//$lightgrey: scale-color($black, $lightness:96%);
+//$darkgrey: scale-color($black, $lightness:30%);
 
 $yellow: #fbb82d;
 $blue: #0071BC;
@@ -134,7 +136,8 @@ $bluegreen: #00B6A5;
 $lightblue: #1E91D0;
 $darkblue: #0E629B;
 
-$darkwhite: rgba(186, 182, 176, 0.2);
+//$darkwhite: rgba(186, 182, 176, 0.2);
+$darkwhite: #eae9e7;
 
 // We use these as default colors throughout
  $primary-color: #1e91d0;
@@ -145,7 +148,7 @@ $darkwhite: rgba(186, 182, 176, 0.2);
 
 
 // We use these to control various global styles
- $body-bg: $darkwhite;
+ $body-bg: $lightgrey;
  $body-font-color: $black;
 // $body-font-family: $font-family-sans-serif;
 // $body-font-weight: $font-weight-normal;
@@ -1411,7 +1414,7 @@ $panel-bg: $white;
  $topbar-bg: $topbar-bg-color;
 
 // Height and margin
- $topbar-height: rem-calc(72px);
+ $topbar-height: rem-calc(64px);
 // $topbar-margin-bottom: 0;
 
 // Controlling the styles for the title in the top bar
@@ -1460,8 +1463,8 @@ $topbar-link-bg-active-hover: $white;
 // $topbar-menu-link-transform: uppercase;
 // $topbar-menu-link-font-size: rem-calc(13);
 // $topbar-menu-link-weight: $font-weight-bold;
-// $topbar-menu-link-color: $white;
-// $topbar-menu-icon-color: $white;
+ $topbar-menu-link-color: $grey;
+ $topbar-menu-icon-color: $blue;
 // $topbar-menu-link-color-toggled: $jumbo;
 // $topbar-menu-icon-color-toggled: $jumbo;
 
