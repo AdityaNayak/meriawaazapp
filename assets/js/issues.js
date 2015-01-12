@@ -471,7 +471,7 @@ function populateUpdates(){
                         pphoto1=user.get("pic").url(); 
                     }
                     else{
-                        pphoto1="http://placehold.it/300x300&text=user";
+                        pphoto1=getDefaultIcon(user.get("type"));
                     }
                     
                     if(object.get("type")=="assigned"){
@@ -1005,7 +1005,7 @@ function getIcon(category,status){
 
 function plotConstituency(c){
       console.log("Lets Plot a Constituency");
-      ListItem = Parse.Object.extend("Polygon");
+      ListItem = Parse.Object.extend("Constituency");
       query = new Parse.Query(ListItem);
       query.equalTo("index", c);    
       query.find({
