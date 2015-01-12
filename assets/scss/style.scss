@@ -62,6 +62,9 @@
 		font-size: 0.9em;
 		line-height: 1.25;
 	}
+	&.fx{
+		line-height: 1.5;
+	}
 }
 .secondary-color{
 	color:scale-color($grey, $lightness:-25%) !important;
