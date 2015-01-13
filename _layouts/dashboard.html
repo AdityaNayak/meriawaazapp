@@ -37,12 +37,26 @@
     </div>
     <div class="small-6 columns">
       <div id="netapost" class="panel">
-        <h5 class="dbc">Connect with your Voters</h4>
-
+      <div class="row">
+        <div class="small-8 columns">
+        <h5 class="dbc">Connect with your Voters</h5>
+        </div>
+        <div class="small-4 columns text-right">
+        <span class='tertiary'>Estimated Reach: </span><span class='bc'> 100</span>
+        </div>
+      </div>
           <form id="post-form">
             <textarea id="postArea" class="nm" rows="2" required placeholder="Say something inspiring"></textarea>
-            <div class="text-right" id="sh-ltr1" style="display:none;">
-              <input id="post" type="submit" value="Send Update" class="button nm load-fx">
+            <div class="row collapse" id="sh-ltr1" style="display:none;">
+              <div class="small-2 small-offset-2 columns text-center fx3">
+              <input type="checkbox" name="" value="" checked=""> <span class="tertiary secondary-color">Mobile App </span>
+              </div>
+              <div class="small-2 columns text-center fx3"><input type="checkbox" name="" value=""> <span class="tertiary secondary-color">SMS </span> 
+              </div>
+              <div class="small-2 columns text-center fx3"><input type="checkbox" name="" value=""> <span class="tertiary secondary-color">Email </span> 
+              </div>
+              <div class="small-4 columns"><input id="post" type="submit" value="Send Update" class="button tiny nm fullwidth">
+              </div>
             </div>
           </form>
         </div>

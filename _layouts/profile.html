@@ -6,6 +6,10 @@
   <title>Profile | Meri Awaaz</title>
 
   {% include header.html %}
+  <div class="row">
+  <div class="icon-bg">
+  </div>
+  </div>
   <div class="row" style="margin-top:12em;">
     <div class="small-offset-3 small-2 columns">
       <span id="bsupport" class="f-3x yc">...</span><span class="secondary secondary-color"> followers</span>
@@ -15,17 +19,17 @@
       <div id="skeptics" class="d-lc secondary-color" style="width:35%">Loading...</div>
     </div>
     <div class="small-3 columns text-right s-ws-top">
-      <h3 id="election" class="subheader">Loading...</h3>
+      <h5 id="election" class="subheader ct">Loading...</h5>
     </div>
   </div>
-  <div class="panel">
+  <div class="panel icon-bg-fx">
     <div class="row">
       <div class="small-3 columns text-right">
         <img id="photo" src="./assets/images/neta.png" height="300px" class="circle-img top-push">
-        <h3 id="nameage" class="m-ws-top yc">Loading...</h3>
-        <h4 id="party">Loading...</h4>
-        <h4 id="cstate" class="s-ws-top">Loading...</h4>
-        <h5 id="profession" class="subheader">Loading...</h5>
+        <h3 id="nameage" class="m-ws-top yc ct">Loading...</h3>
+        <h4 id="party" class="ct">Loading...</h4>
+        <h4 id="cstate" class="s-ws-top ct">Loading...</h4>
+        <h5 id="profession" class="subheader ct">Loading...</h5>
         <!--<a href="#" class="button v2">Edit</a>-->
       </div>
       <div class="small-3 columns m-ws-top">
@@ -35,7 +39,7 @@
           <div class="small-5 columns secondary-color">
             Education:
           </div>
-          <div id="education" class="small-7 columns">
+          <div id="education" class="small-7 columns ct">
             Loading...
           </div>
         </div>
@@ -44,7 +48,7 @@
           <div class="small-5 columns secondary-color">
             Total Assets:
           </div>
-          <div id="assets" class="small-7 columns">
+          <div id="assets" class="small-7 columns ct">
             Loading...
           </div>
         </div>
@@ -52,7 +56,7 @@
           <div class="small-5 columns secondary-color">
             Liabilities:
           </div>
-          <div id="liabilities" class="small-7 columns">
+          <div id="liabilities" class="small-7 columns ct">
             Loading...
           </div>
         </div>
@@ -249,6 +253,8 @@
   </script>
   <script>
     $( document ).ready(function() {
+      icon_bg();
+      icon_bg();
     });
   </script>
   </html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subscriber List | Meri Awaaz</title>
+
+  {% include header.html %}
+  <div class="row">
+    <div class="small-3 columns m-ws-top secondary-color">
+      Potential Reach: <span class="f-3x yc">321 </span>//no. of citizens in constituency
+    </div>
+    <div class="small-3 columns m-ws-top secondary-color">
+      Supporters: <span class="f-3x bgc">110</span>
+    </div>
+    <div class="small-3 columns m-ws-top secondary-color">
+      Mobile Subscribers: <span class="f-3x bc">100</span>
+    </div>
+    <div class="small-3 columns m-ws-top secondary-color">
+      Email Subscribers: <span class="f-3x dbc">10</span>
+    </div>
+  </div>
+  <div class="row">
+  <div class="small-4 columns m-ws-top">
+      <div class="button tiny">Import List</div>
+    </div>
+    <div class="small-4 small-offset-4 columns m-ws-top">
+      <div class="button tiny secondary">Export List</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 columns">
+      <table>
+        <thead>
+          <tr>
+            <th width="50"><input type="checkbox" class="nm"></th>
+            <th width="150">First Name</th>
+            <th width="150">Last Name</th>
+            <th width="100">Age</th>
+            <th width="200">Email Address</th>
+            <th width="200">Phone Number</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox" class="nm"></td>
+            <td>John</td>
+            <td>Doe</td>
+            <td>12</td>
+            <td>example@example.com</td>
+            <td>9999999999</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="nm"></td>
+            <td>John</td>
+            <td>Doe</td>
+            <td>12</td>
+            <td>example@example.com</td>
+            <td>9999999999</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% include footer.html %} 
+  <script type="text/javascript" src="{{site.url}}/assets/js/profile.js"></script>
+
+  <script type="text/javascript">
+    $(document).foundation();
+  </script>
+  <script>
+    $( document ).ready(function() {
+      icon_bg();
+      icon_bg();
+    });
+  </script>
+  </html>

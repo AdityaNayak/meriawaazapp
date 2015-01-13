@@ -105,6 +105,7 @@
 @media #{$medium-up} { 
 	.top-bar-section{
 		li:not(.has-form) a:not(.button){
+			padding: 0 0.75em;
 			&:hover{
 				border-bottom:3px solid $blue;
 			}
@@ -480,6 +481,9 @@ input{
 .fx2{
 	padding-top:3px;
 }
+.fx3{
+	padding-top:5px;
+}
 .home-showcase{
 	.small-4{
 		cursor: pointer;
@@ -587,5 +591,21 @@ ul.timeline{
 	border-radius:3px;
 	.list{
 
+	}
+}
+tbody{
+	tr{
+	border-bottom:1px solid $lightgrey;
+		&:last-child{
+			border:none;
+		}
+		&:hover{
+			cursor: pointer;
+			background:$darkblue;
+		td{
+			color:$white;
+		}
+
+		}
 	}
 }
