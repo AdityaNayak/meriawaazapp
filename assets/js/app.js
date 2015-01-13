@@ -33,8 +33,8 @@ else{
 		    self.location="./login.html";
 		}
 		else{
-			if(CU.get("uname")!=undefined){
-				hello.innerHTML = "Namaskar "+CU.get("uname");
+			if(CU.get("username")!=undefined){
+				hello.innerHTML = "Namaskar "+CU.get("username");
 			}
 			else{
 				hello.innerHTML = "Namaskar "+CU.get("name");
@@ -63,14 +63,20 @@ else{
 		                if(object.get("type")=="neta"){
 		                	var n=object.get("neta");
 		                	p=n.get("party");	
-		                	consti.innerHTML=n.get("constituency").get("name");
-		                	constituency=n.get("constituency");
+		                	if(CU.get("username")!="admin"){
+		                		console.log(n.get("constituency"));
+		                		consti.innerHTML=n.get("constituency").get("name");
+		                		constituency=n.get("constituency");
+		                	}
+		                	
 		                }
 		                if(object.get("type")=="teamMember"){
 		                	var t=object.get("teamMember");
 		                	p=t.get("neta").get("party");
+		                	
 		                	consti.innerHTML=t.get("neta").get("constituency").get("name");
 		                	constituency=t.get("neta").get("constituency");
+		                	
 		                }
 		                if(p.get("logo").url()!=undefined){
 	                		plogo.src=p.get("logo").url();

@@ -91,6 +91,9 @@ var followers=document.getElementById('support');;
 var skeptics=document.getElementById('skeptics');;
 var ske;
 
+var profilelink=document.getElementById('profilelink');
+var prol;
+
 function queryUserTable(){
     console.log('QueryUserTable');
     ListItem = Parse.Object.extend("User");
@@ -128,9 +131,12 @@ function queryUserTable(){
 
 
         p=neta.get("party");
-
-        nNA=neta.get("user").get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
-
+        if(neta.get("age")!=undefined){
+            nNA=neta.get("user").get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
+        }
+        else{
+            nNA=neta.get("user").get("name");
+        }
         edu=neta.get("education");
         ass=neta.get("assets");
         lia=neta.get("liabilities");
@@ -146,6 +152,13 @@ function queryUserTable(){
         ts=neta.get("numMembers");
         qa=neta.get("numQsAnswered");
         qat=neta.get("numQsAskedTo");
+        if(neta.get("link")!=undefined){
+            prol="Details verified from <a href='"+neta.get("link")+"'>profile</a>";
+        }
+        else{
+            prol="Details verified from <a href='#'>profile</a>";
+        }
+        
         py=p.get("name");
         queryPostTable();
       },
@@ -266,7 +279,7 @@ function displayData(){
     histor.innerHTML="";
     var str="";
     for(var i=0;i<his.length;i++){
-        str=str+"<h5 class='secondary-color'>"+his[i].toString()+"</h5>";
+        str=str+"<h5 class='secondary-color ct'>"+his[i].toString()+"</h5>";
         console.log(str);
     }
     histor.innerHTML=str;
@@ -281,6 +294,7 @@ function displayData(){
     questionsAnswered.innerHTML=qat;
     teamSize.innerHTML=ts;
     profession.innerHTML=pro;
+    profilelink.innnerHTML=prol;
     issuesClaimed.innerHTML=icl;
     issuesClosed.innerHTML=ico;
     issuesValidated.innerHTML=icv;
