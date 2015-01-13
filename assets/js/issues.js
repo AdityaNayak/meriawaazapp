@@ -513,7 +513,7 @@ function populateTeam(){
                 for (var i = 0; i < results.length; i++) { 
                     object= results[i];
                     team.push(object);
-                    teamView.append("<option value="+object.get('user').get('email')+">"+object.get('user').get('name')+"</option>");
+                    teamView.append("<option value="+object.get('user').id+">"+object.get('user').get('name')+"</option>");
                 }
 
             },
@@ -631,12 +631,12 @@ function appropriateStatus(s){
     return s;
 }
 
-function teamMember(email){
+function teamMember(id){
     console.log("teamMember");
-    console.log("Find Team Member with email ID: "+email);
+    console.log("Find Team Member with ID: "+id);
     var member;
     for (var i = 0; i < team.length; i++) { 
-        if(team[i].get('user').get('email')==email){
+        if(team[i].get('user').id==id){
             member=team[i];
             console.log("Member Found: "+member.id);
             return member;
@@ -862,7 +862,7 @@ function updateContentWithCurrentMarker(){
     var p_location=p_latitude.toString().substring(0, 10)+", "+p_longitude.toString().substring(0, 10);
     getReverseGeocodingData(p_latitude, p_longitude);
     var p_id=currmarker.content.id;
-    var p_photo=currmarker.content.get('photo');
+    var p_photo=currmarker.content.get('file');
     var p_status=currmarker.content.get('status');
     var p_title=currmarker.content.get('title');
     var p_issueId=currmarker.content.get('issueId').toString();
@@ -922,10 +922,12 @@ function updateContentWithCurrentMarker(){
             title.innerHTML = p_issueId+"<small> "+p_title+"</small>";
             location.innerHTML = p_location;
             if(p_photo!=undefined){
+                console.log("photo is available");
                 bigphoto.src=p_photo.url();
                 photo.src=p_photo.url(); 
             }
             else{
+                console.log("photo is unavailable");
                 bigphoto.src="./assets/images/no_image.jpg";
                 photo.src="./assets/images/no_image.jpg"; 
             }
@@ -1094,7 +1096,7 @@ function populateTM(){
                     if(object.get("content").length > 30){
                         content=object.get("content").substring(0,30)+"...";
                     }
-                    listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                    listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                     markers.push(marker);
                     if((marker.content).get('status')=="open"){
                         no=no+1;
@@ -1152,7 +1154,7 @@ function populate(){
             for (var i = 0; i < results.length; i++) { 
                 var object = results[i];
                 var myicon;
-                if(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly)==true){
+                if(currentUser.get("username")=="admin"){
                     //Set Icon
                     myicon=getIcon(object.get("category"),object.get("status"));
                                   
@@ -1172,7 +1174,7 @@ function populate(){
                     if(object.get("content").length > 30){
                         content=object.get("content").substring(0,30)+"...";
                     }
-                    listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100'>"+object.get('category')+"</td><td>"+content+"</td><td>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                    listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                     markers.push(marker);
                     if((marker.content).get('status')=="open"){
                     no=no+1;
@@ -1205,6 +1207,62 @@ function populate(){
                         }
                     })(marker,object));
                 }
+                else{
+                    if(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly)==true){
+                        //Set Icon
+                        myicon=getIcon(object.get("category"),object.get("status"));
+                                      
+                        marker = new google.maps.Marker({
+                            position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
+                            map: map,
+                            title: object.get('category'),
+                            content: object,
+                            icon : myicon,
+                            draggable: false,
+                            animation: google.maps.Animation.DROP
+                        });
+
+                        var d=new Date(object.createdAt);
+                        var ago=timeSince(d);
+                        var content=object.get("content");
+                        if(object.get("content").length > 30){
+                            content=object.get("content").substring(0,30)+"...";
+                        }
+                        listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+                        markers.push(marker);
+                        if((marker.content).get('status')=="open"){
+                        no=no+1;
+                        }
+                        if((marker.content).get('status')=="progress"){
+                            np=np+1;
+                        }
+                        if((marker.content).get('status')=="review"){
+                            nr=nr+1;
+                        }
+                        if((marker.content).get('status')=="closed"){
+                            nc=nc+1;
+                        }
+                        google.maps.event.addListener(marker, 'click', (function(marker,object) {
+                            return function() {
+                                NProgress.start();
+                                console.log("NProgress start");
+                                if(infowindow) {
+                                    infowindow.close();
+                                }
+                                infowindow = new google.maps.InfoWindow({
+                                    maxWidth: 700,
+                                    maxHeight: 900
+                                });
+                                
+                                currmarker=marker;
+                                updateCurrentMarker(currmarker);                        
+                                infowindow.setContent(currmarker.content.get('status'));
+                                
+                            }
+                        })(marker,object));
+                    }
+                }
+                
              } 
           statusCounters(no,np,nr,nc);
           filter();
@@ -1320,7 +1378,7 @@ function filter(){
                     content=markers[m].content.get('content').substring(0,30)+"...";
             }
 
-            listView.append( "<tr id='"+(markers[m].content).id+"' class='"+(markers[m].content).get('status')+"' onClick='listViewClick("+(markers[m].content).id.toString()+");'><td width='100'>"+((markers[m].content).get('issueId')).toString()+"</td><td width='100'>"+(markers[m].content).get('category')+"</td><td>"+content+"</td><td width='100'>"+appropriateStatus((markers[m].content).get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+            listView.append( "<tr id='"+(markers[m].content).id+"' class='"+(markers[m].content).get('status')+"' onClick='listViewClick("+(markers[m].content).id.toString()+");'><td width='100' class='ct'>"+((markers[m].content).get('issueId')).toString()+"</td><td width='100' class='ct'>"+(markers[m].content).get('category')+"</td><td class='ct'>"+content+"</td><td width='100' class='ct'>"+appropriateStatus((markers[m].content).get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
             markers[m].setMap(map);
         }else{
             markers[m].setMap(null);
@@ -1393,9 +1451,16 @@ function initializeMap(){
         query.ascending('createdAt');
         query.find({
               success: function(results) {
-                constituency=results[0].get("neta").get("constituency");
-                plotConstituency(constituency.get("index"));
-                map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+                if(currentUser.get("username")!="admin"){
+                  console.log(results[0].get("neta").get("constituency"));
+                  constituency=results[0].get("neta").get("constituency");
+                  plotConstituency(constituency.get("index"));
+                  map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+                }  
+                else{
+                  populate();
+                  populateTeam();
+                }
               },
               error: function(error){
                 console.log("Error: "+error.message); 
@@ -1435,7 +1500,7 @@ function initialize() {
       pphoto.src=currentUser.get("pic").url(); 
     }
     else{
-      pphoto.src="http://placehold.it/300x300&text=user";
+      pphoto.src=getDefaultIcon(currentUser.get("type"));
     }
 
     if (currentUser.get("type")=="neta"){
