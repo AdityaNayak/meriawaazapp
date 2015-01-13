@@ -91,7 +91,7 @@ var followers=document.getElementById('support');;
 var skeptics=document.getElementById('skeptics');;
 var ske;
 
-var progilelink=document.getElementById('profilelink');
+var profilelink=document.getElementById('profilelink');
 var prol;
 
 function queryUserTable(){
