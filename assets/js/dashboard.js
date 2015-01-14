@@ -433,10 +433,32 @@ function initialize() {
           var p=document.getElementById("postArea").value;
           postStatus(p);
     });
-    $('#postArea').focus(function(){
-        $(this).animate({'height': '160px'}).removeClass('nm');
+    $('#postarea').focus(function(){
+        $(this).animate({'height': '120px'}).removeClass('nm');
         $('#sh-ltr1').delay(800).fadeIn();
     });
+    var supportOnInput = 'oninput' in document.createElement('input');
+
+       
+            var postArea = $('textarea#postarea');
+            var maxLength = 140;
+            var el1 = $('#chcount');
+            var el2 = $("<span>" + maxLength + "</span>");
+            el1.append(el2);    
+            postArea.bind(supportOnInput ? 'input' : 'keyup', function() {
+                var cc = postArea.val().length;
+                
+                el2.text(maxLength - cc);
+                
+                if(maxLength < cc) {
+                    el1.removeClass('bgc');
+                    el1.addClass('yc');
+                } else {
+                    el1.removeClass('yc');
+                    el1.addClass('bgc');
+                }
+            
+        });
 }
         
 initialize();
