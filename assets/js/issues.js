@@ -476,17 +476,17 @@ function populateUpdates(){
                     
                     if(object.get("type")=="assigned"){
                         var ass=assignee.get("user");
-                        timelineView.append("<div class='panel nb'><p><strong>"+ass.get("name")+"</strong> was assigned by <strong>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was assigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
                     }
                     if(object.get("type")=="closed"){
-                        timelineView.append("<div class='panel nb'><p><strong>"+user.get("name")+"</strong> closed the issue <small>"+ago+" ago</small></p></div>"); 
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>"+user.get("name")+"</strong> closed the issue <small>"+ago+" ago</small></p></div>"); 
                         
                     }
                     if(object.get("type")=="comment"){
-                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='"+pphoto1+"' class='circle-img'></div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong>"+user.get("name")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div></div></div>"); 
+                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='"+pphoto1+"' class='circle-img'></div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>"+user.get("name")+"</strong> commented <small>"+ago+" ago</small></div><p>"+content+"</p></div></div></div>"); 
                     }
                     if(object.get("type")=="claim"){
-                        timelineView.append("<div class='panel nb'><p><strong>"+user.get("name")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>"+user.get("name")+"</strong> claimed this issue <small>"+ago+" ago</small></p></div>"); 
                     }
                 }
                 NProgress.done();
@@ -1093,8 +1093,8 @@ function populateTM(){
                     var d=new Date(object.createdAt);
                     var ago=timeSince(d);
                     var content=object.get("content");
-                    if(object.get("content").length > 30){
-                        content=object.get("content").substring(0,30)+"...";
+                    if(object.get("content").length > 50){
+                        content=object.get("content").substring(0,50)+"...";
                     }
                     listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                     markers.push(marker);
@@ -1171,8 +1171,8 @@ function populate(){
                     var d=new Date(object.createdAt);
                     var ago=timeSince(d);
                     var content=object.get("content");
-                    if(object.get("content").length > 30){
-                        content=object.get("content").substring(0,30)+"...";
+                    if(object.get("content").length > 50){
+                        content=object.get("content").substring(0,50)+"...";
                     }
                     listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                     markers.push(marker);
@@ -1225,8 +1225,8 @@ function populate(){
                         var d=new Date(object.createdAt);
                         var ago=timeSince(d);
                         var content=object.get("content");
-                        if(object.get("content").length > 30){
-                            content=object.get("content").substring(0,30)+"...";
+                        if(object.get("content").length > 50){
+                            content=object.get("content").substring(0,50)+"...";
                         }
                         listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
                         markers.push(marker);
@@ -1374,8 +1374,8 @@ function filter(){
             var d=new Date((markers[m].content).createdAt);
             var ago=timeSince(d);
             var content=markers[m].content.get('content');
-            if(markers[m].content.get('content').length > 30){
-                    content=markers[m].content.get('content').substring(0,30)+"...";
+            if(markers[m].content.get('content').length > 50){
+                    content=markers[m].content.get('content').substring(0,50)+"...";
             }
 
             listView.append( "<tr id='"+(markers[m].content).id+"' class='"+(markers[m].content).get('status')+"' onClick='listViewClick("+(markers[m].content).id.toString()+");'><td width='100' class='ct'>"+((markers[m].content).get('issueId')).toString()+"</td><td width='100' class='ct'>"+(markers[m].content).get('category')+"</td><td class='ct'>"+content+"</td><td width='100' class='ct'>"+appropriateStatus((markers[m].content).get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
