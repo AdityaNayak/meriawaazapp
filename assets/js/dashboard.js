@@ -4,11 +4,11 @@ var currentUser;
 var currentPost;
 
 function postComment(pid){
-    console.log("postComment");
+    console.log("postComment"+pid);
     NProgress.start();
     console.log("NProgress Start");
     console.log("postComment");
-    var Comment = Parse.Object.extend("postComment");
+    var Comment = Parse.Object.extend("PostComment");
     var comment = new Comment();
     var p = new Parse.Object("Post");
     var u = new Parse.Object("User");
@@ -20,10 +20,12 @@ function postComment(pid){
     comment.set("user", u);
     comment.save(null, {
       success: function(comment) {
-        updatePost(pid);        
+        updatePost(pid); 
+        document.getElementById("text-"+pid).value="";       
       },
       error: function(comment, error) {
         alert('Failed to Comment!' + error.message);
+        NProgress.done();
       }
     });
 }
@@ -31,7 +33,7 @@ function postComment(pid){
 function updatePost(pid){
     console.log("updatePost");
     ListItem1 = Parse.Object.extend("Post");
-    query1 = new Parse.Query(ListItem);
+    query1 = new Parse.Query(ListItem1);
     query1.equalTo("objectId", pid);
     query1.find({
           success: function(results1) {
@@ -73,17 +75,26 @@ function updatePost(pid){
                             comm=results2[j].get("content");
                             chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i>"+time+"</div></div></div>";
                         }
-                        var thisview=document.getElementById("post-"+pid);
-                        thisview.innerHTML="<div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top'><div class='row' name='"+object.id+"' id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src='"+getDefaultIcon(currentUser.get('type'))+"' class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form onSubmit='postComment"+"('"+object.id+"')'"+"><textarea id='text-"+object.id+"' class='secondary fx' rows='3'></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny right'></form></div></div>";
+                        var thisview=$('#post-'+pid);
+                        thisview.html("");  
+                        if(currentUser.get("pic")!=undefined){
+                            var imige=currentUser.get("pic").url();
+                        }
+                        else{
+                            var imige=getDefaultIcon(currentUser.get("pic").url());
+                        }
+                        thisview.html("<div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div><div class='bg2 br-fx1-top'><div class='row' name='"+object.id+"' id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' required></textarea><input type='submit' id='text-"+object.id+"' value='comment' placeholder='add a comment' class='tiny button'></form></div></div>");
                         NProgress.done();
                     },
                     error: function(error2){
-                        console.log("Error2:"+error2.message);
+                        console.log("Error: "+error2.message);
+                        NProgress.done();
                     }
                 });
             },
           error: function(error1) {
-            console.log("Error1:"+error1.message);
+            console.log("Error: "+error1.message);
+            NProgress.done();
           }
     });
 }
@@ -123,7 +134,8 @@ function calculateNetaStats(n){
         $("#competitorlist").append("<div class='row collapse'><div class='small-3 columns'><img src="+photo+" class='circle-img gs hv pd'></div><div class='small-9 columns ct'><h4>"+name+"<small>("+age+")</small></h4><h6>"+partyname+"</h6></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x bgc'>"+followers+" </span>followers </div><div class='small-6 columns s-ws-top'><i class='icon-up gc'></i><span class='secondary secondary-color'>23 this week</span></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x bc'>"+interactions+"</span>interactions </div><div class='small-6 columns s-ws-top'><i class='icon-down rc'></i><span class='secondary secondary-color'>31 this week</span></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x dbc'>"+actions+" </span>actions </div><div class='small-6 columns s-ws-top'><i class='icon-down rc'></i><span class='secondary secondary-color'>2 this week</span></div></div><hr>");
       },
       error: function(error) {
-
+            console.log("Error: "+error.message);
+            NProgress.done();
       }
     });
 
@@ -167,7 +179,8 @@ function fetchConstituencyData(c){
                 NProgress.done();
             },
           error: function(error){
-                console.log("Error99: "+error.message);
+                console.log("Error: "+error.message);
+                NProgress.done();
             } 
           });
 }
@@ -187,7 +200,7 @@ function populateStatus(){
           success: function(results) {
                 for (var i = 0; i < results.length; i++) {
                     ListItem1 = Parse.Object.extend("Post");
-                    query1 = new Parse.Query(ListItem);
+                    query1 = new Parse.Query(ListItem1);
                     query1.equalTo("objectId", results[i].id);
                     query1.find({
                           success: function(results1) {
@@ -215,6 +228,7 @@ function populateStatus(){
                                 query2.find({
                                     success: function(results2) {
                                         var chaincomments ="";
+                                        console.log(object.id+"Number of comments:"+results2.length);
                                         for(var j=0;j<results2.length;j++){
                                             var time;
                                             var photo;
@@ -230,15 +244,28 @@ function populateStatus(){
                                             comm=results2[j].get("content");
                                             chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i>"+time+"</div></div></div>";
                                         }
-                                        postView.append("<div id='post-"+object.id+"' class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top'><div class='row' name='"+object.id+"' id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src='"+getDefaultIcon(currentUser.get('type'))+"' class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form onSubmit='postComment('"+object.id+"')'><textarea class='secondary fx' rows='3' required></textarea><input type='submit' id='text-"+object.id+"' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div>");
+                                        if(currentUser.get("pic")!=undefined){
+                                            var imige=currentUser.get("pic").url();
+                                        }
+                                        else{
+                                            var imige=getDefaultIcon(currentUser.get("pic").url());
+                                        }
+                                        postView.append("<div id='post-"+object.id+"' class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div><div class='bg2 br-fx1-top'><div class='row' name='"+object.id+"' id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div>");
+                                        $('#form-'+object.id).submit(function(event){
+                                              event.preventDefault();
+                                              postComment(object.id);
+                                              console.log("form listener created for "+object.id);
+                                        });
                                     },
                                     error: function(error2){
                                         console.log("Error2:"+error2.message);
+                                        NProgress.done();
                                     }
                                 });
                             },
                           error: function(error1) {
                             console.log("Error1:"+error1.message);
+                            NProgress.done();
                           }
                     });
                     
@@ -250,6 +277,7 @@ function populateStatus(){
           },
           error: function(error) {
                 console.log("Error0:"+error.message);
+                NProgress.done();
           }
     });
 }
@@ -273,7 +301,12 @@ function postStatus(c) {
     post.set("likes", 0);
     post.set("numComments", 0);
     post.set("neta",u);
-    
+    var isSms = document.getElementById("sms").checked;
+    var isApp = document.getElementById("app").checked;
+    var isEmail = document.getElementById("email").checked;
+    post.set("isSMS",isSms);
+    post.set("isApp",isApp);
+    post.set("isEmail",isEmail);
     post.save(null, {
       success: function(post) {
         populateStatus();
@@ -281,6 +314,7 @@ function postStatus(c) {
       },
       error: function(comment, error) {
         alert('Failed to Post! ' + error.message);
+        NProgress.done();
       }
     });
 }
@@ -335,6 +369,7 @@ function fetchECStatus(u){
           },
           error: function(error) {
                 console.log("Error:"+error.message);
+                NProgress.done();
           }
     });
 }
@@ -358,7 +393,8 @@ function queryUserTable(){
         fetchECStatus(object);
       },
       error: function(error) {
-
+            console.log("Error:"+error.message);
+            NProgress.done();
       }
     });
 }
@@ -380,10 +416,12 @@ function setCurrentNetaTM(n){
     var name=currentUser.get("name");
     var party=currentNeta.get("party");
     var partyname=party.get("name");
+    var population=currentNeta.get("constituency").get("population");
     var ele=EC.e;
     var cs=EC.c;
     document.getElementById('photo').src=photo;
     document.getElementById('myname').innerHTML=name;
+    document.getElementById('population').innerHTML=population;
     document.getElementById('myparty').innerHTML=partyname;
     document.getElementById('ele').innerHTML=ele;
     document.getElementById('cs').innerHTML=cs;
@@ -433,14 +471,14 @@ function initialize() {
           var p=document.getElementById("postArea").value;
           postStatus(p);
     });
-    $('#postarea').focus(function(){
+    $('#postArea').focus(function(){
         $(this).animate({'height': '120px'}).removeClass('nm');
         $('#sh-ltr1').delay(800).fadeIn();
     });
     var supportOnInput = 'oninput' in document.createElement('input');
 
        
-            var postArea = $('textarea#postarea');
+            var postArea = $('textarea#postArea');
             var maxLength = 140;
             var el1 = $('#chcount');
             var el2 = $("<span>" + maxLength + "</span>");

@@ -188,24 +188,25 @@ function login() {
 
 function resetPassword() {
 	  console.log("Reset Password");
+	  NProgress.start();
 	  loading();
-	  var form = document.getElementById("signin-form");
-	  var email = form.email.value;
-      if(email === "") {
-	      alert("Looks like you have forgotten your password! Enter your email in this form itself and click this link again. We will send you a mail that will allow you to reset your password.");
-	      
-	      //hide();
-	      return;
-	  }
-      Parse.User.requestPasswordReset(email, {
+	  var email = prompt("Please enter your name", "");
+	  if (email != null) {
+	    Parse.User.requestPasswordReset(email, {
           success:function() {
               alert("Reset instructions have been emailed to you.");
           },
           error:function(error) {
             alert("An Error Occured!"+error.message);
           }
-      });
-      setTimeout(hide, 3000);
+      	});	
+	  }
+	  else{
+	  	resetPassword();
+	  	return;
+	  }      
+	  NProgress.done();
+      //setTimeout(hide, 3000);
       //hide();
       return false;
 }
