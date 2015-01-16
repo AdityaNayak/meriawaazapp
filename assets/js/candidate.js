@@ -307,6 +307,81 @@ function displayData(){
     NProgress.done();
 }
 
+function getDefaultIcon(type){
+    if(type=="neta"){
+        return "./assets/images/neta.png";
+    }
+    else if(type=="teamMember"){
+        return "./assets/images/neta.png";
+    }
+    else{
+        return "./assets/images/user.png";
+    }
+}
+
+function timeSince(date) {
+
+    var seconds = Math.floor((new Date() - date) / 1000);
+
+    var interval = Math.floor(seconds / 31536000);
+
+    if (interval > 1) {
+        return interval + " years";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+        return interval + " months";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+        return interval + " days";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+        return interval + " hours";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+        return interval + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+}
+
+function icon_bg(){
+    var iconBg = $('.icon-bg');
+    var iconArray = ['calendar','clock',
+    'location',
+    'phone',
+    'trophy',
+    'alert',
+    'broadcast',
+    'organization',
+    'network',
+    'comments',
+    'comment',
+    'map-streamline-user',
+    'check',
+    'person',
+    'milestone',
+    'android',
+    'share',
+    'data-science',
+    'help',
+    'voice',
+    'bulb',
+    'like',
+    'tweak',
+    'map'
+    ];
+    var arraySize=iconArray.length;
+    for (i = 1; i < arraySize; i++) { 
+        var randomNumber = Math.floor(Math.random()*arraySize);
+        iconBg.append('<i class="icon-'+iconArray[randomNumber]+'" style="font-size:'+Math.floor((Math.random() * 3) + 1.75)+'em; padding-top:'+Math.floor((Math.random() * 2) + 0.25)+'em;"></i>');
+        iconArray.splice(randomNumber, 1);
+    }
+    console.log('success');
+}
+
 function initialize() {
     console.log("initialize");
     currentUser = CU;
