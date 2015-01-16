@@ -42,22 +42,22 @@
         <h5 class="dbc">Connect with your Voters</h5>
         </div>
         <div class="small-4 columns text-right">
-        <span class='tertiary'>Estimated Reach: </span><span class='bc'> 100</span>
+        <span class='tertiary'>Estimated Reach: </span><span class='bc' id="population">Loading...</span>
         </div>
       </div>
           <form id="post-form">
-            <textarea id="postarea" class="nm" rows="2" required placeholder="Say something inspiring"></textarea>
+            <textarea id="postArea" class="nm" rows="2" required placeholder="Say something inspiring"></textarea>
             <div class="row collapse" id="sh-ltr1" style="display:none;">
               <div id="chcount" class="small-2 columns secondary fx3 bgc">
               </div>
               <div class="small-2 columns text-center fx3">
-              <input type="checkbox" name="" value="" checked=""> <span class="tertiary secondary-color">Mobile App </span>
+              <input type="checkbox" name="" id="app" value="" checked=""> <span class="tertiary secondary-color">Mobile App </span>
               </div>
-              <div class="small-2 columns text-center fx3"><input type="checkbox" name="" value=""> <span class="tertiary secondary-color">SMS </span> 
+              <div class="small-2 columns text-center fx3"><input type="checkbox" id="sms" name="" value=""> <span class="tertiary secondary-color">SMS </span> 
               </div>
-              <div class="small-2 columns text-center fx3"><input type="checkbox" name="" value=""> <span class="tertiary secondary-color">Email </span> 
+              <div class="small-2 columns text-center fx3"><input type="checkbox" id="email" name="" value=""> <span class="tertiary secondary-color">Email </span> 
               </div>
-              <div class="small-4 columns"><input id="post" type="submit" value="Send Update" class="button tiny nm fullwidth">
+              <div class="small-4 columns"><input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth">
               </div>
             </div>
           </form>

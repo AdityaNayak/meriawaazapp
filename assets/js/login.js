@@ -24,6 +24,7 @@ function updateCounters(){
 	var Users = Parse.Object.extend("User");
 	var query1 = new Parse.Query(Issues);
 	var query2 = new Parse.Query(Users);
+	query2.limit(1000);
 	var a=0;
 	var b=0;
 	var c=0;
@@ -75,6 +76,38 @@ function hide(){
 	  //$('#signin-btn').innerHTML = "Sign In";
 	  document.getElementById("signin-btn").value = "Sign In";
 }
+
+// function login(){
+// 	  NProgress.start();
+// 	  console.log("Inside Login");
+// 	  //loading();
+// 	  loadingButton_id("signin-btn",12);
+// 	  var form = document.getElementById("signin-form")
+// 	  var username = form.email.value;
+// 	  console.log(username);
+// 	  var password = form.password.value;
+// 	  console.log("Email used");
+// 	  Parse.User.logIn(username, password, {
+// 		  success: function(user) {
+// 		      console.log("Log In Ho Gaya!");
+// 		      currentUser = Parse.User.current();
+// 		      self.location="./dashboard.html";
+// 		      NProgress.done();
+// 		    },
+// 		  error: function(user, error) {
+// 		  	  NProgress.done();
+// 		  	  if(error.code==101){
+// 		  	  	alert("An Error Occured!"+error.message);
+// 		  	  }	
+// 		      console.log("Error: " + error.code + " " + error.message);
+// 		  }
+// 	  });
+// 	  $('#signin-btn').focus(function() {
+//         this.blur();
+//       });
+// 	  //hide();
+//       return false;
+// }
 
 function login() {
 	  NProgress.start();
@@ -155,24 +188,25 @@ function login() {
 
 function resetPassword() {
 	  console.log("Reset Password");
+	  NProgress.start();
 	  loading();
-	  var form = document.getElementById("signin-form");
-	  var email = form.email.value;
-      if(email === "") {
-	      alert("Looks like you have forgotten your password! Enter your email in this form itself and click this link again. We will send you a mail that will allow you to reset your password.");
-	      setTimeout(hide, 3000);
-	      //hide();
-	      return;
-	  }
-      Parse.User.requestPasswordReset(email, {
+	  var email = prompt("Please enter your name", "");
+	  if (email != null) {
+	    Parse.User.requestPasswordReset(email, {
           success:function() {
               alert("Reset instructions have been emailed to you.");
           },
           error:function(error) {
             alert("An Error Occured!"+error.message);
           }
-      });
-      setTimeout(hide, 3000);
+      	});	
+	  }
+	  else{
+	  	resetPassword();
+	  	return;
+	  }      
+	  NProgress.done();
+      //setTimeout(hide, 3000);
       //hide();
       return false;
 }
