@@ -473,7 +473,10 @@ function populateUpdates(){
                     else{
                         pphoto1=getDefaultIcon(user.get("type"));
                     }
-                    
+                    if(object.get("type")=="unassigned"){
+                        var ass=assignee.get("user");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was unassigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
+                    }
                     if(object.get("type")=="assigned"){
                         var ass=assignee.get("user");
                         timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was assigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
@@ -666,14 +669,7 @@ function postAssignment(id){
           success: function(results) {
                 var countclaims=0;
                 for (var i = 0; i < results.length; i++) {
-                    results[i].destroy({
-                      success: function(myObject) {
-                        console.log("Previous Assignment Deleted!");
-                      },
-                      error: function(myObject, error) {
-                        console.log("Some Error occured during Deletion!");
-                      }
-                    });
+                    results[i].set("type","unassigned");
                 }
                 var Assign = Parse.Object.extend("Update");
                 var assign = new Assign();

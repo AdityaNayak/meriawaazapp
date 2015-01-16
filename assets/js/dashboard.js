@@ -14,14 +14,15 @@ function postComment(pid){
     var u = new Parse.Object("User");
     p.id = pid;
     u.id = currentUser.id;
-    var c=document.getElementById("text-"+pid).value;
+    console.log("text-"+pid.toString());
+    var c=document.getElementById("text-"+pid.toString()).value;
     comment.set("content", c);
     comment.set("post", p);
     comment.set("user", u);
     comment.save(null, {
       success: function(comment) {
         updatePost(pid); 
-        document.getElementById("text-"+pid).value="";       
+        document.getElementById("text-"+pid.toString()).value="";       
       },
       error: function(comment, error) {
         alert('Failed to Comment!' + error.message);
@@ -57,6 +58,7 @@ function updatePost(pid){
                 query2.equalTo("post", pointer1);
                 query2.include("post");
                 query2.include("user");
+                query2.ascending("createdAt");
                 query2.find({
                     success: function(results2) {
                         var chaincomments ="";
@@ -83,7 +85,11 @@ function updatePost(pid){
                         else{
                             var imige=getDefaultIcon(currentUser.get("pic").url());
                         }
-                        thisview.html("<div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div><div class='bg2 br-fx1-top'><div class='row' name='"+object.id+"' id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' required></textarea><input type='submit' id='text-"+object.id+"' value='comment' placeholder='add a comment' class='tiny button'></form></div></div>");
+                        thisview.html("<div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div><div class='bg2 br-fx1-top'><div class='row' name='"+object.id+"' id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea id='text-"+object.id+"' class='secondary fx' rows='3' required></textarea><input type='submit'  value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div>");
+                        $('#form-'+object.id).submit(function(event){
+                              event.preventDefault();
+                              postComment(event.target.id.toString().split('-')[1]);
+                        });
                         NProgress.done();
                     },
                     error: function(error2){
@@ -198,82 +204,77 @@ function populateStatus(){
     query.descending('createdAt');
     query.find({
           success: function(results) {
+                qpost=[];
                 for (var i = 0; i < results.length; i++) {
-                    ListItem1 = Parse.Object.extend("Post");
-                    query1 = new Parse.Query(ListItem1);
-                    query1.equalTo("objectId", results[i].id);
-                    query1.find({
-                          success: function(results1) {
-                                var d;
-                                var ago;
-                                var content;
-                                var reach;
-                                var likes;
-                                var comments;
-                                object= results1[0];
-                                console.log("I am here!120");
-                                d=new Date(object.createdAt);
-                                ago=timeSince(d);
-                                content=object.get("content");
-                                reach=object.get("reach");
-                                likes=object.get("likes");
-                                comments=object.get("numComments");
-                                ListItem2 = Parse.Object.extend("PostComment");
-                                query2 = new Parse.Query(ListItem2);
-                                var pointer1 = new Parse.Object("Post");
-                                pointer1.id = object.id;
-                                query2.equalTo("post", pointer1);
-                                query2.include("post");
-                                query2.include("user");
-                                query2.find({
-                                    success: function(results2) {
-                                        var chaincomments ="";
-                                        console.log(object.id+"Number of comments:"+results2.length);
-                                        for(var j=0;j<results2.length;j++){
-                                            var time;
-                                            var photo;
-                                            var comm;
-                                            console.log("I am here!142");
-                                            time=timeSince(new Date(results2[j].createdAt));
-                                            if(results2[j].get("user").get("pic")==undefined){
-                                                photo=getDefaultIcon(results2[j].get("user").get("type"));
-                                            }
-                                            else{
-                                                photo=results2[j].get("user").get("pic").url();
-                                            } 
-                                            comm=results2[j].get("content");
-                                            chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i>"+time+"</div></div></div>";
-                                        }
-                                        if(currentUser.get("pic")!=undefined){
-                                            var imige=currentUser.get("pic").url();
-                                        }
-                                        else{
-                                            var imige=getDefaultIcon(currentUser.get("type"));
-                                        }
-                                        postView.append("<div id='post-"+object.id+"' class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div><div class='bg2 br-fx1-top'><div class='row' name='"+object.id+"' id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div>");
-                                        $('#form-'+object.id).submit(function(event){
-                                              event.preventDefault();
-                                              postComment(object.id);
-                                              console.log("form listener created for "+object.id);
-                                        });
-                                    },
-                                    error: function(error2){
-                                        console.log("Error2:"+error2.message);
-                                        NProgress.done();
-                                    }
-                                });
-                            },
-                          error: function(error1) {
-                            console.log("Error1:"+error1.message);
-                            NProgress.done();
-                          }
-                    });
-                    
+                    var poin = new Parse.Object("Post");
+                    poin.id = results[i].id;
+                    qpost.push(poin);
                 }
-
-                fetchConstituencyData(currentNeta.get("constituency"));
-                
-                console.log("NProgress Stop");
+                ListItem2 = Parse.Object.extend("PostComment");
+                query2 = new Parse.Query(ListItem2);
+                query2.containedIn("post",qpost);
+                query2.include("post");
+                query2.include("user");
+                query2.ascending("createdAt");
+                query2.find({
+                    success: function(results2) {
+                        console.log("Number of comments:"+results2.length);
+                        for(var i=0;i<results.length;i++){
+                            var object=results[i];
+                            var chaincomments ="";
+                            for(var j=0;j<results2.length;j++){
+                                if(results2[j].get("post").id==object.id){
+                                    var time;
+                                    var photo;
+                                    var comm;
+                                    console.log("I am here!142");
+                                    time=timeSince(new Date(results2[j].createdAt));
+                                    if(results2[j].get("user").get("pic")==undefined){
+                                        photo=getDefaultIcon(results2[j].get("user").get("type"));
+                                    }
+                                    else{
+                                        photo=results2[j].get("user").get("pic").url();
+                                    } 
+                                    comm=results2[j].get("content");
+                                    chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i>"+time+"</div></div></div>";
+                                }
+                                
+                            }
+                            var d;
+                            var ago;
+                            var content;
+                            var reach;
+                            var likes;
+                            var comments;
+                            console.log("I am here!120");
+                            d=new Date(object.createdAt);
+                            ago=timeSince(d);
+                            content=object.get("content");
+                            reach=object.get("reach");
+                            likes=object.get("likes");
+                            comments=object.get("numComments");
+                            if(currentUser.get("pic")!=undefined){
+                            var imige=currentUser.get("pic").url();
+                            }
+                            else{
+                                var imige=getDefaultIcon(currentUser.get("type"));
+                            }
+                            postView.append("<div id='post-"+object.id+"' class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div><div class='bg2 br-fx1-top'><div class='row' name='"+object.id+"' id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div>");
+                            console.log("form listener created for "+object.id);
+                            $('#form-'+object.id).submit(function(event){
+                                  event.preventDefault();
+                                  postComment(event.target.id.toString().split('-')[1]);
+                            });
+                            fetchConstituencyData(currentNeta.get("constituency"));
+                            console.log("NProgress Stop");
+                        }
+                       
+                    },
+                    error: function(error2){
+                        console.log("Error2:"+error2.message);
+                        NProgress.done();
+                    }
+                });    
           },
           error: function(error) {
                 console.log("Error0:"+error.message);
@@ -281,6 +282,91 @@ function populateStatus(){
           }
     });
 }
+
+// function populateStatus(){
+//     var postView=$('#posts');
+//     console.log("populateStatus");
+//     postView.html("");    
+//     ListItem = Parse.Object.extend("Post");
+//     query = new Parse.Query(ListItem);
+//     var pointer = new Parse.Object("Neta");
+//     pointer.id = currentNeta.id;
+//     query.equalTo("neta", pointer);
+//     console.log("I am here104!");
+//     query.descending('createdAt');
+//     query.find({
+//           success: function(results) {
+//                 for (var i = 0; i < results.length; i++) {
+//                     var d;
+//                     var ago;
+//                     var content;
+//                     var reach;
+//                     var likes;
+//                     var comments;
+//                     object= results[i];
+//                     console.log("I am here!120");
+//                     d=new Date(object.createdAt);
+//                     ago=timeSince(d);
+//                     content=object.get("content");
+//                     reach=object.get("reach");
+//                     likes=object.get("likes");
+//                     comments=object.get("numComments");
+//                     ListItem2 = Parse.Object.extend("PostComment");
+//                     query2 = new Parse.Query(ListItem2);
+//                     var pointer1 = new Parse.Object("Post");
+//                     pointer1.id = object.id;
+//                     query2.equalTo("post", pointer1);
+//                     query2.include("post");
+//                     query2.include("user");
+//                     query2.find({
+//                         success: function(results2) {
+//                             var chaincomments ="";
+//                             console.log(object.id+"Number of comments:"+results2.length);
+//                             for(var j=0;j<results2.length;j++){
+//                                 var time;
+//                                 var photo;
+//                                 var comm;
+//                                 console.log("I am here!142");
+//                                 time=timeSince(new Date(results2[j].createdAt));
+//                                 if(results2[j].get("user").get("pic")==undefined){
+//                                     photo=getDefaultIcon(results2[j].get("user").get("type"));
+//                                 }
+//                                 else{
+//                                     photo=results2[j].get("user").get("pic").url();
+//                                 } 
+//                                 comm=results2[j].get("content");
+//                                 chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i>"+time+"</div></div></div>";
+//                             }
+//                             if(currentUser.get("pic")!=undefined){
+//                                 var imige=currentUser.get("pic").url();
+//                             }
+//                             else{
+//                                 var imige=getDefaultIcon(currentUser.get("type"));
+//                             }
+//                             postView.append("<div id='post-"+object.id+"' class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div><div class='bg2 br-fx1-top'><div class='row' name='"+object.id+"' id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div>");
+//                             console.log("form listener created for "+object.id);
+//                             $('#form-'+object.id).submit(function(event){
+//                                   event.preventDefault();
+//                                   postComment(object.id);
+//                             });
+//                         },
+//                         error: function(error2){
+//                             console.log("Error2:"+error2.message);
+//                             NProgress.done();
+//                         }
+//                     });
+//                 }
+
+//                 fetchConstituencyData(currentNeta.get("constituency"));
+                
+//                 console.log("NProgress Stop");
+//           },
+//           error: function(error) {
+//                 console.log("Error0:"+error.message);
+//                 NProgress.done();
+//           }
+//     });
+// }
 
 function postStatus(c) {
     if(CU.get("type")!="neta"){
