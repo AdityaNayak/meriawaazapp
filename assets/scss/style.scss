@@ -545,7 +545,7 @@ input{
 	width: 40%;
 	z-index: 999;
 }
-ul.timeline{
+.timeline{
 	position:relative;
 	&:before{
 		display: block;
@@ -580,6 +580,18 @@ ul.timeline{
 			background: $darkwhite;
 			margin-top: 10px;
 		}
+	}
+}
+.timeline.big{
+	&:before{
+		top: 10px;
+		bottom: 0px;
+		left: 49.8%;
+		width: 3px;
+		background-color: #f9f8f8;
+	}
+	i{
+		color:$blue;
 	}
 }
 .bg2{

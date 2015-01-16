@@ -10507,11 +10507,11 @@ input.lead {
 }
 
 /* line 548, ../scss/style.scss */
-ul.timeline {
+.timeline {
   position: relative;
 }
 /* line 550, ../scss/style.scss */
-ul.timeline:before {
+.timeline:before {
   display: block;
   content: "";
   position: absolute;
@@ -10523,13 +10523,13 @@ ul.timeline:before {
   z-index: 0;
 }
 /* line 561, ../scss/style.scss */
-ul.timeline li {
+.timeline li {
   padding-left: 1em;
   margin-left: 0.5em;
   margin-top: 0.5em;
 }
 /* line 565, ../scss/style.scss */
-ul.timeline li:before {
+.timeline li:before {
   content: "v";
   font-family: "meriawaaz" !important;
   font-style: normal !important;
@@ -10548,7 +10548,20 @@ ul.timeline li:before {
   margin-top: 10px;
 }
 
-/* line 585, ../scss/style.scss */
+/* line 586, ../scss/style.scss */
+.timeline.big:before {
+  top: 10px;
+  bottom: 0px;
+  left: 49.8%;
+  width: 3px;
+  background-color: #f9f8f8;
+}
+/* line 593, ../scss/style.scss */
+.timeline.big i {
+  color: #0071BC;
+}
+
+/* line 597, ../scss/style.scss */
 .bg2 {
   background: rgba(234, 233, 231, 0.3);
   margin-bottom: 1em;
@@ -10558,20 +10571,20 @@ ul.timeline li:before {
   border-radius: 3px;
 }
 
-/* line 597, ../scss/style.scss */
+/* line 609, ../scss/style.scss */
 tbody tr {
   border-bottom: 1px solid #f9f8f8;
 }
-/* line 599, ../scss/style.scss */
+/* line 611, ../scss/style.scss */
 tbody tr:last-child {
   border: none;
 }
-/* line 602, ../scss/style.scss */
+/* line 614, ../scss/style.scss */
 tbody tr:hover {
   cursor: pointer;
   background: #00B6A5;
 }
-/* line 605, ../scss/style.scss */
+/* line 617, ../scss/style.scss */
 tbody tr:hover td {
   color: #FFFFFF;
 }
