@@ -3,6 +3,7 @@
 
 var count = 0 ;
 var CU;
+var constituency;
 
 Parse.initialize("km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt", "BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI");
 
@@ -40,50 +41,97 @@ else{
 				hello.innerHTML = "Namaskar "+CU.get("name");
 			}
 		    
-		    ListItem = Parse.Object.extend("User");
-		    query = new Parse.Query(ListItem);
-		    query.equalTo("objectId", CU.id);
-		    query.include("neta");
-		    query.include(["neta.party"]);
-		    query.include(["neta.constituency"]);
-		    query.include("teamMember");
-		    query.include(["teamMember.neta"]);
-		    query.include(["teamMember.neta.party"]);
-		    query.include(["teamMember.neta.constituency"]);
-		    query.ascending('createdAt');
-		    query.find({
+		    CU.fetch({
 		          success: function(results) {
-
 		                console.log("Size:"+results.length);
 		                var plogo=document.getElementById('plogo');
 		                var consti=document.getElementById('consti');
-		                CU=results[0];
-		                object=results[0];
+		                object=CU;
 		                var p;
+		                var n;
 		                if(object.get("type")=="neta"){
 		                	var n=object.get("neta");
-		                	p=n.get("party");	
-		                	if(CU.get("username")!="admin"){
-		                		console.log(n.get("constituency"));
-		                		consti.innerHTML=n.get("constituency").get("name");
-		                		constituency=n.get("constituency");
-		                	}
-		                	
+		                	n.fetch({
+		                		success: function(results){
+		                			p=n.get("party");	
+		                			p.fetch({
+		                				success: function(results){
+		                					if(CU.get("username")!="admin"){
+						                		console.log(n.get("constituency"));
+						                		
+						                		constituency=n.get("constituency");
+						                		constituency.fetch({
+						                			success:function(results){
+						                				consti.innerHTML=n.get("constituency").get("name");
+						                			},
+						                			error:function(error){
+						                				
+						                			}
+						                		})
+						                		
+						                	}	
+						                	if(p.get("logo").url()!=undefined){
+						                		plogo.src=p.get("logo").url();
+						                	}
+
+						                	object.set("lastFetched",new Date());
+						                	object.save();
+		                				},
+		                				error: function(error){
+		                					
+		                				}
+		                			});
+		                		},
+		                		error: function(results){
+		                			
+		                		}
+		                	});
 		                }
 		                if(object.get("type")=="teamMember"){
 		                	var t=object.get("teamMember");
-		                	p=t.get("neta").get("party");
-		                	
-		                	consti.innerHTML=t.get("neta").get("constituency").get("name");
-		                	constituency=t.get("neta").get("constituency");
-		                	
-		                }
-		                if(p.get("logo").url()!=undefined){
-	                		plogo.src=p.get("logo").url();
-	                	}
+		                	t.fetch({
+		                		success:function(results){
+		                			n=t.get("neta");
+		                			n.fetch({
+		                				success:function(results){
+		                					p=n.get("party");
+						                	p.fetch({
+						                		success:function(results){
+						                			constituency=n.get("constituency");
+						                			constituency.fetch({
+						                				success:function(results){
+						                					consti.innerHTML=t.get("neta").get("constituency").get("name");
+								                	
 
-	                	object.set("lastFetched",new Date());
-	                	object.save();
+										                	if(p.get("logo").url()!=undefined){
+										                		plogo.src=p.get("logo").url();
+										                	}
+
+										                	object.set("lastFetched",new Date());
+										                	object.save();
+						                				},
+						                				error:function(error){
+						                					
+						                				}
+						                			});
+						                		},
+						                		error:function(error){
+						                			
+						                		}
+						                	});
+						                	
+		                				},
+		                				error:function(error){
+		                					
+		                				}
+		                			});
+		                		},
+		                		error: function(error){
+		                			
+		                		}
+		                	});
+		                }
+		                
 		            },
 		          error: function(error) {
 		                console.log("Error:"+error.message);

@@ -8,32 +8,31 @@
   {% include header.html %}
   <div class="row">
     <div class="small-3 columns m-ws-top secondary-color">
-      Potential Reach: <span class="f-3x yc">321 </span>//no. of citizens in constituency
+      Potential Reach: <span class="f-3x yc" id="pop">0 </span>
     </div>
     <div class="small-3 columns m-ws-top secondary-color">
-      Supporters: <span class="f-3x bgc">110</span>
+      Supporters: <span class="f-3x bgc" id="tot">0</span>
     </div>
     <div class="small-3 columns m-ws-top secondary-color">
-      Mobile Subscribers: <span class="f-3x bc">100</span>
+      Mobile Subscribers: <span class="f-3x bc" id="mob">0</span>
     </div>
     <div class="small-3 columns m-ws-top secondary-color">
-      Email Subscribers: <span class="f-3x dbc">10</span>
+      Email Subscribers: <span class="f-3x dbc" id="ema">0</span>
     </div>
   </div>
-  <div class="row">
-  <div class="small-4 columns m-ws-top">
+  <!--<div class="row">
+    <div class="small-4 columns m-ws-top">
       <div class="button tiny">Import List</div>
     </div>
     <div class="small-4 small-offset-4 columns m-ws-top">
       <div class="button tiny secondary">Export List</div>
     </div>
-  </div>
+  </div>-->
   <div class="row">
     <div class="small-12 columns">
-      <table>
+      <table id="subscribers-table">
         <thead>
           <tr>
-            <th width="50"><input type="checkbox" class="nm"></th>
             <th width="150">First Name</th>
             <th width="150">Last Name</th>
             <th width="100">Age</th>
@@ -42,29 +41,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><input type="checkbox" class="nm"></td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>12</td>
-            <td>example@example.com</td>
-            <td>9999999999</td>
-          </tr>
-          <tr>
-            <td><input type="checkbox" class="nm"></td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>12</td>
-            <td>example@example.com</td>
-            <td>9999999999</td>
-          </tr>
         </tbody>
       </table>
     </div>
   </div>
 
   {% include footer.html %} 
+  <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
   <script type="text/javascript" src="{{site.url}}/assets/js/subscribers.js"></script>
+
 
   <script type="text/javascript">
     $(document).foundation();

@@ -23,6 +23,7 @@
   <meta property="fb:app_id" content="261087750752180" />
 
   <link rel="icon" type="image/png" href="{{site.url}}/assets/images/favicon.png">
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
   <!--[if IE]><link rel="shortcut icon" href="{{site.url}}/assets/images/favicon.ico"/><![endif]-->
 </head>
 <body class="elections">  
@@ -118,13 +119,13 @@
   <h3 class="dbc text-center m-ws-top">Candidates</h3>
   <div class="row text-center">
     <div class="small-6 columns secondary-color">
-      Number of Candidates: <span class="f-2x bc">x</span>
+      Number of Candidates: <span class="f-2x bc id="numc">Loading...</span>
     </div>
     <div class="small-6 columns secondary-color">
-      Number of Parties: <span class="f-2x bc">x</span>
+      Number of Parties: <span class="f-2x bc" id="nump">Loading...</span>
     </div>
   </div>
-  <div class="row">
+  <div class="row" id="candidates">
     <h4 class="text-center bgc m-ws-top">Aam Aadmi Party</h4>
     <div class="small-4 columns">
       <div class="row">
@@ -429,7 +430,7 @@
 <script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.js"></script>
 <script src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.magellan.js"></script>
 <script src="{{site.url}}/assets/js/jquery.countdown.min.js"></script>
-<script src="{{site.url}}/assets/js/app.js"></script>
+<script src="{{site.url}}/assets/js/elections.js"></script>
 <script>
   $(document).foundation({
     magellan: {

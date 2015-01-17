@@ -460,23 +460,36 @@ function fetchECStatus(u){
     });
 }
 
+// function queryUserTable(){
+//     console.log('QueryUserTable');
+//     ListItem = Parse.Object.extend("User");
+//     query = new Parse.Query(ListItem);
+//     query.equalTo("objectId", CU.id);
+//     query.include("neta");
+//     query.include(["neta.party"]);
+//     query.include(["neta.constituency"]);
+//     query.include("teamMember");
+//     query.include(["teamMember.neta"]);
+//     query.include(["teamMember.neta.user"]);
+//     query.include(["teamMember.neta.party"]);
+//     query.include(["teamMember.neta.constituency"]);
+//     query.find({
+//       success: function(results) {
+//         var object = results[0];
+//         fetchECStatus(object);
+//       },
+//       error: function(error) {
+//             console.log("Error:"+error.message);
+//             NProgress.done();
+//       }
+//     });
+// }
+
 function queryUserTable(){
     console.log('QueryUserTable');
-    ListItem = Parse.Object.extend("User");
-    query = new Parse.Query(ListItem);
-    query.equalTo("objectId", CU.id);
-    query.include("neta");
-    query.include(["neta.party"]);
-    query.include(["neta.constituency"]);
-    query.include("teamMember");
-    query.include(["teamMember.neta"]);
-    query.include(["teamMember.neta.user"]);
-    query.include(["teamMember.neta.party"]);
-    query.include(["teamMember.neta.constituency"]);
-    query.find({
+    CU.fetch({
       success: function(results) {
-        var object = results[0];
-        fetchECStatus(object);
+        fetchECStatus(CU);
       },
       error: function(error) {
             console.log("Error:"+error.message);
@@ -489,31 +502,46 @@ function queryUserTable(){
 //given neta
 function setCurrentNetaTM(n){
     console.log("setCurrentNeta");
-    currentUser=n.get("user");
-    currentNeta=n;
-    console.log("I was called Team Member!");
-    if(currentUser.get("pic")!=undefined){
-          var photo=currentUser.get("pic").url();
-    }
-    else{
-          var photo="./assets/images/neta.png";
-    }
-    
-    var name=currentUser.get("name");
-    var party=currentNeta.get("party");
-    var partyname=party.get("name");
-    var population=currentNeta.get("constituency").get("population");
-    var ele=EC.e;
-    var cs=EC.c;
-    document.getElementById('photo').src=photo;
-    document.getElementById('myname').innerHTML=name;
-    document.getElementById('population').innerHTML=population;
-    document.getElementById('myparty').innerHTML=partyname;
-    document.getElementById('ele').innerHTML=ele;
-    document.getElementById('cs').innerHTML=cs;
-    calculateCurrentNetaStats();
-    
-    populateStatus();
+    n.fetch({
+     success: function(result){
+            currentUser=n.get("user");
+            currentNeta=n;
+            console.log("I was called Team Member!");
+            if(currentUser.get("pic")!=undefined){
+                  var photo=currentUser.get("pic").url();
+            }
+            else{
+                  var photo="./assets/images/neta.png";
+            }
+            
+            var name=currentUser.get("name");
+            var party=currentNeta.get("party");
+            party.fetch({
+               success:function(result){
+                    var partyname=party.get("name");
+                    var population=currentNeta.get("constituency").get("population");
+                    var ele=EC.e;
+                    var cs=EC.c;
+                    document.getElementById('photo').src=photo;
+                    document.getElementById('myname').innerHTML=name;
+                    document.getElementById('population').innerHTML=population;
+                    document.getElementById('myparty').innerHTML=partyname;
+                    document.getElementById('ele').innerHTML=ele;
+                    document.getElementById('cs').innerHTML=cs;
+                    calculateCurrentNetaStats();
+                    
+                    populateStatus();
+               },
+               error: function(error){
+                   
+               } 
+            });
+            
+     },
+     error: function(error){
+         
+     }   
+    });
 }
 
 //given user
@@ -521,27 +549,41 @@ function setCurrentNeta(u){
     console.log("setCurrentNeta");
     currentUser=u;
     currentNeta=currentUser.get("neta");
-    console.log("I was called Neta!");
-    if(currentUser.get("pic")!=undefined){
-          var photo=currentUser.get("pic").url();
-    }
-    else{
-          var photo="./assets/images/neta.png";
-    }
-    
-    var name=currentUser.get("name");
-    var party=currentNeta.get("party");
-    var partyname=party.get("name");
-    var ele=EC.e;
-    var cs=EC.c;
-    document.getElementById('photo').src=photo;
-    document.getElementById('myname').innerHTML=name;
-    document.getElementById('myparty').innerHTML=partyname;
-    document.getElementById('ele').innerHTML=ele;
-    document.getElementById('cs').innerHTML=cs;
-    calculateCurrentNetaStats();
-
-    populateStatus();
+    currentNeta.fetch({
+       success: function(results){
+            console.log("I was called Neta!");
+            if(currentUser.get("pic")!=undefined){
+                  var photo=currentUser.get("pic").url();
+            }
+            else{
+                  var photo="./assets/images/neta.png";
+            }
+            
+            var name=currentUser.get("name");
+            var party=currentNeta.get("party");
+            party.fetch({
+               success: function(result){
+                    var partyname=party.get("name");
+                    var ele=EC.e;
+                    var cs=EC.c;
+                    document.getElementById('photo').src=photo;
+                    document.getElementById('myname').innerHTML=name;
+                    document.getElementById('myparty').innerHTML=partyname;
+                    document.getElementById('ele').innerHTML=ele;
+                    document.getElementById('cs').innerHTML=cs;
+                    calculateCurrentNetaStats();
+                    populateStatus();   
+               } ,
+               error: function(error){
+                   
+               }
+            });
+            
+       },
+       error: function(error){
+           
+       }
+    });
 }
 
 function initialize() {
