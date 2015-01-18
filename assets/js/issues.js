@@ -437,8 +437,8 @@ function populateUpdates(){
     pointer.id = currmarker.content.id;
     query.equalTo("issue", pointer);
     query.include("assignee");
-    query.include(["assignee.user"]);
-    query.include("user");
+    query.include(["assignee.pUser"]);
+    query.include("pUser");
     query.ascending('createdAt');
     query.find({
           success: function(results) {
@@ -458,10 +458,10 @@ function populateUpdates(){
                     else{
                         content="";
                     }
-                    user=object.get("user");
+                    user=object.get("pUser");
                     if(object.get("assignee")!=undefined){
                         assignee=object.get("assignee");
-                        console.log("comments"+ assignee.get("user"));
+                        console.log("comments"+ assignee.get("pUser"));
                     }
                     else{
                         assignee="";
@@ -474,11 +474,11 @@ function populateUpdates(){
                         pphoto1=getDefaultIcon(user.get("type"));
                     }
                     if(object.get("type")=="unassigned"){
-                        var ass=assignee.get("user");
+                        var ass=assignee.get("pUser");
                         timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was unassigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
                     }
                     if(object.get("type")=="assigned"){
-                        var ass=assignee.get("user");
+                        var ass=assignee.get("pUser");
                         timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was assigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
                     }
                     if(object.get("type")=="closed"){
@@ -507,7 +507,7 @@ function populateTeam(){
     teamView.html("<option selected disabled hidden value='Assign a Team Member'></option>");    
     ListItem = Parse.Object.extend("TeamMember");
     query = new Parse.Query(ListItem);
-    query.include("user");
+    query.include("pUser");
     query.include("neta");
     query.equalTo("neta", currentUser.get("neta"));
     query.find({
@@ -516,9 +516,8 @@ function populateTeam(){
                 for (var i = 0; i < results.length; i++) { 
                     object= results[i];
                     team.push(object);
-                    teamView.append("<option value="+object.get('user').id+">"+object.get('user').get('name')+"</option>");
+                    teamView.append("<option value="+object.id+">"+object.get('pUser').get('name')+"</option>");
                 }
-
             },
           error: function(error) {
                 console.log("Error:"+error.message);
@@ -653,7 +652,7 @@ function teamMember(id){
     console.log("Find Team Member with ID: "+id);
     var member;
     for (var i = 0; i < team.length; i++) { 
-        if(team[i].get('user').id==id){
+        if(team[i].id==id){
             member=team[i];
             console.log("Member Found: "+member.id);
             return member;
@@ -682,8 +681,10 @@ function postAssignment(id){
     query.find({
           success: function(results) {
                 var countclaims=0;
+                console.log("People already Assigned"+results.length);
                 for (var i = 0; i < results.length; i++) {
                     results[i].set("type","unassigned");
+                    results[i].save();
                 }
                 var Assign = Parse.Object.extend("Update");
                 var assign = new Assign();
@@ -736,7 +737,7 @@ function setIssueStatusButton(){
         query.equalTo("user",u);
         query.include("assignee");
         query.include(["assignee.user"]);
-        query.include("user");
+        query.include("pUser");
         query.descending('createdAt');
 
         query.find({
@@ -754,7 +755,7 @@ function setIssueStatusButton(){
                         if(results[i].get("assignee")!=undefined){
                             console.log(results[i].get("assignee"));
                             var up=results[i].get("assignee");
-                            var dp=up.get("user");
+                            var dp=up.get("pUser");
                             assignedto.innerHTML="Assigned to: <strong><span class='ct'>"+dp.get("name")+"</span></strong>";
                             break;
                         }
@@ -775,8 +776,8 @@ function setIssueStatusButton(){
         query.equalTo("issue", pointer);
         query.equalTo("user",u);
         query.include("assignee");
-        query.include("user");
-        query.include(["assignee.user"]);
+        query.include("pUser");
+        query.include(["assignee.pUser"]);
         query.descending('createdAt');
 
         query.find({
@@ -796,7 +797,7 @@ function setIssueStatusButton(){
                         if(results[i].get("assignee")!=undefined){
                             
                             var up=results[i].get("assignee");
-                            var dp=up.get("user");
+                            var dp=up.get("pUser");
                             assignedto.innerHTML="Assigned to: <strong>"+dp.get("name")+"</strong>";
                             break;
                         }
