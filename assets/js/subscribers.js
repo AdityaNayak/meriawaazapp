@@ -12,9 +12,12 @@ function updateCounters(){
     var query1 = new Parse.Query(Citizens);
     query1.equalTo("constituency",constituency);
     var query2 = new Parse.Query(Subscribers);
+    query2.equalTo("neta",neta);
     var query3 = new Parse.Query(Subscribers2);
     query3.notEqualTo("phone",undefined);
+    query3.equalTo("neta",neta);
     var query4 = new Parse.Query(Subscribers3);
+    query4.equalTo("neta",neta);
     query4.equalTo("phone",undefined);
     query4.notEqualTo("email",undefined);
     query1.count({
