@@ -210,71 +210,74 @@ function populateStatus(){
                     poin.id = results[i].id;
                     qpost.push(poin);
                 }
-                ListItem2 = Parse.Object.extend("PostComment");
-                query2 = new Parse.Query(ListItem2);
-                query2.containedIn("post",qpost);
-                query2.include("post");
-                query2.include("pUser");
-                query2.ascending("createdAt");
-                query2.find({
-                    success: function(results2) {
-                        console.log("Number of comments:"+results2.length);
-                        for(var i=0;i<results.length;i++){
-                            var object=results[i];
-                            var chaincomments ="";
-                            for(var j=0;j<results2.length;j++){
-                                if(results2[j].get("post").id==object.id){
-                                    var time;
-                                    var photo;
-                                    var comm;
-                                    console.log("I am here!142");
-                                    time=timeSince(new Date(results2[j].createdAt));
-                                    if(results2[j].get("pUser").get("pic")==undefined){
-                                        photo=getDefaultIcon(results2[j].get("pUser").get("type"));
+                if qpost.length!=0{
+                    ListItem2 = Parse.Object.extend("PostComment");
+                    query2 = new Parse.Query(ListItem2);
+                    query2.containedIn("post",qpost);
+                    query2.include("post");
+                    query2.include("pUser");
+                    query2.ascending("createdAt");
+                    query2.find({
+                        success: function(results2) {
+                            console.log("Number of comments:"+results2.length);
+                            for(var i=0;i<results.length;i++){
+                                var object=results[i];
+                                var chaincomments ="";
+                                for(var j=0;j<results2.length;j++){
+                                    if(results2[j].get("post").id==object.id){
+                                        var time;
+                                        var photo;
+                                        var comm;
+                                        console.log("I am here!142");
+                                        time=timeSince(new Date(results2[j].createdAt));
+                                        if(results2[j].get("pUser").get("pic")==undefined){
+                                            photo=getDefaultIcon(results2[j].get("pUser").get("type"));
+                                        }
+                                        else{
+                                            photo=results2[j].get("pUser").get("pic").url();
+                                        } 
+                                        comm=results2[j].get("content");
+                                        chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i>"+time+"</div></div></div>";
                                     }
-                                    else{
-                                        photo=results2[j].get("pUser").get("pic").url();
-                                    } 
-                                    comm=results2[j].get("content");
-                                    chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i>"+time+"</div></div></div>";
+                                    
                                 }
+                                var d;
+                                var ago;
+                                var content;
+                                var reach;
+                                var likes;
+                                var comments;
+                                console.log("I am here!120");
+                                d=new Date(object.createdAt);
+                                ago=timeSince(d);
+                                content=object.get("content");
+                                reach=object.get("reach");
+                                likes=object.get("likes");
+                                comments=object.get("numComments");
+                                if(currentUser.get("pic")!=undefined){
+                                var imige=currentUser.get("pic").url();
+                                }
+                                else{
+                                    var imige=getDefaultIcon(currentUser.get("type"));
+                                }
+                                postView.append("<div id='post-"+object.id+"' class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div><div class='bg2 br-fx1-top'><div class='row' name='"+object.id+"' id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div>");
+                                console.log("form listener created for "+object.id);
+                                $('#form-'+object.id).submit(function(event){
+                                      event.preventDefault();
+                                      postComment(event.target.id.toString().split('-')[1]);
+                                });
                                 
                             }
-                            var d;
-                            var ago;
-                            var content;
-                            var reach;
-                            var likes;
-                            var comments;
-                            console.log("I am here!120");
-                            d=new Date(object.createdAt);
-                            ago=timeSince(d);
-                            content=object.get("content");
-                            reach=object.get("reach");
-                            likes=object.get("likes");
-                            comments=object.get("numComments");
-                            if(currentUser.get("pic")!=undefined){
-                            var imige=currentUser.get("pic").url();
-                            }
-                            else{
-                                var imige=getDefaultIcon(currentUser.get("type"));
-                            }
-                            postView.append("<div id='post-"+object.id+"' class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div><div class='bg2 br-fx1-top'><div class='row' name='"+object.id+"' id='expand'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"</div><div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div>");
-                            console.log("form listener created for "+object.id);
-                            $('#form-'+object.id).submit(function(event){
-                                  event.preventDefault();
-                                  postComment(event.target.id.toString().split('-')[1]);
-                            });
                             fetchConstituencyData(currentNeta.get("constituency"));
                             console.log("NProgress Stop");
+                        },
+                        error: function(error2){
+                            console.log("Error2:"+error2.message);
+                            NProgress.done();
                         }
-                       
-                    },
-                    error: function(error2){
-                        console.log("Error2:"+error2.message);
-                        NProgress.done();
-                    }
-                });    
+                    });
+                }
+                    
           },
           error: function(error) {
                 console.log("Error0:"+error.message);
@@ -471,8 +474,8 @@ function updateReach(){
         document.getElementById("population").innerHTML=count1;
       },
       error: function(error) {
-
-        alert("Error: " + error.code + " " + error.message);
+        console.log("Error: "+error.message);
+                NProgress.done();
       }
     });
 }
@@ -551,17 +554,20 @@ function setCurrentNetaTM(n){
                             populateStatus();
                        },
                        error: function(error){
-                           
+                           console.log("Error: "+error.message);
+                            NProgress.done();
                        } 
                     });
                 },
                 error:function(error){
-                    
+                    console.log("Error: "+error.message);
+                    NProgress.done();
                 }
             });
      },
      error: function(error){
-         
+         console.log("Error: "+error.message);
+        NProgress.done();
      }   
     });
 }
@@ -597,13 +603,15 @@ function setCurrentNeta(u){
                     populateStatus();   
                } ,
                error: function(error){
-                   
+                   console.log("Error: "+error.message);
+                    NProgress.done();
                }
             });
             
        },
        error: function(error){
-           
+           console.log("Error: "+error.message);
+                NProgress.done();
        }
     });
 }
