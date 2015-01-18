@@ -70,7 +70,7 @@ else{
 						                		})
 						                		
 						                	}	
-						                	if(p.get("logo").url()!=undefined){
+						                	if(p.get("logo")!=undefined){
 						                		plogo.src=p.get("logo").url();
 						                	}
 
