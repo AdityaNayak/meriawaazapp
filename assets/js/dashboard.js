@@ -132,7 +132,7 @@ function calculateNetaStats(n){
             age="-";
         }
         if(results[0].get("pUser").get("pic")!=undefined){
-            photo=results[0].get("user").get("pic").url();
+            photo=results[0].get("pUser").get("pic").url();
         }
         else{
             photo="./assets/images/neta.png";
