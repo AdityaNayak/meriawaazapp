@@ -103,7 +103,7 @@ else{
 						                					consti.innerHTML=t.get("neta").get("constituency").get("name");
 								                	
 
-										                	if(p.get("logo").url()!=undefined){
+										                	if(p.get("logo")!=undefined){
 										                		plogo.src=p.get("logo").url();
 										                	}
 
