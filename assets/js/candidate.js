@@ -95,47 +95,73 @@ var profilelink=document.getElementById('profilelink');
 var prol;
 
 function queryUserTable(){
-    console.log('QueryUserTable');        
-    if(neta.get("user").get("pic")!=undefined){
-      np=neta.get("user").get("pic").url();
-    }
-    else{
-      np="./../assets/images/neta.png";
-    }
+      console.log('QueryUserTable');
+      neta.fetch({
+          success:function(results){
+                object=neta.get("pUser");
+                object.fetch({
+                    success:function(results){
+                        if(object.get("pic")!=undefined){
+                          np=object.get("pic").url();
+                        }
+                        else{
+                          np="./../assets/images/neta.png";
+                        }
+                        p=neta.get("party");
+                        p.fetch({
+                            success:function(reuslts){
+                                py=p.get("name");
+                                if(neta.get("age")!=undefined){
+                                    nNA=object.get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
+                                }
+                                else{
+                                    nNA=object.get("name");
+                                }
+                                edu=neta.get("education");
+                                ass=neta.get("assets");
+                                lia=neta.get("liabilities");
+                                cri=neta.get("criminalCases");
+                                pro=neta.get("profession");
+                                com=neta.get("numComments");
+                                fol=neta.get("numLikes");
+                                ske=neta.get("numDislikes");
+                                icl=neta.get("numIsClaimed");
+                                ico=neta.get("numIsClosed");
+                                icv=neta.get("numIsValidated");
+                                npo=neta.get("numPosts");
+                                ts=neta.get("numMembers");
+                                qa=neta.get("numQsAnswered");
+                                qat=neta.get("numQsAskedTo");
+                                if(neta.get("link")!=undefined){
+                                    prol="Details verified from <a href='"+neta.get("link")+"'>profile</a>";
+                                }
+                                else{
+                                    prol="Details verified from <a href='#'>profile</a>";
+                                }
+                                
+                                
+                                queryPostTable();
+                            },
+                            error:function(error){
+                                console.log("Error: "+error.message);
+                                NProgress.done();
+                            }
+                        });
+                    },
+                    error:function(error){
+                        
+                    }
+                });
 
-
-    p=neta.get("party");
-    if(neta.get("age")!=undefined){
-        nNA=neta.get("user").get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
-    }
-    else{
-        nNA=neta.get("user").get("name");
-    }
-    edu=neta.get("education");
-    ass=neta.get("assets");
-    lia=neta.get("liabilities");
-    cri=neta.get("criminalCases");
-    pro=neta.get("profession");
-    com=neta.get("numComments");
-    fol=neta.get("numLikes");
-    ske=neta.get("numDislikes");
-    icl=neta.get("numIsClaimed");
-    ico=neta.get("numIsClosed");
-    icv=neta.get("numIsValidated");
-    npo=neta.get("numPosts");
-    ts=neta.get("numMembers");
-    qa=neta.get("numQsAnswered");
-    qat=neta.get("numQsAskedTo");
-    if(neta.get("link")!=undefined){
-        prol="Details verified from <a href='"+neta.get("link")+"'>profile</a>";
-    }
-    else{
-        prol="Details verified from <a href='#'>profile</a>";
-    }
-    
-    py=p.get("name");
-    queryPostTable();
+                
+          },
+          error:function(error){
+              console.log("Error: "+error.message);
+                        NProgress.done();
+          }
+      });    
 }
+
 
 function queryPostTable(){
     console.log('QueryPostTable');
@@ -361,7 +387,7 @@ function getNeta(id){
     console.log("NProgress Start");
     ListItem = Parse.Object.extend("Neta");
     query = new Parse.Query(ListItem);
-    query.include("user");
+    query.include("pUser");
     query.include(["neta.party"]);
     query.include(["neta.constituency"]);
     query.equalTo("objectId", id);
@@ -373,14 +399,15 @@ function getNeta(id){
                 }
                 else{
                     neta = results[0];
-                    currentUser = results[0].get("user");
+                    currentUser = results[0].get("pUser");
                     document.title = currentUser.get("name")+' | Delhi Elections 2015 | Meri Awaaz';
                     queryUserTable();
                 }
 
             },
           error: function(error) {
-                console.log("Error:"+error.message);
+                console.log("Error: "+error.message);
+                        NProgress.done();
           }
     });   
     

@@ -9,7 +9,7 @@ function populateCandidates(){
 	numc=0;
 	var Candidates= Parse.Object.extend("Neta");
 	var query=new Parse.Query(Candidates);
-	query.include("user");
+	query.include("pUser");
 	query.include("party");
 	query.include("constituency");
 	query.find({
@@ -22,7 +22,7 @@ function populateCandidates(){
 					var p=neta.get("party");
 					var c=neta.get("constituency");
 					console.log(p.get("code"));
-					var pu=neta.get("user");
+					var pu=neta.get("pUser");
 					console.log(pu.get("name"));
 					if(p.get("code")==3){
 						if(pu.get("pic")!=undefined){

@@ -96,77 +96,214 @@ var prol;
 
 function queryUserTable(){
     console.log('QueryUserTable');
-    ListItem = Parse.Object.extend("User");
-    query = new Parse.Query(ListItem);
-    query.equalTo("objectId", currentUser.id);
-    query.include("neta");
-    //query.include(["neta.user"]);
-    query.include(["neta.constituency"]);
-    query.include(["neta.party"]);
-    query.include("teamMember");
-    query.include(["teamMember.neta"]);
-    query.include(["teamMember.neta.user"]);
-    query.include(["teamMember.neta.party"]);
-    query.include(["teamMember.neta.constituency"]);
-    
-    query.find({
-      success: function(results) {
-        var object = results[0];
-        
-        if(object.get("type")=="neta"){
-          neta=object.get("neta");
+    var object = currentUser;
+    if(object.get("type")=="neta"){
+      neta=object.get("neta");
+      neta.fetch({
+          success:function(results){
+                if(object.get("pic")!=undefined){
+                  np=object.get("pic").url();
+                }
+                else{
+                  np="./assets/images/neta.png";
+                }
+                p=neta.get("party");
+                p.fetch({
+                    success:function(reuslts){
+                        py=p.get("name");
+                        if(neta.get("age")!=undefined){
+                            nNA=object.get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
+                        }
+                        else{
+                            nNA=object.get("name");
+                        }
+                        edu=neta.get("education");
+                        ass=neta.get("assets");
+                        lia=neta.get("liabilities");
+                        cri=neta.get("criminalCases");
+                        pro=neta.get("profession");
+                        com=neta.get("numComments");
+                        fol=neta.get("numLikes");
+                        ske=neta.get("numDislikes");
+                        icl=neta.get("numIsClaimed");
+                        ico=neta.get("numIsClosed");
+                        icv=neta.get("numIsValidated");
+                        npo=neta.get("numPosts");
+                        ts=neta.get("numMembers");
+                        qa=neta.get("numQsAnswered");
+                        qat=neta.get("numQsAskedTo");
+                        if(neta.get("link")!=undefined){
+                            prol="Details verified from <a href='"+neta.get("link")+"'>profile</a>";
+                        }
+                        else{
+                            prol="Details verified from <a href='#'>profile</a>";
+                        }
+                        
+                        
+                        queryPostTable();
+                    },
+                    error:function(error){
+                        
+                    }
+                });
+                
+          },
+          error:function(error){
+              
+          }
+      });
 
-        }
-        else if(object.get("type")=="teamMember"){
-          var teammember=object.get("teamMember");
-          neta=teammember.get("neta");
-        }
-        
-        if(neta.get("user").get("pic")!=undefined){
-          np=neta.get("user").get("pic").url();
-        }
-        else{
-          np="./assets/images/neta.png";
-        }
-
-
-        p=neta.get("party");
-        if(neta.get("age")!=undefined){
-            nNA=neta.get("user").get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
-        }
-        else{
-            nNA=neta.get("user").get("name");
-        }
-        edu=neta.get("education");
-        ass=neta.get("assets");
-        lia=neta.get("liabilities");
-        cri=neta.get("criminalCases");
-        pro=neta.get("profession");
-        com=neta.get("numComments");
-        fol=neta.get("numLikes");
-        ske=neta.get("numDislikes");
-        icl=neta.get("numIsClaimed");
-        ico=neta.get("numIsClosed");
-        icv=neta.get("numIsValidated");
-        npo=neta.get("numPosts");
-        ts=neta.get("numMembers");
-        qa=neta.get("numQsAnswered");
-        qat=neta.get("numQsAskedTo");
-        if(neta.get("link")!=undefined){
-            prol="Details verified from <a href='"+neta.get("link")+"'>profile</a>";
-        }
-        else{
-            prol="Details verified from <a href='#'>profile</a>";
-        }
-        
-        py=p.get("name");
-        queryPostTable();
-      },
-      error: function(error) {
-        console.log("Error: "+error.message);
-      }
-    });
+    }
+    else if(object.get("type")=="teamMember"){
+      var teammember=object.get("teamMember");
+      teammember.fetch({
+          success:function(){
+              neta=teammember.get("neta");
+              neta.fetch({
+                  success:function(results){
+                        var u=neta.get("user");
+                        u.fetch({
+                            success:function(results){
+                                if(u.get("pic")!=undefined){
+                                  np=u.get("pic").url();
+                                }
+                                else{
+                                  np="./assets/images/neta.png";
+                                }
+                                p=neta.get("party");
+                                p.fetch({
+                                    success:function(results){
+                                        py=p.get("name");
+                                        if(neta.get("age")!=undefined){
+                                            nNA=u.get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
+                                        }
+                                        else{
+                                            nNA=u.get("name");
+                                        }
+                                        edu=neta.get("education");
+                                        ass=neta.get("assets");
+                                        lia=neta.get("liabilities");
+                                        cri=neta.get("criminalCases");
+                                        pro=neta.get("profession");
+                                        com=neta.get("numComments");
+                                        fol=neta.get("numLikes");
+                                        ske=neta.get("numDislikes");
+                                        icl=neta.get("numIsClaimed");
+                                        ico=neta.get("numIsClosed");
+                                        icv=neta.get("numIsValidated");
+                                        npo=neta.get("numPosts");
+                                        ts=neta.get("numMembers");
+                                        qa=neta.get("numQsAnswered");
+                                        qat=neta.get("numQsAskedTo");
+                                        if(neta.get("link")!=undefined){
+                                            prol="Details verified from <a href='"+neta.get("link")+"'>profile</a>";
+                                        }
+                                        else{
+                                            prol="Details verified from <a href='#'>profile</a>";
+                                        }                                    
+                                        queryPostTable();      
+                                    },
+                                    error:function(error){
+                                        console.log("Error: "+error.message);
+                                        NProgress.done();    
+                                    }
+                                });
+                            },
+                            error:function(error){
+                             console.log("Error: "+error.message);
+                                NProgress.done();   
+                            }
+                        });
+                        
+                        
+                  },
+                  error:function(error){
+                      console.log("Error: "+error.message);
+                        NProgress.done();
+                  }
+              });
+          },
+          error:function(){
+              console.log("Error: "+error.message);
+                NProgress.done();
+          }
+      });
+    }    
 }
+
+// function queryUserTable(){
+//     console.log('QueryUserTable');
+//     ListItem = Parse.Object.extend("User");
+//     query = new Parse.Query(ListItem);
+//     query.equalTo("objectId", currentUser.id);
+//     query.include("neta");
+//     //query.include(["neta.user"]);
+//     query.include(["neta.constituency"]);
+//     query.include(["neta.party"]);
+//     query.include("teamMember");
+//     query.include(["teamMember.neta"]);
+//     query.include(["teamMember.neta.user"]);
+//     query.include(["teamMember.neta.party"]);
+//     query.include(["teamMember.neta.constituency"]);
+    
+//     query.find({
+//       success: function(results) {
+//         var object = results[0];
+        
+//         if(object.get("type")=="neta"){
+//           neta=object.get("neta");
+
+//         }
+//         else if(object.get("type")=="teamMember"){
+//           var teammember=object.get("teamMember");
+//           neta=teammember.get("neta");
+//         }
+        
+//         if(neta.get("user").get("pic")!=undefined){
+//           np=neta.get("user").get("pic").url();
+//         }
+//         else{
+//           np="./assets/images/neta.png";
+//         }
+
+
+//         p=neta.get("party");
+//         if(neta.get("age")!=undefined){
+//             nNA=neta.get("user").get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
+//         }
+//         else{
+//             nNA=neta.get("user").get("name");
+//         }
+//         edu=neta.get("education");
+//         ass=neta.get("assets");
+//         lia=neta.get("liabilities");
+//         cri=neta.get("criminalCases");
+//         pro=neta.get("profession");
+//         com=neta.get("numComments");
+//         fol=neta.get("numLikes");
+//         ske=neta.get("numDislikes");
+//         icl=neta.get("numIsClaimed");
+//         ico=neta.get("numIsClosed");
+//         icv=neta.get("numIsValidated");
+//         npo=neta.get("numPosts");
+//         ts=neta.get("numMembers");
+//         qa=neta.get("numQsAnswered");
+//         qat=neta.get("numQsAskedTo");
+//         if(neta.get("link")!=undefined){
+//             prol="Details verified from <a href='"+neta.get("link")+"'>profile</a>";
+//         }
+//         else{
+//             prol="Details verified from <a href='#'>profile</a>";
+//         }
+        
+//         py=p.get("name");
+//         queryPostTable();
+//       },
+//       error: function(error) {
+//         console.log("Error: "+error.message);
+//       }
+//     });
+// }
 
 function queryPostTable(){
     console.log('QueryPostTable');

@@ -72,7 +72,7 @@ function populateSubscribers(){
     var pointer= new Parse.Object("Neta");
     pointer.id=neta.id;
     query.equalTo("neta",pointer);
-    query.include("user");
+    query.include("puser");
     query.find({
         success: function(result){
             console.log(result.length);
@@ -84,7 +84,8 @@ function populateSubscribers(){
 
         },
         error: function(error){
-            
+            console.log("Error: "+error.message);
+            NProgress.done();
         }
     });
 }
@@ -111,14 +112,16 @@ function getStuff(){
                                         populateSubscribers();
                                     },
                                     error:function(error){
-                                        
+                                        console.log("Error: "+error.message);
+                                        NProgress.done();
                                     }
                                 })
                                 
                             }                                
                         },
-                        error: function(results){
-                            
+                        error: function(error){
+                            console.log("Error: "+error.message);
+                            NProgress.done();
                         }
                     });
                 }
@@ -137,24 +140,28 @@ function getStuff(){
                                             populateSubscribers();
                                         },
                                         error:function(error){
-                                            
+                                            console.log("Error: "+error.message);
+                                            NProgress.done();
                                         }
                                     });
                                 },
                                 error:function(error){
-                                    
+                                    console.log("Error: "+error.message);
+                                    NProgress.done();
                                 }
                             });  
                         },
                         error: function(error){
-                            
+                            console.log("Error: "+error.message);
+                            NProgress.done();
                         }
                     });
                 }
                 
             },
           error: function(error) {
-                console.log("Error:"+error.message);
+                console.log("Error: "+error.message);
+                NProgress.done();
           }
     });
 }

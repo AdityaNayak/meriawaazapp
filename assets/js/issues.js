@@ -573,19 +573,27 @@ function postClaim(){
     var i = new Parse.Object("Issue");
     u.id = currentUser.id;
     i.id = currmarker.content.id;
-    i.set("status", "progress");
+    claim.set("issue",i);
     claim.set("type", "claim");
-    claim.set("issue", i);
     claim.set("user", u);
-    
+      
     claim.save(null, {
       success: function(claim) {
-        updateCurrentMarker(currmarker);
-        enableDetailsView();
-       
+        console.log(i.id);
+        Parse.Cloud.run("changeStatus", {objectId: i.id, status: "progress"}, {
+          success:function(results){
+            console.log(results);
+            updateCurrentMarker(currmarker);
+            enableDetailsView();
+          },
+          error:function(error){
+            console.log(error);
+          }
+        });   
+          
       },
       error: function(claim, error) {
-        console.log('Failed to Comment! ' + error.message);
+        console.log('Failed to Claim! ' + error.message);
         enableDetailsView();
       }
     });
@@ -606,16 +614,22 @@ function postClose(){
     var i = new Parse.Object("Issue");
     u.id = currentUser.id;
     i.id = currmarker.content.id;
-    i.set("status", "review");
+    close.set("issue",i);
     close.set("type", "closed");
-    close.set("issue", i);
     close.set("user", u);
     
     close.save(null, {
       success: function(close) {
-        updateCurrentMarker(currmarker);
-        enableDetailsView();
-       
+        Parse.Cloud.run("changeStatus", {objectId: i.id, status: "review"}, {
+          success:function(results){
+            console.log(results);
+            updateCurrentMarker(currmarker);
+            enableDetailsView();
+          },
+          error:function(error){
+            console.log(error);
+          }
+        });        
       },
       error: function(close, error) {
         console.log('Failed to Close! ' + error.message);
@@ -1384,6 +1398,7 @@ function filter(){
     }         
 }  
 
+
 function updateCounters(){
     var no=0;
     var np=0;
@@ -1438,53 +1453,117 @@ function listViewClick(p) {
 function initializeMap(){
   var constituency;
   if (currentUser.get("type")=="neta"){
-        ListItem = Parse.Object.extend("User");
-        query = new Parse.Query(ListItem);
-        query.equalTo("objectId", CU.id);
-        query.include("neta");
-        query.include(["neta.party"]);
-        query.include(["neta.constituency"]);
-        query.ascending('createdAt');
-        query.find({
-              success: function(results) {
-                if(currentUser.get("username")!="admin"){
-                  console.log(results[0].get("neta").get("constituency"));
-                  constituency=results[0].get("neta").get("constituency");
-                  plotConstituency(constituency.get("index"));
-                  map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
-                }  
-                else{
-                  populate();
-                  populateTeam();
-                }
-              },
-              error: function(error){
-                console.log("Error: "+error.message); 
-              }
-        });
-  }
-  else{
-        ListItem = Parse.Object.extend("User");
-        query = new Parse.Query(ListItem);
-        query.equalTo("objectId", CU.id);
-        query.include("teamMember");
-        query.include(["teamMember.neta"]);
-        query.include(["teamMember.neta.party"]);
-        query.include(["teamMember.neta.constituency"]);
-        query.ascending('createdAt');
-        query.find({
-              success: function(results) {
-                constituency=results[0].get("teamMember").get("neta").get("constituency");
+      if(currentUser.get("username")!="admin"){
+        var n=currentUser.get("neta");
+        n.fetch({
+          success:function(results1){
+            constituency=n.get("constituency");
+            constituency.fetch({
+              success:function(results2){
                 plotConstituency(constituency.get("index"));
                 map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
               },
-              error: function(error){
+              error:function(error){
                 console.log("Error: "+error.message);
+                NProgress.done();
               }
+            });
+          },
+          error:function(error){
+            console.log("Error: "+error.message);
+            NProgress.done();
+          }
         });
-      
+      }  
+      else{
+        populate();
+        populateTeam();
+      }
+  }
+  else{  
+      var t=currentUser.get("teamMember");
+      t.fetch({
+        success:function(){
+          var n=t.get("neta");
+          n.fetch({
+            success:function(results){
+              constituency=n.get("constituency");
+              constituency.fetch({
+                success:function(results){
+                  plotConstituency(constituency.get("index"));
+                  map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+                },
+                error:function(error){
+                  console.log("Error: "+error.message);
+                  NProgress.done();
+                }
+              });
+            },
+            error:function(error){
+                console.log("Error: "+error.message);
+                NProgress.done();
+            }
+          });
+        },
+        error:function(error){
+            console.log("Error: "+error.message);
+            NProgress.done();         
+        }
+      });
   }
 }
+
+// function initializeMap(){
+//   var constituency;
+//   if (currentUser.get("type")=="neta"){
+//         ListItem = Parse.Object.extend("User");
+//         query = new Parse.Query(ListItem);
+//         query.equalTo("objectId", CU.id);
+//         query.include("neta");
+//         query.include(["neta.party"]);
+//         query.include(["neta.constituency"]);
+//         query.ascending('createdAt');
+//         query.find({
+//               success: function(results) {
+//                 if(currentUser.get("username")!="admin"){
+//                   console.log(results[0].get("neta").get("constituency"));
+//                   constituency=results[0].get("neta").get("constituency");
+//                   plotConstituency(constituency.get("index"));
+//                   map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+//                 }  
+//                 else{
+//                   populate();
+//                   populateTeam();
+//                 }
+//               },
+//               error: function(error){
+//                 console.log("Error: "+error.message); 
+//               }
+//         });
+//   }
+//   else{
+//         ListItem = Parse.Object.extend("User");
+//         query = new Parse.Query(ListItem);
+//         query.equalTo("objectId", CU.id);
+//         query.include("teamMember");
+//         query.include(["teamMember.neta"]);
+//         query.include(["teamMember.neta.party"]);
+//         query.include(["teamMember.neta.constituency"]);
+//         query.ascending('createdAt');
+//         query.find({
+//               success: function(results) {
+//                 constituency=results[0].get("teamMember").get("neta").get("constituency");
+//                 plotConstituency(constituency.get("index"));
+//                 map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+//               },
+//               error: function(error){
+//                 console.log("Error: "+error.message);
+//               }
+//         });
+      
+//   }
+// }
+
 
 function initialize() {
     console.log("initialize");
