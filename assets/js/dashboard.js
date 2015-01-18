@@ -602,6 +602,7 @@ function setCurrentNeta(u){
                     document.getElementById('cs').innerHTML=cs;
                     calculateCurrentNetaStats();
                     populateStatus();   
+                    updateReach();
                } ,
                error: function(error){
                    console.log("Error: "+error.message);
