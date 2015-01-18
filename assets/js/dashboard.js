@@ -210,7 +210,7 @@ function populateStatus(){
                     poin.id = results[i].id;
                     qpost.push(poin);
                 }
-                if qpost.length!=0{
+                if (qpost.length!=0){
                     ListItem2 = Parse.Object.extend("PostComment");
                     query2 = new Parse.Query(ListItem2);
                     query2.containedIn("post",qpost);
