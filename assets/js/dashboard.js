@@ -268,15 +268,16 @@ function populateStatus(){
                                 });
                                 
                             }
-                            fetchConstituencyData(currentNeta.get("constituency"));
-                            console.log("NProgress Stop");
                         },
                         error: function(error2){
                             console.log("Error2:"+error2.message);
                             NProgress.done();
                         }
                     });
+
                 }
+                fetchConstituencyData(currentNeta.get("constituency"));
+                console.log("NProgress Stop");
                     
           },
           error: function(error) {
