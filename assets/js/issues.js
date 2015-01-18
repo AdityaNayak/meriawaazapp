@@ -473,10 +473,11 @@ function populateUpdates(){
                     else{
                         pphoto1=getDefaultIcon(user.get("type"));
                     }
-                    if(object.get("type")=="unassigned"){
-                        var ass=assignee.get("pUser");
-                        timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was unassigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
-                    }
+                    // if(object.get("type")=="unassigned"){
+                    //   console.log(assignee);
+                    //     var ass=assignee.get("pUser");
+                    //     timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was unassigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
+                    // }
                     if(object.get("type")=="assigned"){
                         var ass=assignee.get("pUser");
                         timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was assigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
@@ -681,35 +682,79 @@ function postAssignment(id){
     query.find({
           success: function(results) {
                 var countclaims=0;
-                console.log("People already Assigned"+results.length);
-                for (var i = 0; i < results.length; i++) {
-                    results[i].set("type","unassigned");
-                    results[i].save();
-                }
-                var Assign = Parse.Object.extend("Update");
-                var assign = new Assign();
-                var u = new Parse.Object("User");
-                var i = new Parse.Object("Issue");
-                var a = new Parse.Object("TeamMember");
-                var member=teamMember(id);
-                u.id = currentUser.id;
-                a.id = member.id; 
-                i.id = currmarker.content.id;
-                assign.set("type", "assigned");
-                assign.set("issue", i);
-                assign.set("user", u);
-                assign.set("assignee", a);
-                assign.save(null, {
-                  success: function(assign) {
-                    updateCurrentMarker(currmarker);
-                    enableDetailsView();
-                    
-                  },
-                  error: function(assign, error) {
-                    alert('Failed to Assign! ' + error.message);
-                    enableDetailsView();
-                  }
-                });
+                // console.log("People already Assigned"+results.length);
+                // if(results.length!=0){
+                //     var Assign = Parse.Object.extend("Update");
+                //     var assign = new Assign();
+                //     var u = new Parse.Object("User");
+                //     var i = new Parse.Object("Issue");
+                //     var a = new Parse.Object("TeamMember");
+                //     u.id = currentUser.id;
+                //     a.id = results[0].id; 
+                //     i.id = currmarker.content.id;
+                //     assign.set("type", "unassigned");
+                //     assign.set("issue", i);
+                //     assign.set("user", u);
+                //     assign.set("assignee", a);
+                //     assign.save(null, {
+                //       success: function(assign) {
+                //             var Assign2 = Parse.Object.extend("Update");
+                //             var assign2 = new Assign2();
+                //             var u2 = new Parse.Object("User");
+                //             var i2 = new Parse.Object("Issue");
+                //             var a2 = new Parse.Object("TeamMember");
+                //             var member2=teamMember(id);
+                //             u2.id = currentUser.id;
+                //             a2.id = member2.id; 
+                //             i2.id = currmarker.content.id;
+                //             assign2.set("type", "assigned");
+                //             assign2.set("issue", i2);
+                //             assign2.set("user", u2);
+                //             assign2.set("assignee", a2);
+                //             assign2.save(null, {
+                //               success: function(assign2) {
+                //                 updateCurrentMarker(currmarker);
+                //                 enableDetailsView();
+                                
+                //               },
+                //               error: function(assign2, error) {
+                //                 alert('Failed to Assign! ' + error.message);
+                //                 enableDetailsView();
+                //               }
+                //             });
+                //       },
+                //       error: function(assign, error) {
+                //         alert('Failed to Assign! ' + error.message);
+                //         enableDetailsView();
+                //       }
+                //     });
+                // }
+                // else{
+                    var Assign = Parse.Object.extend("Update");
+                    var assign = new Assign();
+                    var u = new Parse.Object("User");
+                    var i = new Parse.Object("Issue");
+                    var a = new Parse.Object("TeamMember");
+                    var member=teamMember(id);
+                    u.id = currentUser.id;
+                    a.id = member.id; 
+                    i.id = currmarker.content.id;
+                    assign.set("type", "assigned");
+                    assign.set("issue", i);
+                    assign.set("user", u);
+                    assign.set("assignee", a);
+                    assign.save(null, {
+                      success: function(assign) {
+                        updateCurrentMarker(currmarker);
+                        enableDetailsView();
+                        
+                      },
+                      error: function(assign, error) {
+                        alert('Failed to Assign! ' + error.message);
+                        enableDetailsView();
+                      }
+                    });
+                //}
                 
             },
           error: function(error) {
@@ -1727,7 +1772,9 @@ function initialize() {
     $('#claim-st2').click(function(){
         disableDetailsView();
         var q= $('#team').val();
-        postAssignment(q);
+        if(q!=null){
+          postAssignment(q);
+        }
     });
 
     $('#close').click(function(){
