@@ -1,2 +1,10 @@
 User-agent: *
 Disallow: /
+
+Allow: /delhielections/
+Allow: /delhielections/candidate.html
+Allow: /login.html
+Allow: /press.html
+Allow: /index.html
+Allow: /join.html
+Allow: /privacy-policy.html
