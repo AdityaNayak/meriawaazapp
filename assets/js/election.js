@@ -200,7 +200,7 @@ function displayCandidates(){
 		AAP+="<div class='row'><div class='small-3 columns s-ws-top'><a href='./candidate.html?id="+candidatesAAP[i][0]+"'><img src="+candidatesAAP[i][1]+" class='circle-img'></div><div class='small-9 columns s-ws-top ct'><h4>"+candidatesAAP[i][2]+"</h4><h5 class='secondary-color ct'>"+candidatesAAP[i][3]+"</h5></a></div></div>";
 	}
 	AAP+="</div>";
-	console.log(AAP);
+	//console.log(AAP);
 	AAPView.append(AAP);
 	//Display BJP
 	var BJPView=$('#BJP');
@@ -214,7 +214,7 @@ function displayCandidates(){
 	}
 	BJP+="</div>";
 	BJPView.append(BJP);
-	console.log(BJP);
+	//console.log(BJP);
 	//Display Coongress
 	var CONView=$('#CON');
 	CONView.html("");
@@ -224,6 +224,8 @@ function displayCandidates(){
 			CON+="</div><div class='small-4 columns'>";
 		}
 		CON+="<div class='row'><div class='small-3 columns s-ws-top'><a href='./candidate.html?id="+candidatesCON[i][0]+"'><img src="+candidatesCON[i][1]+" class='circle-img'></div><div class='small-9 columns s-ws-top ct'><h4>"+candidatesCON[i][2]+"</h4><h5 class='secondary-color ct'>"+candidatesCON[i][3]+"</h5></a></div></div>";
+	console.log('<url><loc>http://meriawaazapp.com/delhielections/candidate.html?id='+candidatesCON[i][0]+'</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>');
+	
 	}
 	CON+="</div>";
 	CONView.append(CON);
