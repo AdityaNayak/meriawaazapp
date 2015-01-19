@@ -400,7 +400,7 @@ function getNeta(id){
                 else{
                     neta = results[0];
                     currentUser = results[0].get("pUser");
-                    document.title = currentUser.get("name")+' | Delhi Elections 2015 | Meri Awaaz';
+                    document.title = toTitleCase(currentUser.get("name"))+' | Delhi Elections 2015 | Meri Awaaz';
                     queryUserTable();
                 }
 
@@ -411,6 +411,10 @@ function getNeta(id){
           }
     });   
     
+}
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
 function initialize() {
