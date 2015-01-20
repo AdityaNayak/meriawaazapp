@@ -8,3 +8,4 @@ Allow: /press.html
 Allow: /index.html
 Allow: /join.html
 Allow: /privacy-policy.html
+Allow: /sitemap.xml
