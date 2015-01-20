@@ -9,3 +9,7 @@ Allow: /index.html
 Allow: /join.html
 Allow: /privacy-policy.html
 Allow: /sitemap.xml
+Allow: /assets/css/
+Allow: /assets/images/
+Allow: /assets/js/
+Allow: /assets/bower_components/
