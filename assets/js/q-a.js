@@ -327,7 +327,7 @@ function postAnswer(a){
 function populateOpenTo(constituency){
 	console.log("populateOpenTo");
 	var Election = Parse.Object.extend("Election");
-	var election = new Parse.Quesry(Election);
+	var election = new Parse.Query(Election);
 	election.equalTo("constituency",constituency);
 	election.include("arrayNetas.pUser");
 	election.find({
