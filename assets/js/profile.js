@@ -132,11 +132,12 @@ function queryUserTable(){
                         ts=neta.get("numMembers");
                         qa=neta.get("numQsAnswered");
                         qat=neta.get("numQsAskedTo");
+                        console.log(neta.get("link"));
                         if(neta.get("link")!=undefined){
-                            prol="Details verified from <a href='"+neta.get("link")+"'>profile</a>";
+                            prol="Details verified from <a href='"+neta.get('link').toString()+"'>profile</a>";
                         }
                         else{
-                            prol="Details verified from <a href='#'>profile</a>";
+                            prol="Details verified from previous records.";
                         }
                         
                         
@@ -196,10 +197,11 @@ function queryUserTable(){
                                         qa=neta.get("numQsAnswered");
                                         qat=neta.get("numQsAskedTo");
                                         if(neta.get("link")!=undefined){
-                                            prol="Details verified from <a href='"+neta.get("link")+"'>profile</a>";
+                                            console.log(neta.get("link"));
+                                            prol="Details verified from <a href='"+neta.get("link").toString()+"'>profile</a>";
                                         }
                                         else{
-                                            prol="Details verified from <a href='#'>profile</a>";
+                                            prol="Details verified from previous records.";
                                         }                                    
                                         queryPostTable();      
                                     },
@@ -341,8 +343,7 @@ function queryFollowerTable(){
     query.equalTo("neta", pointer);
     query.equalTo("type", "like");
     var date=new Date(currentUser.get("lastFetched"));
-    var d = new Date(date.getTime());
-    //query.greaterThan("createdAt", d);
+    query.greaterThan("createdAt", date);
     query.find({
       success: function(results) {
         nfol=results.length;
