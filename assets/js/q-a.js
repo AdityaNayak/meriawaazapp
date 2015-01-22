@@ -1,75 +1,20 @@
 var currquestion;
 var currentUser;
 var currentNeta;
+var folllist=[];
 
 function followerQuestions(){
 	var qView=$('#qView');
 	console.log("followerQuestions");
 	qView.html("");
 	var question = currentUser.relation("questions");
-	// question.include("askedTo");
-	// question.include("asker");
-	// question.include("pAsker");
-	// question.include("lastAnswer");
-	// question.include(["lastAnswer.pUser"]);
-	// question.include("constituency");
-	//question.equalTo("constituency",constituency);
 	question.query().find({
 	  success:function(results){
-    		var addition="";
-    		for(var i=0;i<results.length;i++){
-    			var object=results[i];
-
-    			if(object.get("lastAnswer")!=undefined){
-    				var lastReply=object.get("lastAnswer").get("content");
-    				if(object.get("lastAnswer").get("pUser").get("pic")!=undefined){
-	    				var lastReplyPhoto=object.get("lastAnswer").get("pUser").get("pic").url();
-	    			}
-	    			else{
-	    				if(object.get("lastAnswer").get("pUser").get("name")!=undefined){
-		    				var lastReplyPhoto=getDefaultIcon("neta");
-		    			}
-		    			else{
-		    				var lastReplyPhoto=getDefaultIcon("citizen");
-		    			}
-	    			}
-    			}
-    			else{
-    				lastReply="No Replies Yet.";
-    				var lastReplyPhoto=getDefaultIcon("citizen");
-    			}
-    			
-    			if(object.get("pAsker").get("pic")!=undefined){
-    				var askedbyPhoto=object.get("pAsker").get("pic").url();
-    			}
-    			else{
-    				var askedbyPhoto=getDefaultIcon(object.get("pAsker").get("type"));    				
-    			}
- 
-			    var lastActivityTime=timeSince(new Date(object.get("lastUpdated")));
-			    var views=object.get("reach");
-			    var comments=object.get("numAnswers");
-			    var followers=object.get("numFollowers");
-			    var tdate=object.createdAt;
-			    var p_timestamp=tdate.toString().split(" ");
-			    var date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
-			    var time=p_timestamp[4];
-			    var place=object.get("constituency").get("name");
-			    var questionstatement=object.get("content");
-			    var questionId=object.id;
-			    qView.append("<div class='row list-qa'><div class='small-9 columns' ><h4 id='question-"+questionId+"'>"+questionstatement+"</h4><div class='row'><div class='small-4 columns secondary secondary-color'><i class='icon-clock'></i>"+time+"</div><div class='small-4 columns secondary secondary-color'><i class='icon-calendar'></i>"+date+"</div><div class='small-4 columns secondary secondary-color'><i class='icon-location'></i> "+place+"</div></div><p class='secondary-color s-ws-top'>"+lastReply+"</p></div><div class='small-3 columns'><div class='row'><div class='small-6 columns text-center'><img src='"+askedbyPhoto+"' class='circle-img img-h'><h5 class='secondary secondary-color'>Asked by</h5></div><div class='small-6 columns text-center'><img src='"+ lastReplyPhoto+"' class='circle-img img-h'><h5 class='secondary secondary-color'>Last reply</h5></div></div><div class='row secondary'><div class='small-6 columns text-right secondary-color'>Last actvity:</div><div class='small-6 columns'>"+lastActivityTime+"</div></div><div class='row'><div class='small-6 columns text-right secondary-color'>Views:</div><div class='small-6 columns'>"+views+"</div></div><div class='row'><div class='small-6 columns text-right secondary-color'>Comments:</div><div class='small-6 columns'>"+comments+"</div></div><div class='row'><div class='small-6 columns text-right secondary-color'>Followers:</div><div class='small-6 columns'>"+followers+"</div></div></div></div><hr>");
-				$('#question-'+questionId).off();
-				$('#question-'+questionId).click(function(event){
-					  event.preventDefault();
-                      NProgress.start();
-                      console.log(event.target.id.toString().split('-')[1]);
-                      singleQuestion(event.target.id.toString().split('-')[1]);
-
-                });	
-            }
-                NProgress.done();
-			
-    		
+	  		folllist=[];
+	  		for(var i=0;i<results.length;i++){
+	  			folllist.push(results[i].id);
+	  		}
+    		populateQuestions(3);
     	},
     	error:function(error){
     		console.log(error.message);
@@ -90,6 +35,18 @@ function populateQuestions(val){
 	 question.include(["lastAnswer.pUser"]);
 	 question.include("constituency");
 	 question.equalTo("constituency",constituency);
+	 if(val==0){
+	 	
+	 }
+	 else if(val==1){
+	 	question.equalTo("askedTo",currentNeta);
+	 }
+	 else if(val==2){
+	 	question.equalTo("status","open");
+	 }
+	 else if(val==3){
+	 	question.containedIn("objectId",folllist);
+	 }
     question.find({
     	success:function(results){
     		var addition="";
