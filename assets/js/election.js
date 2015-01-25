@@ -11,6 +11,7 @@ function populateCandidates(){
 	var query=new Parse.Query(Candidates);
 	query.include("pUser");
 	query.include("party");
+	query.limit(1000);
 	query.include("constituency");
 	query.find({
 		success:function(results){
