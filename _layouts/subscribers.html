@@ -20,21 +20,26 @@
       Email Subscribers: <span class="f-3x dbc" id="ema">...</span>
     </div>
   </div>
-  <!--<div class="row">
+  <div class="row">
     <div class="small-4 columns m-ws-top">
-      <div class="button tiny">Import List</div>
+      <input type="file" id="fileUpload" />
+      <input type="button" id="upload" value="Upload" />
+      <input type="button" id="check" value="Check in Console" />
+      <hr />
+      <div id="dvCSV">
+      </div>
     </div>
-    <div class="small-4 small-offset-4 columns m-ws-top">
+  <!--  <div class="small-4 small-offset-4 columns m-ws-top">
       <div class="button tiny secondary">Export List</div>
-    </div>
-  </div>-->
+    </div>-->
+
+  </div>
   <div class="row">
     <div class="small-12 columns">
       <table id="subscribers-table">
         <thead>
           <tr>
-            <th width="150">First Name</th>
-            <th width="150">Last Name</th>
+            <th width="150">Name</th>
             <th width="100">Age</th>
             <th width="200">Email Address</th>
             <th width="200">Phone Number</th>
@@ -58,6 +63,125 @@
     $( document ).ready(function() {
       icon_bg();
       icon_bg();
+
+
+     $(function () {
+          $("#upload").bind("click", function () {
+              var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+              if (regex.test($("#fileUpload").val().toLowerCase())) {
+                  NProgress.start();
+                  var Supporter = Parse.Object.extend("Subscriber");
+                  var SupporterArray = [];
+                  if (typeof (FileReader) != "undefined") {
+                      var reader = new FileReader();
+                      reader.onload = function (e) {
+                          var table = $("<table />");
+                          var rows = e.target.result.split("\n");
+                          for (var i = 1; i < rows.length; i++) {
+                              var row = $("<tr />");
+                              var temp = new Supporter();
+                              var cells = rows[i].split(",");
+                              for (var j = 0; j < cells.length; j++) {
+                                  var cell = $("<td />");
+                                  temp.set("neta",neta);
+                                  if(j==0){
+                                    temp.set("name",cells[0].toLowerCase());
+                                    
+                                  }
+                                  else if(j==2){
+                                    temp.set("email",cells[2].toLowerCase());
+                                    
+                                  }
+                                  else if(j==1){
+                                    temp.set("phone",cells[1]);
+                                    
+                                  }
+                                  else{
+                                    temp.set("age",cells[3]);
+                                    
+                                  }
+                                  cell.html(cells[j]);
+                                  row.append(cell);
+
+                              }
+                              SupporterArray.push(temp);
+                              
+                              table.append(row);
+                          }
+                          Parse.Object.saveAll(SupporterArray, {
+                              success: function(objs) {
+                                  alert("Successfully Saved!");
+                                  NProgress.done();
+                              },
+                              error: function(error) { 
+                                  alert("Error: "+error.message);
+                                  NProgress.done();
+                              }
+                          });
+                      }
+                      reader.readAsText($("#fileUpload")[0].files[0]);
+                  } else {
+                      alert("This browser does not support HTML5.");
+                  }
+              } else {
+                  alert("Please upload a valid CSV file.");
+              }
+          });
+      });
+
+      $(function () {
+          $("#check").bind("click", function () {
+              var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+              if (regex.test($("#fileUpload").val().toLowerCase())) {
+                  NProgress.start();
+                  
+                  if (typeof (FileReader) != "undefined") {
+                      var reader = new FileReader();
+                      reader.onload = function (e) {
+                          var table = $("<table />");
+                          var rows = e.target.result.split("\n");
+                          for (var i = 1; i < rows.length; i++) {
+                              var row = $("<tr />");
+                              
+                              var cells = rows[i].split(",");
+                              for (var j = 0; j < cells.length; j++) {
+                                  var cell = $("<td />");
+                                  
+                                  if(j==0){
+                                    
+                                    console.log("name:"+cells[0]);
+                                  }
+                                  else if(j==2){
+                                    
+                                    console.log("email:"+cells[2]);
+                                  }
+                                  else if(j==1){
+                                    
+                                    console.log("phone:"+cells[1]);
+                                  }
+                                  else{
+                                    
+                                    console.log("age:"+cells[3]);
+                                  }
+                                  cell.html(cells[j]);
+                                  row.append(cell);
+
+                              }
+                                                            
+                              table.append(row);
+                          }
+                          
+                      }
+                      reader.readAsText($("#fileUpload")[0].files[0]);
+                  } else {
+                      alert("This browser does not support HTML5.");
+                  }
+              } else {
+                  alert("Please upload a valid CSV file.");
+              }
+          });
+      });
+
     });
   </script>
   </html>

@@ -394,9 +394,11 @@ function postStatus(c) {
     var isSms = document.getElementById("sms").checked;
     var isApp = document.getElementById("app").checked;
     var isEmail = document.getElementById("email").checked;
+    var isWhatsApp = document.getElementById("whatsapp").checked;
     post.set("isSMS",isSms);
     post.set("isApp",isApp);
     post.set("isEmail",isEmail);
+    post.set("isWhatsApp",isWhatsApp);
     post.save(null, {
       success: function(post) {
         populateStatus();

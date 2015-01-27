@@ -14,12 +14,12 @@ function updateCounters(){
     var query2 = new Parse.Query(Subscribers);
     query2.equalTo("neta",neta);
     var query3 = new Parse.Query(Subscribers2);
-    query3.notEqualTo("phone",undefined);
+    query3.notEqualTo("phone","-");
     query3.equalTo("neta",neta);
     var query4 = new Parse.Query(Subscribers3);
     query4.equalTo("neta",neta);
-    query4.equalTo("phone",undefined);
-    query4.notEqualTo("email",undefined);
+    query4.equalTo("phone","-");
+    query4.notEqualTo("email","-");
     query1.count({
       success: function(count1) {
         console.log(count1);
@@ -81,7 +81,7 @@ function populateSubscribers(){
             console.log(result.length);
             for(var i=0;i<result.length;i++){
                 object=result[i];
-                sTable.append( "<tr><td>"+object.get("firstName")+"</td><td>"+object.get("firstName")+"</td><td>"+object.get("age")+"</td><td>"+object.get("email")+"</td><td>"+object.get("phone")+"</td></tr>");
+                sTable.append( "<tr><td>"+object.get("name")+"</td><<td>"+object.get("age")+"</td><td>"+object.get("email")+"</td><td>"+object.get("phone")+"</td></tr>");
             }
             NProgress.done();
 
@@ -169,12 +169,15 @@ function getStuff(){
     });
 }
 
+
 function initialize() {
     console.log("initialize");
     currentUser = CU;
     NProgress.start();
     console.log("NProgress Start");
     getStuff();
+    
 }
 
 initialize();
+
