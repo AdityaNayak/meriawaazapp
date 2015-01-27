@@ -1,15 +1,10 @@
 User-agent: *
-Disallow: /
+Allow: /
 
-Allow: /delhielections/
-Allow: /delhielections/candidate.html
-Allow: /login.html
-Allow: /press.html
-Allow: /index.html
-Allow: /join.html
-Allow: /privacy-policy.html
-Allow: /sitemap.xml
-Allow: /assets/css/
-Allow: /assets/images/
-Allow: /assets/js/
-Allow: /assets/bower_components/
+Disallow: /dashboard.html
+Disallow: /isssues.html
+Disallow: /q-a.html
+Disallow: /profile.html
+Disallow: /subscribers.html
+Disallow: /assets/scss/
+Disallow: /assets/bower_components/
