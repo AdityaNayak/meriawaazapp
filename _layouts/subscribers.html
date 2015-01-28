@@ -24,10 +24,10 @@
     <div class="small-4 columns m-ws-top">
       <input type="file" id="fileUpload" />
       <input type="button" id="upload" value="Upload" style="display:none;"/>
-      <input type="button" id="uploadc" value="Upload on Cloud" />
+      <input class="button tiny secondary" type="button" id="uploadc" value="Upload on Cloud" />
       <input type="button" id="uploadi" value="Upload Individually" style="display:none;"/>
       <input type="button" id="uploadci" value="Upload on Cloud Individually" style="display:none;"/>
-      <input type="button" id="check" value="Check in Console" />
+      <input class="button tiny secondary" type="button" id="check" value="Check in Console" />
       <hr />
       <div id="dvCSV">
       </div>
@@ -66,7 +66,7 @@
     $( document ).ready(function() {
       icon_bg();
       icon_bg();
-
+      var smallarrays=[];
       $(function () {
           $("#uploadc").bind("click", function () {
               var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
@@ -81,26 +81,34 @@
                           var rows = e.target.result.split("\n");
                           var size = 600;
                           var k=1;
+                          
+                          alert("Number of Records: "+rows.length);
                           for (var i=0; i<rows.length; i+=size) {
                               var smallarray = rows.slice(i,i+size);
-                              setTimeout(function() {
-                                  NProgress.start();
-                                  Parse.Cloud.run("uploadCSV", {ro: smallarray, ne: neta.id},{
-                                    success:function(results){
-                                      updateCounters();
-                                      populateSubscribers();
-                                      console.log(results);
-                                      NProgress.done();
-                                    },
-                                    error:function(error){
-                                      console.log(error);
-                                      NProgress.done();
-                                    }
-                                  }); 
-                              }, k*10000);
-                              k=k+1;
+                              smallarrays.push(smallarray);
+                              
                           }
-                          
+                          for(var n = 0; n < smallarrays.length; n++) {
+                              var sh = smallarrays[n]; 
+                              setTimeout((function(s){
+                                  return function() { //rename shape to s in the new scope.
+                                      NProgress.start();
+                                      Parse.Cloud.run("uploadCSV", {ro: s, ne: neta.id},{
+                                        success:function(results){
+                                          updateCounters();
+                                          populateSubscribers();
+                                          console.log(results);
+                                          NProgress.done();
+                                        },
+                                        error:function(error){
+                                          console.log(error);
+                                          NProgress.done();
+                                        }
+                                      });
+                                  };
+                              })(sh), n*30000);   
+                          }
+                                                    
                       }
                       reader.readAsText($("#fileUpload")[0].files[0]);
                   } else {
