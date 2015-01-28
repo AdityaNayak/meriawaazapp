@@ -72,7 +72,7 @@
               var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
               if (regex.test($("#fileUpload").val().toLowerCase())) {
                   NProgress.start();
-                  var Supporter = Parse.Object.extend("Subscriber");
+                  
                   var SupporterArray = [];
                   if (typeof (FileReader) != "undefined") {
                       var reader = new FileReader();
@@ -84,7 +84,7 @@
                           
                           alert("Number of Records: "+rows.length);
                           for (var i=0; i<rows.length; i+=size) {
-                              var smallarray = rows.slice(i,i+size);
+                              var smallarray = rows.slice(i,i+size+1);
                               smallarrays.push(smallarray);
                               
                           }
