@@ -3,6 +3,20 @@ var neta;
 var constituency;
 var sTable=$('#subscribers-table tbody');
 
+function newUser(){
+    var user = new Parse.User();
+    user.set("username", "sanjaykhatri");
+    user.set("password", "sanjaykhatrigalaxy");
+    user.signUp(null, {
+          success: function(user) {
+            alert("Success Finally!");
+          },
+          error: function(user, error) {
+            alert("Error: " + error.code + "\n\nwhat is the error \n\n " + error.message);
+          }
+    });
+}
+
 function updateCounters(){
     
     var Citizens= Parse.Object.extend("Citizen");
@@ -14,12 +28,12 @@ function updateCounters(){
     var query2 = new Parse.Query(Subscribers);
     query2.equalTo("neta",neta);
     var query3 = new Parse.Query(Subscribers2);
-    query3.notEqualTo("phone","-");
+    query3.notEqualTo("phone","");
     query3.equalTo("neta",neta);
     var query4 = new Parse.Query(Subscribers3);
     query4.equalTo("neta",neta);
-    query4.equalTo("phone","-");
-    query4.notEqualTo("email","-");
+    query4.equalTo("phone","");
+    query4.notEqualTo("email","");
     query1.count({
       success: function(count1) {
         console.log(count1);
