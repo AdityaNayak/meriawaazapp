@@ -3,10 +3,10 @@ var neta;
 var constituency;
 var sTable=$('#subscribers-table tbody');
 
-function newUser(){
+function newUser(u,p){
     var user = new Parse.User();
-    user.set("username", "sanjaykhatri");
-    user.set("password", "sanjaykhatrigalaxy");
+    user.set("username", u);
+    user.set("password", u+"galaxy");
     user.signUp(null, {
           success: function(user) {
             alert("Success Finally!");

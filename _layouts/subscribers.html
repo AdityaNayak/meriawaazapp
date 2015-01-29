@@ -32,6 +32,9 @@
       <div id="dvCSV">
       </div>
     </div>
+    <div id="progress" style="display:none" class="small-3 columns m-ws-top secondary-color">
+      Percentage Completed: <span class="f-3x yc" id="per">1</span>
+    </div>
   <!--  <div class="small-4 small-offset-4 columns m-ws-top">
       <div class="button tiny secondary">Export List</div>
     </div>-->
@@ -63,12 +66,90 @@
     $(document).foundation();
   </script>
   <script>
+    var tobeuploaded=0;
+    var currentuploaded=0;
+    var smallarrays=[]; 
+    var dirty=0;
+    function selfUpload(){
+      if(dirty==1){
+        console.log("Deleting Unsuccesful Uploads!");
+        Parse.Cloud.run("deleteCSV", {ro: smallarrays[currentuploaded], ne: neta.id},{
+          success:function(results){
+            NProgress.set(currentuploaded/tobeuploaded);
+            var numAnim1 = new countUp("per", 0, (currentuploaded/tobeuploaded)*100);
+            numAnim1.start();
+            console.log("Next Batch!");
+            dirty=0;
+            setTimeout('selfUpload()',10000);
+          },
+          error:function(error){
+                console.log(error);
+                if(error.message.indexOf("exceed") !=-1){
+                  console.log("Will try after "+61+" seconds");
+                  dirty=1;
+                  setTimeout('selfUpload()',(parseInt(61*1000)));
+                }
+                else{
+                  updateCounters();
+                  populateSubscribers();
+                  NProgress.done();
+                  $('#progress').delay(400).fadeOut(300);
+                }
+          }
+        });
+      }
+      else{
+          Parse.Cloud.run("uploadCSV", {ro: smallarrays[currentuploaded], ne: neta.id},{
+          success:function(results){
+            
+            if(currentuploaded==tobeuploaded){
+              console.log("Done!");
+              updateCounters();
+              populateSubscribers();
+              console.log(results);
+              NProgress.done();
+              tobeuploaded=0;
+              currentuploaded=0;
+              $('#progress').delay(400).fadeOut(300);
+            }
+            else{
+                currentuploaded=currentuploaded+1;
+                NProgress.set(currentuploaded/tobeuploaded);
+                var numAnim1 = new countUp("per", 0, (currentuploaded/tobeuploaded)*100);
+                numAnim1.start();
+                console.log("Next Batch!");
+                
+                setTimeout('selfUpload()',10000);
+              
+              
+            }
+          },
+          error:function(error){
+            console.log(error);
+            if(error.message.indexOf("exceed") !=-1){
+              console.log("Will try after "+61+" seconds");
+              dirty=1;
+              setTimeout('selfUpload()',(parseInt(61*1000)));
+            }
+            else{
+              updateCounters();
+              populateSubscribers();
+              NProgress.done();
+              $('#progress').delay(400).fadeOut(300);
+            }
+            
+          }
+        });
+      }
+
+    }  
     $( document ).ready(function() {
       icon_bg();
       icon_bg();
-      var smallarrays=[];
+      
       $(function () {
           $("#uploadc").bind("click", function () {
+              $('#progress').delay(400).fadeIn(300);
               var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
               if (regex.test($("#fileUpload").val().toLowerCase())) {
                   NProgress.start();
@@ -79,36 +160,16 @@
                       reader.onload = function (e) {
                           var table = $("<table />");
                           var rows = e.target.result.split("\n");
-                          var size = 600;
+                          var size = 500;
                           var k=1;
                           
-                          alert("Number of Records: "+rows.length);
-                          for (var i=0; i<rows.length; i+=size) {
+                          for (var i=1; i<rows.length; i+=size) {
                               var smallarray = rows.slice(i,i+size+1);
                               smallarrays.push(smallarray);
                               
                           }
-                          for(var n = 0; n < smallarrays.length; n++) {
-                              var sh = smallarrays[n]; 
-                              setTimeout((function(s){
-                                  return function() { //rename shape to s in the new scope.
-                                      NProgress.start();
-                                      Parse.Cloud.run("uploadCSV", {ro: s, ne: neta.id},{
-                                        success:function(results){
-                                          updateCounters();
-                                          populateSubscribers();
-                                          console.log(results);
-                                          NProgress.done();
-                                        },
-                                        error:function(error){
-                                          console.log(error);
-                                          NProgress.done();
-                                        }
-                                      });
-                                  };
-                              })(sh), n*30000);   
-                          }
-                                                    
+                          tobeuploaded=smallarrays.length;
+                          selfUpload();                                                    
                       }
                       reader.readAsText($("#fileUpload")[0].files[0]);
                   } else {

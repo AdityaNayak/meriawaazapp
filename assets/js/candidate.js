@@ -120,7 +120,7 @@ function queryUserTable(){
                                 edu=neta.get("education");
                                 ass=neta.get("assets");
                                 lia=neta.get("liabilities");
-                                cri=neta.get("criminalCases");
+                                cri=neta.get("numCriminalCases");
                                 pro=neta.get("profession");
                                 com=neta.get("numComments");
                                 fol=neta.get("numLikes");
