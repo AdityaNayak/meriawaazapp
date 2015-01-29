@@ -467,20 +467,32 @@ function fetchECStatus(u){
 }
 
 function updateReach(){
-    var constituency=currentNeta.get("constituency");
-    var Citizens= Parse.Object.extend("Citizen");
-    var query1 = new Parse.Query(Citizens);
-    query1.equalTo("constituency",constituency);
-    query1.count({
-      success: function(count1) {
-        console.log("population:"+count1);
-        document.getElementById("population").innerHTML=count1;
+    var Subscribers = Parse.Object.extend("Subscriber");
+    var query2 = new Parse.Query(Subscribers);
+    query2.equalTo("neta",currentNeta);
+    query2.count({
+      success: function(count2) {
+        console.log(count2);
+        var constituency=currentNeta.get("constituency");
+        var Citizens= Parse.Object.extend("Citizen");
+        var query1 = new Parse.Query(Citizens);
+        query1.equalTo("constituency",constituency);
+        query1.count({
+          success: function(count1) {
+            console.log("population:"+count1);
+            document.getElementById("population").innerHTML=count1+4487+count2;
+          },
+          error: function(error) {
+            console.log("Error: "+error.message);
+                    NProgress.done();
+          }
+        });
       },
       error: function(error) {
-        console.log("Error: "+error.message);
-                NProgress.done();
+        alert("Error: " + error.code + " " + error.message);
       }
     });
+    
 }
 // function queryUserTable(){
 //     console.log('QueryUserTable');

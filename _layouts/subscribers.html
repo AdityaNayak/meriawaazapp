@@ -102,7 +102,7 @@
           Parse.Cloud.run("uploadCSV", {ro: smallarrays[currentuploaded], ne: neta.id},{
           success:function(results){
             
-            if(currentuploaded==tobeuploaded){
+            if(currentuploaded==tobeuploaded-1){
               console.log("Done!");
               updateCounters();
               populateSubscribers();

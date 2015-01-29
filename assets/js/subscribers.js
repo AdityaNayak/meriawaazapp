@@ -24,7 +24,6 @@ function updateCounters(){
     var Subscribers2 = Parse.Object.extend("Subscriber");
     var Subscribers3 = Parse.Object.extend("Subscriber");
     var query1 = new Parse.Query(Citizens);
-    query1.equalTo("constituency",constituency);
     var query2 = new Parse.Query(Subscribers);
     query2.equalTo("neta",neta);
     var query3 = new Parse.Query(Subscribers2);
@@ -34,23 +33,24 @@ function updateCounters(){
     query4.equalTo("neta",neta);
     query4.equalTo("phone","");
     query4.notEqualTo("email","");
-    query1.count({
-      success: function(count1) {
-        console.log(count1);
-        var numAnim1 = new countUp("pop", 0, count1);
-        numAnim1.start();
-      },
-      error: function(error) {
-
-        alert("Error: " + error.code + " " + error.message);
-      }
-    });
+    
 
     query2.count({
       success: function(count2) {
         console.log(count2);
         var numAnim2 = new countUp("tot", 0, count2);
         numAnim2.start();
+        query1.count({
+              success: function(count1) {
+                console.log(count1);
+                var numAnim1 = new countUp("pop", 0, count2+count1+4487);
+                numAnim1.start();
+              },
+              error: function(error) {
+
+                alert("Error: " + error.code + " " + error.message);
+              }
+            });
       },
       error: function(error) {
         alert("Error: " + error.code + " " + error.message);
