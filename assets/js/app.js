@@ -63,6 +63,10 @@ else{
 						                		constituency.fetch({
 						                			success:function(results){
 						                				consti.innerHTML=n.get("constituency").get("name");
+						                				(a=="q-a.html"){
+						                					populateQuestions(0);
+						                				}
+
 						                			},
 						                			error:function(error){
 						                				
