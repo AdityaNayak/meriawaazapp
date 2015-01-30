@@ -223,8 +223,8 @@ function pagination(){
           var numpages=Math.floor(count2/1000)+1;
           totalpages=numpages;
         }
-        if(numpages>9){
-          numpages=9;
+        if(numpages>10){
+          numpages=10;
         }
         for(var i=0;i<numpages;i++){
           $('#pages').append("<li ><a id='page-"+i+"'>"+(i+1).toString()+"</a></li>");
