@@ -323,13 +323,17 @@ function initialize() {
 	$( document ).ready(function() {
 		currentUser=CU;
 		if(currentUser.get("type")=="neta"){
-			currentNeta=currentUser.get("neta");			
+			currentNeta=currentUser.get("neta");	
+			NProgress.start();
+					populateQuestions(0);		
 		}
 		else if(currentUser.get("type")=="teamMember"){
 			currentTeamMember=currentUser.get("teamMember");
 			currentTeamMember.fetch({
 				success:function(results){
 					currentNeta=currentTeamMember.get("neta");
+					NProgress.start();
+					populateQuestions(0);
 				},
 				error:function(error){
 					console.log("Error: "+error.message);
