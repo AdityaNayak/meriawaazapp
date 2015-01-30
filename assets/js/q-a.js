@@ -123,10 +123,7 @@ function singleQuestion(questionId){
  			console.log(question);
 		 	var title=question.get("title");
 		 	var questionstatement=question.get("content");
-		 	var asked=question.get("askedTo");
-		 	console.log(asked);
-		 	asked.fetch({
-		 		success:function(results){
+		 	
 		 			var asker=question.get("pAsker");
 		 			asker.fetch({
 		 				success:function(results){
@@ -136,13 +133,7 @@ function singleQuestion(questionId){
 		 					else{
 		 						var askerphoto=getDefaultIcon(asker.get("type"));
 		 					}
-		 					var askedto=asked.get("pUser");
-						 	if(askedto.get("pic")!=undefined){
-						 		var askedtophoto=askedto.get("pic").url();
-						 	}
-						 	else{
-						 		var askedtophoto=getDefaultIcon(askedto.get("type"));
-						 	}
+		 					
 						 	var opento=question.get("openTo");
 						 	var tdate=question.createdAt;
 						    var p_timestamp=tdate.toString().split(" ");
@@ -154,15 +145,15 @@ function singleQuestion(questionId){
 						 	var lastactivity=timeSince(new Date(question.get("lastUpdated")));
 						 	singleAnswers(question);
 						 	console.log(opento);
-						 	if(opento=="neta"){
-						 		$("#opentoarea").html("");
-						 		$("#opentoarea").append("<img src='"+askedtophoto+"' class='circle-img'>");
-						 	}
-						 	else{
+						 	//if(opento=="neta"){
+						 	//	$("#opentoarea").html("");
+						 	//	$("#opentoarea").append("<img src='"+askedtophoto+"' class='circle-img'>");
+						 	//}
+						 	//else{
 						 		populateOpenTo(constituency);
-						 	}
+						 	//}
 						 	$('#que-view').append("<h3>"+title+"</h3><hr><p>"+questionstatement+"</p>");
-						 	document.getElementById("askedtophoto").innerHTML="<img src='"+askedtophoto+"' class='circle-img'>";
+						 	//document.getElementById("askedtophoto").innerHTML="<img src='"+askedtophoto+"' class='circle-img'>";
 						 	document.getElementById("askedbyphoto").innerHTML="<img src='"+askerphoto+"' class='circle-img'>";
 						 	document.getElementById("singplace").innerHTML=place;
 						 	document.getElementById("singtime").innerHTML=time;
@@ -176,11 +167,7 @@ function singleQuestion(questionId){
 		 				}
 		 			});
 		 			
-		 		},
-		 		error:function(error){
-		 			console.log("Error: "+error.message);
-		 		}
-		 	});
+		 		
 		 	
  		},
  		error:function(){
@@ -188,6 +175,85 @@ function singleQuestion(questionId){
  		}
  	});
  }
+
+// function singleQuestion(questionId){
+// 	singleView();
+//  	console.log("singleQuestion");
+//  	console.log(questionId);
+//  	var question=new Parse.Object("Question");
+//  	question.id=questionId;
+//  	question.fetch({
+//  		success:function(results){
+//  			$('#que-view').html("");
+//  			currquestion=question;
+//  			console.log(question);
+// 		 	var title=question.get("title");
+// 		 	var questionstatement=question.get("content");
+// 		 	var asked=question.get("askedTo");
+// 		 	console.log(asked);
+// 		 	asked.fetch({
+// 		 		success:function(results){
+// 		 			var asker=question.get("pAsker");
+// 		 			asker.fetch({
+// 		 				success:function(results){
+// 		 					if(asker.get("pic")!=undefined){
+// 		 						var askerphoto=asker.get("pic");
+// 		 					}
+// 		 					else{
+// 		 						var askerphoto=getDefaultIcon(asker.get("type"));
+// 		 					}
+// 		 					var askedto=asked.get("pUser");
+// 						 	if(askedto.get("pic")!=undefined){
+// 						 		var askedtophoto=askedto.get("pic").url();
+// 						 	}
+// 						 	else{
+// 						 		var askedtophoto=getDefaultIcon(askedto.get("type"));
+// 						 	}
+// 						 	var opento=question.get("openTo");
+// 						 	var tdate=question.createdAt;
+// 						    var p_timestamp=tdate.toString().split(" ");
+// 						    var date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
+// 						    var time=p_timestamp[4];
+// 						 	var place=constituency.get("name");
+// 						 	var views=question.get("reach");
+// 						 	var followers=question.get("numFollowers");
+// 						 	var lastactivity=timeSince(new Date(question.get("lastUpdated")));
+// 						 	singleAnswers(question);
+// 						 	console.log(opento);
+// 						 	if(opento=="neta"){
+// 						 		$("#opentoarea").html("");
+// 						 		$("#opentoarea").append("<img src='"+askedtophoto+"' class='circle-img'>");
+// 						 	}
+// 						 	else{
+// 						 		populateOpenTo(constituency);
+// 						 	}
+// 						 	$('#que-view').append("<h3>"+title+"</h3><hr><p>"+questionstatement+"</p>");
+// 						 	document.getElementById("askedtophoto").innerHTML="<img src='"+askedtophoto+"' class='circle-img'>";
+// 						 	document.getElementById("askedbyphoto").innerHTML="<img src='"+askerphoto+"' class='circle-img'>";
+// 						 	document.getElementById("singplace").innerHTML=place;
+// 						 	document.getElementById("singtime").innerHTML=time;
+// 						 	document.getElementById("singdate").innerHTML=date;
+// 						 	document.getElementById("singlast").innerHTML=lastactivity;
+// 						 	document.getElementById("singfollowers").innerHTML=followers;
+// 						 	document.getElementById("singviews").innerHTML=views;
+// 		 				},
+// 		 				error:function(error){
+		 					
+// 		 				}
+// 		 			});
+		 			
+// 		 		},
+// 		 		error:function(error){
+// 		 			console.log("Error: "+error.message);
+// 		 		}
+// 		 	});
+		 	
+//  		},
+//  		error:function(){
+ 			
+//  		}
+//  	});
+//  }
 
 function singleAnswers(question){
 	console.log("singleAnswers");
@@ -330,7 +396,7 @@ function initialize() {
 			currentTeamMember.fetch({
 				success:function(results){
 					currentNeta=currentTeamMember.get("neta");
-					
+
 				},
 				error:function(error){
 					console.log("Error: "+error.message);
