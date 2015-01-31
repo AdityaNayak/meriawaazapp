@@ -265,7 +265,7 @@ function populateSubscribers(){
             console.log(skip);
             for(var i=0;i<result.length;i++){
                 object=result[i];
-                sTable.append( "<tr><td>"+object.get("name")+"</td><<td>"+object.get("age")+"</td><td>"+object.get("email")+"</td><td>"+object.get("phone")+"</td></tr>");
+                sTable.append( "<tr><td>"+object.get("name")+"</td><td>"+object.get("phone")+"</td><td>"+object.get("email")+"</td><td>"+object.get("age")+"</td></tr>");
             }
 
             NProgress.done();
