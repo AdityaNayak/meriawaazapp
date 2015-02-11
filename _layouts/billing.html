@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subscriber List | Meri Awaaz</title>
+
+  {% include header.html %}
+  <div class="row">
+    <div class="small-3 columns m-ws-top secondary-color">
+      Potential Reach: <span class="f-3x yc" id="pop">...</span>
+    </div>
+    <div class="small-3 columns m-ws-top secondary-color">
+      Supporters: <span class="f-3x bgc" id="tot">...</span>
+    </div>
+    <div class="small-3 columns m-ws-top secondary-color">
+      Mobile Subscribers: <span class="f-3x bc" id="mob">...</span>
+    </div>
+    <div class="small-3 columns m-ws-top secondary-color">
+      Email Subscribers: <span class="f-3x dbc" id="ema">...</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-4 columns m-ws-top">
+      <input type="file" id="fileUpload" />
+      <input type="button" id="upload" value="Upload" style="display:none;"/>
+      <input class="button tiny secondary" type="button" id="uploadc" value="Upload on Cloud" />
+      <input type="button" id="uploadi" value="Upload Individually" style="display:none;"/>
+      <input type="button" id="uploadci" value="Upload on Cloud Individually" style="display:none;"/>
+      <input class="button tiny secondary" type="button" id="check" value="Check in Console" />
+      <hr />
+      <div id="dvCSV">
+      </div>
+    </div>
+  <!--  <div class="small-4 small-offset-4 columns m-ws-top">
+      <div class="button tiny secondary">Export List</div>
+    </div>-->
+
+  </div>
+  <div class="row">
+    <div class="small-12 columns">
+      <table id="subscribers-table">
+        <thead>
+          <tr>
+            <th width="150">Name</th>
+            <th width="100">Age</th>
+            <th width="200">Email Address</th>
+            <th width="200">Phone Number</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% include footer.html %} 
+  <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+  <script type="text/javascript" src="{{site.url}}/assets/js/subscribers.js"></script>
+
+
+  <script type="text/javascript">
+    $(document).foundation();
+  </script>
+  <script>
+    $( document ).ready(function() {
+      icon_bg();
+      icon_bg();
+      var smallarrays=[];
+      $(function () {
+          $("#uploadc").bind("click", function () {
+              var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+              if (regex.test($("#fileUpload").val().toLowerCase())) {
+                  NProgress.start();
+                  
+                  var SupporterArray = [];
+                  if (typeof (FileReader) != "undefined") {
+                      var reader = new FileReader();
+                      reader.onload = function (e) {
+                          var table = $("<table />");
+                          var rows = e.target.result.split("\n");
+                          var size = 600;
+                          var k=1;
+                          
+                          alert("Number of Records: "+rows.length);
+                          for (var i=0; i<rows.length; i+=size) {
+                              var smallarray = rows.slice(i,i+size+1);
+                              smallarrays.push(smallarray);
+                              
+                          }
+                          for(var n = 0; n < smallarrays.length; n++) {
+                              var sh = smallarrays[n]; 
+                              setTimeout((function(s){
+                                  return function() { //rename shape to s in the new scope.
+                                      NProgress.start();
+                                      Parse.Cloud.run("uploadCSV", {ro: s, ne: neta.id},{
+                                        success:function(results){
+                                          updateCounters();
+                                          populateSubscribers();
+                                          console.log(results);
+                                          NProgress.done();
+                                        },
+                                        error:function(error){
+                                          console.log(error);
+                                          NProgress.done();
+                                        }
+                                      });
+                                  };
+                              })(sh), n*30000);   
+                          }
+                                                    
+                      }
+                      reader.readAsText($("#fileUpload")[0].files[0]);
+                  } else {
+                    NProgress.done();
+                      alert("This browser does not support HTML5.");
+                  }
+              } else {
+                NProgress.done();
+                  alert("Please upload a valid CSV file.");
+              }
+          });
+      });
+
+      $(function () {
+          $("#uploadci").bind("click", function () {
+              var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+              if (regex.test($("#fileUpload").val().toLowerCase())) {
+                  NProgress.start();
+                  
+                  if (typeof (FileReader) != "undefined") {
+                      var reader = new FileReader();
+                      reader.onload = function (e) {
+                          var table = $("<table />");
+                          var rows = e.target.result.split("\n");
+                          for (var i = 1; i < rows.length; i++) {
+                              console.log("Row: "+i);
+                              var cells = rows[i].split(",");
+                              var nam;
+                              var ag;
+                              var phon;
+                              var emai;
+                              for (var j = 0; j < cells.length; j++) {
+                              
+                                  if(j==0){
+                                    nam=cells[0].toLowerCase();
+                                    
+                                  }
+                                  else if(j==2){
+                                    emai=cells[2].toLowerCase();
+                                    
+                                  }
+                                  else if(j==1){
+                                    phon=cells[1];
+                                    
+                                  }
+                                  else{
+                                    ag=parseInt(cells[3]);
+                                    
+                                  }
+                              }
+                               Parse.Cloud.run("uploadCSVi", {phone: phon ,email: emai,age: ag,name: nam, ne: neta.id}, {
+                                  success:function(results){
+                                    console.log(results);
+                                    updateCounters();
+                                    populateSubscribers();
+                                  },
+                                  error:function(error){
+                                    console.log(error);
+                                  }
+                                }); 
+                          }
+
+                      }
+                      reader.readAsText($("#fileUpload")[0].files[0]);
+                      NProgress.done();
+                  } else {
+                    NProgress.done();
+                      alert("This browser does not support HTML5.");
+                  }
+              } else {
+                NProgress.done();
+                  alert("Please upload a valid CSV file.");
+              }
+          });
+      }); 
+
+     $(function () {
+          $("#uploadi").bind("click", function () {
+              var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+              if (regex.test($("#fileUpload").val().toLowerCase())) {
+                  NProgress.start();
+                  var Supporter = Parse.Object.extend("Subscriber");
+                  var SupporterArray = [];
+                  if (typeof (FileReader) != "undefined") {
+                      var reader = new FileReader();
+                      reader.onload = function (e) {
+                          var table = $("<table />");
+                          var rows = e.target.result.split("\n");
+                          for (var i = 1; i < rows.length; i++) {
+                              console.log("Row: "+i);
+                              var row = $("<tr />");
+                              var temp = new Supporter();
+                              var cells = rows[i].split(",");
+                              for (var j = 0; j < cells.length; j++) {
+                                  var cell = $("<td />");
+                                  temp.set("neta",neta);
+                                  if(j==0){
+                                    temp.set("name",cells[0].toLowerCase());
+                                    
+                                  }
+                                  else if(j==2){
+                                    temp.set("email",cells[2].toLowerCase());
+                                    
+                                  }
+                                  else if(j==1){
+                                    temp.set("phone",cells[1]);
+                                    
+                                  }
+                                  else{
+                                    temp.set("age",parseInt(cells[3]));
+                                    
+                                  }
+                                  cell.html(cells[j]);
+                                  row.append(cell);
+
+                              }
+                              temp.save({
+                                success:function(results){
+                                  console.log("Done!");
+                                },
+                                error:function(error){
+                                  console.log("Error: "+error.message);
+                                }
+                              });
+                              
+                              table.append(row);
+                          }
+                          updateCounters();
+                          populateSubscribers();
+                      }
+                      reader.readAsText($("#fileUpload")[0].files[0]);
+                  } else {
+                    NProgress.done();
+                      alert("This browser does not support HTML5.");
+                  }
+              } else {
+                NProgress.done();
+                  alert("Please upload a valid CSV file.");
+              }
+          });
+      }); 
+
+     $(function () {
+          $("#upload").bind("click", function () {
+              var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+              if (regex.test($("#fileUpload").val().toLowerCase())) {
+                  NProgress.start();
+                  var Supporter = Parse.Object.extend("Subscriber");
+                  var SupporterArray = [];
+                  if (typeof (FileReader) != "undefined") {
+                      var reader = new FileReader();
+                      reader.onload = function (e) {
+                          var table = $("<table />");
+                          var rows = e.target.result.split("\n");
+                          for (var i = 1; i < rows.length; i++) {
+                              console.log("Row: "+i);
+                              var row = $("<tr />");
+                              var temp = new Supporter();
+                              var cells = rows[i].split(",");
+                              for (var j = 0; j < cells.length; j++) {
+                                  var cell = $("<td />");
+                                  temp.set("neta",neta);
+                                  if(j==0){
+                                    temp.set("name",cells[0].toLowerCase());
+                                    
+                                  }
+                                  else if(j==2){
+                                    temp.set("email",cells[2].toLowerCase());
+                                    
+                                  }
+                                  else if(j==1){
+                                    temp.set("phone",cells[1]);
+                                    
+                                  }
+                                  else{
+                                    temp.set("age",parseInt(cells[3]));
+                                    
+                                  }
+                                  cell.html(cells[j]);
+                                  row.append(cell);
+
+                              }
+                              SupporterArray.push(temp);
+                              
+                              table.append(row);
+                          }
+                          Parse.Object.saveAll(SupporterArray, {
+                              success: function(objs) {
+                                  alert("Successfully Saved!");
+                                  updateCounters();
+                                  populateSubscribers();
+                                  NProgress.done();
+                              },
+                              error: function(error) { 
+                                  alert("Error: "+error.message);
+                                  NProgress.done();
+                              }
+                          });
+                      }
+                      reader.readAsText($("#fileUpload")[0].files[0]);
+                  } else {
+                    NProgress.done();
+                      alert("This browser does not support HTML5.");
+                  }
+              } else {
+                NProgress.done();
+                  alert("Please upload a valid CSV file.");
+              }
+          });
+      });
+
+      $(function () {
+          $("#check").bind("click", function () {
+              var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+              if (regex.test($("#fileUpload").val().toLowerCase())) {
+                  NProgress.start();
+                  
+                  if (typeof (FileReader) != "undefined") {
+                      var reader = new FileReader();
+                      reader.onload = function (e) {
+                          var table = $("<table />");
+                          var rows = e.target.result.split("\n");
+                          for (var i = 1; i < rows.length; i++) {
+                              var row = $("<tr />");
+                              
+                              var cells = rows[i].split(",");
+                              for (var j = 0; j < cells.length; j++) {
+                                  var cell = $("<td />");
+                                  
+                                  if(j==0){
+                                    
+                                    console.log("name:"+cells[0]);
+                                  }
+                                  else if(j==2){
+                                    
+                                    console.log("email:"+cells[2]);
+                                  }
+                                  else if(j==1){
+                                    
+                                    console.log("phone:"+cells[1]);
+                                  }
+                                  else{
+                                    
+                                    console.log("age:"+parseInt(cells[3]));
+                                  }
+                                  cell.html(cells[j]);
+                                  row.append(cell);
+
+                              }
+                                                            
+                              table.append(row);
+                          }
+                          NProgress.done();
+                          
+                      }
+                      reader.readAsText($("#fileUpload")[0].files[0]);
+                  } else {
+                    NProgress.done();
+                      alert("This browser does not support HTML5.");
+                  }
+              } else {
+                NProgress.done();
+                  alert("Please upload a valid CSV file.");
+              }
+          });
+      });
+
+    });
+  </script>
+  </html>
