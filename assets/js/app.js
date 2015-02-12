@@ -200,7 +200,7 @@ function timeSince(date) {
 function loadingButton_id(id,d){
 	var Original=document.getElementById(id).value;
 	console.log("Original: "+Original );
-	document.getElementById(id).value = "Loading...";
+	document.getElementById(id).value = "Processing...";
 	$("#"+id).addClass('loading');
 	var ref=this;
 	setTimeout(function() {
@@ -213,7 +213,7 @@ function loadingButton_id(id,d){
 
 function loadingButton_ref(d){
 	var Original=document.getElementById(this.id).value;
-	document.getElementById(this.id).value = "Loading...";
+	document.getElementById(this.id).value = "Processing...";
 	$(this).addClass('loading');
 	setTimeout(function() {
 		$(this).removeClass('loading');
@@ -224,7 +224,7 @@ function loadingButton_ref(d){
 
 $('.interactiveLoading').click(function() {
 	var Original=document.getElementById(this.id).value;
-	document.getElementById(this.id).value = "Loading...";
+	document.getElementById(this.id).value = "Processing...";
 	$(this).addClass('loading');
 	var ref=this;
 	setTimeout(function() {

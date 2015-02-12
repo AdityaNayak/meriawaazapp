@@ -134,6 +134,14 @@ i{
 		border:none;
 	}
 }
+.brbm{
+	border-bottom:1px solid $grey;
+	padding-top:1em;
+	padding-bottom:1em;
+	&:last-child{
+		border:none;
+	}
+}
 ::selection {
 	background: $blue; /* Safari */
 	color:$white;
@@ -191,6 +199,11 @@ i{
 }
 .nb{
 	border:none;
+}
+.nhv{
+	&:hover{
+		border:none !important;
+	}
 }
 .panel-head{
 	background:$lightgrey;
@@ -619,5 +632,12 @@ tbody{
 		}
 
 		}
+	}
+}
+.ic-pr{
+	i{
+		color:$grey;
+		font-size:1.2em;
+		margin-right: 5px;
 	}
 }
