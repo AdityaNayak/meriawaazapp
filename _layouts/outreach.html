@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Subscriber List | Meri Awaaz</title>
+  <title>Outreach | Meri Awaaz</title>
 
   {% include header.html %}
   <div class="row">
@@ -26,114 +26,283 @@
   <div class="row">
     <div class="small-3 columns">
       <ul class="side-nav" role="navigation" title="Link List">
-       <li role="menuitem" class="active"><a href="#" >Lists</a></li>
-       <li role="menuitem"><a href="#">Campaigns</a></li>
+       <li id="list-trg" role="menuitem" class="active"><a href="#" >Lists</a></li>
+       <li id="cmp-trg" role="menuitem"><a href="#">Campaigns</a></li>
        <li role="menuitem"><a href="#">Reports</a></li>
      </ul>
    </div>
    <div class="small-9 columns">
-     <div class="panel">
-       <form>
-        <div class="row brbm">
-          <a href="#">
-          <div class="small-10 columns"><span class="f-2x">Voters</span><small> (Default)</small></a>
-          </div>
-          <div class="small-2 columns secondary-color s-ws-top">
-            3245
+     <div id="outreach-view">
+       <div id="outreach-list-view" >
+        <div class="row">
+          <div class="small-12 text-right columns">
+            <div class="button tiny"><i class="icon-add secondary-color"></i> Create List</div>
           </div>
         </div>
-        <div class="row brbm">
-          <a href="#">
-          <div class="small-10 columns"><span class="f-2x">Volunteers</span>
-          </div></a>
-          <div class="small-2 columns secondary-color s-ws-top">
-            324
-          </div>
-        </div>
-        <div class="row brbm">
-          <a href="#">
-          <div class="small-10 columns"><span class="f-2x">Others</span></a>
-          </div>
-          <div class="small-2 columns secondary-color s-ws-top">
-            32
-          </div>
-        </div>
-      </form>
-    </div>
+        <div class="panel">
 
-    <div class="row">
-      <div class="small-4 columns m-ws-top">
-        <input type="file" id="fileUpload" />
-        <input type="button" id="upload" value="Upload" style="display:none;"/>
-        <input class="button tiny secondary" type="button" id="uploadc" value="Upload on Cloud" />
-        <input type="button" id="uploadi" value="Upload Individually" style="display:none;"/>
-        <input type="button" id="uploadci" value="Upload on Cloud Individually" style="display:none;"/>
-        <input class="button tiny secondary" type="button" id="check" value="Check in Console" />
-        <hr />
-        <div id="dvCSV">
+          <div class="row brbm">
+            <a href="#">
+              <div class="small-8 columns"><span class="secondary-color">#1 </span><span class="f-1-5x">Voters</span><small class="secondary-color"> (Primary)</small></a>
+              </div>
+              <div class="small-4 columns s-ws-top">
+                3245 <span class="secondary-color">subscribers</span>
+              </div>
+            </div>
+            <div class="row brbm">
+              <a href="#">
+                <div class="small-8 columns"><span class="secondary-color">#2 </span><span class="f-1-5x">Volunteers</span>
+                </div></a>
+                <div class="small-4 columns s-ws-top">
+                  324 <span class="secondary-color">subscribers</span>
+                </div>
+              </div>
+              <div class="row brbm">
+                <a href="#">
+                  <div class="small-8 columns"><span class="secondary-color">#3 </span><span class="f-1-5x">Others</span>
+                  </div>
+                </a>
+                <div class="small-4 columns s-ws-top">
+                  32 <span class="secondary-color">subscribers</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div id="outreach-single-listview" style="display:none;">
+
+            <div class="row">
+              <div class="small-6 columns text-right">
+                <a href="#" class="button tiny s-ws-left">Segregate</a> <a href="#" class="button tiny s-ws-left">Verify</a><a href="#" class="s-ws-left button tiny">Complete</a><a href="#" class="button tiny s-ws-left">Segments</a>
+              </div>
+              <div class="small-3 columns">
+                <div id="addv" class="button tiny fullwidth">Add a Subscriber</div>
+              </div>
+              <div class="small-3 columns">
+                <div id="addvs" class="button tiny fullwidth">Import Subscriber</div>
+              </div>
+            </div>
+            <div id="addv-row" style="display:none;">
+              <form>        
+                <div class="row">
+                  <div class="small-6 columns small-centered b-ws-top panel">
+                    <p class="secondary secondary-color text-center">All fields are optional</p>
+                    <div class="row">
+                      <div class="small-4 columns">
+                        <label for="name-l" class="right inline">Name</label>
+                      </div>
+                      <div class="small-8 columns">
+                        <input type="text" id="name-l" placeholder="Full Name">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="small-4 columns">
+                        <label for="ph-l" class="right inline">Phone</label>
+                      </div>
+                      <div class="small-8 columns">
+                        <input type="tel" id="ph-l" placeholder="Without country code">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="small-4 columns">
+                        <label for="email-l" class="right inline">Email</label>
+                      </div>
+                      <div class="small-8 columns">
+                        <input type="email" id="email-l" placeholder="example@gmail.com">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="small-4 columns">
+                        <label for="a-l" class="right inline">Age</label>
+                      </div>
+                      <div class="small-8 columns">
+                        <input type="number" id="a-l" placeholder="Just the Number" min="0" max="99">
+                      </div>
+                    </div>
+                    <input type="submit" value="Add Voter" class="button fullwidth small">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div id="addvs-row" class="row" style="display:none;">
+
+              <div class="small-4 columns b-ws-top">
+                <input type="file" id="fileUpload" multiple="1" class="secondary"/>
+              </div>
+              <div class="small-4 columns b-ws-top">
+                <input type="button" id="upload" value="Upload" style="display:none;"/>
+                <input class="button tiny secondary" type="button" id="uploadc" value="Upload" />
+                <input type="button" id="uploadi" value="Upload Individually" style="display:none;"/>
+                <input type="button" id="uploadci" value="Upload on Cloud Individually" style="display:none;"/>
+                <input class="button tiny secondary" type="button" id="check" value="Check" />
+
+              </div>
+              <div id="dvCSV" class="small-4 columns b-ws-top">
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="small-12 columns">
+                <table id="subscribers-table">
+                  <thead>
+                    <tr>
+                      <th width="400">Name</th>
+                      <th width="200">Phone Number</th>
+                      <th width="200">Email Address</th>
+                      <th width="100">Age</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="cmp-view" style="display:none;">
+          <div id="cmp-list-view" style="display:none;">
+            <div class="panel">
+              <div class="row brbm">
+                <div class="small-6 columns"><span class="secondary-color">#1 </span>Naresh yadav ji wants to Thank you ...
+                </div>
+                <div class="small-3 columns secondary secondary-color"><i class="icon-clock secondary"></i> 3:12 PM <i class="icon-calendar secondary"></i> 22nd Jan</div>
+                <div class="small-2 columns secondary secondary color">
+                  3245 <small>/2903</small>
+                </div>
+                <div class="small-1 columns">
+                  <i class="icon-process yc"></i>
+                </div>
+              </div>
+              <div class="row brbm">
+                <div class="small-6 columns"><span class="secondary-color">#2 </span>Naresh yadav ji wants to Thank you ...
+                </div>
+                <div class="small-3 columns secondary secondary-color"><i class="icon-clock secondary"></i> 3:12 PM <i class="icon-calendar secondary"></i> 22nd Jan</div>
+                <div class="small-2 columns secondary secondary color">
+                  3245 <small>/2903</small>
+                </div>
+                <div class="small-1 columns">
+                  <i class="icon-check gc"></i>
+                </div>
+              </div>
+              <div class="row brbm">
+                <div class="small-6 columns"><span class="secondary-color">#3 </span>Naresh yadav ji wants to Thank you ...
+                </div>
+                <div class="small-3 columns secondary secondary-color"><i class="icon-clock secondary"></i> 3:12 PM <i class="icon-calendar secondary"></i> 22nd Jan</div>
+                <div class="small-2 columns secondary secondary color">
+                  3245 <small>/2903</small>
+                </div>
+                <div class="small-1 columns">
+                 <i class="icon-alert rc"></i>
+               </div>
+             </div>
+           </div>
+
+         </div>
+         <div id="cmp-single-listview" style="display:none;">
+           <div class="panel">
+              <div class="row secondary secondary-color">
+                  <div class="small-12 columns text-right"><span class="secondary">Campaign Status:</span> In Progress <i class="icon-process yc"></i></div>
+                </div>
+             <div class="row">
+               <div class="small-10 columns s-ws-top">
+                <div class="row">
+                  <div class="small-12 columns">
+                    <h5><span class="secondary-color secondary">#1</span>Naresh yadav ji wants to Thank you and complete message</h5>
+                  </div>
+                </div>
+                <div class="row secondary">
+                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Reach:</span> <span class="dbc">180</span></div>
+                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Pushes:</span> <span class="dbc">80</span></div>
+                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">SMS:</span> <span class="dbc">30</span></div>
+                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">SMS (T):</span> <span class="dbc">20</span></div>
+                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">WhatsApp:</span> <span class="dbc">40</span></div>
+                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Email:</span> <span class="dbc">10</span></div>
+                </div>
+
+              </div>
+              <div class="small-2 columns s-ws-top"><img src="http://placehold.it/800x450"></div>
+            </div> 
+            </div>
+            <div class="row">
+            <div class="small-10 columns s-ws-top">
+            <dl class="sub-nav">
+              <dt>Filter:</dt>
+              <dd class="active"><a href="#">All</a></dd>
+              <dd><a href="#">Pushes</a></dd>
+              <dd><a href="#">SMS</a></dd>
+              <dd><a href="#">SMS (T)</a></dd>
+              <dd><a href="#">WhatsApp</a></dd>
+              <dd><a href="#">Email</a></dd>
+            </dl>
+            </div>
+            <div class="small-2 columns">
+              <a href="#" class="button tiny">Download</a>
+            </div>
+
+           <div class="small-12 columns">
+            <table id="delivery-table">
+                <thead>
+                  <tr>
+                    <th width="300">Channel</th>
+                    <th width="250">Status</th>
+                    <th width="200">Date</th>
+                    <th width="200">Time</th>
+                    <th width="50"> </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>+91 99999999</td>
+                    <td>In process</td>
+                    <td>3:02 PM</td>
+                    <td>22 Jan, 2015</td>
+                    <td><i class="icon-process"></i></td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
         </div>
       </div>
-  <!--  <div class="small-4 small-offset-4 columns m-ws-top">
-      <div class="button tiny secondary">Export List</div>
-    </div>-->
-
-  </div>
-  <div class="row">
-    <div class="small-12 columns">
-      <table id="subscribers-table">
-        <thead>
-          <tr>
-            <th width="150">Name</th>
-            <th width="100">Age</th>
-            <th width="200">Email Address</th>
-            <th width="200">Phone Number</th>
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
     </div>
   </div>
-</div>
-</div>
-
-{% include footer.html %} 
-<script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
-<script type="text/javascript" src="{{site.url}}/assets/js/outreach.js"></script>
+  {% include footer.html %} 
+  <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+  <script type="text/javascript" src="{{site.url}}/assets/js/outreach.js"></script>
 
 
-<script type="text/javascript">
-  $(document).foundation();
-</script>
-<script>
-  $( document ).ready(function() {
-    icon_bg();
-    icon_bg();
-    var smallarrays=[];
-    $(function () {
-      $("#uploadc").bind("click", function () {
-        var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
-        if (regex.test($("#fileUpload").val().toLowerCase())) {
-          NProgress.start();
+  <script type="text/javascript">
+    $(document).foundation();
+  </script>
+  <script>
+    $( document ).ready(function() {
+      icon_bg();
+      icon_bg();
+      var smallarrays=[];
+      $(function () {
+        $("#uploadc").bind("click", function () {
+          var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+          if (regex.test($("#fileUpload").val().toLowerCase())) {
+            NProgress.start();
 
-          var SupporterArray = [];
-          if (typeof (FileReader) != "undefined") {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-              var table = $("<table />");
-              var rows = e.target.result.split("\n");
-              var size = 600;
-              var k=1;
+            var SupporterArray = [];
+            if (typeof (FileReader) != "undefined") {
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                var table = $("<table />");
+                var rows = e.target.result.split("\n");
+                var size = 600;
+                var k=1;
 
-              alert("Number of Records: "+rows.length);
-              for (var i=0; i<rows.length; i+=size) {
-                var smallarray = rows.slice(i,i+size+1);
-                smallarrays.push(smallarray);
+                alert("Number of Records: "+rows.length);
+                for (var i=0; i<rows.length; i+=size) {
+                  var smallarray = rows.slice(i,i+size+1);
+                  smallarrays.push(smallarray);
 
-              }
-              for(var n = 0; n < smallarrays.length; n++) {
-                var sh = smallarrays[n]; 
-                setTimeout((function(s){
+                }
+                for(var n = 0; n < smallarrays.length; n++) {
+                  var sh = smallarrays[n]; 
+                  setTimeout((function(s){
                                   return function() { //rename shape to s in the new scope.
                                     NProgress.start();
                                     Parse.Cloud.run("uploadCSV", {ro: s, ne: neta.id},{
@@ -150,19 +319,19 @@
                                     });
                                   };
                                 })(sh), n*30000);   
-              }
+                }
 
+              }
+              reader.readAsText($("#fileUpload")[0].files[0]);
+            } else {
+              NProgress.done();
+              alert("This browser does not support HTML5.");
             }
-            reader.readAsText($("#fileUpload")[0].files[0]);
           } else {
             NProgress.done();
-            alert("This browser does not support HTML5.");
+            alert("Please upload a valid CSV file.");
           }
-        } else {
-          NProgress.done();
-          alert("Please upload a valid CSV file.");
-        }
-      });
+        });
 });
 
 $(function () {

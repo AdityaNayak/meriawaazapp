@@ -146,6 +146,9 @@ $darkwhite: #eae9e7;
  $success-color: $green;
  $warning-color: $yellow;
 
+$twitter:#1dcaff;
+$fb:#3b5998;
+
 
 // We use these to control various global styles
  $body-bg: $lightgrey;
@@ -1447,6 +1450,7 @@ $table-border-color: $darkwhite;
  $topbar-link-bg-active: $white;
 // $topbar-link-bg-active-hover: scale-color($primary-color, $lightness: -14%);
 $topbar-link-bg-active-hover: $white;
+$topbar-dropdown-link-bg-hover: $white;
 // $topbar-link-font-family: $body-font-family;
 // $topbar-link-text-transform: none;
 // $topbar-link-padding: $topbar-height / 3;

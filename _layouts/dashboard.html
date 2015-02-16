@@ -50,81 +50,115 @@
           <div id="sh-ltr1" style="display:none;">
             <div class="row collapse">
               <div class="small-2 columns text-center fx3">
-                <input type="checkbox" name="" id="app" value="" checked=""> <span class="tertiary secondary-color">Mobile App </span>
-              </div>
-              <div class="small-2 columns text-center fx3"><input type="checkbox" id="sms" name="" value=""> <span class="tertiary secondary-color">SMS </span> 
-              </div>
-              <div class="small-2 columns text-center fx3"><input type="checkbox" id="email" name="" value=""> <span class="tertiary secondary-color">Email </span> 
-              </div>
-              <div class="small-2 columns text-center fx3"><input type="checkbox" id="whatsapp" name="" value=""> <span class="tertiary secondary-color">WhatsApp </span> 
-              </div>
-              <div class="small-2 columns text-center fx3"><input type="checkbox" id="fb" name="" value=""> <span class="tertiary secondary-color">Facebook </span> 
-              </div>
-              <div class="small-2 columns text-center fx3"><input type="checkbox" id="twt" name="" value=""> <span class="tertiary secondary-color">Twitter </span> 
-              </div>
-              
-            </div>
-            <div class="row">
-              <div class="small-4 columns tertiary secondary-color">
-              <!-- <input type="file" name="media" multiple="1"> --> <a href="#"><i class="icon-image-add f-2x secondary-color"></i></a>
-              <a href="#"><i class="icon-image-accept f-2x gc" style="display:none;"></i></a>
-              </div>
-              <div id="chcount" class="small-2 small-offset-2 columns secondary fx3 bgc">
-              </div>
-              <div class="small-4 columns"><input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth">
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div id="posts">
-        <h4 class="text-center secondary-color b-ws-top">Loading...</h4>
+                <label for="app" class="inline secondary-color np tertiary">
+                  <div class="f-1-5x fx4">
+                    <i class="icon-phone blc"></i>
+                  </div>
+                  <input type="checkbox" name="" id="app" value="" checked=""> Push Send</label>
+                </div>
+                <div class="small-2 columns text-center fx3">
+                  <label for="sms" class="inline secondary-color np tertiary">
+                    <div class="f-1-5x fx4">
+                      <i class="icon-comment blc"></i> 
+                    </div>
+                    <input type="checkbox" id="sms" name="" value=""> SMS
+                  </label>
+                </div>
+                <div class="small-2 columns text-center fx3">
+                  <label for="whatsapp" class="inline secondary-color np tertiary">
+                    <div class="f-1-5x fx4">
+                      <i class="icon-whatsapp blc"></i>
+                    </div>
+                    <input type="checkbox" id="whatsapp" name="" value="">
+                     WhatsApp
+                  </label>
+                </div>
+                <div class="small-2 columns text-center fx3">
+                  <label for="email" class="inline secondary-color np tertiary">
+                    <div class="f-1-5x fx4">
+                      <i class="icon-mail blc"></i>
+                    </div>
+                    <input type="checkbox" id="email" name="" value=""> Email
+                    </label>
+                  </div>
+                  <div class="small-2 columns text-center fx3">
+                    <label for="fb" class="inline secondary-color np tertiary">
+                      <div class="f-1-5x fx4">
+                        <i class="icon-facebook blc"></i>
+                      </div>
+                      <input type="checkbox" id="fb" name="" value=""> Facebook
+                      </label>
+                    </div>
+                    <div class="small-2 columns text-center fx3">
+                    <label for="twt" class="inline secondary-color np tertiary">
+                      <div class="f-1-5x fx4">
+                        <i class="icon-twitter blc"></i>
+                      </div>
+                      <input type="checkbox" id="twt" name="" value=""> Twitter</label>
+                    </div>
 
-      </div>
-    </div>
-    <div class="small-3 columns">
-      <div class="panel">
-        <div class="row">
-          <div class="small-12 columns">
-            <h5>Get Help</h5>
+                  </div>
+                  <div class="row">
+                    <div class="small-4 columns tertiary secondary-color">
+                      <!-- <input type="file" name="media" multiple="1"> --> <a href="#"><i class="icon-image-add f-2x secondary-color"></i></a>
+                      <a href="#"><i class="icon-image-accept f-2x gc" style="display:none;"></i></a>
+                    </div>
+                    <div id="chcount" class="small-2 small-offset-2 columns secondary fx3 bgc">
+                    </div>
+                    <div class="small-4 columns"><input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth">
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div id="posts">
+              <h4 class="text-center secondary-color b-ws-top">Loading...</h4>
+
+            </div>
           </div>
-          <div class="small-2 columns">
-            <i class="icon-email secondary-color"></i>
-          </div>
-          <div class="small-10 columns"><a href="mailto:mahelp@mutinylabs.in">help@mutinylabs.in</a>
-          </div>
-          <div class="small-2 columns">
-            <i class="icon-call secondary-color"></i>
-          </div>
-          <div class="small-10 columns">
-            +91 987 144 8741
+          <div class="small-3 columns">
+            <div class="panel">
+              <div class="row">
+                <div class="small-12 columns">
+                  <h5>Get Help</h5>
+                </div>
+                <div class="small-2 columns">
+                  <i class="icon-email secondary-color"></i>
+                </div>
+                <div class="small-10 columns"><a href="mailto:mahelp@mutinylabs.in">help@mutinylabs.in</a>
+                </div>
+                <div class="small-2 columns">
+                  <i class="icon-call secondary-color"></i>
+                </div>
+                <div class="small-10 columns">
+                  +91 987 144 8741
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            <h5>Competitors</h5>
+            <select>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="year">This Year</option>
+              <option value="lifetime">Lifetime</option>
+            </select>
+            <div id="competitorlist">
+            </div>
+
+
+
           </div>
         </div>
-      </div>
 
-      <hr>
-      <h5>Competitors</h5>
-      <select>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-        <option value="year">This Year</option>
-        <option value="lifetime">Lifetime</option>
-      </select>
-      <div id="competitorlist">
-      </div>
+        {% include footer.html %} 
+        <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
 
+        <script type="text/javascript">
+          $(document).foundation();
+        </script>
 
-
-    </div>
-  </div>
-
-  {% include footer.html %} 
-  <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
-
-  <script type="text/javascript">
-    $(document).foundation();
-  </script>
-
-  <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
-  <script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
-  </html>
+        <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+        <script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
+        </html>

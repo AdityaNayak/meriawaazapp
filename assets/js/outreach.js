@@ -362,6 +362,34 @@ function initialize() {
     NProgress.start();
     console.log("NProgress Start");
     getStuff();
+    $('#outreach-list-view a').click(function(){
+      $('#outreach-list-view').fadeOut();
+      $('#outreach-single-listview').fadeIn();
+    });
+    $('#addv').click(function(){
+      $('#addvs-row').delay(300).fadeOut();
+      $('#addv-row').fadeIn();
+    });
+    $('#addvs').click(function(){
+      $('#addv-row').delay(300).fadeOut();
+      $('#addvs-row').fadeIn();
+    });
+    $('#list-trg').click(function(){
+      $('#cmp-view').fadeOut();
+      $('#outreach-view').delay(300).fadeIn();
+      $('#outreach-list-view').delay(300).fadeIn();
+    });
+    $('#cmp-trg').click(function(){
+      $('#outreach-view').fadeOut();
+      $('#cmp-view').delay().fadeIn();
+      $('#cmp-list-view').delay().fadeIn();
+      $('#cmp-single-listview').delay().fadeOut();
+    });
+    $('#cmp-list-view').click(function(){
+      $('#cmp-list-view').fadeOut();
+      $('#cmp-single-listview').delay().fadeIn();
+
+    });
     
 }
 

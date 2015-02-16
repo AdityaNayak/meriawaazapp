@@ -104,12 +104,39 @@
 }
 @media #{$medium-up} { 
 	.top-bar-section{
-		li:not(.has-form) a:not(.button){
+		li:not(.has-form)
+			{
+			a:not(.button){
 			padding: 0 0.75em;
-			&:hover{
-				border-bottom:3px solid $blue;
+				&:hover{
+					border-bottom:3px solid $blue;
+				}
 			}
+			.f-dropdown{
+				li{
+					border-bottom:1px solid $grey;
+					margin-bottom: 0.5em;
+					padding-bottom:0.5em;
+					&:hover{
+						background:none;
+					}
+					&:first-child{
+						margin-bottom: 1em;
+					}
+					&:last-child{
+						border:none;
+					}
+				}
+				a{
+					line-height: 1.2;
+					font-size: 0.9em;
+					&:hover{
+						border:none;
+						background:$lightgrey;
+					}
+				}
 
+			}
 		}
 	} 
 	.top-bar-section ul li.active > a{
@@ -136,8 +163,8 @@ i{
 }
 .brbm{
 	border-bottom:1px solid $grey;
-	padding-top:1em;
-	padding-bottom:1em;
+	padding-top:0.5em;
+	padding-bottom:0.5em;
 	&:last-child{
 		border:none;
 	}
@@ -301,6 +328,9 @@ i{
 .bbr{
 	border:2px solid $darkblue;
 }
+.blc{
+	color: $black !important;
+}
 .yc{
 	color:$yellow !important;
 }
@@ -352,6 +382,9 @@ i{
 .s-ws-side{
 	padding-right:1em;
 	padding-left:1em;
+}
+.s-ws-left{
+	margin-left:0.5em;
 }
 .fi{
 	font-style:italic;
@@ -426,6 +459,20 @@ input{
 		padding-left: 4rem;
 		padding-right:4rem;
 	}
+	&.twitter{
+		border-color:$twitter;
+		color:$twitter;
+		i{
+			color: $twitter;
+		}
+	}
+	&.facebook{
+		border-color:$fb;
+		color: $fb;
+		i{
+			color:$fb;
+		}
+	}
 }
 .postfix{
 	&.lead{
@@ -458,6 +505,12 @@ input{
 }
 .nm{
 	margin:0 !important;
+}
+.nm2{
+	margin-bottom:0 !important;
+}
+.np{
+	padding:0 !important;
 }
 .circles{
 	width:56px;
@@ -496,6 +549,9 @@ input{
 }
 .fx3{
 	padding-top:5px;
+}
+.fx4{
+	padding-bottom:5px;
 }
 .home-showcase{
 	.small-4{
@@ -627,10 +683,9 @@ tbody{
 		&:hover{
 			cursor: pointer;
 			background:$bluegreen;
-		td{
-			color:$white;
-		}
-
+			td{
+				color:$white;
+			}
 		}
 	}
 }
@@ -640,4 +695,16 @@ tbody{
 		font-size:1.2em;
 		margin-right: 5px;
 	}
+}
+.nbbl {
+    position:absolute;
+    top: 1em;
+    right:1em;
+    padding:2px 5px 2px 4px;
+    background-color:$yellow;
+    color:$white;
+    font-weight:bold;
+    font-size:0.6em;
+    border-radius:50%;
+    line-height: 1;
 }

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Integrations | Meri Awaaz</title>
+
+  {% include header.html %}
+  <div class="row">
+    <div class="panel">
+    <h3>Connect your Social Profiles</h3>
+    <p>Post to all your profiles from one location</p>
+    <div class="row">
+    <div class="small-6 columns text-center">
+      <div class="facebook button"><i class="icon-facebook"></i> Connect Facebook Page</div>
+    </div>
+    <div class="small-6 columns text-center">
+      <div class="twitter button"><i class="icon-twitter"></i> Connect Twitter Profile</div>
+    </div>
+    </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-9 columns">
+      <div class="panel">
+        <div class="row">
+          <div class="small-12 columns">
+            <h3>Recommended Apps</h3>
+          </div>
+          <div class="row text-center">
+            <div class="small-3 columns s-ws-top">
+              <img src="{{site.url}}/assets/images/vendors/mosto.png" class="circle-img img-h">
+              <p class="s-ws-top">Mosto Systems</p>
+              <p class="secondary-color secondary">SMS | WhatsApp</p>
+            </div>
+            <div class="small-3 columns s-ws-top">
+              <img src="{{site.url}}/assets/images/vendors/vcs.png" class="circle-img img-h">
+              <p class="s-ws-top">Virtual Campaign Solutions</p>
+              <p class="secondary-color secondary">SMS | WhatsApp</p>
+            </div>
+          </div>
+
+          <div class="small-12 columns s-ws-top">
+            <h3>Supported 3rd party Vendors</h3>
+          </div>
+          <div class="row text-center">
+            <div class="small-3 columns s-ws-top">
+              <img src="{{site.url}}/assets/images/vendors/pinnacle.jpg" class="circle-img img-h">
+              <p class="s-ws-top">Pinnacle Systems</p>
+              <p class="secondary-color secondary">SMS</p>
+            </div>
+            <div class="small-3 columns s-ws-top">
+              <img src="{{site.url}}/assets/images/vendors/custom.jpg" class="circle-img img-h">
+              <p class="s-ws-top">Add your Vendor</p>
+              <p class="secondary-color secondary">Custom</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="small-3 columns panel">
+      <h4>Mosto Systems</h4>
+      <div id="step0">
+        <p class="secondary fx">#1 Bulk SMS Service Provider in India with Bulk SMS, Virtual Numbers & Missed Call Solution</p>
+        <div class="row collapse">
+          <div class="small-6 columns secondary secondary-color">
+            <div class="s-ws-top"><i class="icon-check gc"></i> SMS DND</div>
+            <div class="s-ws-top"><i class="icon-check gc"></i> SMS Non-DND</div>
+            <div class="s-ws-top"><i class="icon-check gc"></i> WhatsApp</div>
+          </div>
+          <div class="small-6 columns secondary secondary-color">
+            <div class="s-ws-top"><i class="icon-check gc"></i> Delivery Reports</div>
+            <div class="s-ws-top"><i class="icon-check gc"></i> 99% Delivery</div>
+            <div class="s-ws-top"><i class="icon-check gc"></i> Read Reports</div>
+          </div>
+        </div>
+        <div id="step0-trg" class="m-ws-top button tiny fullwidth">Activate</div>
+      </div>
+      <div id="step1" style="display:none;">
+        <form>
+          <div class="row">
+            <div class="small-4 columns m-ws-top">
+              <label for="ak" class="right inline">Api Key</label>
+            </div>
+            <div class="small-8 columns m-ws-top">
+              <input type="text" id="ak" placeholder="Api Key">
+            </div>
+          </div>
+          <input style="submit" class="button tiny fullwidth" value="Finish">
+        </form>
+    </div>
+  </div>
+</div>
+{% include footer.html %} 
+
+<script type="text/javascript" src="{{site.url}}/assets/js/integrations.js"></script>
+
+
+<script type="text/javascript">
+  $(document).foundation();
+  $('#step0-trg').click(function(){
+    $('#step0').fadeOut();
+    $('#step1').delay(300).fadeIn();
+  });
+</script>
+</html>
