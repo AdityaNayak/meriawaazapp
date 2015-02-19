@@ -99,11 +99,19 @@
 
                   </div>
                   <div class="row">
-                    <div class="small-4 columns tertiary secondary-color">
-                      <!-- <input type="file" name="media" multiple="1"> --> <a href="#"><i class="icon-image-add f-2x secondary-color"></i></a>
-                      <a href="#"><i class="icon-image-accept f-2x gc" style="display:none;"></i></a>
+                    <div class="small-1 columns tertiary secondary-color">
+                      <!-- <input type="file" name="media" multiple="1"> --> <span title="Attach an image or video" class="cs"><i class="icon-image-add f-2x secondary-color"></i><i class="icon-image-accept f-2x gc" style="display:none;"></i></span>
                     </div>
-                    <div id="chcount" class="small-2 small-offset-2 columns secondary fx3 bgc">
+                    <div class="small-1 columns tertiary secondary-color">
+                    <span class="cs" title="Change List" id="cf1-trg"><i class="icon-list f-2x secondary-color"></i></span>
+                    </div>
+                    <div class="small-4 columns tertiary secondary-color">
+                    <select class="dbrd-s" id="cf1" style="display:none;">
+                      <option value="default">Voters (Default)</option>
+                      <option value="l1">Volunteers</option>
+                    </select>
+                    </div>
+                    <div id="chcount" class="small-2 columns secondary fx3 bgc">
                     </div>
                     <div class="small-4 columns"><input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth">
                     </div>
@@ -113,7 +121,6 @@
             </div>
             <div id="posts">
               <h4 class="text-center secondary-color b-ws-top">Loading...</h4>
-
             </div>
           </div>
           <div class="small-3 columns">
@@ -137,7 +144,7 @@
             </div>
 
             <hr>
-            <h5>Competitors</h5>
+            <!-- <h5>Competitors</h5>
             <select>
               <option value="week">This Week</option>
               <option value="month">This Month</option>
@@ -147,7 +154,7 @@
             <div id="competitorlist">
             </div>
 
-
+-->
 
           </div>
         </div>
@@ -156,6 +163,9 @@
         <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
 
         <script type="text/javascript">
+          $('#cf1-trg').click(function(){
+            $('#cf1').fadeIn();
+          });
           $(document).foundation();
         </script>
 
