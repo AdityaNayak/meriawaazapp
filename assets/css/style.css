@@ -4536,16 +4536,16 @@ label small {
 span.prefix, label.prefix {
   background: #f2f2f2;
   border-right: none;
-  color: #0071bc;
-  border-color: #0071bc;
+  color: #5d5650;
+  border-color: gainsboro;
 }
 
 /* line 410, ../bower_components/foundation/scss/foundation/components/_forms.scss */
 span.postfix, label.postfix {
   background: #f2f2f2;
   border-left: none;
-  color: #0071bc;
-  border-color: #0071bc;
+  color: #5d5650;
+  border-color: gainsboro;
 }
 
 /* We use this to get basic styling on all basic form elements */

@@ -53,11 +53,11 @@
             <h2 class="dbc">Connects Citizens with their Netas and Government officials</h2>
             <h3 class="nm"> for Open, Accessible and Accountable Governance</h3>
             <p class="s-ws-top secondary-color">Mobile-first | Candidate Report Cards | Real-time discussions | Under 3 sec issue reporting | Digital governance</p>
-            <h3 class="nm secondary-color">Time till complete Delhi roll out</h3>
+           <!-- <h3 class="nm secondary-color">Time till complete Delhi roll out</h3>
             <div id="countdown" class="m-ws-bottom"></div>
             <h3 class="nm dbc">Next Push</h3>
             <h5 class="s-ws-top"><small>5th Jan</small> Beta Launch of Issues Module <small>Get to participate in the issues of your locality</small></h5>
-            <h5 class="s-ws-top"><small>6th Jan</small> Beta Launch of Netas Profile Module <small>Know your MLA candidates</small></h5>
+            <h5 class="s-ws-top"><small>6th Jan</small> Beta Launch of Netas Profile Module <small>Know your MLA candidates</small></h5> -->
         </div>
     </div>
     <div class="panel">
@@ -124,12 +124,14 @@
                 <a name="4"></a>
                 <h3 data-magellan-destination="4" class="bc">People</h3>
                 <h4 class="s-ws-top">Team</h4>
-                <ul class="small-block-grid-5 text-center s-ws-top">
+                <ul class="small-block-grid-4 text-center s-ws-top">
                     <li><img class="circle-img gs hv" src="{{site.url}}/assets/images/team/akn.jpg"><h5 class="s-ws-top">Aditya Nayak</h5>Founder</li>
                     <li><img class="circle-img gs hv" src="{{site.url}}/assets/images/team/sg.jpg"><h5 class="s-ws-top">Shashank Gautam</h5>Operations</li>
                     <li><img class="circle-img gs hv" src="{{site.url}}/assets/images/team/mg.jpg"><h5 class="s-ws-top">Manan Gakhar</h5>Product</li>
                     <li><img class="circle-img gs hv" src="{{site.url}}/assets/images/team/dg.jpg"><h5 class="s-ws-top">Danish Goel</h5>Product</li>
                     <li><img class="circle-img gs hv" src="{{site.url}}/assets/images/team/sa.jpg"><h5 class="s-ws-top">Sarthak Ahuja</h5>Product</li>
+                    <li><img class="circle-img gs hv" src="{{site.url}}/assets/images/team/ag.jpg"><h5 class="s-ws-top">Anchita Goel</h5>Product</li>
+                    <li><img class="circle-img gs hv" src="{{site.url}}/assets/images/team/mp.jpg"><h5 class="s-ws-top">Mansi Panwar</h5>Community Outreach</li>
                 </ul>
                 <h4 class="b-ws-top">Volunteer Core</h4>
                 <h5>Manoj Kumar</h5>
@@ -245,13 +247,13 @@
 <script type="text/javascript" src="{{site.url}}/assets/bower_components/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.js"></script>
 <script src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.magellan.js"></script>
-<script src="{{site.url}}/assets/js/jquery.countdown.min.js"></script>
+<!-- <script src="{{site.url}}/assets/js/jquery.countdown.min.js"></script> -->
 <script>
     $(document).foundation({
         magellan: {
             active_class: 'active',
             threshold: 0,
-            destination_threshold: 20,
+            destination_threshold: 5,
             throttle_delay: 50 
         },
         /*orbit: {
@@ -259,12 +261,12 @@
             timer: false,
         } */
     });
-    $(document).ready(function(){
+   /* $(document).ready(function(){
         /* $('.walkthrough .circles').click(function(event){
             $('.circles.active').removeClass('active');
             $(this).addClass('active');event.preventDefault();
         });  */ 
-    $('#countdown').countdown('2015/1/26').on('update.countdown', function(event) {
+  /*  $('#countdown').countdown('2015/1/26').on('update.countdown', function(event) {
         var $this = $(this).html(event.strftime(''
            + '<span class="s-ws-side"><span class="f-4x">%-w</span> week%!w</span>'
            + '<span class="s-ws-side"><span class="f-4x yc">%-d</span> day%!d</span>'
@@ -272,7 +274,7 @@
            + '<span class="s-ws-side"><span class="f-4x bc">%M</span> mins</span>'
            + '<span class="s-ws-side"><span class="f-4x dbc">%S</span> sec</span>'));
     });
-});
+}); */
 </script>
 </body>
 </html>
