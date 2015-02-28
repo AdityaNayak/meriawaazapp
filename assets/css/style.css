@@ -10482,6 +10482,11 @@ input.lead {
 }
 
 /* line 516, ../scss/style.scss */
+.np2 {
+  padding-bottom: 0 !important;
+}
+
+/* line 519, ../scss/style.scss */
 .circles {
   width: 56px;
   height: 56px;
@@ -10490,84 +10495,84 @@ input.lead {
   border: 1px solid gainsboro;
   margin: 1.5em auto 0 auto;
 }
-/* line 523, ../scss/style.scss */
+/* line 526, ../scss/style.scss */
 .circles:hover {
   border: 2px solid #0071bc;
 }
-/* line 526, ../scss/style.scss */
+/* line 529, ../scss/style.scss */
 .circles.active {
   border: 2px solid #0071bc;
 }
 
-/* line 530, ../scss/style.scss */
+/* line 533, ../scss/style.scss */
 .circle-img {
   border-radius: 50%;
 }
-/* line 532, ../scss/style.scss */
+/* line 535, ../scss/style.scss */
 .circle-img.pd {
   padding: 0.5rem;
 }
 
-/* line 536, ../scss/style.scss */
+/* line 539, ../scss/style.scss */
 .img-h {
   width: 50%;
 }
 
-/* line 539, ../scss/style.scss */
+/* line 542, ../scss/style.scss */
 #map {
   height: 450px;
   width: 800px;
 }
 
-/* line 543, ../scss/style.scss */
+/* line 546, ../scss/style.scss */
 .fx1 {
   vertical-align: super;
   margin-right: 5px;
   margin-left: 5px;
 }
 
-/* line 548, ../scss/style.scss */
+/* line 551, ../scss/style.scss */
 .fx2 {
   padding-top: 3px;
 }
 
-/* line 551, ../scss/style.scss */
+/* line 554, ../scss/style.scss */
 .fx3 {
   padding-top: 5px;
 }
 
-/* line 554, ../scss/style.scss */
+/* line 557, ../scss/style.scss */
 .fx4 {
   padding-bottom: 5px;
 }
 
-/* line 558, ../scss/style.scss */
+/* line 561, ../scss/style.scss */
 .home-showcase .small-4 {
   cursor: pointer;
 }
-/* line 561, ../scss/style.scss */
+/* line 564, ../scss/style.scss */
 .home-showcase .active {
   border-bottom: 3px solid gainsboro;
   padding-bottom: 1em;
 }
-/* line 567, ../scss/style.scss */
+/* line 570, ../scss/style.scss */
 .home-showcase img {
   max-height: 50px;
 }
 
-/* line 571, ../scss/style.scss */
+/* line 574, ../scss/style.scss */
 .ct {
   text-transform: capitalize;
 }
 
-/* line 574, ../scss/style.scss */
+/* line 577, ../scss/style.scss */
 .wbg-fx {
   background: white;
   padding-top: 1em;
   padding-bottom: 1em;
 }
 
-/* line 579, ../scss/style.scss */
+/* line 582, ../scss/style.scss */
 .icon-bg {
   position: absolute;
   max-width: 1200px;
@@ -10575,7 +10580,7 @@ input.lead {
   height: 100%;
   padding-top: 1em;
 }
-/* line 586, ../scss/style.scss */
+/* line 589, ../scss/style.scss */
 .icon-bg i {
   color: #eae9e7;
   padding: 0.75rem;
@@ -10583,13 +10588,13 @@ input.lead {
   float: left;
 }
 
-/* line 594, ../scss/style.scss */
+/* line 597, ../scss/style.scss */
 .icon-bg-fx {
   z-index: 9;
   position: relative;
 }
 
-/* line 599, ../scss/style.scss */
+/* line 602, ../scss/style.scss */
 .coming-soon:before {
   content: " Coming Soon";
   color: #333;
@@ -10604,18 +10609,18 @@ input.lead {
   font-size: 6em;
 }
 
-/* line 613, ../scss/style.scss */
+/* line 616, ../scss/style.scss */
 .alert-box {
   position: fixed;
   width: 40%;
   z-index: 999;
 }
 
-/* line 618, ../scss/style.scss */
+/* line 621, ../scss/style.scss */
 .timeline {
   position: relative;
 }
-/* line 620, ../scss/style.scss */
+/* line 623, ../scss/style.scss */
 .timeline:before {
   display: block;
   content: "";
@@ -10627,13 +10632,13 @@ input.lead {
   background-color: #f9f8f8;
   z-index: 0;
 }
-/* line 631, ../scss/style.scss */
+/* line 634, ../scss/style.scss */
 .timeline li {
   padding-left: 1em;
   margin-left: 0.5em;
   margin-top: 0.5em;
 }
-/* line 635, ../scss/style.scss */
+/* line 638, ../scss/style.scss */
 .timeline li:before {
   content: "v";
   font-family: "meriawaaz" !important;
@@ -10653,7 +10658,7 @@ input.lead {
   margin-top: 10px;
 }
 
-/* line 656, ../scss/style.scss */
+/* line 659, ../scss/style.scss */
 .timeline.big:before {
   top: 10px;
   bottom: 0px;
@@ -10661,14 +10666,14 @@ input.lead {
   width: 3px;
   background-color: #f9f8f8;
 }
-/* line 663, ../scss/style.scss */
+/* line 666, ../scss/style.scss */
 .timeline.big i {
   color: #0071bc;
 }
 
-/* line 667, ../scss/style.scss */
+/* line 670, ../scss/style.scss */
 .bg2 {
-  background: rgba(234, 233, 231, 0.3);
+  background: rgba(249, 248, 248, 0.3);
   margin-bottom: 1em;
   padding: 0.75em;
   border: 1px solid gainsboro;
@@ -10676,32 +10681,32 @@ input.lead {
   border-radius: 3px;
 }
 
-/* line 679, ../scss/style.scss */
+/* line 682, ../scss/style.scss */
 tbody tr {
   border-bottom: 1px solid #f9f8f8;
 }
-/* line 681, ../scss/style.scss */
+/* line 684, ../scss/style.scss */
 tbody tr:last-child {
   border: none;
 }
-/* line 684, ../scss/style.scss */
+/* line 687, ../scss/style.scss */
 tbody tr:hover {
   cursor: pointer;
   background: #00b6a5;
 }
-/* line 687, ../scss/style.scss */
+/* line 690, ../scss/style.scss */
 tbody tr:hover td {
   color: white;
 }
 
-/* line 694, ../scss/style.scss */
+/* line 697, ../scss/style.scss */
 .ic-pr i {
   color: gainsboro;
   font-size: 1.2em;
   margin-right: 5px;
 }
 
-/* line 700, ../scss/style.scss */
+/* line 703, ../scss/style.scss */
 .nbbl {
   position: absolute;
   top: 1em;
@@ -10715,7 +10720,7 @@ tbody tr:hover td {
   line-height: 1;
 }
 
-/* line 712, ../scss/style.scss */
+/* line 715, ../scss/style.scss */
 .dbrd-s {
   background-color: white;
   font-size: 1em;
@@ -10724,7 +10729,7 @@ tbody tr:hover td {
   height: 2em;
 }
 
-/* line 719, ../scss/style.scss */
+/* line 722, ../scss/style.scss */
 .cs {
   cursor: pointer;
 }

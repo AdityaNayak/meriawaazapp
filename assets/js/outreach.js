@@ -376,6 +376,7 @@ function initialize() {
     });
     $('#list-trg').click(function(){
       $('#cmp-view').fadeOut();
+      $('#outreach-single-listview').fadeOut();
       $('#outreach-view').delay(300).fadeIn();
       $('#outreach-list-view').delay(300).fadeIn();
     });
