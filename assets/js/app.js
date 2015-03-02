@@ -57,7 +57,8 @@ else{
 		                			p.fetch({
 		                				success: function(results){
 		                					if(CU.get("username")!="admin"){
-						                		console.log(n.get("constituency"));
+						                		/*
+												console.log(n.get("constituency"));
 						                		
 						                		constituency=n.get("constituency");
 						                		constituency.fetch({
@@ -71,8 +72,26 @@ else{
 						                			error:function(error){
 						                				
 						                			}
-						                		})
-						                		
+						                		});*/
+												var Election = Parse.Object.extend("Election");
+												election = new Parse.Query(Election);
+												election.descending('createdAt');
+												var pointer = new Parse.Object("Neta");
+												pointer.id = CU.get("neta").id;
+												election.equalTo("arrayNetas", pointer);
+												election.include("constituency");
+												election.find({
+												  success: function(results) {
+														constituency=results[0].get("constituency");
+														consti.innerHTML=constituency.get("name");
+														if(a=="q-a.html"){
+						                					populateQuestions(0);
+						                				}
+													},
+													error: function(error){
+														console.log("Error: "+error.message);
+													}													
+												});
 						                	}	
 						                	if(p.get("logo")!=undefined){
 						                		plogo.src=p.get("logo").url();
@@ -104,9 +123,27 @@ else{
 						                			constituency=n.get("constituency");
 						                			constituency.fetch({
 						                				success:function(results){
-						                					consti.innerHTML=t.get("neta").get("constituency").get("name");
-								                	
-
+						                					//consti.innerHTML=t.get("neta").get("constituency").get("name");
+															var Election = Parse.Object.extend("Election");
+															election = new Parse.Query(Election);
+															election.descending('createdAt');
+															var pointer = new Parse.Object("Neta");
+															pointer.id = t.get("neta").id;
+															election.equalTo("arrayNetas", pointer);
+															election.include("constituency");
+															election.find({
+															  success: function(results) {
+																	constituency=results[0].get("constituency");
+																	consti.innerHTML=constituency.get("name");
+																	if(a=="q-a.html"){
+																		populateQuestions(0);
+																	}
+																},
+																error: function(error){
+																	console.log("Error: "+error.message);
+																}													
+															});
+															
 										                	if(p.get("logo")!=undefined){
 										                		plogo.src=p.get("logo").url();
 										                	}

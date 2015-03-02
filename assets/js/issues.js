@@ -1514,8 +1514,27 @@ function initializeMap(){
         var n=currentUser.get("neta");
         n.fetch({
           success:function(results1){
-            constituency=n.get("constituency");
-            constituency.fetch({
+            //constituency=n.get("constituency");
+			var Election = Parse.Object.extend("Election");
+			election = new Parse.Query(Election);
+			election.descending('createdAt');
+			var pointer = new Parse.Object("Neta");
+			pointer.id = n.id;
+			election.equalTo("arrayNetas", pointer);
+			election.include("constituency");
+			election.find({
+				success: function(results) {
+					constituency=results[0].get("constituency");
+					plotConstituency(constituency.get("index"));
+					map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+				},
+				error: function(error){
+					NProgress.done();
+					console.log("Error: "+error.message);
+				}													
+			});
+            /*
+			constituency.fetch({
               success:function(results2){
                 plotConstituency(constituency.get("index"));
                 map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
@@ -1525,6 +1544,7 @@ function initializeMap(){
                 NProgress.done();
               }
             });
+			*/
           },
           error:function(error){
             console.log("Error: "+error.message);
@@ -1544,7 +1564,7 @@ function initializeMap(){
           var n=t.get("neta");
           n.fetch({
             success:function(results){
-              constituency=n.get("constituency");
+              /*constituency=n.get("constituency");
               constituency.fetch({
                 success:function(results){
                   plotConstituency(constituency.get("index"));
@@ -1554,7 +1574,25 @@ function initializeMap(){
                   console.log("Error: "+error.message);
                   NProgress.done();
                 }
-              });
+              });*/
+				var Election = Parse.Object.extend("Election");
+				election = new Parse.Query(Election);
+				election.descending('createdAt');
+				var pointer = new Parse.Object("Neta");
+				pointer.id = n.id;
+				election.equalTo("arrayNetas", pointer);
+				election.include("constituency");
+				election.find({
+					success: function(results) {
+						constituency=results[0].get("constituency");
+						plotConstituency(constituency.get("index"));
+						map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+					},
+					error: function(error){
+						NProgress.done();
+						console.log("Error: "+error.message);
+					}													
+				});
             },
             error:function(error){
                 console.log("Error: "+error.message);

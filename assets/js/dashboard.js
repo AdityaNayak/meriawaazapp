@@ -417,53 +417,105 @@ function fetchECStatus(u){
     query = new Parse.Query(ListItem);
     if(u.get("type")=="neta"){
         currentNeta=u.get("neta");
+		
+		var pointer = new Parse.Object("Neta");
+		pointer.id = currentNeta.id;
+		query.equalTo("arrayNetas", pointer);
+		query.include("arrayNetas");
+		query.include("constituency");
+		query.descending('createdAt');
+		EC={e:"",c:""};
+		query.find({
+			  success: function(results) {
+					console.log("Size:"+results.length);
+					if(results.length==0){
+						EC.e="-";
+						EC.c="-";
+					}
+					else{
+						//Check if newer elections in this constituency have happened
+						if(results[0].get("winner")==undefined){
+							EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Candidate)";
+						}
+						else{
+							if(results[0].get("winner").id==currentNeta.id){
+								EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Winner)";
+							}
+							else{
+								EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Contested)";
+							}
+						}
+						EC.c=results[0].get("constituency").get("name")+"<small> "+results[0].get("constituency").get("state")+"</small>";
+					}
+					if(u.get("type")=="neta"){
+						setCurrentNeta(u);
+					}
+					else if(u.get("type")=="teamMember"){
+						setCurrentNetaTM(currentNeta);
+					}
+					console.log("NProgress Stop");
+			  },
+			  error: function(error) {
+					console.log("Error:"+error.message);
+					NProgress.done();
+			  }
+		});
     }
     else{
-        currentNeta=u.get("teamMember").get("neta");
+        currentTeamMember=u.get("teamMember");
+		currentTeamMember.fetch({
+			success:function(results){
+				currentNeta=currentTeamMember.get("neta");
+				var pointer = new Parse.Object("Neta");
+				pointer.id = currentNeta.id;
+				query.equalTo("arrayNetas", pointer);
+				query.include("arrayNetas");
+				query.include("constituency");
+				query.descending('createdAt');
+				EC={e:"",c:""};
+				query.find({
+					  success: function(results) {
+							console.log("Size:"+results.length);
+							if(results.length==0){
+								EC.e="-";
+								EC.c="-";
+							}
+							else{
+								//Check if newer elections in this constituency have happened
+								if(results[0].get("winner")==undefined){
+									EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Candidate)";
+								}
+								else{
+									if(results[0].get("winner").id==currentNeta.id){
+										EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Winner)";
+									}
+									else{
+										EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Contested)";
+									}
+								}
+								EC.c=results[0].get("constituency").get("name")+"<small> "+results[0].get("constituency").get("state")+"</small>";
+							}
+							if(u.get("type")=="neta"){
+								setCurrentNeta(u);
+							}
+							else if(u.get("type")=="teamMember"){
+								setCurrentNetaTM(currentNeta);
+							}
+							console.log("NProgress Stop");
+					  },
+					  error: function(error) {
+							console.log("Error:"+error.message);
+							NProgress.done();
+					  }
+				});
+			},
+			error:function(errors){
+				console.log("Error: "+errors.message);
+			}
+		});
+		
     }
     
-    var pointer = new Parse.Object("Neta");
-    pointer.id = currentNeta.id;
-    query.equalTo("arrayNetas", pointer);
-    query.include("arrayNetas");
-    query.include("constituency");
-    query.descending('createdAt');
-    EC={e:"",c:""};
-    query.find({
-          success: function(results) {
-                console.log("Size:"+results.length);
-                if(results.length==0){
-                    EC.e="-";
-                    EC.c="-";
-                }
-                else{
-                    //Check if newer elections in this constituency have happened
-                    if(results[0].get("winner")==undefined){
-                        EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Candidate)";
-                    }
-                    else{
-                        if(results[0].get("winner").id==currentNeta.id){
-                            EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Winner)";
-                        }
-                        else{
-                            EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Candidate)";
-                        }
-                    }
-                    EC.c=results[0].get("constituency").get("name")+"<small> "+results[0].get("constituency").get("state")+"</small>";
-                }
-                if(u.get("type")=="neta"){
-                    setCurrentNeta(u);
-                }
-                else if(u.get("type")=="teamMember"){
-                    setCurrentNetaTM(currentNeta);
-                }
-                console.log("NProgress Stop");
-          },
-          error: function(error) {
-                console.log("Error:"+error.message);
-                NProgress.done();
-          }
-    });
 }
 
 function updateReach(){
