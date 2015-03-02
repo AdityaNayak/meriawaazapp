@@ -380,7 +380,7 @@ function queryElectionTable(){
                         ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Candidate)";
                     }
                     else{
-                        if(results[0].get("winner").id==currentNeta.id){
+                        if(results[0].get("winner").id==neta.id){
                             ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Winner)";
                         }
                         else{

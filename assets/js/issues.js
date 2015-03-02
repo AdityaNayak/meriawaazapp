@@ -173,7 +173,7 @@ function deleteMarkers() {
   markers = [];
 }
 
-
+// Returns Address given the Latitude and Longitude
 function getReverseGeocodingData(lat, lng) {
     console.log("getReverseGeocodingData");
     var latlng = new google.maps.LatLng(lat, lng);
@@ -195,6 +195,7 @@ function getReverseGeocodingData(lat, lng) {
     
 }
 
+// On Click Listener to Current Location on Map
 function CurrentLocationControl(controlDiv, map) {
   console.log("CurrentLocationControl");
   // Set CSS styles for the DIV containing the control
@@ -252,6 +253,7 @@ function CurrentLocationControl(controlDiv, map) {
 
 }
 
+
 function enableDetailsView(){
   $('#details-panel').children().prop('disabled',false);
 }
@@ -260,6 +262,7 @@ function disableDetailsView(){
   $('#details-panel').children().prop('disabled',true);
 }
 
+// Enable CheckBoxs 
 function enableCheckPoints(){
   console.log("enableCheckPoints");
   enableCategoryIcons();
@@ -332,7 +335,8 @@ function enableStatusIcons(){
   $('#fn1').closest("label").toggleClass("gs", false); 
 }
 
-//Starts NProgress
+// Refresh Screen
+// Starts NProgress
 function refresh1(){
   NProgress.start();
   console.log("NProgress Start");
@@ -366,9 +370,11 @@ function refresh1(){
   }
 }
 
+// Refresh Current Selected Marker
 function refresh2(){
   updateCurrentMarker(currmarker);
 }
+
 
 function disbleStatusIcons(i){
 
@@ -391,6 +397,7 @@ function disbleStatusIcons(i){
   }
 }
 
+// OnClick Listener for Specific Issue Map 
 function FixedLocationControl(controlDiv, map) {
   console.log("FixedLocationControl");
   // Set CSS styles for the DIV containing the control
@@ -428,6 +435,7 @@ function FixedLocationControl(controlDiv, map) {
 
 }
 
+// 
 function populateUpdates(){
     console.log("populateUpdates");
     timelineView.html("");    
@@ -473,11 +481,11 @@ function populateUpdates(){
                     else{
                         pphoto1=getDefaultIcon(user.get("type"));
                     }
-                    // if(object.get("type")=="unassigned"){
-                    //   console.log(assignee);
-                    //     var ass=assignee.get("pUser");
-                    //     timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was unassigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
-                    // }
+                    if(object.get("type")=="unassigned"){
+                       console.log(assignee);
+                         var ass=assignee.get("pUser");
+                         timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was unassigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
+                    }
                     if(object.get("type")=="assigned"){
                         var ass=assignee.get("pUser");
                         timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was assigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
@@ -681,55 +689,55 @@ function postAssignment(id){
     query.equalTo("type","assigned");
     query.find({
           success: function(results) {
-                var countclaims=0;
-                // console.log("People already Assigned"+results.length);
-                // if(results.length!=0){
-                //     var Assign = Parse.Object.extend("Update");
-                //     var assign = new Assign();
-                //     var u = new Parse.Object("User");
-                //     var i = new Parse.Object("Issue");
-                //     var a = new Parse.Object("TeamMember");
-                //     u.id = currentUser.id;
-                //     a.id = results[0].id; 
-                //     i.id = currmarker.content.id;
-                //     assign.set("type", "unassigned");
-                //     assign.set("issue", i);
-                //     assign.set("user", u);
-                //     assign.set("assignee", a);
-                //     assign.save(null, {
-                //       success: function(assign) {
-                //             var Assign2 = Parse.Object.extend("Update");
-                //             var assign2 = new Assign2();
-                //             var u2 = new Parse.Object("User");
-                //             var i2 = new Parse.Object("Issue");
-                //             var a2 = new Parse.Object("TeamMember");
-                //             var member2=teamMember(id);
-                //             u2.id = currentUser.id;
-                //             a2.id = member2.id; 
-                //             i2.id = currmarker.content.id;
-                //             assign2.set("type", "assigned");
-                //             assign2.set("issue", i2);
-                //             assign2.set("user", u2);
-                //             assign2.set("assignee", a2);
-                //             assign2.save(null, {
-                //               success: function(assign2) {
-                //                 updateCurrentMarker(currmarker);
-                //                 enableDetailsView();
+                 var countclaims=0;
+                 console.log("People already Assigned"+results.length);
+                 if(results.length!=0){
+                     var Assign = Parse.Object.extend("Update");
+                     var assign = new Assign();
+                     var u = new Parse.Object("User");
+                     var i = new Parse.Object("Issue");
+                     var a = new Parse.Object("TeamMember");
+                     u.id = currentUser.id;
+                     a.id = results[0].id; 
+                     i.id = currmarker.content.id;
+                     assign.set("type", "unassigned");
+                     assign.set("issue", i);
+                     assign.set("user", u);
+                     assign.set("assignee", a);
+                     assign.save(null, {
+						success: function(assign) {
+                             var Assign2 = Parse.Object.extend("Update");
+                             var assign2 = new Assign2();
+                             var u2 = new Parse.Object("User");
+                             var i2 = new Parse.Object("Issue");
+                             var a2 = new Parse.Object("TeamMember");
+                             var member2=teamMember(id);
+                             u2.id = currentUser.id;
+                             a2.id = member2.id; 
+                             i2.id = currmarker.content.id;
+                             assign2.set("type", "assigned");
+                             assign2.set("issue", i2);
+                             assign2.set("user", u2);
+                             assign2.set("assignee", a2);
+                             assign2.save(null, {
+                             success: function(assign2) {
+								updateCurrentMarker(currmarker);
+                                enableDetailsView();
                                 
-                //               },
-                //               error: function(assign2, error) {
-                //                 alert('Failed to Assign! ' + error.message);
-                //                 enableDetailsView();
-                //               }
-                //             });
-                //       },
-                //       error: function(assign, error) {
-                //         alert('Failed to Assign! ' + error.message);
-                //         enableDetailsView();
-                //       }
-                //     });
-                // }
-                // else{
+                             },
+                             error: function(assign2, error) {
+                                alert('Failed to Assign! ' + error.message);
+                                enableDetailsView();
+                             }
+                             });
+                        },
+                        error: function(assign, error) {
+							alert('Failed to Assign! ' + error.message);
+							enableDetailsView();
+                        }
+					});
+                 }
+                else{
                     var Assign = Parse.Object.extend("Update");
                     var assign = new Assign();
                     var u = new Parse.Object("User");
@@ -754,7 +762,7 @@ function postAssignment(id){
                         enableDetailsView();
                       }
                     });
-                //}
+                }
                 
             },
           error: function(error) {
@@ -1134,7 +1142,7 @@ function populateTM(){
                 if(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly)==true){
                     //Set Icon
                     myicon=getIcon(object.get("category"),object.get("status"));
-
+					
                                   
                     marker = new google.maps.Marker({
                         position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
@@ -1153,7 +1161,8 @@ function populateTM(){
                         content=object.get("content").substring(0,50)+"...";
                     }
                     listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
-                    markers.push(marker);
+                    console.log("<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+					markers.push(marker);
                     if((marker.content).get('status')=="open"){
                         no=no+1;
                     }
@@ -1426,7 +1435,7 @@ function filter(){
     updateHistory();
     listView.html("");
     for(var m=0;m<markers.length;m++){
-        if(statusCheck(markers[m])==1 && categoryCheck(markers[m])==1 && dateCheck(markers[m])==1){
+        if(statusCheck(markers[m])==1 && categoryCheck(markers[m])==1){// && dateCheck(markers[m])==1){
             var d=new Date((markers[m].content).createdAt);
             var ago=timeSince(d);
             var content=markers[m].content.get('content');
