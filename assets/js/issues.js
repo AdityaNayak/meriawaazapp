@@ -698,7 +698,7 @@ function postAssignment(id){
                      var i = new Parse.Object("Issue");
                      var a = new Parse.Object("TeamMember");
                      u.id = currentUser.id;
-                     a.id = results[0].id; 
+                     a.id = results[0].get("assignee").id; 
                      i.id = currmarker.content.id;
                      assign.set("type", "unassigned");
                      assign.set("issue", i);
@@ -1335,6 +1335,8 @@ function populate(){
           console.log("NProgress Stop");
           },
           error: function(error) {
+			  NProgress.done();
+			  console.log("Error: "+error.message);
           }
         });
 }
