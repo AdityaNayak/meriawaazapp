@@ -76,7 +76,7 @@ function hide(){
  	  console.log("Inside Login");
  	  //loading();
  	  loadingButton_id("signin-btn",12);
- 	  var form = document.getElementById("signin-form")
+ 	  var form = document.getElementById("signin-form");
  	  var username = form.username.value;
  	  console.log(username);
  	  var password = form.password.value;

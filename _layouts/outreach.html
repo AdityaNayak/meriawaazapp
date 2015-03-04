@@ -28,7 +28,7 @@
       <ul class="side-nav" role="navigation" title="Link List">
        <li id="list-trg" role="menuitem" class="active"><a href="#" >Lists</a></li>
        <li id="cmp-trg" role="menuitem"><a href="#">Campaigns</a></li>
-       <li role="menuitem"><a href="#">Reports</a></li>
+       <li id="rep-trg" role="menuitem"><a href="#">Reports</a></li>
      </ul>
    </div>
    <div class="small-9 columns">
@@ -36,7 +36,7 @@
        <div id="outreach-list-view" >
         <div class="row">
           <div class="small-12 text-right columns">
-            <div class="button tiny"><i class="icon-add secondary-color"></i> Create List</div>
+            <div class="button tiny" id="crl-btn"><i class="icon-add secondary-color"></i> Create List</div>
           </div>
         </div>
         <div class="panel">
@@ -46,7 +46,7 @@
               <div class="small-8 columns"><span class="secondary-color">#1 </span><span class="f-1-5x">Voters</span><small class="secondary-color"> (Primary)</small></a>
               </div>
               <div class="small-4 columns s-ws-top">
-                3245 <span class="secondary-color">subscribers</span>
+                ... <span class="secondary-color">subscribers</span>
               </div>
             </div>
             <div class="row brbm">
@@ -54,7 +54,7 @@
                 <div class="small-8 columns"><span class="secondary-color">#2 </span><span class="f-1-5x">Volunteers</span>
                 </div></a>
                 <div class="small-4 columns s-ws-top">
-                  324 <span class="secondary-color">subscribers</span>
+                  ... <span class="secondary-color">subscribers</span>
                 </div>
               </div>
               <div class="row brbm">
@@ -63,7 +63,7 @@
                   </div>
                 </a>
                 <div class="small-4 columns s-ws-top">
-                  32 <span class="secondary-color">subscribers</span>
+                  ... <span class="secondary-color">subscribers</span>
                 </div>
               </div>
 
@@ -74,7 +74,7 @@
 
             <div class="row">
               <div class="small-6 columns text-right">
-                <a href="#" class="button tiny s-ws-left">Segregate</a> <a href="#" class="button tiny s-ws-left">Verify</a><a href="#" class="s-ws-left button tiny">Complete</a><a href="#" class="button tiny s-ws-left">Segments</a>
+                <a href="#" class="button tiny s-ws-left" id="seg-btn">Segregate</a> <a href="#" id="ver-btn" class="button tiny s-ws-left">Verify</a><a href="#" id="com-btn" class="s-ws-left button tiny">Complete</a><a href="#" id="sgm-btn" class="button tiny s-ws-left">Segments</a>
               </div>
               <div class="small-3 columns">
                 <div id="addv" class="button tiny fullwidth">Add a Subscriber</div>
@@ -84,7 +84,7 @@
               </div>
             </div>
             <div id="addv-row" style="display:none;">
-              <form>        
+              <form id="voteradd-form">        
                 <div class="row">
                   <div class="small-6 columns small-centered b-ws-top panel">
                     <p class="secondary secondary-color text-center">All fields are optional</p>

@@ -275,6 +275,10 @@ $('#logout').click(function() {
 	logout();
 });
 
+function notready(){
+	alert("The feature is not ready yet, but coming soon. Stay Tuned");
+}
+
 function icon_bg(){
 	var iconBg = $('.icon-bg');
 	var iconArray = ['calendar','clock',

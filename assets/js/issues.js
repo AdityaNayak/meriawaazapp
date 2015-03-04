@@ -566,6 +566,8 @@ function postComment(c){
     });
 }
 
+
+
 //Starts NProgress
 function postClaim(){
     NProgress.start();
@@ -584,11 +586,12 @@ function postClaim(){
     claim.set("issue",i);
     claim.set("type", "claim");
     claim.set("user", u);
-      
+    var form = document.getElementById("estimateddays");
+ 	var days = form.time.value;
     claim.save(null, {
       success: function(claim) {
         console.log(i.id);
-        Parse.Cloud.run("changeStatus", {objectId: i.id, status: "progress"}, {
+        Parse.Cloud.run("changeStatus", {objectId: i.id, status: "progress", claimDays: days}, {
           success:function(results){
             console.log(results);
             updateCurrentMarker(currmarker);
@@ -777,6 +780,7 @@ function setIssueStatusButton(){
     console.log("setIssueStatusButton");
     if(currmarker.content.get("status")=="closed" || currmarker.content.get("status")=="review"){
         $('#claim-st1').delay(400).fadeOut(300);
+		$('#timebox').delay(400).fadeOut(300);
         $('#claim-st2').delay(400).fadeOut(300);
         $('#close').delay(400).fadeOut(300);
         $('#team').delay(400).fadeOut(300);
@@ -858,12 +862,14 @@ function setIssueStatusButton(){
                     
                     if(countclaims==0){
                         $('#claim-st1').delay(400).fadeIn(300);
+						$('#timebox').delay(400).fadeIn(300);
                         $('#claim-st2').delay(400).fadeOut(300);
                         $('#close').delay(400).fadeOut(300);
                         $('#team').delay(400).fadeOut(300);
                     }
                     else{
                         $('#claim-st1').delay(400).fadeOut(300);
+						$('#timebox').delay(400).fadeOut(300);
                         $('#claim-st2').delay(400).fadeIn(300);
                         $('#close').delay(400).fadeIn(300);
                         $('#team').delay(400).fadeIn(300);
@@ -928,12 +934,14 @@ function updateContentWithCurrentMarker(){
     var p_id=currmarker.content.id;
     var p_photo=currmarker.content.get('file');
     var p_status=currmarker.content.get('status');
+	var p_daysLeft=currmarker.content.get('daysLeft');
     var p_title=currmarker.content.get('title');
     var p_issueId=currmarker.content.get('issueId').toString();
     infowindow.setContent(p_issueId);
     infowindow.open(map, marker);
     var status=document.getElementById('colorstatus');
     var date=document.getElementById('date');
+	var daysLeft=document.getElementById('daysLeft');
     var time=document.getElementById('time');
     var photo=document.getElementById('photo');
     var content=document.getElementById('content');
@@ -996,6 +1004,7 @@ function updateContentWithCurrentMarker(){
                 photo.src="./assets/images/no_image.jpg"; 
             }
             detailedissue.innerHTML=p_content; 
+			daysLeft.innerHTML=p_daysLeft;
             populateUpdates();
             showDetailsView();
             if(currentUser.get("type")=="neta"){
