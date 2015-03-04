@@ -247,6 +247,11 @@ function loadingButton_id(id,d){
 	}, d*1000);
 	console.log("Loading Button was Called!");
 }
+function loadingButton_id_stop(id,value){
+	var Original=value;
+	$("#"+id).removeClass('loading');
+	document.getElementById(id).value = Original;
+}
 
 function loadingButton_ref(d){
 	var Original=document.getElementById(this.id).value;

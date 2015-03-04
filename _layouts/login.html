@@ -14,7 +14,11 @@
   </div>
   <div class="small-12 large-3 columns panel b-ws-top icon-bg-fx">
     <div id="signin">
-      <form class="s-ws-top" id="signin-form">
+    <div data-alert class="alert-box alert radius ct" style="display:none;">
+          Loading
+          <a href="#" class="close">&times;</a>
+    </div>
+      <form class="b-ws-top" id="signin-form">
         <div class="row">
           <div class="large-12 columns">
             <label>Username
@@ -35,14 +39,18 @@
           </div>
         </div>
         <input type="submit" value="Sign In" id="signin-btn" class="button fullwidth small" /> 
-
-        <!--<div id="loading-btn" class="fullwidth text-center" style="display:none;" align="center"><img src="{{site.url}}/assets/images/loading.gif"></div>-->
       </form>
-      <!--<div class="row">
-        <div class="small-12 columns text-center">
-          <a onclick='setVisibility(0);' class="secondary-color">or Sign up for a new account</a>
+
+      <form class="b-ws-top" id="reset-form" style="display:none;">
+        <div class="row">
+          <div class="large-12 columns">
+            <label>Email
+              <input type="email" placeholder="example@gmail.com" id="email" required />
+            </label>
+          </div>
         </div>
-      </div>-->
+        <input type="submit" value="Send Reset Email" id="reset-btn" class="button fullwidth small" /> 
+      </form>
     </div>
     <!--
     <div id="signup">
