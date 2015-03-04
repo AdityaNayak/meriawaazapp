@@ -133,7 +133,7 @@
             Status: <span id="colorstatus"><strong>Loading...</strong></span>
           </div>       
           <div class="small-12 columns ct">
-            Estimated Time Left: <span class="yc"><strong>28 <small>days</small></strong></span>
+            Estimated Time Left: <span class="yc"><strong><span id="daysLeft">Loading...</span> <small>days</small></strong></span>
           </div>
         </div>  
         <div class="row">
@@ -141,6 +141,19 @@
             <div class="text-center" id="details-panel">
               <div class="button fullwidth success" id="close" style="display:none;"><strong>Mark as Completed</strong></div>
               <div id="neta-panel" style="display:none;">
+				 <div class="s-ws-top" id="timebox">
+                  <p class="secondary secondary-color">Estimated Time Needed for Results</p>
+                    <div class="row collapse">
+                      <div class="small-9 columns">
+					  <form id="estimateddays">
+                        <input id="time" type="number" min="1" placeholder="7"/>
+						</form>
+                      </div>
+                      <div class="small-3 columns">
+                        <span class="postfix"> days</span>
+                      </div>
+                    </div>
+                  </div>
                 <div class="text-left">
                   <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
                   <div id="claim-st3">
@@ -153,18 +166,7 @@
                   </select>
                   <div class="button fullwidth" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
 
-                  <div class="s-ws-top" id="timebox">
-                  <p class="secondary secondary-color">Estimated Time Needed for Results</p>
-                    <div class="row collapse">
-                      <div class="small-9 columns">
-                        <input type="number" min="1" placeholder="7"/>
-                      </div>
-                      <div class="small-3 columns">
-                        <span class="postfix"> days</span>
-                      </div>
-                    </div>
-                    <div class="button fullwidth">Update</div>
-                  </div>
+                  
                 </div>
               </div>
             </div>

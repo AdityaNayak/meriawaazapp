@@ -355,6 +355,13 @@ function getStuff(){
     });
 }
 
+function addVoter(){
+	
+}
+
+function setupVoterForm(){
+	
+}
 
 function initialize() {
     console.log("initialize");
@@ -367,6 +374,7 @@ function initialize() {
       $('#outreach-single-listview').fadeIn();
     });
     $('#addv').click(function(){
+	  setupVoterForm();
       $('#addvs-row').delay(300).fadeOut();
       $('#addv-row').fadeIn();
     });
@@ -381,15 +389,39 @@ function initialize() {
       $('#outreach-list-view').delay(300).fadeIn();
     });
     $('#cmp-trg').click(function(){
-      $('#outreach-view').fadeOut();
+	  notready();
+      /*$('#outreach-view').fadeOut();
       $('#cmp-view').delay().fadeIn();
       $('#cmp-list-view').delay().fadeIn();
-      $('#cmp-single-listview').delay().fadeOut();
+      $('#cmp-single-listview').delay().fadeOut();*/
+    });
+	$('#rep-trg').click(function(){
+      notready();
+    });
+	$('#crl-btn').click(function(){
+      notready();
+    });
+	$('#seg-btn').click(function(){
+      notready();
+    });
+	$('#com-btn').click(function(){
+      notready();
+    });
+	$('#sgm-btn').click(function(){
+      notready();
+    });
+	$('#ver-btn').click(function(){
+      notready();
     });
     $('#cmp-list-view').click(function(){
       $('#cmp-list-view').fadeOut();
       $('#cmp-single-listview').delay().fadeIn();
 
+    });
+	$('#voteradd-form').submit(function(event){
+          event.preventDefault();
+          var bio=document.getElementById("bio").value;
+          updateBio(bio);
     });
     
 }

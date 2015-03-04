@@ -33,17 +33,35 @@
         <!--<a href="#" class="button v2">Edit</a>-->
       </div>
       <div class="small-9 columns">
-        <div class="row">
-          <div class="small-2 columns">
+        <div class="row" id="currbio">
+          <div class="small-2 columns" id="sociallinks">
             <div><a href="#">Website</a></div>
             <div><a href="#">Twitter</a></div>
             <div><a href="#">Facebook</a></div>
           </div>
           <div class="small-10 columns">
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-
+            <p id="netabio">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
           </div>
+		  </div>
+		   <div id="editform" style="display:none;">
+              <form id="edit-form">        
+                <div class="row">
+                  <div class="small-6 columns">
+                    <div class="row">    
+                        <textarea id="weblink" rows="1" placeholder="Link to your Website"/></textarea>
+                        <textarea id="bio" rows="5" required placeholder="Tell people something about yourself..."></textarea>
+                    </div>
+                    <input type="submit" value="Update Bio" class="button fullwidth small">
+					<div id="canceledit" class="button tiny fullwidth">Cancel Edit</div>
+                  </div>
+                </div>
+              </form>
+            </div>
+		  <div class="small-3 columns">
+                
+				<div id="edittext" class="button tiny fullwidth">Edit Bio</div>
           </div>
+          
           <div class="row">
           <div class="small-3 columns m-ws-top">
             <h4 class="bgc">Statistics</h4>

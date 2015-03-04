@@ -72,7 +72,7 @@ var issuesClosed=document.getElementById('num-iclosed');;
 var ico;
 
 //Query User -> Neta Table
-var election=document.getElementById('election');;
+var electionResult=document.getElementById('election');;
 var ele;
 
 //Query User -> Neta Table
@@ -387,6 +387,7 @@ function queryElectionTable(){
                             ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Contested)";
                         }
                     }
+					console.log("ele:"+ele);
                     cs=results[0].get("constituency").get("name")+"<small> "+results[0].get("constituency").get("state")+"</small>";
                     var chp;
                     for(var i=1;i<results.length;i++){
@@ -407,12 +408,25 @@ function queryElectionTable(){
     });
 }
 
+function updateBio(b){
+	
+}
+
+function setupUpdateForm(){
+	
+}
+
+function setupSocialLinkButtons(){
+	
+}
+
 function displayData(){
     console.log('QueryUpdateTable');
     netaPhoto.src=np;
     netaNameAge.innerHTML=nNA;
     party.innerHTML=py;
-    election.innerHTML=ele;
+	console.log("ele:"+ele);
+    electionResult.innerHTML=ele;
     cstate.innerHTML=cs;
     histor.innerHTML="";
     var str="";
@@ -451,6 +465,23 @@ function initialize() {
     NProgress.start();
     console.log("NProgress Start");
     queryUserTable();
+	$('#edittext').click(function(){
+      $('#editform').delay(300).fadeIn();
+	  $('#currbio').delay(300).fadeOut();
+	  $('#edittext').delay(300).fadeOut();
+	  setupUpdateForm();
+    });
+    $('#canceledit').click(function(){
+      $('#editform').delay(300).fadeOut();
+	  $('#currbio').delay(300).fadeIn();
+	  $('#edittext').delay(300).fadeIn();
+	  queryUserTable();
+    });
+	$('#edit-form').submit(function(event){
+          event.preventDefault();
+          var bio=document.getElementById("bio").value;
+          updateBio(bio);
+    });
 }
 
 initialize();
