@@ -30,40 +30,44 @@
         <h4 id="party" class="ct">Loading...</h4>
         <h4 id="cstate" class="s-ws-top ct">Loading...</h4>
         <h5 id="profession" class="subheader ct">Loading...</h5>
-        <!--<a href="#" class="button v2">Edit</a>-->
+        <div id="history2">
+        </div>
+          <div id="edittext" class="button tiny">Edit</div>
+
       </div>
       <div class="small-9 columns">
         <div class="row" id="currbio">
-          <div class="small-2 columns" id="sociallinks">
-            <div><a href="#">Website</a></div>
-            <div><a href="#">Twitter</a></div>
-            <div><a href="#">Facebook</a></div>
+          <div class="small-2 columns text-right" id="sociallinks">
+            <div><i class="icon-network secondary-color"></i><a id="wlink" href="#" target="_blank"> Website</a></div>
+            <div><i class="icon-facebook secondary-color"></i><a id="flink" href="#" target="_blank"> Facebook</a></div> 
+            <div><i class="icon-twitter secondary-color"></i><a id="tlink" href="#" target="_blank"> Twitter</a></div>
           </div>
           <div class="small-10 columns">
-            <p id="netabio">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+            <p id="netabio"></p>
           </div>
-		  </div>
-		   <div id="editform" style="display:none;">
-              <form id="edit-form">        
-                <div class="row">
-                  <div class="small-6 columns">
-                    <div class="row">    
-                        <textarea id="weblink" rows="1" placeholder="Link to your Website"/></textarea>
-                        <textarea id="bio" rows="5" required placeholder="Tell people something about yourself..."></textarea>
-                    </div>
-                    <input type="submit" value="Update Bio" class="button fullwidth small">
-					<div id="canceledit" class="button tiny fullwidth">Cancel Edit</div>
-                  </div>
-                </div>
-              </form>
-            </div>
-		  <div class="small-3 columns">
-                
-				<div id="edittext" class="button tiny fullwidth">Edit Bio</div>
+        </div>
+        <div id="editform" style="display:none;">
+        <form id="edit-form"> 
+        <div class="row">
+          <div class="small-12 columns text-right">
+          <input type="submit" value="Update Bio" class="button tiny">
+          <div id="canceledit" class="button tiny secondary">Cancel Edit</div>
           </div>
-          
-          <div class="row">
-          <div class="small-3 columns m-ws-top">
+        </div>
+        <div class="row">
+          <div class="small-4 columns text-right" id="sociallinks">
+            <div class="row"><div class="small-1 columns"><i class="icon-network secondary-color"></i></div><div class="small-11 columns"><input type="url" id="weblink" placeholder="http://example.com"></div></div>
+            <div class="row"><div class="small-1 columns"><i class="icon-facebook secondary-color"></i></div><div class="small-11 columns"><input type="url" id="fbink" placeholder="http://facebook.com/example"></div></div>
+            <div class="row"><div class="small-1 columns"><i class="icon-twitter secondary-color"></i></div><div class="small-11 columns"><input type="url" id="twtlink" placeholder="http://twitter.com/example"></div></div>
+          </div>
+          <div class="small-8 columns">
+            <textarea id="bio" rows="5" required placeholder="Tell people something about yourself..."></textarea>
+          </div>
+        </div>
+        </div>
+         </form>
+        <div class="row">
+          <div class="small-4 columns m-ws-top">
             <h4 class="bgc">Statistics</h4>
             <hr>
             <div class="row">
@@ -101,7 +105,7 @@
               </div>
             </div>
           </div>
-          <div class="small-3 columns m-ws-top">
+          <div class="small-4 columns m-ws-top">
             <h4 class="bc">Interactions</h4>
             <hr>
             <div class="row">
@@ -156,7 +160,7 @@
               </div>
             </div>
           </div>
-          <div class="small-3 columns m-ws-top">
+          <div class="small-4 columns m-ws-top">
             <h4 class="dbc">Actions</h4>
             <hr>
             <div class="row">
@@ -198,13 +202,7 @@
     </div>
     
     <div class="row">
-      <div class="small-3 columns text-right s-ws-top">
-        <h5>History</h5>
-        <div id="history2">
-          -
-        </div>
-      </div>
-      <div class="small-3 columns m-ws-top">
+      <div class="small-3 small-offset-3 columns m-ws-top">
         <div class="row secondary-panel">
           <div class="small-2 columns">
             <i class="icon-check gc f-2x">
@@ -215,8 +213,8 @@
           </div>
         </div>
       </div>
-      <!--
-      <div class="small-3 columns m-ws-top">
+   <!--   
+      <div class="small-4 columns m-ws-top">
         <div class="row secondary-panel">
           <div class="small-2 columns">
           <i class="icon-check gc f-2x">
@@ -245,7 +243,7 @@
           </div>
         </div>
       </div>
-      <div class="small-3 columns m-ws-top">
+      <div class="small-4 columns m-ws-top">
         <div class="row secondary-panel">
           <div class="small-2 columns">
           <i class="icon-check gc f-2x">

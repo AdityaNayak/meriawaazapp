@@ -9,90 +9,108 @@ var netaNameAge=document.getElementById('nameage');
 var nNA;
 
 //Query User -> Neta  Table
-var party=document.getElementById('party');;
+var party=document.getElementById('party');
 var py;
 
 //Query User -> Neta Table
-var cstate=document.getElementById('cstate');;
+var cstate=document.getElementById('cstate');
 var cs;
 
 //Query Assembly Table
-var histor=document.getElementById('history2');;
+var histor=document.getElementById('history2');
 var his=[];
 
 //Query User -> Neta Table
-var education=document.getElementById('education');;
+var education=document.getElementById('education');
 var edu;
 
 //Query User -> Neta Table
-var assets=document.getElementById('assets');;
+var assets=document.getElementById('assets');
 var ass;
 
 //Query User -> Neta Table
-var liabilities=document.getElementById('liabilities');;
+var liabilities=document.getElementById('liabilities');
 var lia;
 
 //Query User -> Neta Table
-var criminalCases=document.getElementById('ccases');;
+var criminalCases=document.getElementById('ccases');
 var cri;
 
 //Query User -> Neta Table
-var newFollowers=document.getElementById('num-followers');;
+var newFollowers=document.getElementById('num-followers');
 var nfol;
 
 //Query User -> Neta Table
-var comments=document.getElementById('num-comments');;
+var comments=document.getElementById('num-comments');
 var com;
 
 //Query User -> Neta Table
-var questionsAsked=document.getElementById('num-qat');;
+var questionsAsked=document.getElementById('num-qat');
 var qa;
 
 //Query User -> Neta Table
-var questionsAnswered=document.getElementById('num-qa');;
+var questionsAnswered=document.getElementById('num-qa');
 var qat;
 
-var profession=document.getElementById('profession');;
+var profession=document.getElementById('profession');
 var pro;
 
 //Query User -> Neta Table
-var teamSize=document.getElementById('teamsize');;
+var teamSize=document.getElementById('teamsize');
 var ts;
 
 //Query User -> Neta Table
-var issuesClaimed=document.getElementById('num-iclaimed');;
+var issuesClaimed=document.getElementById('num-iclaimed');
 var icl;
 
 //Query User -> Neta Table
-var numPosts=document.getElementById('num-posts');;
+var numPosts=document.getElementById('num-posts');
 var npo;
 
 //Query User -> Neta Table
-var issuesClosed=document.getElementById('num-iclosed');;
+var issuesClosed=document.getElementById('num-iclosed');
 var ico;
 
 //Query User -> Neta Table
-var electionResult=document.getElementById('election');;
+var electionResult=document.getElementById('election');
 var ele;
 
 //Query User -> Neta Table
-var issuesValidated=document.getElementById('num-ivalidated');;
+var issuesValidated=document.getElementById('num-ivalidated');
 var icv;
 
+//Query User -> Neta Table
+var netabio=$('#netabio');
+var nbio;
+
+//Query User -> Neta Table
+var wlink=$('#wlink');
+var nweb;
+
+//Query User -> Neta Table
+var flink=$('#flink');
+var nfb;
+
+//Query User -> Neta Table
+var tlink=$('#tlink');
+var ntwt;
+
 //Query Posts Table
-var reach=document.getElementById('num-reach');;
+var reach=document.getElementById('num-reach');
 var rea;
 
 //Query Posts Table
-var followers2=document.getElementById('bsupport');;
-var followers=document.getElementById('support');;
+var followers2=document.getElementById('bsupport');
+var followers=document.getElementById('support');
 
 //Query Posts Table
-var skeptics=document.getElementById('skeptics');;
+var skeptics=document.getElementById('skeptics');
 var ske;
 
 var profilelink=document.getElementById('profilelink');
 var prol;
+
+
 
 function queryUserTable(){
     console.log('QueryUserTable');
@@ -101,136 +119,148 @@ function queryUserTable(){
       neta=object.get("neta");
       neta.fetch({
           success:function(results){
-                if(object.get("pic")!=undefined){
-                  np=object.get("pic").url();
+            if(object.get("pic")!=undefined){
+              np=object.get("pic").url();
+          }
+          else{
+              np="./assets/images/neta.png";
+          }
+          p=neta.get("party");
+          p.fetch({
+            success:function(reuslts){
+                py=p.get("name");
+                if(neta.get("age")!=undefined){
+                    nNA=object.get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
                 }
                 else{
-                  np="./assets/images/neta.png";
+                    nNA=object.get("name");
                 }
-                p=neta.get("party");
-                p.fetch({
-                    success:function(reuslts){
-                        py=p.get("name");
-                        if(neta.get("age")!=undefined){
-                            nNA=object.get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
-                        }
-                        else{
-                            nNA=object.get("name");
-                        }
-                        edu=neta.get("education");
-                        ass=neta.get("assets");
-                        lia=neta.get("liabilities");
-                        cri=neta.get("criminalCases");
-                        pro=neta.get("profession");
-                        com=neta.get("numComments");
-                        fol=neta.get("numLikes");
-                        ske=neta.get("numDislikes");
-                        icl=neta.get("numIsClaimed");
-                        ico=neta.get("numIsClosed");
-                        icv=neta.get("numIsValidated");
-                        npo=neta.get("numPosts");
-                        ts=neta.get("numMembers");
-                        qa=neta.get("numQsAnswered");
-                        qat=neta.get("numQsAskedTo");
-                        console.log(neta.get("link"));
-                        if(neta.get("link")!=undefined){
-                            prol="Details verified from <a href='"+neta.get('link').toString()+"'>profile</a>";
-                        }
-                        else{
-                            prol="Details verified from previous records.";
-                        }
-                        
-                        
-                        queryPostTable();
-                    },
-                    error:function(error){
-                        
-                    }
-                });
-                
-          },
-          error:function(error){
-              
-          }
-      });
+                edu=neta.get("education");
+                ass=neta.get("assets");
+                lia=neta.get("liabilities");
+                cri=neta.get("criminalCases");
+                pro=neta.get("profession");
+                com=neta.get("numComments");
+                fol=neta.get("numLikes");
+                ske=neta.get("numDislikes");
+                icl=neta.get("numIsClaimed");
+                ico=neta.get("numIsClosed");
+                icv=neta.get("numIsValidated");
+                npo=neta.get("numPosts");
+                ts=neta.get("numMembers");
+                qa=neta.get("numQsAnswered");
+                qat=neta.get("numQsAskedTo");
 
-    }
-    else if(object.get("type")=="teamMember"){
-      var teammember=object.get("teamMember");
-      teammember.fetch({
-          success:function(){
-              neta=teammember.get("neta");
-              neta.fetch({
-                  success:function(results){
-                        var u=neta.get("user");
-                        u.fetch({
-                            success:function(results){
-                                if(u.get("pic")!=undefined){
-                                  np=u.get("pic").url();
-                                }
-                                else{
-                                  np="./assets/images/neta.png";
-                                }
-                                p=neta.get("party");
-                                p.fetch({
-                                    success:function(results){
-                                        py=p.get("name");
-                                        if(neta.get("age")!=undefined){
-                                            nNA=u.get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
-                                        }
-                                        else{
-                                            nNA=u.get("name");
-                                        }
-                                        edu=neta.get("education");
-                                        ass=neta.get("assets");
-                                        lia=neta.get("liabilities");
-                                        cri=neta.get("numCriminalCases");
-                                        pro=neta.get("profession");
-                                        com=neta.get("numComments");
-                                        fol=neta.get("numLikes");
-                                        ske=neta.get("numDislikes");
-                                        icl=neta.get("numIsClaimed");
-                                        ico=neta.get("numIsClosed");
-                                        icv=neta.get("numIsValidated");
-                                        npo=neta.get("numPosts");
-                                        ts=neta.get("numMembers");
-                                        qa=neta.get("numQsAnswered");
-                                        qat=neta.get("numQsAskedTo");
-                                        if(neta.get("link")!=undefined){
-                                            console.log(neta.get("link"));
-                                            prol="Details verified from <a href='"+neta.get("link").toString()+"'>profile</a>";
-                                        }
-                                        else{
-                                            prol="Details verified from previous records.";
-                                        }                                    
-                                        queryPostTable();      
-                                    },
-                                    error:function(error){
-                                        console.log("Error: "+error.message);
-                                        NProgress.done();    
-                                    }
-                                });
-                            },
-                            error:function(error){
-                             console.log("Error: "+error.message);
-                                NProgress.done();   
+                nbio=neta.get("bio");
+                nweb=neta.get("webLink");
+                nfb=neta.get("fbLink");
+                ntwt=neta.get("twitterLink");
+
+                console.log(neta.get("link"));
+                if(neta.get("link")!=undefined){
+                    prol="Details verified from <a href='"+neta.get('link').toString()+"'>profile</a>";
+                }
+                else{
+                    prol="Details verified from previous records.";
+                }
+
+
+                queryPostTable();
+            },
+            error:function(error){
+
+            }
+        });
+
+},
+error:function(error){
+
+}
+});
+
+}
+else if(object.get("type")=="teamMember"){
+  var teammember=object.get("teamMember");
+  teammember.fetch({
+      success:function(){
+          neta=teammember.get("neta");
+          neta.fetch({
+              success:function(results){
+                var u=neta.get("user");
+                u.fetch({
+                    success:function(results){
+                        if(u.get("pic")!=undefined){
+                          np=u.get("pic").url();
+                      }
+                      else{
+                          np="./assets/images/neta.png";
+                      }
+                      p=neta.get("party");
+                      p.fetch({
+                        success:function(results){
+                            py=p.get("name");
+                            if(neta.get("age")!=undefined){
+                                nNA=u.get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
                             }
-                        });
-                        
-                        
-                  },
-                  error:function(error){
-                      console.log("Error: "+error.message);
-                        NProgress.done();
-                  }
-              });
-          },
-          error:function(){
-              console.log("Error: "+error.message);
-                NProgress.done();
-          }
-      });
-    }    
+                            else{
+                                nNA=u.get("name");
+                            }
+                            edu=neta.get("education");
+                            ass=neta.get("assets");
+                            lia=neta.get("liabilities");
+                            cri=neta.get("numCriminalCases");
+                            pro=neta.get("profession");
+                            com=neta.get("numComments");
+                            fol=neta.get("numLikes");
+                            ske=neta.get("numDislikes");
+                            icl=neta.get("numIsClaimed");
+                            ico=neta.get("numIsClosed");
+                            icv=neta.get("numIsValidated");
+                            npo=neta.get("numPosts");
+                            ts=neta.get("numMembers");
+                            qa=neta.get("numQsAnswered");
+                            qat=neta.get("numQsAskedTo");
+
+                            nbio=neta.get("bio");
+                            nweb=neta.get("weblink");
+                            nfb=neta.get("fblink");
+                            ntwt=neta.get("twitterlink");
+
+                            if(neta.get("link")!=undefined){
+                                console.log(neta.get("link"));
+                                prol="Details verified from <a href='"+neta.get("link").toString()+"'>profile</a>";
+                            }
+                            else{
+                                prol="Details verified from previous records.";
+                            }                                    
+                            queryPostTable();      
+                        },
+                        error:function(error){
+                            console.log("Error: "+error.message);
+                            NProgress.done();    
+                        }
+                    });
+},
+error:function(error){
+   console.log("Error: "+error.message);
+   NProgress.done();   
+}
+});
+
+
+},
+error:function(error){
+  console.log("Error: "+error.message);
+  NProgress.done();
+}
+});
+},
+error:function(){
+  console.log("Error: "+error.message);
+  NProgress.done();
+}
+});
+}    
 }
 
 // function queryUserTable(){
@@ -247,11 +277,11 @@ function queryUserTable(){
 //     query.include(["teamMember.neta.user"]);
 //     query.include(["teamMember.neta.party"]);
 //     query.include(["teamMember.neta.constituency"]);
-    
+
 //     query.find({
 //       success: function(results) {
 //         var object = results[0];
-        
+
 //         if(object.get("type")=="neta"){
 //           neta=object.get("neta");
 
@@ -260,7 +290,7 @@ function queryUserTable(){
 //           var teammember=object.get("teamMember");
 //           neta=teammember.get("neta");
 //         }
-        
+
 //         if(neta.get("user").get("pic")!=undefined){
 //           np=neta.get("user").get("pic").url();
 //         }
@@ -297,7 +327,7 @@ function queryUserTable(){
 //         else{
 //             prol="Details verified from <a href='#'>profile</a>";
 //         }
-        
+
 //         py=p.get("name");
 //         queryPostTable();
 //       },
@@ -326,11 +356,11 @@ function queryPostTable(){
         }
         rea=reach;
         queryFollowerTable();
-      },
-      error: function(error) {
+    },
+    error: function(error) {
         console.log("Error: "+error.message);
-      }
-    });
+    }
+});
 }
 
 //for New Followers
@@ -348,11 +378,11 @@ function queryFollowerTable(){
       success: function(results) {
         nfol=results.length;
         queryElectionTable();
-      },
-      error: function(error) {
+    },
+    error: function(error) {
         console.log("Error: "+error.message);
-      }
-    });
+    }
+});
 }
 
 //Election History
@@ -368,13 +398,13 @@ function queryElectionTable(){
     query.descending('createdAt');
     his=[];
     query.find({
-          success: function(results) {
-                console.log("Size:"+results.length);
-                if(results.length==0){
-                    ele="-";
-                    cs="-";
-                }
-                else{
+      success: function(results) {
+        console.log("Size:"+results.length);
+        if(results.length==0){
+            ele="-";
+            cs="-";
+        }
+        else{
                     //Check if some new election has held in this constituency before
                     if(results[0].get("winner")==undefined){
                         ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Candidate)";
@@ -387,7 +417,7 @@ function queryElectionTable(){
                             ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Contested)";
                         }
                     }
-					console.log("ele:"+ele);
+                    console.log("ele:"+ele);
                     cs=results[0].get("constituency").get("name")+"<small> "+results[0].get("constituency").get("state")+"</small>";
                     var chp;
                     for(var i=1;i<results.length;i++){
@@ -401,31 +431,48 @@ function queryElectionTable(){
                     }
                 }
                 displayData();
-          },
-          error: function(error) {
+            },
+            error: function(error) {
                 console.log("Error:"+error.message);
-          }
-    });
+            }
+        });
 }
 
-function updateBio(b){
-	
+function updateBio(b, twt, fb ){ 
+    
+    neta.save(null, {
+        neta.set('bio', b);
+      success: function(neta) {
+        if (b!=""){
+            neta.set('bio', b);
+        }
+        /** if ($('#weblink').val!=""){
+            neta.set('webLink', $('#weblink').val());
+        }
+        if ($('#fblink').val!=""){
+            neta.set('fbLink', $('#fblink').val());
+        }
+        if ($('#twtlink').val!=""){
+            neta.set('twitterLink', $('#twtlink').val());
+        } **/
+    neta.save();
+}
+});
+
+
 }
 
 function setupUpdateForm(){
 	
 }
 
-function setupSocialLinkButtons(){
-	
-}
 
 function displayData(){
     console.log('QueryUpdateTable');
     netaPhoto.src=np;
     netaNameAge.innerHTML=nNA;
     party.innerHTML=py;
-	console.log("ele:"+ele);
+    console.log("ele:"+ele);
     electionResult.innerHTML=ele;
     cstate.innerHTML=cs;
     histor.innerHTML="";
@@ -433,6 +480,12 @@ function displayData(){
     for(var i=0;i<his.length;i++){
         str=str+"<h5 class='secondary-color ct'>"+his[i].toString()+"</h5>";
         console.log(str);
+        if(i=0){
+            str=0;
+        }
+        else{
+            str="<h5>History</h5>";
+        }
     }
     histor.innerHTML=str;
     education.innerHTML=edu;
@@ -456,6 +509,10 @@ function displayData(){
     followers2.innerHTML=fol;
     skeptics.innerHTML=ske+" skeptics";
     skeptics.style.width=(Math.floor((ske/(fol+ske))*99))+"%";
+    netabio.html(nbio);
+    wlink.attr("href", nweb);
+    flink.attr("href", nfb);
+    tlink.attr("href", ntwt);
     NProgress.done();
 }
 
@@ -465,23 +522,26 @@ function initialize() {
     NProgress.start();
     console.log("NProgress Start");
     queryUserTable();
-	$('#edittext').click(function(){
-      $('#editform').delay(300).fadeIn();
-	  $('#currbio').delay(300).fadeOut();
-	  $('#edittext').delay(300).fadeOut();
-	  setupUpdateForm();
-    });
+    $('#edittext').click(function(){
+      $('#editform').fadeIn(400);
+      $('#currbio').delay(400).fadeOut();
+      $('#edittext').delay(400).fadeOut();
+      setupUpdateForm();
+  });
     $('#canceledit').click(function(){
-      $('#editform').delay(300).fadeOut();
-	  $('#currbio').delay(300).fadeIn();
-	  $('#edittext').delay(300).fadeIn();
-	  queryUserTable();
-    });
-	$('#edit-form').submit(function(event){
-          event.preventDefault();
-          var bio=document.getElementById("bio").value;
-          updateBio(bio);
-    });
+      $('#editform').fadeOut(400);
+      $('#currbio').delay(400).fadeIn();
+      $('#edittext').delay(400).fadeIn();
+      queryUserTable();
+  });
+    $('#edit-form').submit(function(event){
+      event.preventDefault();
+      var bio=$("bio").val;
+      var fbl=$("fblink").val;
+      var twtl=$("twtlink").val;
+      updateBio(bio, fbl, twtl);
+  });
+
 }
 
 initialize();
