@@ -17,6 +17,13 @@ function initialize() {
     	$('.alert-box').hide().removeClass('alert');
 	  	$('#signin-form').delay().addClass('b-ws-top');
     });
+    $('#fpwd').click(function(){
+    	resetPassword();
+    });
+    $('#signbk').click(function(){
+    	$('#reset-form').fadeOut(400);
+    	$('#signin-form').delay(400).fadeIn();
+    });
 }
 function updateCounters(){
 	
@@ -79,7 +86,7 @@ function login(){
  		  error: function(user, error) {
  		  	  NProgress.done();
  		  	  if(error.code==101){
- 		  	  	$('.alert-box').fadeIn().addClass('alert');
+ 		  	  	$('.alert-box').show().addClass('alert');
  		  	  	$('.alert-box').html(error.message);
  		  	  	$('#signin-form').removeClass('b-ws-top');
  		  	  	loadingButton_id_stop("signin-btn", "Sign In");
@@ -174,20 +181,20 @@ function login(){
 function resetPassword() {
 	  console.log("Reset Password");
 	  NProgress.start();
-	  $('#signin-form').fadeOut();
-	  $('#reset-form').delay().fadeIn();
+	  $('#signin-form').fadeOut(400);
+	  $('#reset-form').delay(400).fadeIn();
 	  $("#reset-form").submit(function(event) {
 	  	var emailvar = $('#email').val();
 	  	loadingButton_id("reset-btn",12);
 	  	Parse.User.requestPasswordReset(emailvar, {
           success:function() {
-  			$('.alert-box').fadeIn().addClass('success').removeClass('alert');
+  			$('.alert-box').show().addClass('success').removeClass('alert');
 	  	  	$('.alert-box').html("Reset instructions have been emailed to you");
 	  	  	$('#reset-form').removeClass('b-ws-top');
 	  	  	loadingButton_id_stop("reset-btn","Send Reset Email");
           },
           error:function(error) {
-          	$('.alert-box').fadeIn().addClass('alert').removeClass('success');
+          	$('.alert-box').show().addClass('alert').removeClass('success');
 	  	  	$('.alert-box').html(error.message);
 	  	  	$('#reset-form').removeClass('b-ws-top');
 	  	  	loadingButton_id_stop("reset-btn","Send Reset Email");

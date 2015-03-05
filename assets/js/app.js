@@ -281,7 +281,14 @@ $('#logout').click(function() {
 });
 
 function notready(){
-	alert("The feature is not ready yet, but coming soon. Stay Tuned");
+	notify("The feature is not ready yet, but coming soon. Stay Tuned", "warning",12);
+}
+function notify(text,type,duration){
+	$('.alert-box').fadeIn().addClass(type).html(text + '<a href="#" class="close">&times;</a>');
+	//Types are: alert, success, warning, info 
+	setTimeout(function() {
+		$('.alert-box').fadeOut().html('loading <a href="#" class="close">&times;</a>');
+	}, duration*1000);
 }
 
 function icon_bg(){
