@@ -1,6 +1,8 @@
 var currentNeta;
 var EC;
 var currentUser;
+var filePath;
+var filename;
 var currentPost;
 
 function postComment(pid){
@@ -30,6 +32,31 @@ function postComment(pid){
       }
     });
 }
+
+function getFileName(){
+	var d=new Date();
+	return currentNeta.id+d.getTime();
+}
+
+function showMyImage(fileInput) {
+        var files = fileInput.files;
+        for (var i = 0; i < files.length; i++) {           
+            var file = files[i];
+            var imageType = /image.*/;     
+            if (!file.type.match(imageType)) {
+                continue;
+            }           
+            var img=document.getElementById("thumbnil");            
+            img.file = file;    
+            var reader = new FileReader();
+            reader.onload = (function(aImg) { 
+                return function(e) { 
+                    aImg.src = e.target.result; 
+                }; 
+            })(img);
+            reader.readAsDataURL(file);
+        }    
+    }
 
 function updatePost(pid){
     console.log("updatePost");
@@ -262,21 +289,20 @@ function populateStatus(){
                                     var imige=getDefaultIcon(currentUser.get("type"));
                                 }
                                 var lists='<div class="row" id="cf2" style="display:none;"><div class="small-12 columns"><div class="small-3 columns s-ws-top"> <label class="inline secondary-color np tertiary"> <input type="checkbox"> Voters (Default) </label> </div> <div class="small-3 columns s-ws-top end"> <label class="inline secondary-color np tertiary"> <input type="checkbox"> Volunteers</label></div></div></div>';
-                                var cpgView='<form id="campaign-form"><div id="cmpg-form" style="display:none;" class="s-ws-top"><div class="row collapse"><div class="small-2 columns text-center fx3"><label for="capp" class="inline secondary-color np tertiary"><div class="f-1-5x fx4"><i class="icon-phone blc"></i> </div> <input type="checkbox" name="" id="capp" value="" checked=""> Push Send </label> </div> <div class="small-2 columns text-center fx3"> <label for="csms" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-comment blc"></i> </div> <input type="checkbox" id="csms" name="" value=""> SMS </label> </div> <div class="small-2 columns text-center fx3"> <label for="cwhatsapp" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-whatsapp blc"></i> </div> <input type="checkbox" id="cwhatsapp" name="" value=""> WhatsApp </label> </div> <div class="small-2 columns text-center fx3"> <label for="cemail" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-mail blc"></i> </div> <input type="checkbox" id="cemail" name="" value=""> Email </label> </div> <div class="small-2 columns text-center fx3"> <label for="cfb" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-facebook blc"></i> </div> <input type="checkbox" id="cfb" name="" value=""> Facebook </label> </div> <div class="small-2 columns text-center fx3"> <label for="ctwt" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-twitter blc"></i> </div> <input type="checkbox" id="ctwt" name="" value=""> Twitter</label> </div> </div> <div class="row"><div class="small-12 columns s-ws-bottom"> <div class="small-1 small-offset-4 columns tertiary secondary-color"> <span class="cs" title="Change List" id="cf2-trg"><i class="icon-list f-2x secondary-color"></i></span> </div> <div class="small-3 columns tertiary secondary-color s-ws-top"> Voters (Default) </div> <div class="small-4 columns"> <input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth"></div></div></div>'+lists+'</div></form>';
-                                postView.append("<div id='post-"+object.id+"'><div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary'>"+cpgView+"<div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color cs' id='cpg-trg'><i class='icon-plus dbc'></i> Send Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
+                                var cpgView='<form id="campaignform-'+object.id+'" style="display:none;"><div id="cmpg-form" class="s-ws-top"><div class="row collapse"><div class="small-2 columns text-center fx3"><label for="capp" class="inline secondary-color np tertiary"><div class="f-1-5x fx4"><i class="icon-phone blc"></i> </div> <input type="checkbox" name="" id="capp" value="" checked=""> Push Send </label> </div> <div class="small-2 columns text-center fx3"> <label for="csms" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-comment blc"></i> </div> <input type="checkbox" id="csms" name="" value=""> SMS </label> </div> <div class="small-2 columns text-center fx3"> <label for="cwhatsapp" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-whatsapp blc"></i> </div> <input type="checkbox" id="cwhatsapp" name="" value=""> WhatsApp </label> </div> <div class="small-2 columns text-center fx3"> <label for="cemail" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-mail blc"></i> </div> <input type="checkbox" id="cemail" name="" value=""> Email </label> </div> <div class="small-2 columns text-center fx3"> <label for="cfb" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-facebook blc"></i> </div> <input type="checkbox" id="cfb" name="" value=""> Facebook </label> </div> <div class="small-2 columns text-center fx3"> <label for="ctwt" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-twitter blc"></i> </div> <input type="checkbox" id="ctwt" name="" value=""> Twitter</label> </div> </div> <div class="row"><div class="small-12 columns s-ws-bottom"> <div class="small-1 small-offset-4 columns tertiary secondary-color"> <span class="cs" title="Change List" id="cf2-trg"><i class="icon-list f-2x secondary-color"></i></span> </div> <div class="small-3 columns tertiary secondary-color s-ws-top"> Voters (Default) </div> <div class="small-4 columns"> <input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth"></div></div></div>'+lists+'</div></form>';
+                                postView.append("<div id='post-"+object.id+"'><div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary'>"+cpgView+"<div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary' id='commentsclick-"+object.id+"'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color cs' id='campaignclick-"+object.id+"'><i class='icon-plus dbc'></i> Send Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
                                 console.log("form listener created for "+object.id);
                                 $('#form-'+object.id).submit(function(event){
                                       event.preventDefault();
                                       postComment(event.target.id.toString().split('-')[1]);
                                 });
+								$('#commentsclick-'+object.id).click(function(){
+									$('#comments-'+event.target.id.toString().split('-')[1]).fadeIn();
+								});
+								$('#campaignclick-'+object.id).click(function(){
+									$('#campaignform-'+event.target.id.toString().split('-')[1]).fadeIn();
+								});
                             }
-
-                            $('#cf2-trg').click(function(){
-                              $('#cf2').fadeIn();
-                            });
-                            $('#cpg-trg').click(function(){
-                              $('#cmpg-form').fadeIn();
-                            });
                         },
                         error: function(error2){
                             console.log("Error2:"+error2.message);
@@ -701,6 +727,15 @@ function initialize() {
     }
     queryUserTable();
 
+	$('#fileUpload').on('change',function ()
+        {
+			showMyImage(this);
+            filePath = $(this).val();
+			filename=getFileName();
+			uploadname.innerHTML=filePath;
+            console.log(filePath);
+        });
+	
     $('#post-form').submit(function(event){
           event.preventDefault();
           var p=document.getElementById("postArea").value;
