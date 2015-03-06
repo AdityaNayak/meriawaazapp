@@ -172,95 +172,94 @@ function queryUserTable(){
             }
         });
 
-},
-error:function(error){
+		},
+		error:function(error){
 
-}
-});
+		}
+		});
 
-}
-else if(object.get("type")=="teamMember"){
-  var teammember=object.get("teamMember");
-  teammember.fetch({
-      success:function(){
-          neta=teammember.get("neta");
-          neta.fetch({
-              success:function(results){
-                var u=neta.get("user");
-                u.fetch({
-                    success:function(results){
-                        if(u.get("pic")!=undefined){
-                          np=u.get("pic").url();
-                      }
-                      else{
-                          np="./assets/images/neta.png";
-                      }
-                      p=neta.get("party");
-                      p.fetch({
-                        success:function(results){
-                            py=p.get("name");
-                            if(neta.get("age")!=undefined){
-                                nNA=u.get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
-                            }
-                            else{
-                                nNA=u.get("name");
-                            }
-                            edu=neta.get("education");
-                            ass=neta.get("assets");
-                            lia=neta.get("liabilities");
-                            cri=neta.get("numCriminalCases");
-                            pro=neta.get("profession");
-                            com=neta.get("numComments");
-                            fol=neta.get("numLikes");
-                            ske=neta.get("numDislikes");
-                            icl=neta.get("numIsClaimed");
-                            ico=neta.get("numIsClosed");
-                            icv=neta.get("numIsValidated");
-                            npo=neta.get("numPosts");
-                            ts=neta.get("numMembers");
-                            qa=neta.get("numQsAnswered");
-                            qat=neta.get("numQsAskedTo");
+	}
+	else if(object.get("type")=="teamMember"){
+	  var teammember=object.get("teamMember");
+	  teammember.fetch({
+		  success:function(){
+			  neta=teammember.get("neta");
+			  neta.fetch({
+				  success:function(results){
+					var u=neta.get("user");
+					u.fetch({
+						success:function(results){
+							if(u.get("pic")!=undefined){
+							  np=u.get("pic").url();
+						  }
+						  else{
+							  np="./assets/images/neta.png";
+						  }
+						  p=neta.get("party");
+						  p.fetch({
+							success:function(results){
+								py=p.get("name");
+								if(neta.get("age")!=undefined){
+									nNA=u.get("name")+"<br><small>("+neta.get("age").toString()+")</small>";
+								}
+								else{
+									nNA=u.get("name");
+								}
+								edu=neta.get("education");
+								ass=neta.get("assets");
+								lia=neta.get("liabilities");
+								cri=neta.get("numCriminalCases");
+								pro=neta.get("profession");
+								com=neta.get("numComments");
+								fol=neta.get("numLikes");
+								ske=neta.get("numDislikes");
+								icl=neta.get("numIsClaimed");
+								ico=neta.get("numIsClosed");
+								icv=neta.get("numIsValidated");
+								npo=neta.get("numPosts");
+								ts=neta.get("numMembers");
+								qa=neta.get("numQsAnswered");
+								qat=neta.get("numQsAskedTo");
+								nbio=neta.get("bio");
+								nweb=neta.get("webLink");
+								nfb=neta.get("fbLink");
+								ntwt=neta.get("twitterLink");
 
-                            nbio=neta.get("bio");
-                            nweb=neta.get("weblink");
-                            nfb=neta.get("fblink");
-                            ntwt=neta.get("twitterlink");
-
-                            if(neta.get("link")!=undefined){
-                                console.log(neta.get("link"));
-                                prol="Details verified from <a href='"+neta.get("link").toString()+"'>profile</a>";
-                            }
-                            else{
-                                prol="Details verified from previous records.";
-                            }                                    
-                            queryPostTable();      
-                        },
-                        error:function(error){
-                            console.log("Error: "+error.message);
-                            NProgress.done();    
-                        }
-                    });
-},
-error:function(error){
-   console.log("Error: "+error.message);
-   NProgress.done();   
-}
-});
+								if(neta.get("link")!=undefined){
+									console.log(neta.get("link"));
+									prol="Details verified from <a href='"+neta.get("link").toString()+"'>profile</a>";
+								}
+								else{
+									prol="Details verified from previous records.";
+								}                                    
+								queryPostTable();      
+							},
+							error:function(error){
+								console.log("Error: "+error.message);
+								NProgress.done();    
+							}
+						});
+				},
+				error:function(error){
+				   console.log("Error: "+error.message);
+				   NProgress.done();   
+				}
+				});
 
 
-},
-error:function(error){
-  console.log("Error: "+error.message);
-  NProgress.done();
-}
-});
-},
-error:function(){
-  console.log("Error: "+error.message);
-  NProgress.done();
-}
-});
-}    
+				},
+			error:function(error){
+			  console.log("Error: "+error.message);
+			  NProgress.done();
+			}
+			});
+			},
+		error:function(){
+		  console.log("Error: "+error.message);
+		  NProgress.done();
+		}
+		});
+	}    
 }
 
 // function queryUserTable(){
@@ -438,32 +437,43 @@ function queryElectionTable(){
         });
 }
 
-function updateBio(b, twt, fb ){ 
-    
-    neta.save(null, {
-        neta.set('bio', b);
-      success: function(neta) {
-        if (b!=""){
-            neta.set('bio', b);
-        }
-        /** if ($('#weblink').val!=""){
-            neta.set('webLink', $('#weblink').val());
-        }
-        if ($('#fblink').val!=""){
-            neta.set('fbLink', $('#fblink').val());
-        }
-        if ($('#twtlink').val!=""){
-            neta.set('twitterLink', $('#twtlink').val());
-        } **/
-    neta.save();
+function queryUpdatedData(){
+	neta.fetch({
+		success:function(results){
+			nbio=neta.get("bio");
+			nweb=neta.get("webLink");
+			nfb=neta.get("fbLink");
+			ntwt=neta.get("twitterLink");
+			displayData();
+		},
+		error:function(error){
+		   console.log("Error: "+error.message);
+		   NProgress.done();   
+		}
+	});
+	
 }
-});
 
-
+function updateBio(pb,pwl,pfb,ptwt){ 
+	NProgress.start();
+	console.log(pb+pwl+ptwt+pfb);
+	Parse.Cloud.run("changeBio", {objectId: neta.id, b: pb, wl: pwl, twt: ptwt, fb: pfb}, {
+		success:function(results){
+			console.log(results);
+			queryUpdatedData();
+		},
+		error:function(error){
+			console.log("Error: "+error);
+			NProgress.done();   
+		}
+	}); 
 }
 
 function setupUpdateForm(){
-	
+	bio.innerHTML=nbio;
+	weblink.value=nweb;
+	fblink.value=nfb;
+	twtlink.value=ntwt;
 }
 
 
@@ -532,14 +542,17 @@ function initialize() {
       $('#editform').fadeOut(400);
       $('#currbio').delay(400).fadeIn();
       $('#edittext').delay(400).fadeIn();
-      queryUserTable();
   });
     $('#edit-form').submit(function(event){
       event.preventDefault();
-      var bio=$("bio").val;
-      var fbl=$("fblink").val;
-      var twtl=$("twtlink").val;
-      updateBio(bio, fbl, twtl);
+	  $('#editform').fadeOut(400);
+      $('#currbio').delay(400).fadeIn();
+      $('#edittext').delay(400).fadeIn();
+      var bio=$("#bio").val();
+	  var wl=$("#weblink").val();
+      var fbl=$("#fblink").val();
+      var twtl=$("#twtlink").val();
+      updateBio(bio,wl, fbl, twtl);
   });
 
 }
