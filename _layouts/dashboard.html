@@ -59,7 +59,7 @@
                 <div class="f-1-5x fx4">
                   <i class="icon-phone blc"></i>
                 </div>
-                <input type="checkbox" name="" id="app" value="" checked=""> Push Send
+                <input type="checkbox" name="medium" id="app" value="1" checked=""> Push Send
               </label>
             </div>
             <div class="small-2 columns text-center fx3">
@@ -67,7 +67,7 @@
                 <div class="f-1-5x fx4">
                   <i class="icon-comment blc"></i> 
                 </div>
-                <input type="checkbox" id="sms" name="" value=""> SMS
+                <input type="checkbox" id="sms" name="medium" value="2"> SMS
               </label>
             </div>
             <div class="small-2 columns text-center fx3">
@@ -75,7 +75,7 @@
                 <div class="f-1-5x fx4">
                   <i class="icon-whatsapp blc"></i>
                 </div>
-                <input type="checkbox" id="whatsapp" name="" value="">
+                <input type="checkbox" id="whatsapp" name="medium" value="3">
                 WhatsApp
               </label>
             </div>
@@ -84,7 +84,7 @@
                 <div class="f-1-5x fx4">
                   <i class="icon-mail blc"></i>
                 </div>
-                <input type="checkbox" id="email" name="" value=""> Email
+                <input type="checkbox" id="email" name="medium" value="4"> Email
               </label>
             </div>
             <div class="small-2 columns text-center fx3">
@@ -92,7 +92,7 @@
                 <div class="f-1-5x fx4">
                   <i class="icon-facebook blc"></i>
                 </div>
-                <input type="checkbox" id="fb" name="" value=""> Facebook
+                <input type="checkbox" id="fb" name="medium" value="5"> Facebook
               </label>
             </div>
             <div class="small-2 columns text-center fx3">
@@ -100,15 +100,15 @@
                 <div class="f-1-5x fx4">
                   <i class="icon-twitter blc"></i>
                 </div>
-                <input type="checkbox" id="twt" name="" value=""> Twitter</label>
+                <input type="checkbox" id="twt" name="medium" value="6"> Twitter</label>
               </div>
             </div>
             <div class="row">
               <div id="chcount" class="small-2 columns secondary fx3 bgc">
               </div>
               <div class="small-1 small-offset-1 columns tertiary secondary-color">
-                <label for="fdup" class="icon-image-add f-2x secondary-color" style="line-height:1;">
-                  <input id="fdup" type="file" name="media" multiple="1" style="display:none; position:fixed; top:-9999px;">
+                <label for="fileUpload" class="icon-image-add f-2x secondary-color" style="line-height:1;">
+                  <input id="fileUpload" type="file" name="media" multiple="1" style="display:none; position:fixed; top:-9999px;">
                 </label>
 				<br/>
               </div>
@@ -117,27 +117,12 @@
 				<br/>
 				<span id="uploadname"></span>
 			  </div>
-              <div class="small-1 columns tertiary secondary-color">
-                <span class="cs" title="Change List" id="cf1-trg"><i class="icon-list f-2x secondary-color"></i></span>
-              </div>
-              <div class="small-3 columns tertiary secondary-color s-ws-top">
-                Voters (Default)
-              </div>
               <div class="small-4 columns">
                 <input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth">
               </div>
             </div>
-            <div class="row" id="cf1" style="display:none;">
-              <div class="small-3 columns s-ws-top">
-                <label class="inline secondary-color np tertiary">
-                  <input type="checkbox"> Voters (Default)
-                </label>
-              </div>
-              <div class="small-3 columns s-ws-top end">
-                <label class="inline secondary-color np tertiary">
-                  <input type="checkbox"> Volunteers
-                </label>
-              </div>
+            <div class="row" id="cf1">
+              
             </div>
           </div>
 

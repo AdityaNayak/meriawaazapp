@@ -1,9 +1,39 @@
 var currentNeta;
 var EC;
 var currentUser;
+var file;
 var filePath;
 var filename;
 var currentPost;
+var voterViewArray=[];
+
+function createVoterArray(){
+	var VoterTable=Parse.Object.extend("NetaList");
+	var votertable=new Parse.Query(VoterTable);
+	votertable.equalTo("neta",currentNeta);
+	votertable.find({
+		success:function(results){
+			for(var i=0;i<results.length;i++){
+				voterViewArray.push([results[i].id,results[i].get("name")]);
+			}
+			var voterView="";
+			var flag=0;
+			for(var ik=0;ik<voterViewArray.length;ik++){
+				if(flag==0){
+					flag=1;
+					voterView=voterView+"<label><input type='checkbox' checked=true value='"+voterViewArray[ik][0]+"' name='voter'>"+voterViewArray[ik][1]+"</label>";
+				}
+				else{
+					voterView=voterView+"<label><input type='checkbox' value='"+voterViewArray[ik][0]+"' name='voter'>"+voterViewArray[ik][1]+"</label>";
+				}
+			}
+			cf1.innerHTML=voterView;
+		},
+		error:function(){
+			console.log("Error: "+error.message);
+		}
+	});
+}
 
 function postComment(pid){
     console.log("postComment"+pid);
@@ -39,6 +69,7 @@ function getFileName(){
 }
 
 function showMyImage(fileInput) {
+		console.log("Display Thumbnail");
         var files = fileInput.files;
         for (var i = 0; i < files.length; i++) {           
             var file = files[i];
@@ -57,6 +88,8 @@ function showMyImage(fileInput) {
             reader.readAsDataURL(file);
         }    
     }
+	
+
 
 function updatePost(pid){
     console.log("updatePost");
@@ -219,6 +252,72 @@ function fetchConstituencyData(c){
           });
 }
 
+function createCampaign(id,selectedNetaLists,selectedMediums){
+	var ip=false,iw=false,it=false,is=false,ie=false,ib=false;
+	var post=id;
+	for(var i=0;i<selectedMediums.length;i++){
+		if(selectedMediums[i]==1){
+			ip=true;
+		}
+		else if(selectedMediums[i]==2){
+			is=true;
+		}
+		else if(selectedMediums[i]==3){
+			iw=true;
+		}
+		else if(selectedMediums[i]==4){
+			ie=true;
+		}
+		else if(selectedMediums[i]==5){
+			ib=true;
+		}
+		else if(selectedMediums[i]==6){
+			it=true;
+		}
+	}
+	nl=[];
+	for(var i=0;i<selectedNetaLists.length;i++){
+		nl.push(selectedNetaLists[i]);
+	}
+	Parse.Cloud.run("createCampaign", {isPush: ip,isSMS: is, isWhatsApp: iw, isTwitter: it, isEmail: ie, isFacebook: ib, p: post, netalists: nl}, {
+	  success:function(results){
+		console.log(results);
+		populateStatus();
+	  },
+	  error:function(error){
+		console.log(error.message());
+		NProgress.done();
+	  }
+	}); 
+	
+}
+
+function postCampaign(id){
+	var selectedNetaLists = [];
+	var selectedMediums = [];
+	$.each($("input[name='voter-"+id+"']:checked"), function(){            
+		selectedNetaLists.push($(this).val());
+	});
+	$.each($("input[name='medium-"+id+"']:checked"), function(){            
+		selectedMediums.push($(this).val());
+	});
+	alert("This post will be campaigned via: " + selectedMediums.join(", ") +" with- "+ selectedNetaLists.join(", "));
+	createCampaign(id,selectedNetaLists,selectedMediums); 
+}
+
+function postCampaignFromPost(id){
+	var selectedNetaLists = [];
+	var selectedMediums = [];
+	$.each($("input[name='voter']:checked"), function(){            
+		selectedNetaLists.push($(this).val());
+	});
+	$.each($("input[name='medium']:checked"), function(){            
+		selectedMediums.push($(this).val());
+	});
+	alert("This post will be campaigned via: " + selectedMediums.join(", ") +" with- "+ selectedNetaLists.join(", "));
+	createCampaign(id,selectedNetaLists,selectedMediums);
+}
+
 function populateStatus(){
     var postView=$('#posts');
     console.log("populateStatus");
@@ -282,19 +381,45 @@ function populateStatus(){
                                 reach=object.get("reach");
                                 likes=object.get("likes");
                                 comments=object.get("numComments");
+								uploadlink=object.get("file");
+								if(uploadlink==undefined){
+									DisplayUpload="";
+								}
+								else{
+									DisplayUpload="<a href='"+uploadlink.url()+"'>Link to Attachment</a>";
+								}
+								
+								/*
+								Define Stuff to Display the Upload Link here.
+								*/
+								
                                 if(currentUser.get("pic")!=undefined){
                                 var imige=currentUser.get("pic").url();
                                 }
                                 else{
                                     var imige=getDefaultIcon(currentUser.get("type"));
                                 }
-                                var lists='<div class="row" id="cf2" style="display:none;"><div class="small-12 columns"><div class="small-3 columns s-ws-top"> <label class="inline secondary-color np tertiary"> <input type="checkbox"> Voters (Default) </label> </div> <div class="small-3 columns s-ws-top end"> <label class="inline secondary-color np tertiary"> <input type="checkbox"> Volunteers</label></div></div></div>';
-                                var cpgView='<form id="campaignform-'+object.id+'" style="display:none;"><div id="cmpg-form" class="s-ws-top"><div class="row collapse"><div class="small-2 columns text-center fx3"><label for="capp" class="inline secondary-color np tertiary"><div class="f-1-5x fx4"><i class="icon-phone blc"></i> </div> <input type="checkbox" name="" id="capp" value="" checked=""> Push Send </label> </div> <div class="small-2 columns text-center fx3"> <label for="csms" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-comment blc"></i> </div> <input type="checkbox" id="csms" name="" value=""> SMS </label> </div> <div class="small-2 columns text-center fx3"> <label for="cwhatsapp" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-whatsapp blc"></i> </div> <input type="checkbox" id="cwhatsapp" name="" value=""> WhatsApp </label> </div> <div class="small-2 columns text-center fx3"> <label for="cemail" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-mail blc"></i> </div> <input type="checkbox" id="cemail" name="" value=""> Email </label> </div> <div class="small-2 columns text-center fx3"> <label for="cfb" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-facebook blc"></i> </div> <input type="checkbox" id="cfb" name="" value=""> Facebook </label> </div> <div class="small-2 columns text-center fx3"> <label for="ctwt" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-twitter blc"></i> </div> <input type="checkbox" id="ctwt" name="" value=""> Twitter</label> </div> </div> <div class="row"><div class="small-12 columns s-ws-bottom"> <div class="small-1 small-offset-4 columns tertiary secondary-color"> <span class="cs" title="Change List" id="cf2-trg"><i class="icon-list f-2x secondary-color"></i></span> </div> <div class="small-3 columns tertiary secondary-color s-ws-top"> Voters (Default) </div> <div class="small-4 columns"> <input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth"></div></div></div>'+lists+'</div></form>';
-                                postView.append("<div id='post-"+object.id+"'><div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary'>"+cpgView+"<div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary' id='commentsclick-"+object.id+"'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color cs' id='campaignclick-"+object.id+"'><i class='icon-plus dbc'></i> Send Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
+                                var voterView="";
+								var flag=0;
+								for(var ik=0;ik<voterViewArray.length;ik++){
+									if(flag==0){
+										flag=1;
+										voterView=voterView+"<label><input type='checkbox' checked=true value='"+voterViewArray[ik][0]+"' name='voter-"+object.id+"'>"+voterViewArray[ik][1]+"</label>";
+									}
+									else{
+										voterView=voterView+"<label><input type='checkbox' value='"+voterViewArray[ik][0]+"' name='voter-"+object.id+"'>"+voterViewArray[ik][1]+"</label>";
+									}
+								}
+                                var cpgView='<form id="campaignform-'+object.id+'" style="display:none;"><div id="cmpg-form" class="s-ws-top"><div class="row collapse"><div class="small-2 columns text-center fx3"><label for="capp" class="inline secondary-color np tertiary"><div class="f-1-5x fx4"><i class="icon-phone blc"></i> </div> <input type="checkbox" name="medium-'+object.id+'" id="capp" value="1" checked=""> Push Send </label> </div> <div class="small-2 columns text-center fx3"> <label for="csms" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-comment blc"></i> </div> <input type="checkbox" id="csms" name="medium-'+object.id+'" value="2"> SMS </label> </div> <div class="small-2 columns text-center fx3"> <label for="cwhatsapp" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-whatsapp blc"></i> </div> <input type="checkbox" id="cwhatsapp" name="medium-'+object.id+'" value="3"> WhatsApp </label> </div> <div class="small-2 columns text-center fx3"> <label for="cemail" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-mail blc"></i> </div> <input type="checkbox" id="cemail" name="medium-'+object.id+'" value="4"> Email </label> </div> <div class="small-2 columns text-center fx3"> <label for="cfb" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-facebook blc"></i> </div> <input type="checkbox" id="cfb" name="medium-'+object.id+'" value="5"> Facebook </label> </div> <div class="small-2 columns text-center fx3"> <label for="ctwt" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-twitter blc"></i> </div> <input type="checkbox" id="ctwt" name="medium-'+object.id+'" value="6"> Twitter</label> </div> </div> <div class="row"></div><div class="small-12 columns s-ws-bottom">'+voterView+' <div class="small-4 columns"> <input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth"></div></div></div></form>';
+								postView.append("<div id='post-"+object.id+"'><div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p><p>"+DisplayUpload+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary'>"+cpgView+"<div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary' id='commentsclick-"+object.id+"'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color cs' id='campaignclick-"+object.id+"'><i class='icon-plus dbc'></i> Send Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
                                 console.log("form listener created for "+object.id);
                                 $('#form-'+object.id).submit(function(event){
                                       event.preventDefault();
                                       postComment(event.target.id.toString().split('-')[1]);
+                                });
+								$('#campaignform-'+object.id).submit(function(event){
+                                      event.preventDefault();
+                                      postCampaign(event.target.id.toString().split('-')[1]);
                                 });
 								$('#commentsclick-'+object.id).click(function(){
 									$('#comments-'+event.target.id.toString().split('-')[1]).fadeIn();
@@ -412,38 +537,68 @@ function postStatus(c) {
         alert("You do not have the required permissions");
         return;
     }
-    console.log('postStatus');
-    NProgress.start();
-    console.log("NProgress Start");
-    console.log("postStatus");
-    loadingButton_id("post",4);
-    var Post = Parse.Object.extend("Post");
-    var post = new Post();
-    var u = new Parse.Object("Neta");
-    u.id = currentNeta.id;
-    post.set("content", c);
-    post.set("reach", 0);
-    post.set("likes", 0);
-    post.set("numComments", 0);
-    post.set("neta",u);
-    var isSms = document.getElementById("sms").checked;
-    var isApp = document.getElementById("app").checked;
-    var isEmail = document.getElementById("email").checked;
-    var isWhatsApp = document.getElementById("whatsapp").checked;
-    post.set("isSMS",isSms);
-    post.set("isApp",isApp);
-    post.set("isEmail",isEmail);
-    post.set("isWhatsApp",isWhatsApp);
-    post.save(null, {
-      success: function(post) {
-        populateStatus();
-        document.getElementById("postArea").value="";
-      },
-      error: function(comment, error) {
-        alert('Failed to Post! ' + error.message);
-        NProgress.done();
-      }
-    });
+	if(file!=undefined){
+		var parsefile=new Parse.File(file.name,file);
+		parsefile.save().then(function(){
+			console.log('postStatus');
+			NProgress.start();
+			console.log("NProgress Start");
+			console.log("postStatus");
+			loadingButton_id("post",4);
+			var Post = Parse.Object.extend("Post");
+			var post = new Post();
+			var u = new Parse.Object("Neta");
+			u.id = currentNeta.id;
+			post.set("file",parsefile);
+			post.set("content", c);
+			post.set("reach", 0);
+			post.set("likes", 0);
+			post.set("numComments", 0);
+			post.set("neta",u);
+			post.save(null, {
+			  success: function(result) {
+				postCampaignFromPost(result.id);
+				document.getElementById("postArea").value="";
+				file=undefined;
+				thumbnil.src="";
+			  },
+			  error: function(comment, error) {
+				document.getElementById("postArea").value="";
+				file=undefined;
+				thumbnil.src="";
+				alert('Failed to Post! ' + error.message);
+				NProgress.done();
+			  }
+			});
+		});
+	}
+	else{
+		console.log('postStatus');
+		NProgress.start();
+		console.log("NProgress Start");
+		console.log("postStatus");
+		loadingButton_id("post",4);
+		var Post = Parse.Object.extend("Post");
+		var post = new Post();
+		var u = new Parse.Object("Neta");
+		u.id = currentNeta.id;
+		//post.set("file",data);
+		post.set("content", c);
+		post.set("reach", 0);
+		post.set("likes", 0);
+		post.set("numComments", 0);
+		post.set("neta",u);
+		post.save(null, {
+		  success: function(result) {
+			postCampaignFromPost(result.id);
+			document.getElementById("postArea").value="";
+		  },
+		  error: function(comment, error) {
+			alert('Failed to Post! ' + error.message);
+			NProgress.done();
+		  }
+		});
+	}
 }
 
 function fetchECStatus(u){
@@ -652,7 +807,7 @@ function setCurrentNetaTM(n){
                             document.getElementById('ele').innerHTML=ele;
                             document.getElementById('cs').innerHTML=cs;
                             calculateCurrentNetaStats();
-                            
+                            createVoterArray();
                             populateStatus();
                        },
                        error: function(error){
@@ -704,6 +859,7 @@ function setCurrentNeta(u){
                     calculateCurrentNetaStats();
                     populateStatus();   
                     updateReach();
+					createVoterArray();
                } ,
                error: function(error){
                    console.log("Error: "+error.message);
@@ -721,21 +877,29 @@ function setCurrentNeta(u){
 
 function initialize() {
     console.log("initialize");
+	voterViewArray=[];
     NProgress.start();
     if(CU.get("type")!="neta"){
         $("#netapost").fadeOut();
     }
     queryUserTable();
 
-	$('#fileUpload').on('change',function ()
+	/*$('#fileUpload').on('change',function ()
         {
 			showMyImage(this);
             filePath = $(this).val();
 			filename=getFileName();
 			uploadname.innerHTML=filePath;
             console.log(filePath);
-        });
-	
+        });*/
+	// Set an event listener on the Choose File field.
+    $('#fileUpload').bind("change", function(e) {
+		showMyImage(this);
+		var files = e.target.files || e.dataTransfer.files;
+		// Our file var now holds the selected file
+		file = files[0];
+    });
+
     $('#post-form').submit(function(event){
           event.preventDefault();
           var p=document.getElementById("postArea").value;
