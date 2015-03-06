@@ -283,14 +283,18 @@ $('#logout').click(function() {
 function notready(){
 	notify("The feature is not ready yet, but coming soon. Stay Tuned", "warning",12);
 }
+
 function notify(text,type,duration){
+
 	$('.alert-box').fadeIn().addClass(type).html(text + '<a href="#" class="close">&times;</a>');
 	//Types are: alert, success, warning, info 
 	setTimeout(function() {
 		$('.alert-box').fadeOut().html('loading <a href="#" class="close">&times;</a>');
 	}, duration*1000);
+	$(document).on('close.alert', function(event) {
+  $('#alert-hook').html('<div data-alert id="alert-box" class="alert-box-wrapper alert-box alert radius" style="display:none;"> Loading... <a href="#" class="close">&times;</a> </div>');
+});
 }
-
 function icon_bg(){
 	var iconBg = $('.icon-bg');
 	var iconArray = ['calendar','clock',

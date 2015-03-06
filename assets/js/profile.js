@@ -533,9 +533,9 @@ function initialize() {
     console.log("NProgress Start");
     queryUserTable();
     $('#edittext').click(function(){
-      $('#editform').fadeIn(400);
-      $('#currbio').delay(400).fadeOut();
-      $('#edittext').delay(400).fadeOut();
+        $('#currbio').fadeOut();
+        $('#editform').delay(400).fadeIn(400);
+        $('#edittext').fadeOut();
       setupUpdateForm();
   });
     $('#canceledit').click(function(){

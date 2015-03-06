@@ -1909,7 +1909,7 @@ function initialize() {
     });
 
 
-    $('#reportrange').daterangepicker(
+   /* $('#reportrange').daterangepicker(
         {
             startDate: moment().subtract('days', 29),
             endDate: moment(),
@@ -1948,5 +1948,5 @@ function initialize() {
             filter();
             updateCounters();
         }
-    );
+    ); */
 }
