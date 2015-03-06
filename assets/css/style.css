@@ -5950,14 +5950,14 @@ ul.pagination li {
 /* line 57, ../bower_components/foundation/scss/foundation/components/_progress-bars.scss */
 .progress {
   background-color: #F6F6F6;
-  height: 1.5625rem;
+  height: 1rem;
   border: 1px solid white;
   padding: 0.125rem;
   margin-bottom: 0.625rem;
 }
 /* line 61, ../bower_components/foundation/scss/foundation/components/_progress-bars.scss */
 .progress .meter {
-  background: #1e91d0;
+  background: #0E629B;
   height: 100%;
   display: block;
 }

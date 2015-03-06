@@ -1080,7 +1080,7 @@ $panel-bg: $white;
 // $include-html-media-classes: $include-html-classes;
 
 // We use this to set the progress bar height
-// $progress-bar-height: rem-calc(25);
+ $progress-bar-height: rem-calc(16);
 // $progress-bar-color: $vapor  ;
 
 // We use these to control the border styles
@@ -1094,7 +1094,7 @@ $panel-bg: $white;
 // $progress-bar-margin-bottom: rem-calc(10);
 
 // We use these to set the meter colors
-// $progress-meter-color: $primary-color;
+ $progress-meter-color: $darkblue;
 // $progress-meter-secondary-color: $secondary-color;
 // $progress-meter-success-color: $success-color;
 // $progress-meter-alert-color: $alert-color;
