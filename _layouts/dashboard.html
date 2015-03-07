@@ -48,6 +48,8 @@
         </div>
       </div>
       <form id="post-form">
+        <img id="thumbnil" style="width:100%; margin-top:10px; border:none; display:none;"  src=""/>
+        <span id="uploadname"></span>
         <textarea id="postArea" class="nm" rows="2" required placeholder="Say something inspiring"></textarea>
         <div class="progress radius" style="display:none;">
           <span class="meter" style="width:10%;"></span>
@@ -106,22 +108,22 @@
             <div class="row">
               <div id="chcount" class="small-2 columns secondary fx3 bgc">
               </div>
-              <div class="small-1 small-offset-1 columns tertiary secondary-color">
-                <label for="fileUpload" class="icon-image-add f-2x secondary-color" style="line-height:1;">
+              <div class="small-4 columns tertiary secondary-color s-ws-top text-right">
+                Default List (Default)
+              </div>
+              <div class="small-1 columns tertiary secondary-color">
+                <i id="listIcon" class="icon-list f-2x cs"></i>
+              </div>
+              <div class="small-1 columns tertiary secondary-color">
+                <label for="fileUpload" id="imgStatus" class="icon-image-add f-2x bc" style="line-height:1;">
                   <input id="fileUpload" type="file" name="media" multiple="1" style="display:none; position:fixed; top:-9999px;">
                 </label>
-				<br/>
               </div>
-			  <div class="small-10 columns">
-				<img id="thumbnil" style="width:20%; margin-top:10px;"  src="" alt="image"/>
-				<br/>
-				<span id="uploadname"></span>
-			  </div>
               <div class="small-4 columns">
                 <input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth">
               </div>
             </div>
-            <div class="row" id="cf1">
+            <div class="row" id="cf1" style="display:none;">
               
             </div>
           </div>

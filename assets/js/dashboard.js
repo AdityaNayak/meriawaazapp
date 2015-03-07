@@ -21,13 +21,16 @@ function createVoterArray(){
 			for(var ik=0;ik<voterViewArray.length;ik++){
 				if(flag==0){
 					flag=1;
-					voterView=voterView+"<label><input type='checkbox' checked=true value='"+voterViewArray[ik][0]+"' name='voter'>"+voterViewArray[ik][1]+"</label>";
+					voterView=voterView+"<div class='small-2 columns end s-ws-top'><label><input type='checkbox' checked=true value='"+voterViewArray[ik][0]+"' name='voter'> "+voterViewArray[ik][1]+"</label></div>";
 				}
 				else{
-					voterView=voterView+"<label><input type='checkbox' value='"+voterViewArray[ik][0]+"' name='voter'>"+voterViewArray[ik][1]+"</label>";
+					voterView=voterView+"<div class='small-2 columns end s-ws-top'><label><input type='checkbox' value='"+voterViewArray[ik][0]+"' name='voter'> "+voterViewArray[ik][1]+"</label></div>";
 				}
 			}
 			cf1.innerHTML=voterView;
+                $('#cf1 input').change(function(){
+                $('#listIcon').removeClass('bc').addClass('gc');
+            })
 		},
 		error:function(){
 			console.log("Error: "+error.message);
@@ -70,6 +73,7 @@ function getFileName(){
 
 function showMyImage(fileInput) {
 		console.log("Display Thumbnail");
+        $('#thumbnil').fadeIn();
         var files = fileInput.files;
         for (var i = 0; i < files.length; i++) {           
             var file = files[i];
@@ -895,6 +899,7 @@ function initialize() {
 	// Set an event listener on the Choose File field.
     $('#fileUpload').bind("change", function(e) {
 		showMyImage(this);
+        $('#imgStatus').removeClass('icon-image-add bc').addClass('icon-image-accept gc');
 		var files = e.target.files || e.dataTransfer.files;
 		// Our file var now holds the selected file
 		file = files[0];
@@ -909,9 +914,12 @@ function initialize() {
         $(this).animate({'height': '120px'}).removeClass('nm');
         $('#sh-ltr1').delay(800).fadeIn();
     });
+    $('#listIcon').click(function(){
+        $('#cf1').fadeIn();
+        $(this).addClass('bc')
+    });
+    
     var supportOnInput = 'oninput' in document.createElement('input');
-
-       
             var postArea = $('textarea#postArea');
             var maxLength = 140;
             var el1 = $('#chcount');
@@ -928,10 +936,8 @@ function initialize() {
                 } else {
                     el1.removeClass('yc');
                     el1.addClass('bgc');
-                }
-            
+                }        
         });
-
 }
         
 initialize();
