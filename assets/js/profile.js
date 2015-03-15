@@ -235,13 +235,13 @@ function queryUserTable(){
 								queryPostTable();      
 							},
 							error:function(error){
-								console.log("Error: "+error.message);
+								console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 								NProgress.done();    
 							}
 						});
 				},
 				error:function(error){
-				   console.log("Error: "+error.message);
+				   console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 				   NProgress.done();   
 				}
 				});
@@ -249,13 +249,13 @@ function queryUserTable(){
 
 				},
 			error:function(error){
-			  console.log("Error: "+error.message);
+			  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 			  NProgress.done();
 			}
 			});
 			},
 		error:function(){
-		  console.log("Error: "+error.message);
+		  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 		  NProgress.done();
 		}
 		});
@@ -331,7 +331,7 @@ function queryUserTable(){
 //         queryPostTable();
 //       },
 //       error: function(error) {
-//         console.log("Error: "+error.message);
+//         console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 //       }
 //     });
 // }
@@ -357,7 +357,7 @@ function queryPostTable(){
         queryFollowerTable();
     },
     error: function(error) {
-        console.log("Error: "+error.message);
+        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
     }
 });
 }
@@ -379,7 +379,7 @@ function queryFollowerTable(){
         queryElectionTable();
     },
     error: function(error) {
-        console.log("Error: "+error.message);
+        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
     }
 });
 }
@@ -447,7 +447,7 @@ function queryUpdatedData(){
 			displayData();
 		},
 		error:function(error){
-		   console.log("Error: "+error.message);
+		   console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 		   NProgress.done();   
 		}
 	});
@@ -470,6 +470,7 @@ function updateBio(pb,pwl,pfb,ptwt){
 }
 
 function setupUpdateForm(){
+	console.log("setupUpdateForm");
 	bio.innerHTML=nbio;
 	weblink.value=nweb;
 	fblink.value=nfb;
@@ -478,7 +479,7 @@ function setupUpdateForm(){
 
 
 function displayData(){
-    console.log('QueryUpdateTable');
+    console.log('displayData');
     netaPhoto.src=np;
     netaNameAge.innerHTML=nNA;
     party.innerHTML=py;

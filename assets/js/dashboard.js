@@ -33,7 +33,7 @@ function createVoterArray(){
             })
 		},
 		error:function(){
-			console.log("Error: "+error.message);
+			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 		}
 	});
 }
@@ -205,7 +205,7 @@ function calculateNetaStats(n){
         $("#competitorlist").append("<div class='row collapse'><div class='small-3 columns'><img src="+photo+" class='circle-img gs hv pd'></div><div class='small-9 columns ct'><h4>"+name+"<small>("+age+")</small></h4><h6>"+partyname+"</h6></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x bgc'>"+followers+" </span>followers </div><div class='small-6 columns s-ws-top'><i class='icon-up gc'></i><span class='secondary secondary-color'>23 this week</span></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x bc'>"+interactions+"</span>interactions </div><div class='small-6 columns s-ws-top'><i class='icon-down rc'></i><span class='secondary secondary-color'>31 this week</span></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x dbc'>"+actions+" </span>actions </div><div class='small-6 columns s-ws-top'><i class='icon-down rc'></i><span class='secondary secondary-color'>2 this week</span></div></div><hr>");
       },
       error: function(error) {
-            console.log("Error: "+error.message);
+            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
             NProgress.done();
       }
     });
@@ -250,7 +250,7 @@ function fetchConstituencyData(c){
                 NProgress.done();
             },
           error: function(error){
-                console.log("Error: "+error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                 NProgress.done();
             } 
           });
@@ -729,7 +729,7 @@ function updateReach(){
             document.getElementById("population").innerHTML=count1+4487+count2;
           },
           error: function(error) {
-            console.log("Error: "+error.message);
+            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                     NProgress.done();
           }
         });
@@ -815,19 +815,19 @@ function setCurrentNetaTM(n){
                             populateStatus();
                        },
                        error: function(error){
-                           console.log("Error: "+error.message);
+                           console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                             NProgress.done();
                        } 
                     });
                 },
                 error:function(error){
-                    console.log("Error: "+error.message);
+                    console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                     NProgress.done();
                 }
             });
      },
      error: function(error){
-         console.log("Error: "+error.message);
+         console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
         NProgress.done();
      }   
     });
@@ -866,14 +866,14 @@ function setCurrentNeta(u){
 					createVoterArray();
                } ,
                error: function(error){
-                   console.log("Error: "+error.message);
+                   console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                     NProgress.done();
                }
             });
             
        },
        error: function(error){
-           console.log("Error: "+error.message);
+           console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                 NProgress.done();
        }
     });
