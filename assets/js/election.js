@@ -69,7 +69,7 @@ function populateCandidates(){
 			displayCandidates();
 		},
 		error:function(error){
-			console.log("Error: "+error.message);
+			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 		}
 	});
 	
@@ -124,7 +124,7 @@ function populateCandidates(){
  // 			displayCandidates();
  // 		},
  // 		error:function(error){
- // 			console.log("Error: "+error.message);
+ // 			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
  // 		}
  // 	});
 	
@@ -191,7 +191,7 @@ function populateCandidates(){
 // 			displayCandidates();
 // 		},
 // 		error:function(error){
-// 			console.log("Error: "+error.message);
+// 			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 // 		}
 // 	});
 	

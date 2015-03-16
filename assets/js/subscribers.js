@@ -23,13 +23,13 @@ function deleterecords(n){
                   console.log("destroyAll done");
               },
               error: function(error) { 
-                  console.log("Error: "+error.message);
+                  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
               }
           });
         console.log("success1");
       },
       error: function(error){
-        console.log("Error: "+error.message);
+        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
       }
     });
 }
@@ -272,7 +272,7 @@ function populateSubscribers(){
 
         },
         error: function(error){
-            console.log("Error: "+error.message);
+            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
             NProgress.done();
         }
     });
@@ -301,7 +301,7 @@ function getStuff(){
                                         pagination();
                                     },
                                     error:function(error){
-                                        console.log("Error: "+error.message);
+                                        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                                         NProgress.done();
                                     }
                                 })
@@ -309,7 +309,7 @@ function getStuff(){
                             }                                
                         },
                         error: function(error){
-                            console.log("Error: "+error.message);
+                            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                             NProgress.done();
                         }
                     });
@@ -329,19 +329,19 @@ function getStuff(){
                                             populateSubscribers();
                                         },
                                         error:function(error){
-                                            console.log("Error: "+error.message);
+                                            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                                             NProgress.done();
                                         }
                                     });
                                 },
                                 error:function(error){
-                                    console.log("Error: "+error.message);
+                                    console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                                     NProgress.done();
                                 }
                             });  
                         },
                         error: function(error){
-                            console.log("Error: "+error.message);
+                            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                             NProgress.done();
                         }
                     });
@@ -349,7 +349,7 @@ function getStuff(){
                 
             },
           error: function(error) {
-                console.log("Error: "+error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                 NProgress.done();
           }
     });

@@ -4,6 +4,8 @@
 var count = 0 ;
 var CU;
 var constituency;
+standardErrorMessage="Oops! There seems to be some problem. Please try again later.";
+standardErrorDuration=2;
 
 Parse.initialize("km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt", "BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI");
 
@@ -281,7 +283,7 @@ $('#logout').click(function() {
 });
 
 function notready(){
-	notify("The feature is not ready yet, but coming soon. Stay Tuned", "warning",12);
+	notify("The feature is not ready yet, but coming soon. Stay Tuned", "warning",2);
 }
 
 function notify(text,type,duration){

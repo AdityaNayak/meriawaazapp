@@ -2,12 +2,15 @@ var currentUser;
 var neta;
 var constituency;
 var sTable=$('#subscribers-table tbody');
+var nTable=$('#netaLists');
 var tobeuploaded=0;
 var currentuploaded=0;
 var smallarrays=[]; 
 var dirty=0;
 var skip=0;
 var totalpages=0;
+var currentListId;
+var currentCampaignId;
 
 function deleterecords(n){
     ListItem = Parse.Object.extend("Subscriber");
@@ -23,13 +26,13 @@ function deleterecords(n){
                   console.log("destroyAll done");
               },
               error: function(error) { 
-                  console.log("Error: "+error.message);
+                  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
               }
           });
         console.log("success1");
       },
       error: function(error){
-        console.log("Error: "+error.message);
+        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
       }
     });
 }
@@ -213,6 +216,9 @@ function pagination(){
     var query = new Parse.Query(Subscribers);
     
     query.equalTo("neta",neta);
+	var currentList= new Parse.Object("NetaList");
+	currentList.id=currentListId;
+	query.equalTo("netaList",currentList);
     query.count({
       success: function(count2) {
         console.log(count2);
@@ -255,6 +261,9 @@ function populateSubscribers(){
     var pointer= new Parse.Object("Neta");
     pointer.id=neta.id;
     query.equalTo("neta",pointer);
+	var currentList= new Parse.Object("NetaList");
+	currentList.id=currentListId;
+	query.equalTo("netaList",currentList);
     query.include("puser");
     query.skip(skip);
     query.limit(1000);
@@ -272,7 +281,7 @@ function populateSubscribers(){
 
         },
         error: function(error){
-            console.log("Error: "+error.message);
+            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
             NProgress.done();
         }
     });
@@ -297,11 +306,10 @@ function getStuff(){
                                 constituency.fetch({
                                     success:function(results){
                                         updateCounters();
-                                        populateSubscribers();
-                                        pagination();
+										showMemberLists();
                                     },
                                     error:function(error){
-                                        console.log("Error: "+error.message);
+                                        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                                         NProgress.done();
                                     }
                                 })
@@ -309,7 +317,7 @@ function getStuff(){
                             }                                
                         },
                         error: function(error){
-                            console.log("Error: "+error.message);
+                            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                             NProgress.done();
                         }
                     });
@@ -326,22 +334,22 @@ function getStuff(){
                                     constituency.fetch({
                                         success:function(results){
                                             updateCounters();
-                                            populateSubscribers();
+											showMemberLists();
                                         },
                                         error:function(error){
-                                            console.log("Error: "+error.message);
+                                            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                                             NProgress.done();
                                         }
                                     });
                                 },
                                 error:function(error){
-                                    console.log("Error: "+error.message);
+                                    console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                                     NProgress.done();
                                 }
                             });  
                         },
                         error: function(error){
-                            console.log("Error: "+error.message);
+                            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                             NProgress.done();
                         }
                     });
@@ -349,17 +357,105 @@ function getStuff(){
                 
             },
           error: function(error) {
-                console.log("Error: "+error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                 NProgress.done();
           }
     });
 }
 
-function addVoter(){
+function addMember(name,phone,email,age){
+	NProgress.start();
+	console.log(name+email+phone+age);
+	Parse.Cloud.run("addMember", {objectId: neta.id, n: name, e: email, a: age, p: phone}, {
+		success:function(results){
+			console.log(results);
+			alert("Member Added");
+			$('#addv-row').fadeOut();
+		},
+		error:function(error){
+			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+			NProgress.done();   
+		}
+	}); 
+}
+
+function setupMemberForm(){
+	$('#name-l').val("");
+	$('#email-l').val("");
+	$('#ph-l').val("");
+	$('#a-l').val("");
+}
+
+function getStatusIcon(){
 	
 }
 
-function setupVoterForm(){
+function showCampaignReport(){
+	
+}
+
+function showCampaign(){
+	
+}
+
+function showMemberLists(){
+	nTable.html("");
+    var NetaLists = Parse.Object.extend("NetaList");
+    var query=new Parse.Query(NetaLists);
+    var pointer= new Parse.Object("Neta");
+    pointer.id=neta.id;
+    query.equalTo("neta",pointer);
+    query.find({
+        success: function(result){
+            console.log(result.length);
+            for(var i=0;i<result.length;i++){
+                object=result[i];        
+                nTable.append('<div class="row brbm" id="list-'+object.id+'"><a href="#"><div class="small-8 columns"><span class="secondary-color">'+object.get("ranking")+' </span><span class="f-1-5x">'+object.get("name")+'</span></div></a><div class="small-4 columns s-ws-top">'+object.get("number")+' <span class="secondary-color">subscribers</span></div></div>');
+				$('#list-'+object.id).click(function(){ 
+							  currentListId=this.id.toString().split('-')[1];
+                              console.log(currentListId);
+							  populateSubscribers();
+							  pagination();
+							  $('#outreach-view').fadeOut();
+							  $('#outreach-single-listview').fadeIn();
+                });
+			}
+            NProgress.done();
+        },
+        error: function(error){
+            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+            NProgress.done();
+        }
+    });
+}
+
+function showListAdditionForm(){
+	console.log("showListAdditionForm");
+	prepareListAdditionForm();
+	$("#addList-Form").fadeIn();
+}
+
+function prepareListAdditionForm(){
+	console.log("prepareListAdditionForm");
+	$("#listName").val("");
+}
+
+function addNetaList(name){
+	console.log("addNetaList");    
+	NProgress.start();
+	console.log(name);
+	Parse.Cloud.run("addNetaList", {objectId: neta.id, listName: name}, {
+		success:function(results){
+			console.log(results);
+			alert("List Added.");
+			showLists();
+			$("#addList-Form").fadeOut();
+		},
+		error:function(error){
+			console.log("Error: "+error);
+			NProgress.done();   
+		}
+	}); 
 	
 }
 
@@ -369,12 +465,20 @@ function initialize() {
     NProgress.start();
     console.log("NProgress Start");
     getStuff();
-    $('#outreach-list-view a').click(function(){
-      $('#outreach-list-view').fadeOut();
-      $('#outreach-single-listview').fadeIn();
-    });
+	$('#addListForm').submit(function(event){
+      event.preventDefault();
+      var name=$("#listName").val();
+	  addNetaList(name);
+  });
+
+	$('#cancelListAddition').click(function(){
+		$("#addList-Form").fadeOut();
+	});
+	$('#cancelVoterAddition').click(function(){
+		$("#addv-row").fadeOut();
+	});
     $('#addv').click(function(){
-	  setupVoterForm();
+	  setupMemberForm();
       $('#addvs-row').delay(300).fadeOut();
       $('#addv-row').fadeIn();
     });
@@ -389,17 +493,17 @@ function initialize() {
       $('#outreach-list-view').delay(300).fadeIn();
     });
     $('#cmp-trg').click(function(){
-	  notready();
-      /*$('#outreach-view').fadeOut();
+	  //notready();
+      $('#outreach-view').fadeOut();
       $('#cmp-view').delay().fadeIn();
       $('#cmp-list-view').delay().fadeIn();
-      $('#cmp-single-listview').delay().fadeOut();*/
+      $('#cmp-single-listview').delay().fadeOut();
     });
 	$('#rep-trg').click(function(){
       notready();
     });
 	$('#crl-btn').click(function(){
-      notready();
+      showListAdditionForm();
     });
 	$('#seg-btn').click(function(){
       notready();
@@ -420,10 +524,99 @@ function initialize() {
     });
 	$('#voteradd-form').submit(function(event){
           event.preventDefault();
-          var bio=document.getElementById("bio").value;
-          updateBio(bio);
+          var name=document.getElementById("name-l").value;
+		  var phone=document.getElementById("ph-l").value;
+		  var email=document.getElementById("email-l").value;
+		  var age=document.getElementById("a-l").value;
+          addMember(name,phone,email,age);
     });
-    
+	$(function () {
+          $("#uploadc").bind("click", function () {
+              $('#progress').delay(400).fadeIn(300);
+              var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+              if (regex.test($("#fileUpload").val().toLowerCase())) {
+                  NProgress.start();
+                  if (typeof (FileReader) != "undefined") {
+                      var reader = new FileReader();
+                      reader.onload = function (e) {
+                          var table = $("<table />");
+                          var rows = e.target.result.split("\n");
+                          var size = 500;
+                          var k=1;
+                          
+                          for (var i=1; i<rows.length; i+=size) {
+                              var smallarray = rows.slice(i,i+size+1);
+                              smallarrays.push(smallarray);
+                              
+                          }
+                          tobeuploaded=smallarrays.length;
+                          selfUpload();                                                    
+                      }
+                      reader.readAsText($("#fileUpload")[0].files[0]);
+                  } else {
+                    NProgress.done();
+                      alert("This browser does not support HTML5.");
+                  }
+              } else {
+                NProgress.done();
+                  alert("Please upload a valid CSV file.");
+              }
+          });
+      });
+    $(function () {
+          $("#check").bind("click", function () {
+              var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+              if (regex.test($("#fileUpload").val().toLowerCase())) {
+                  NProgress.start();
+                  
+                  if (typeof (FileReader) != "undefined") {
+                      var reader = new FileReader();
+                      reader.onload = function (e) {
+                          var table = $("<table />");
+                          var rows = e.target.result.split("\n");
+                          for (var i = 1; i < rows.length; i++) {
+                              var row = $("<tr />");
+                              
+                              var cells = rows[i].split(",");
+                              for (var j = 0; j < cells.length; j++) {
+                                  var cell = $("<td />");
+                                  
+                                  if(j==0){
+                                    
+                                    console.log("name:"+cells[0]);
+                                  }
+                                  else if(j==2){
+                                    
+                                    console.log("email:"+cells[2]);
+                                  }
+                                  else if(j==1){
+                                    
+                                    console.log("phone:"+cells[1]);
+                                  }
+                                  else{
+                                    
+                                    console.log("age:"+parseInt(cells[3]));
+                                  }
+                                  cell.html(cells[j]);
+                                  row.append(cell);
+                              }
+                                                            
+                              table.append(row);
+                          }
+                          NProgress.done();
+                          
+                      }
+                      reader.readAsText($("#fileUpload")[0].files[0]);
+                  } else {
+                    NProgress.done();
+                      alert("This browser does not support HTML5.");
+                  }
+              } else {
+                NProgress.done();
+                  alert("Please upload a valid CSV file.");
+              }
+          });
+      });
 }
 
 initialize();

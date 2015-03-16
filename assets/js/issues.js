@@ -506,7 +506,7 @@ function populateUpdates(){
 
             },
           error: function(error) {
-                console.log("Error:"+error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
           }
     });
 }
@@ -529,7 +529,7 @@ function populateTeam(){
                 }
             },
           error: function(error) {
-                console.log("Error:"+error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
           }
     });
     
@@ -769,7 +769,7 @@ function postAssignment(id){
                 
             },
           error: function(error) {
-                console.log("Error:"+error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 
           }
     });  
@@ -819,7 +819,7 @@ function setIssueStatusButton(){
                     } 
                 },
               error: function(error) {
-                    console.log("Error:"+error.message);
+                    console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
               }
         });   
     }
@@ -876,7 +876,7 @@ function setIssueStatusButton(){
                     }
                 },
               error: function(error) {
-                    console.log("Error:"+error.message);
+                    console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
               }
         });   
     }
@@ -912,7 +912,7 @@ function updateCurrentMarker(m){
             infowindow.open(map, currmarker);
         },
       error: function(error) {
-            console.log("Error:"+error.message);
+            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
         }
     }); 
 }
@@ -1120,7 +1120,7 @@ function plotConstituency(c){
                   }, i * 500);                
               },
             error: function(error) {
-                  console.log("Error:"+error.message);
+                  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
             }
       });
   }
@@ -1345,7 +1345,7 @@ function populate(){
           },
           error: function(error) {
 			  NProgress.done();
-			  console.log("Error: "+error.message);
+			  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
           }
         });
 }
@@ -1539,7 +1539,7 @@ function initializeMap(){
 				},
 				error: function(error){
 					NProgress.done();
-					console.log("Error: "+error.message);
+					console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 				}													
 			});
             /*
@@ -1549,14 +1549,14 @@ function initializeMap(){
                 map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
               },
               error:function(error){
-                console.log("Error: "+error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                 NProgress.done();
               }
             });
 			*/
           },
           error:function(error){
-            console.log("Error: "+error.message);
+            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
             NProgress.done();
           }
         });
@@ -1580,7 +1580,7 @@ function initializeMap(){
                   map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
                 },
                 error:function(error){
-                  console.log("Error: "+error.message);
+                  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                   NProgress.done();
                 }
               });*/
@@ -1599,18 +1599,18 @@ function initializeMap(){
 					},
 					error: function(error){
 						NProgress.done();
-						console.log("Error: "+error.message);
+						console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 					}													
 				});
             },
             error:function(error){
-                console.log("Error: "+error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                 NProgress.done();
             }
           });
         },
         error:function(error){
-            console.log("Error: "+error.message);
+            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
             NProgress.done();         
         }
       });
@@ -1641,7 +1641,7 @@ function initializeMap(){
 //                 }
 //               },
 //               error: function(error){
-//                 console.log("Error: "+error.message); 
+//                 console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration); 
 //               }
 //         });
 //   }
@@ -1661,7 +1661,7 @@ function initializeMap(){
 //                 map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
 //               },
 //               error: function(error){
-//                 console.log("Error: "+error.message);
+//                 console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 //               }
 //         });
       

@@ -28,7 +28,7 @@
       <ul class="side-nav" role="navigation" title="Link List">
        <li id="list-trg" role="menuitem" class="active"><a href="#" >Lists</a></li>
        <li id="cmp-trg" role="menuitem"><a href="#">Campaigns</a></li>
-       <li id="rep-trg" role="menuitem"><a href="#">Reports</a></li>
+       <!--<li id="rep-trg" role="menuitem"><a href="#">Reports</a></li>-->
      </ul>
    </div>
    <div class="small-9 columns">
@@ -39,33 +39,26 @@
             <div class="button tiny" id="crl-btn"><i class="icon-add secondary-color"></i> Create List</div>
           </div>
         </div>
-        <div class="panel">
+		<div id="addList-Form" style='display:none'>
+		<form id="addListForm"> 
+        <div class="row">
+          <div class="small-12 columns text-right">
+          <input type="submit" value="Create New List" class="button tiny">
+          <div id="cancelListAddition" class="button tiny secondary">Cancel</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="small-8 columns">
+            <textarea id="listName" rows="1" required placeholder="Name"></textarea>
+          </div>
+        </div>
+        </div>
+         </form>
+		 </div>
+        <div class="panel" id="netaLists">
 
-          <div class="row brbm">
-            <a href="#">
-              <div class="small-8 columns"><span class="secondary-color">#1 </span><span class="f-1-5x">Voters</span><small class="secondary-color"> (Primary)</small></a>
-              </div>
-              <div class="small-4 columns s-ws-top">
-                ... <span class="secondary-color">subscribers</span>
-              </div>
-            </div>
-            <div class="row brbm">
-              <a href="#">
-                <div class="small-8 columns"><span class="secondary-color">#2 </span><span class="f-1-5x">Volunteers</span>
-                </div></a>
-                <div class="small-4 columns s-ws-top">
-                  ... <span class="secondary-color">subscribers</span>
-                </div>
-              </div>
-              <div class="row brbm">
-                <a href="#">
-                  <div class="small-8 columns"><span class="secondary-color">#3 </span><span class="f-1-5x">Others</span>
-                  </div>
-                </a>
-                <div class="small-4 columns s-ws-top">
-                  ... <span class="secondary-color">subscribers</span>
-                </div>
-              </div>
+          
+            
 
             </div>
           </div>
@@ -121,6 +114,7 @@
                       </div>
                     </div>
                     <input type="submit" value="Add Voter" class="button fullwidth small">
+					<div id="cancelVoterAddition" class="button tiny secondary">Cancel</div>
                   </div>
                 </div>
               </form>
@@ -131,10 +125,8 @@
                 <input type="file" id="fileUpload" multiple="1" class="secondary"/>
               </div>
               <div class="small-4 columns b-ws-top">
-                <input type="button" id="upload" value="Upload" style="display:none;"/>
                 <input class="button tiny secondary" type="button" id="uploadc" value="Upload" />
-                <input type="button" id="uploadi" value="Upload Individually" style="display:none;"/>
-                <input type="button" id="uploadci" value="Upload on Cloud Individually" style="display:none;"/>
+               
                 <input class="button tiny secondary" type="button" id="check" value="Check" />
 
               </div>
@@ -142,6 +134,10 @@
               </div>
 
             </div>
+			<div class="row">
+			  <ul class="pagination" id="pages">
+			  </ul>
+			  </div>
             <div class="row">
               <div class="small-12 columns">
                 <table id="subscribers-table">
@@ -161,8 +157,8 @@
           </div>
         </div>
         <div id="cmp-view" style="display:none;">
-          <div id="cmp-list-view" style="display:none;">
-            <div class="panel">
+          <div id="cmp-list-view" style="display:none;" >
+            <div class="panel" id='list-campaign'>
               <div class="row brbm cs">
                 <div class="small-6 columns"><span class="secondary-color">#1 </span>Naresh yadav ji wants to Thank you ...
                 </div>
@@ -237,7 +233,7 @@
             </dl>
             </div>
             <div class="small-2 columns">
-              <a href="#" class="button tiny">Download</a>
+              <a href="#" class="button tiny" id='download'>Download</a>
             </div>
 
            <div class="small-12 columns">
@@ -278,316 +274,7 @@
     $( document ).ready(function() {
       icon_bg();
       icon_bg();
-      var smallarrays=[];
-      $(function () {
-        $("#uploadc").bind("click", function () {
-          var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
-          if (regex.test($("#fileUpload").val().toLowerCase())) {
-            NProgress.start();
-
-            var SupporterArray = [];
-            if (typeof (FileReader) != "undefined") {
-              var reader = new FileReader();
-              reader.onload = function (e) {
-                var table = $("<table />");
-                var rows = e.target.result.split("\n");
-                var size = 600;
-                var k=1;
-
-                alert("Number of Records: "+rows.length);
-                for (var i=0; i<rows.length; i+=size) {
-                  var smallarray = rows.slice(i,i+size+1);
-                  smallarrays.push(smallarray);
-
-                }
-                for(var n = 0; n < smallarrays.length; n++) {
-                  var sh = smallarrays[n]; 
-                  setTimeout((function(s){
-                                  return function() { //rename shape to s in the new scope.
-                                    NProgress.start();
-                                    Parse.Cloud.run("uploadCSV", {ro: s, ne: neta.id},{
-                                      success:function(results){
-                                        updateCounters();
-                                        populateSubscribers();
-                                        console.log(results);
-                                        NProgress.done();
-                                      },
-                                      error:function(error){
-                                        console.log(error);
-                                        NProgress.done();
-                                      }
-                                    });
-                                  };
-                                })(sh), n*30000);   
-                }
-
-              }
-              reader.readAsText($("#fileUpload")[0].files[0]);
-            } else {
-              NProgress.done();
-              alert("This browser does not support HTML5.");
-            }
-          } else {
-            NProgress.done();
-            alert("Please upload a valid CSV file.");
-          }
-        });
-});
-
-$(function () {
-  $("#uploadci").bind("click", function () {
-    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
-    if (regex.test($("#fileUpload").val().toLowerCase())) {
-      NProgress.start();
-
-      if (typeof (FileReader) != "undefined") {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          var table = $("<table />");
-          var rows = e.target.result.split("\n");
-          for (var i = 1; i < rows.length; i++) {
-            console.log("Row: "+i);
-            var cells = rows[i].split(",");
-            var nam;
-            var ag;
-            var phon;
-            var emai;
-            for (var j = 0; j < cells.length; j++) {
-
-              if(j==0){
-                nam=cells[0].toLowerCase();
-
-              }
-              else if(j==2){
-                emai=cells[2].toLowerCase();
-
-              }
-              else if(j==1){
-                phon=cells[1];
-
-              }
-              else{
-                ag=parseInt(cells[3]);
-
-              }
-            }
-            Parse.Cloud.run("uploadCSVi", {phone: phon ,email: emai,age: ag,name: nam, ne: neta.id}, {
-              success:function(results){
-                console.log(results);
-                updateCounters();
-                populateSubscribers();
-              },
-              error:function(error){
-                console.log(error);
-              }
-            }); 
-          }
-
-        }
-        reader.readAsText($("#fileUpload")[0].files[0]);
-        NProgress.done();
-      } else {
-        NProgress.done();
-        alert("This browser does not support HTML5.");
-      }
-    } else {
-      NProgress.done();
-      alert("Please upload a valid CSV file.");
-    }
-  });
-}); 
-
-$(function () {
-  $("#uploadi").bind("click", function () {
-    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
-    if (regex.test($("#fileUpload").val().toLowerCase())) {
-      NProgress.start();
-      var Supporter = Parse.Object.extend("Subscriber");
-      var SupporterArray = [];
-      if (typeof (FileReader) != "undefined") {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          var table = $("<table />");
-          var rows = e.target.result.split("\n");
-          for (var i = 1; i < rows.length; i++) {
-            console.log("Row: "+i);
-            var row = $("<tr />");
-            var temp = new Supporter();
-            var cells = rows[i].split(",");
-            for (var j = 0; j < cells.length; j++) {
-              var cell = $("<td />");
-              temp.set("neta",neta);
-              if(j==0){
-                temp.set("name",cells[0].toLowerCase());
-
-              }
-              else if(j==2){
-                temp.set("email",cells[2].toLowerCase());
-
-              }
-              else if(j==1){
-                temp.set("phone",cells[1]);
-
-              }
-              else{
-                temp.set("age",parseInt(cells[3]));
-
-              }
-              cell.html(cells[j]);
-              row.append(cell);
-
-            }
-            temp.save({
-              success:function(results){
-                console.log("Done!");
-              },
-              error:function(error){
-                console.log("Error: "+error.message);
-              }
-            });
-
-            table.append(row);
-          }
-          updateCounters();
-          populateSubscribers();
-        }
-        reader.readAsText($("#fileUpload")[0].files[0]);
-      } else {
-        NProgress.done();
-        alert("This browser does not support HTML5.");
-      }
-    } else {
-      NProgress.done();
-      alert("Please upload a valid CSV file.");
-    }
-  });
-}); 
-
-$(function () {
-  $("#upload").bind("click", function () {
-    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
-    if (regex.test($("#fileUpload").val().toLowerCase())) {
-      NProgress.start();
-      var Supporter = Parse.Object.extend("Subscriber");
-      var SupporterArray = [];
-      if (typeof (FileReader) != "undefined") {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          var table = $("<table />");
-          var rows = e.target.result.split("\n");
-          for (var i = 1; i < rows.length; i++) {
-            console.log("Row: "+i);
-            var row = $("<tr />");
-            var temp = new Supporter();
-            var cells = rows[i].split(",");
-            for (var j = 0; j < cells.length; j++) {
-              var cell = $("<td />");
-              temp.set("neta",neta);
-              if(j==0){
-                temp.set("name",cells[0].toLowerCase());
-
-              }
-              else if(j==2){
-                temp.set("email",cells[2].toLowerCase());
-
-              }
-              else if(j==1){
-                temp.set("phone",cells[1]);
-
-              }
-              else{
-                temp.set("age",parseInt(cells[3]));
-
-              }
-              cell.html(cells[j]);
-              row.append(cell);
-
-            }
-            SupporterArray.push(temp);
-
-            table.append(row);
-          }
-          Parse.Object.saveAll(SupporterArray, {
-            success: function(objs) {
-              alert("Successfully Saved!");
-              updateCounters();
-              populateSubscribers();
-              NProgress.done();
-            },
-            error: function(error) { 
-              alert("Error: "+error.message);
-              NProgress.done();
-            }
-          });
-        }
-        reader.readAsText($("#fileUpload")[0].files[0]);
-      } else {
-        NProgress.done();
-        alert("This browser does not support HTML5.");
-      }
-    } else {
-      NProgress.done();
-      alert("Please upload a valid CSV file.");
-    }
-  });
-});
-
-$(function () {
-  $("#check").bind("click", function () {
-    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
-    if (regex.test($("#fileUpload").val().toLowerCase())) {
-      NProgress.start();
-
-      if (typeof (FileReader) != "undefined") {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          var table = $("<table />");
-          var rows = e.target.result.split("\n");
-          for (var i = 1; i < rows.length; i++) {
-            var row = $("<tr />");
-
-            var cells = rows[i].split(",");
-            for (var j = 0; j < cells.length; j++) {
-              var cell = $("<td />");
-
-              if(j==0){
-
-                console.log("name:"+cells[0]);
-              }
-              else if(j==2){
-
-                console.log("email:"+cells[2]);
-              }
-              else if(j==1){
-
-                console.log("phone:"+cells[1]);
-              }
-              else{
-
-                console.log("age:"+parseInt(cells[3]));
-              }
-              cell.html(cells[j]);
-              row.append(cell);
-
-            }
-
-            table.append(row);
-          }
-          NProgress.done();
-
-        }
-        reader.readAsText($("#fileUpload")[0].files[0]);
-      } else {
-        NProgress.done();
-        alert("This browser does not support HTML5.");
-      }
-    } else {
-      NProgress.done();
-      alert("Please upload a valid CSV file.");
-    }
-  });
-});
-
+   
 });
 </script>
 </html>

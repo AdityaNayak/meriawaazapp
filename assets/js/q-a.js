@@ -181,7 +181,7 @@ function singleQuestion(questionId){
 		 			
 		 		},
 		 		error:function(error){
-		 			console.log("Error: "+error.message);
+		 			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 		 		}
 		 	});
 
@@ -258,7 +258,7 @@ function singleAnswers(question){
  			NProgress.done();
  		},
  		error: function(error){
- 			console.log("Error: "+error.message);
+ 			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
  			
  		}
  	});
@@ -309,7 +309,7 @@ function populateOpenTo(constituency){
 			}
 		},
 		error:function(error){
-			console.log("Error: "+error.message);
+			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 		}
 	});
 	
@@ -337,7 +337,7 @@ function initialize() {
 					currentNeta=currentTeamMember.get("neta");
 				},
 				error:function(error){
-					console.log("Error: "+error.message);
+					console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 				}
 			})
 		}
