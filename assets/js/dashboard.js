@@ -283,13 +283,13 @@ function createCampaign(id,selectedNetaLists,selectedMediums){
 	for(var i=0;i<selectedNetaLists.length;i++){
 		nl.push(selectedNetaLists[i]);
 	}
-	Parse.Cloud.run("createCampaign", {isPush: ip,isSMS: is, isWhatsApp: iw, isTwitter: it, isEmail: ie, isFacebook: ib, p: post, netalists: nl}, {
+	Parse.Cloud.run("createCampaign", {objectId: currentNeta.id, isPush: ip,isSMS: is, isWhatsApp: iw, isTwitter: it, isEmail: ie, isFacebook: ib, p: post, netalists: nl}, {
 	  success:function(results){
 		console.log(results);
 		populateStatus();
 	  },
 	  error:function(error){
-		console.log(error.message());
+		console.log(error.message);
 		NProgress.done();
 	  }
 	}); 
@@ -390,7 +390,7 @@ function populateStatus(){
 									DisplayUpload="";
 								}
 								else{
-									DisplayUpload="<a href='"+uploadlink.url()+"'>Link to Attachment</a>";
+									DisplayUpload="<a href='"+uploadlink.url()+"' target='_blank'>Link to Attachment</a>";
 								}
 								
 								/*

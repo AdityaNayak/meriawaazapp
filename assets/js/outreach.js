@@ -72,6 +72,7 @@ function selfUpload(){
               populateSubscribers();
               pagination();
               NProgress.done();
+			  notify(standardSuccessMessage, "success",standardSuccessDuration);
               $('#progress').delay(400).fadeOut(300);
             }
       }
@@ -116,6 +117,7 @@ function selfUpload(){
           populateSubscribers();
           pagination();
           NProgress.done();
+		  notify(standardSuccessMessage, "success",standardSuccessDuration);
           $('#progress').delay(400).fadeOut(300);
         }
         
@@ -130,10 +132,10 @@ function newUser(u,p){
     user.set("password", u+"galaxy");
     user.signUp(null, {
           success: function(user) {
-            alert("Success Finally!");
+            notify(standardSuccessMessage, "success",standardSuccessDuration);
           },
           error: function(user, error) {
-            alert("Error: " + error.code + "\n\nwhat is the error \n\n " + error.message);
+            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
           }
     });
 }
@@ -169,12 +171,12 @@ function updateCounters(){
               },
               error: function(error) {
 
-                alert("Error: " + error.code + " " + error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
               }
             });
       },
       error: function(error) {
-        alert("Error: " + error.code + " " + error.message);
+        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
       }
     });
 
@@ -185,7 +187,7 @@ function updateCounters(){
         numAnim3.start();
       },
       error: function(error) {
-        alert("Error: " + error.code + " " + error.message);
+        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
       }
     });
 
@@ -197,7 +199,7 @@ function updateCounters(){
         NProgress.done();
       },
       error: function(error) {
-        alert("Error: " + error.code + " " + error.message);
+        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
       }
     });
     
@@ -260,7 +262,7 @@ function pagination(){
         
       },
       error: function(error) {
-        alert("Error: " + error.code + " " + error.message);
+        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
       }
     });
 }
@@ -377,11 +379,13 @@ function getStuff(){
 function addMember(name,phone,email,age){
 	NProgress.start();
 	console.log(name+email+phone+age);
-	Parse.Cloud.run("addMember", {objectId: neta.id, n: name, e: email, a: age, p: phone}, {
+	Parse.Cloud.run("addMember", {objectId: neta.id, n: name, e: email, a: age, p: phone, li: currentListId}, {
 		success:function(results){
 			console.log(results);
-			alert("Member Added");
+			notify(standardSuccessMessage, "success",standardSuccessDuration);
 			$('#addv-row').fadeOut();
+			populateSubscribers();
+			pagination();			
 		},
 		error:function(error){
 			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
@@ -455,7 +459,7 @@ function filter(){
 	NProgress.start();
 	crTable.html("");
 	for(var m=0;m<subscriberList.length;m++){
-		var p_timestam=String(currmarker.content.createdAt);
+		var p_timestam=String(subscriberList[m].createdAt);
 		var p_timestamp=p_timestam.split(" ");
 		var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
 		var p_time=p_timestamp[4];
@@ -466,44 +470,81 @@ function filter(){
 }
 
 function showCampaignReport(){
+	NProgress.start();
 	crTable.html("");
     var Campaign = Parse.Object.extend("Campaign");
-    var query=new Parse.Query(Campaign);
+    var campaign=new Campaign();
     var pointer= new Parse.Object("Neta");
     pointer.id=neta.id;
+	
     query.equalTo("neta",pointer);
 	query.descending("createdAt");
 	query.limit(1000);
     query.find({
 		success:function(result){
-			
+			NProgress.done();
 		},
 		error:function(error){
-			
+			NProgress.done();
+			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 		}
+	});
+}
+
+function getReducedContent(s){
+	if (s.length<50){
+		return s;
 	}
+	else{
+		return s.substring(0,50)+"...";
+	}
+	
 }
 
 function showCampaign(){
+	console.log("showCampaign");
+	NProgress.start();
 	cTable.html("");
     var Campaign = Parse.Object.extend("Campaign");
     var query=new Parse.Query(Campaign);
     var pointer= new Parse.Object("Neta");
     pointer.id=neta.id;
     query.equalTo("neta",pointer);
+	query.include("post");
 	query.descending("createdAt");
 	query.limit(1000);
     query.find({
 		success:function(result){
+			console.log(result.length);
+            for(var i=0;i<result.length;i++){
+                object=result[i];      
+				var p_timestam=String(object.createdAt);
+				var p_timestamp=p_timestam.split(" ");
+				var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
+				var p_time=p_timestamp[4];				
+				var totalSuccess=object.get("numSuccessWhatsapp")+object.get("numSuccessEmail")+object.get("numSuccessSMS")+object.get("numSuccessSMSTrans")+object.get("numSuccessPush");
+				var total=object.get("numTotalWhatsapp")+object.get("numTotalEmail")+object.get("numTotalSMS")+object.get("numTotalSMSTans")+object.get("numTotalPush");
+                cTable.append('<div class="row brbm cs" id="campaign-'+object.id+'"><div class="small-6 columns"><span class="secondary-color">#'+(i+1)+'</span>'+getReducedContent(object.get("post").get("content"))+'</div><div class="small-3 columns secondary secondary-color"><i class="icon-clock secondary"></i>'+p_time+'<i class="icon-calendar secondary"></i> '+p_date+'</div><div class="small-2 columns secondary secondary color"> '+totalSuccess+' <small>/'+total+'</small> </div> <div class="small-1 columns"> <i class="'+getStatusIcon(object.get("status"))+'"></i> </div> </div>');
+				$('#campaign-'+object.id).click(function(){ 
+							  currentCampaignId=this.id.toString().split('-')[1];
+                              console.log(currentCampaignIdId);
+							  showCampaignReport();
+							  $('#cmp-view').fadeOut();
+							  $('#cmp-single-listview').delay().fadeIn();
+                });
+			}
+            NProgress.done();
 			
 		},
 		error:function(error){
-			
+			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+			NProgress.done();
 		}
-	}
+	});
 }
 
 function showMemberLists(){
+	NProgress.start();
 	nTable.html("");
     var NetaLists = Parse.Object.extend("NetaList");
     var query=new Parse.Query(NetaLists);
@@ -553,11 +594,11 @@ function addNetaList(name){
 		success:function(results){
 			console.log(results);
 			alert("List Added.");
-			showLists();
+			showMemberLists();
 			$("#addList-Form").fadeOut();
 		},
 		error:function(error){
-			console.log("Error: "+error);
+			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 			NProgress.done();   
 		}
 	}); 
@@ -603,6 +644,7 @@ function initialize() {
       $('#cmp-view').delay().fadeIn();
       $('#cmp-list-view').delay().fadeIn();
       $('#cmp-single-listview').delay().fadeOut();
+	  showCampaign();
     });
 	$('#rep-trg').click(function(){
       notready();
@@ -621,11 +663,6 @@ function initialize() {
     });
 	$('#ver-btn').click(function(){
       notready();
-    });
-    $('#cmp-list-view').click(function(){
-      $('#cmp-list-view').fadeOut();
-      $('#cmp-single-listview').delay().fadeIn();
-
     });
 	$('#voteradd-form').submit(function(event){
           event.preventDefault();
@@ -650,7 +687,7 @@ function initialize() {
                           var k=1;
                           
                           for (var i=1; i<rows.length; i+=size) {
-                              var smallarray = rows.slice(i,i+size+1);
+                              var smallarray = rows.slice(i,i+min(size,rows.length)+1);
                               smallarrays.push(smallarray);
                               
                           }
