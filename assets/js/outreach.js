@@ -3,6 +3,8 @@ var neta;
 var constituency;
 var sTable=$('#subscribers-table tbody');
 var nTable=$('#netaLists');
+var cTable=$('#list-campaign');
+var crTable=$('#delivery-table tbody');
 var tobeuploaded=0;
 var currentuploaded=0;
 var smallarrays=[]; 
@@ -11,6 +13,14 @@ var skip=0;
 var totalpages=0;
 var currentListId;
 var currentCampaignId;
+var subscriberList=[];
+
+var box_a=document.getElementById('a_cb');
+var box_w=document.getElementById('w_cb');
+var box_s=document.getElementById('s_cb');
+var box_st=document.getElementById('ct_cb');
+var box_p=document.getElementById('p_cb');
+var box_e=document.getElementById('e_cb');
 
 function deleterecords(n){
     ListItem = Parse.Object.extend("Subscriber");
@@ -41,7 +51,7 @@ function deleterecords(n){
 function selfUpload(){
   if(dirty==1){
     console.log("Deleting Unsuccesful Uploads!");
-    Parse.Cloud.run("deleteCSV", {ro: smallarrays[currentuploaded], ne: neta.id},{
+    Parse.Cloud.run("deleteCSV", {ro: smallarrays[currentuploaded], ne: neta.id, li: currentListId},{
       success:function(results){
         NProgress.set(currentuploaded/tobeuploaded);
         var numAnim1 = new countUp("per", 0, (currentuploaded/tobeuploaded)*100);
@@ -68,7 +78,7 @@ function selfUpload(){
     });
   }
   else{
-      Parse.Cloud.run("uploadCSV", {ro: smallarrays[currentuploaded], ne: neta.id},{
+      Parse.Cloud.run("uploadCSV", {ro: smallarrays[currentuploaded], ne: neta.id, li: currentListId},{
       success:function(results){
         
         if(currentuploaded==tobeuploaded-1){
@@ -211,6 +221,7 @@ function setcurrentpage(s){
 
 function pagination(){
     $('#pages').html("");
+	skip=0;
     var Subscribers = Parse.Object.extend("Subscriber");
     
     var query = new Parse.Query(Subscribers);
@@ -386,16 +397,110 @@ function setupMemberForm(){
 	$('#a-l').val("");
 }
 
-function getStatusIcon(){
-	
+function getStatusIcon(s){
+	if(s=="done"){
+		return 'icon-check gc';
+	}
+	else if(s=="pending"){
+		return 'icon-process yc';
+	}
+	else{
+		return 'icon-alert rc';
+	}	
+}
+
+function getStatusWord(s){
+	if(s=="done"){
+		return 'Delivered';
+	}
+	else if(s=="pending"){
+		return 'In Progress';
+	}
+	else{
+		return 'Failed';
+	}	
+}
+
+function statusCheck(m){
+    console.log("StatusCheck");
+    if(m.get("type")=="whatsapp"){
+        if(box_w.checked){
+             return 1;
+        }
+    }
+    if(m.get("type")=="sms"){
+        if(box_s.checked){
+             return 1;
+        }
+    }
+	if(m.get("type")=="smstrans"){
+        if(box_st.checked){
+             return 1;
+        }
+    }
+	if(m.get("type")=="email"){
+        if(box_e.checked){
+             return 1;
+        }
+    }
+	if(m.get("type")=="push"){
+        if(box_p.checked){
+             return 1;
+        }
+    }
+    return 0; 
+}
+
+function filter(){
+	NProgress.start();
+	crTable.html("");
+	for(var m=0;m<subscriberList.length;m++){
+		var p_timestam=String(currmarker.content.createdAt);
+		var p_timestamp=p_timestam.split(" ");
+		var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
+		var p_time=p_timestamp[4];
+        if(statusCheck(subscriberList[m])==1){
+            crTable.append( "<tr><td>+91 "+p_number+"</td><td>"+p_status+"</td><td>"+p_time+"</td><td>"+p_date+"</td><td><i class='"+p_statusicon+"'></i></td></tr>")
+        }        
+    }     
 }
 
 function showCampaignReport(){
-	
+	crTable.html("");
+    var Campaign = Parse.Object.extend("Campaign");
+    var query=new Parse.Query(Campaign);
+    var pointer= new Parse.Object("Neta");
+    pointer.id=neta.id;
+    query.equalTo("neta",pointer);
+	query.descending("createdAt");
+	query.limit(1000);
+    query.find({
+		success:function(result){
+			
+		},
+		error:function(error){
+			
+		}
+	}
 }
 
 function showCampaign(){
-	
+	cTable.html("");
+    var Campaign = Parse.Object.extend("Campaign");
+    var query=new Parse.Query(Campaign);
+    var pointer= new Parse.Object("Neta");
+    pointer.id=neta.id;
+    query.equalTo("neta",pointer);
+	query.descending("createdAt");
+	query.limit(1000);
+    query.find({
+		success:function(result){
+			
+		},
+		error:function(error){
+			
+		}
+	}
 }
 
 function showMemberLists(){

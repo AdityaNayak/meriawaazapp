@@ -1404,6 +1404,20 @@ function dateCheck(m){
     return 0;
 }
 
+
+
+function statusCounters(no,np,nr,nc){
+    console.log("statusCounter");
+    var numAnim1 = new countUp("fn1", 0, no);
+    numAnim1.start();
+    var numAnim2 = new countUp("fn2", 0, np);
+    numAnim2.start();
+    var numAnim3 = new countUp("fn3", 0, nr);
+    numAnim3.start();  
+    var numAnim4 = new countUp("fn4", 0, nc);
+    numAnim4.start();
+}
+
 function statusCheck(m){
     console.log("StatusCheck");
     if((m.content).get("status")=="open"){
@@ -1427,18 +1441,6 @@ function statusCheck(m){
         }
     }
     return 0; 
-}
-
-function statusCounters(no,np,nr,nc){
-    console.log("statusCounter");
-    var numAnim1 = new countUp("fn1", 0, no);
-    numAnim1.start();
-    var numAnim2 = new countUp("fn2", 0, np);
-    numAnim2.start();
-    var numAnim3 = new countUp("fn3", 0, nr);
-    numAnim3.start();  
-    var numAnim4 = new countUp("fn4", 0, nc);
-    numAnim4.start();
 }
 
 function filter(){
