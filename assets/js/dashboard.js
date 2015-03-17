@@ -286,10 +286,12 @@ function createCampaign(id,selectedNetaLists,selectedMediums){
 	Parse.Cloud.run("createCampaign", {objectId: currentNeta.id, isPush: ip,isSMS: is, isWhatsApp: iw, isTwitter: it, isEmail: ie, isFacebook: ib, p: post, netalists: nl}, {
 	  success:function(results){
 		console.log(results);
+		notify
 		populateStatus();
+		notify(standardSuccessMessage, "success",standardSuccessDuration);
 	  },
 	  error:function(error){
-		console.log(error.message);
+		console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 		NProgress.done();
 	  }
 	}); 
