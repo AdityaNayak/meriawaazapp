@@ -316,19 +316,33 @@ function getStuff(){
                         success: function(results){
                             neta=n;
                             if(CU.get("username")!="admin"){
-                                console.log(n.get("constituency"));
-                                constituency=n.get("constituency");
-                                constituency.fetch({
-                                    success:function(results){
-                                        updateCounters();
-										showMemberLists();
-                                    },
-                                    error:function(error){
-                                        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
-                                        NProgress.done();
-                                    }
-                                })
-                                
+                                //console.log(n.get("constituency"));
+                                var Election = Parse.Object.extend("Election");
+								election = new Parse.Query(Election);
+								election.descending('createdAt');
+								var pointer = new Parse.Object("Neta");
+								pointer.id = neta.id;
+								election.equalTo("arrayNetas", pointer);
+								election.include("constituency");
+								election.find({
+									success: function(results) {
+										var constituency=results[0].get("constituency");
+											constituency.fetch({
+												success:function(results){
+													updateCounters();
+													showMemberLists();
+												},
+												error:function(error){
+													console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+													NProgress.done();
+												}
+											});
+									},
+									error:function(error){
+										console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+													NProgress.done();
+									}
+                                });
                             }                                
                         },
                         error: function(error){

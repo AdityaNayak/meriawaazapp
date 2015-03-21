@@ -719,20 +719,35 @@ function updateReach(){
     query2.count({
       success: function(count2) {
         console.log(count2);
-        var constituency=currentNeta.get("constituency");
-        var Citizens= Parse.Object.extend("Citizen");
-        var query1 = new Parse.Query(Citizens);
-        query1.equalTo("constituency",constituency);
-        query1.count({
-          success: function(count1) {
-            console.log("population:"+count1);
-            document.getElementById("population").innerHTML=count1+4487+count2;
-          },
-          error: function(error) {
-            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
-                    NProgress.done();
-          }
-        });
+		var Election = Parse.Object.extend("Election");
+		election = new Parse.Query(Election);
+		election.descending('createdAt');
+		var pointer = new Parse.Object("Neta");
+		pointer.id = currentNeta.id;
+		election.equalTo("arrayNetas", pointer);
+		election.include("constituency");
+		election.find({
+			success: function(results) {
+				var constituency=results[0].get("constituency");
+				var Citizens= Parse.Object.extend("Citizen");
+				var query1 = new Parse.Query(Citizens);
+				query1.equalTo("constituency",constituency);
+				query1.count({
+				  success: function(count1) {
+					console.log("population:"+count1);
+					document.getElementById("population").innerHTML=count1+4487+count2;
+				  },
+				  error: function(error) {
+					console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+							NProgress.done();
+				  }
+				});
+			},
+			error:function(error){
+				console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+							NProgress.done();
+			}
+		});
       },
       error: function(error) {
         alert("Error: " + error.code + " " + error.message);
