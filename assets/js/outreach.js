@@ -26,13 +26,15 @@ function deleterecords(n){
                   console.log("destroyAll done");
               },
               error: function(error) { 
-                  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                  //console.log("Error: "+error.message);
+                  notify(error.message, "error",standardErrorDuration);
               }
           });
         console.log("success1");
       },
       error: function(error){
-        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+        //console.log("Error: "+error.message);
+        notify(error.message, "error",standardErrorDuration);
       }
     });
 }
@@ -261,9 +263,9 @@ function populateSubscribers(){
     var pointer= new Parse.Object("Neta");
     pointer.id=neta.id;
     query.equalTo("neta",pointer);
-	var currentList= new Parse.Object("NetaList");
-	currentList.id=currentListId;
-	query.equalTo("netaList",currentList);
+  	var currentList= new Parse.Object("NetaList");
+  	currentList.id=currentListId;
+  	query.equalTo("netaList",currentList);
     query.include("puser");
     query.skip(skip);
     query.limit(1000);
@@ -274,14 +276,15 @@ function populateSubscribers(){
             console.log(skip);
             for(var i=0;i<result.length;i++){
                 object=result[i];
-                sTable.append( "<tr><td>"+object.get("name")+"</td><td>"+object.get("phone")+"</td><td>"+object.get("email")+"</td><td>"+object.get("age")+"</td></tr>");
+                sTable.append( "<tr name="+currentList.id+"><td>"+object.get("name")+"</td><td>"+object.get("phone")+"</td><td>"+object.get("email")+"</td><td>"+object.get("age")+"</td></tr>");
             }
 
             NProgress.done();
 
         },
         error: function(error){
-            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+            //console.log("Error: "+error.message);
+            notify(error.message, "error",standardErrorDuration);
             NProgress.done();
         }
     });
@@ -309,7 +312,8 @@ function getStuff(){
 										showMemberLists();
                                     },
                                     error:function(error){
-                                        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                                        //console.log("Error: "+error.message);
+                                        notify(error.message, "error",standardErrorDuration);
                                         NProgress.done();
                                     }
                                 })
@@ -317,7 +321,8 @@ function getStuff(){
                             }                                
                         },
                         error: function(error){
-                            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                            //console.log("Error: "+error.message);
+                            notify(error.message, "error",standardErrorDuration);
                             NProgress.done();
                         }
                     });
@@ -333,23 +338,26 @@ function getStuff(){
                                     constituency=n.get("constituency");
                                     constituency.fetch({
                                         success:function(results){
-                                            updateCounters();
-											showMemberLists();
+                                          updateCounters();
+                                          showMemberLists();
                                         },
                                         error:function(error){
-                                            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                                            //console.log("Error: "+error.message);
+                                            notify(error.message, "error",standardErrorDuration);
                                             NProgress.done();
                                         }
                                     });
                                 },
                                 error:function(error){
-                                    console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                                    //console.log("Error: "+error.message);
+                                    notify(error.message, "error",standardErrorDuration);
                                     NProgress.done();
                                 }
                             });  
                         },
                         error: function(error){
-                            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                            //console.log("Error: "+error.message);
+                            notify(error.message, "error",standardErrorDuration);
                             NProgress.done();
                         }
                     });
@@ -357,23 +365,25 @@ function getStuff(){
                 
             },
           error: function(error) {
-                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                //console.log("Error: "+error.message);
+                notify(error.message, "error",standardErrorDuration);
                 NProgress.done();
           }
     });
 }
 
-function addMember(name,phone,email,age){
+function addMember(name,phone,email,age,list){
 	NProgress.start();
-	console.log(name+email+phone+age);
-	Parse.Cloud.run("addMember", {objectId: neta.id, n: name, e: email, a: age, p: phone}, {
+	//console.log(name+email+phone+age);
+	Parse.Cloud.run("addMember", {n: name, e: email, a: age, p: phone, l:list}, {
 		success:function(results){
 			console.log(results);
-			alert("Member Added");
+			notify("Subscriber added successfuly","succses",3);
 			$('#addv-row').fadeOut();
 		},
 		error:function(error){
-			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+			//console.log("Error: "+error.message);
+      notify(error.message, "error",standardErrorDuration);
 			NProgress.done();   
 		}
 	}); 
@@ -409,21 +419,42 @@ function showMemberLists(){
         success: function(result){
             console.log(result.length);
             for(var i=0;i<result.length;i++){
-                object=result[i];        
-                nTable.append('<div class="row brbm" id="list-'+object.id+'"><a href="#"><div class="small-8 columns"><span class="secondary-color">'+object.get("ranking")+' </span><span class="f-1-5x">'+object.get("name")+'</span></div></a><div class="small-4 columns s-ws-top">'+object.get("number")+' <span class="secondary-color">subscribers</span></div></div>');
-				$('#list-'+object.id).click(function(){ 
-							  currentListId=this.id.toString().split('-')[1];
-                              console.log(currentListId);
-							  populateSubscribers();
-							  pagination();
-							  $('#outreach-view').fadeOut();
-							  $('#outreach-single-listview').fadeIn();
+                object=result[i];
+                if(object.get("ranking")=='1'){        
+                nTable.append('<div class="row brbm"><a href="#"><div class="small-7 columns" id="list-'+object.id+'"><span class="f-1-5x">'+object.get("name")+'</span></div></a><div class="small-3 columns s-ws-top">'+object.get("number")+' <span class="secondary-color">subscribers</span></div><div class="small-2 columns"><a class="button tiny nm" id="btn-'+object.id+'">Make Default</a></div></div>');
+  				      }
+                else{
+                  nTable.append('<div class="row brbm" id="list-'+object.id+'"><a href="#"><div class="small-7 columns"><span class="f-1-5x">'+object.get("name")+'</span></div></a><div class="small-3 columns s-ws-top">'+object.get("number")+' <span class="secondary-color">subscribers</span></div><div class="small-2 columns s-ws-top"><i class="icon-check gc"></i> Default List</div></div>');
+                }
+                $('#btn-'+object.id).click(function(){ 
+                  //currentListId=this.id.toString().split('-')[1];
+                  currentListId=object.id;
+                  Parse.Cloud.run("changeDefaultList", {listID: currentListId}, {
+                    success:function(results){
+                      console.log(results);
+                      notify("Default list changed successfully","success",3);
+                      //showLists();
+                    },
+                    error:function(error){
+                      notify("Error: "+error.message, "alert", 3);
+                      NProgress.done();   
+                    }
+                  });
                 });
-			}
+                $('#list-'+object.id).click(function(){ 
+  							  currentListId=object.id;
+                  //console.log(currentListId);
+  							  populateSubscribers();
+  							  pagination();
+  							  $('#outreach-view').fadeOut();
+  							  $('#outreach-single-listview').fadeIn();
+                  });
+                }
             NProgress.done();
         },
         error: function(error){
-            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+            //console.log("Error: "+error.message);
+            notify(error.message, "error",standardErrorDuration);
             NProgress.done();
         }
     });
@@ -441,18 +472,18 @@ function prepareListAdditionForm(){
 }
 
 function addNetaList(name){
-	console.log("addNetaList");    
+	//console.log("addNetaList");    
 	NProgress.start();
-	console.log(name);
-	Parse.Cloud.run("addNetaList", {objectId: neta.id, listName: name}, {
+	//console.log(name);
+	Parse.Cloud.run("addNetaList", {listName: name}, {
 		success:function(results){
 			console.log(results);
-			alert("List Added.");
-			showLists();
+			notify("List created successfuly","success",3);
+			//showLists();
 			$("#addList-Form").fadeOut();
 		},
 		error:function(error){
-			console.log("Error: "+error);
+			console.log("Error: "+error.message);
 			NProgress.done();   
 		}
 	}); 
@@ -528,7 +559,9 @@ function initialize() {
 		  var phone=document.getElementById("ph-l").value;
 		  var email=document.getElementById("email-l").value;
 		  var age=document.getElementById("a-l").value;
-          addMember(name,phone,email,age);
+      var list=$('');
+
+          addMember(name,phone,email,age,list);
     });
 	$(function () {
           $("#uploadc").bind("click", function () {

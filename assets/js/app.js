@@ -8,12 +8,12 @@ standardErrorMessage="Oops! There seems to be some problem. Please try again lat
 standardErrorDuration=2;
 
 Parse.initialize("km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt", "BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI");
+internet();
 
 function updateHistory()
 {
 	
 }
-
 var a=location.pathname.split('/').slice(-1)[0];
 console.log(a);
 if(a.length==0){
@@ -288,7 +288,7 @@ function notready(){
 
 function notify(text,type,duration){
 
-	$('.alert-box').fadeIn().addClass(type).html(text + '<a href="#" class="close">&times;</a>');
+	$('.alert-box').fadeIn().addClass(type).removeClass('alert').html(text + '<a href="#" class="close">&times;</a>');
 	//Types are: alert, success, warning, info 
 	setTimeout(function() {
 		$('.alert-box').fadeOut().html('loading <a href="#" class="close">&times;</a>');
@@ -296,6 +296,16 @@ function notify(text,type,duration){
 	$(document).on('close.alert', function(event) {
   $('#alert-hook').html('<div data-alert id="alert-box" class="alert-box-wrapper alert-box alert radius" style="display:none;"> Loading... <a href="#" class="close">&times;</a> </div>');
 });
+}
+function internet(){
+	//console.log('connectivty being monitored');
+	window.addEventListener("offline", function(e) {
+		notify('Internet connectivty lost. Please check your connection.', 'error', 0);
+	}, false);
+
+	window.addEventListener("online", function(e) {
+		notify('Internet connectivty restored', 'success', 3);
+	}, false);
 }
 function icon_bg(){
 	var iconBg = $('.icon-bg');

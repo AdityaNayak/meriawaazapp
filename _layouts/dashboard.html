@@ -72,7 +72,7 @@
                 <input type="checkbox" id="sms" name="medium" value="2"> SMS
               </label>
             </div>
-            <div class="small-2 columns text-center fx3">
+            <!--<div class="small-2 columns text-center fx3">
               <label for="whatsapp" class="inline secondary-color np tertiary">
                 <div class="f-1-5x fx4">
                   <i class="icon-whatsapp blc"></i>
@@ -80,9 +80,9 @@
                 <input type="checkbox" id="whatsapp" name="medium" value="3">
                 WhatsApp
               </label>
-            </div>
+            </div>-->
             <div class="small-2 columns text-center fx3">
-              <label for="email" class="inline secondary-color np tertiary">
+              <label for="email" class="inline secondary-color np tertiary" onclick="notready();">
                 <div class="f-1-5x fx4">
                   <i class="icon-mail blc"></i>
                 </div>
@@ -97,7 +97,7 @@
                 <input type="checkbox" id="fb" name="medium" value="5"> Facebook
               </label>
             </div>
-            <div class="small-2 columns text-center fx3">
+            <div class="small-2 columns text-center fx3 end">
               <label for="twt" class="inline secondary-color np tertiary" onclick="notready();">
                 <div class="f-1-5x fx4">
                   <i class="icon-twitter blc"></i>
@@ -116,7 +116,7 @@
               </div>
               <div class="small-1 columns tertiary secondary-color">
                 <label for="fileUpload" id="imgStatus" class="icon-image-add f-2x bc" style="line-height:1;">
-                  <input id="fileUpload" type="file" name="media" multiple="1" style="display:none; position:fixed; top:-9999px;">
+                  <input id="fileUpload" type="file" name="media" multiple="1" accept="image/*" style="display:none; position:fixed; top:-9999px;">
                 </label>
               </div>
               <div class="small-4 columns">
