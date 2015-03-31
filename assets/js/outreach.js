@@ -3,14 +3,25 @@ var neta;
 var constituency;
 var sTable=$('#subscribers-table tbody');
 var nTable=$('#netaLists');
+var cTable=$('#list-campaign');
+var crTable=$('#delivery-table tbody');
 var tobeuploaded=0;
 var currentuploaded=0;
 var smallarrays=[]; 
 var dirty=0;
 var skip=0;
+var totalReach;
 var totalpages=0;
 var currentListId;
 var currentCampaignId;
+var subscriberList=[];
+
+var box_a=document.getElementById('a_cb');
+var box_w=document.getElementById('w_cb');
+var box_s=document.getElementById('s_cb');
+var box_st=document.getElementById('ct_cb');
+var box_p=document.getElementById('p_cb');
+var box_e=document.getElementById('e_cb');
 
 function deleterecords(n){
     ListItem = Parse.Object.extend("Subscriber");
@@ -43,7 +54,7 @@ function deleterecords(n){
 function selfUpload(){
   if(dirty==1){
     console.log("Deleting Unsuccesful Uploads!");
-    Parse.Cloud.run("deleteCSV", {ro: smallarrays[currentuploaded], ne: neta.id},{
+    Parse.Cloud.run("deleteCSV", {ro: smallarrays[currentuploaded], ne: neta.id, li: currentListId},{
       success:function(results){
         NProgress.set(currentuploaded/tobeuploaded);
         var numAnim1 = new countUp("per", 0, (currentuploaded/tobeuploaded)*100);
@@ -64,13 +75,14 @@ function selfUpload(){
               populateSubscribers();
               pagination();
               NProgress.done();
+			  notify(standardSuccessMessage, "success",standardSuccessDuration);
               $('#progress').delay(400).fadeOut(300);
             }
       }
     });
   }
   else{
-      Parse.Cloud.run("uploadCSV", {ro: smallarrays[currentuploaded], ne: neta.id},{
+      Parse.Cloud.run("uploadCSV", {ro: smallarrays[currentuploaded], ne: neta.id, li: currentListId},{
       success:function(results){
         
         if(currentuploaded==tobeuploaded-1){
@@ -108,6 +120,7 @@ function selfUpload(){
           populateSubscribers();
           pagination();
           NProgress.done();
+		  notify(standardSuccessMessage, "success",standardSuccessDuration);
           $('#progress').delay(400).fadeOut(300);
         }
         
@@ -122,10 +135,10 @@ function newUser(u,p){
     user.set("password", u+"galaxy");
     user.signUp(null, {
           success: function(user) {
-            alert("Success Finally!");
+            notify(standardSuccessMessage, "success",standardSuccessDuration);
           },
           error: function(user, error) {
-            alert("Error: " + error.code + "\n\nwhat is the error \n\n " + error.message);
+            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
           }
     });
 }
@@ -157,16 +170,17 @@ function updateCounters(){
               success: function(count1) {
                 console.log(count1);
                 var numAnim1 = new countUp("pop", 0, count2+count1+4487);
+				totalReach=count1+count2+4487;
                 numAnim1.start();
               },
               error: function(error) {
 
-                alert("Error: " + error.code + " " + error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
               }
             });
       },
       error: function(error) {
-        alert("Error: " + error.code + " " + error.message);
+        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
       }
     });
 
@@ -177,7 +191,7 @@ function updateCounters(){
         numAnim3.start();
       },
       error: function(error) {
-        alert("Error: " + error.code + " " + error.message);
+        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
       }
     });
 
@@ -189,7 +203,7 @@ function updateCounters(){
         NProgress.done();
       },
       error: function(error) {
-        alert("Error: " + error.code + " " + error.message);
+        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
       }
     });
     
@@ -213,6 +227,7 @@ function setcurrentpage(s){
 
 function pagination(){
     $('#pages').html("");
+	skip=0;
     var Subscribers = Parse.Object.extend("Subscriber");
     
     var query = new Parse.Query(Subscribers);
@@ -251,7 +266,7 @@ function pagination(){
         
       },
       error: function(error) {
-        alert("Error: " + error.code + " " + error.message);
+        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
       }
     });
 }
@@ -304,20 +319,34 @@ function getStuff(){
                         success: function(results){
                             neta=n;
                             if(CU.get("username")!="admin"){
-                                console.log(n.get("constituency"));
-                                constituency=n.get("constituency");
-                                constituency.fetch({
-                                    success:function(results){
-                                        updateCounters();
-										showMemberLists();
-                                    },
-                                    error:function(error){
-                                        //console.log("Error: "+error.message);
-                                        notify(error.message, "error",standardErrorDuration);
-                                        NProgress.done();
-                                    }
-                                })
-                                
+
+                                //console.log(n.get("constituency"));
+                                var Election = Parse.Object.extend("Election");
+								election = new Parse.Query(Election);
+								election.descending('createdAt');
+								var pointer = new Parse.Object("Neta");
+								pointer.id = neta.id;
+								election.equalTo("arrayNetas", pointer);
+								election.include("constituency");
+								election.find({
+									success: function(results) {
+										var constituency=results[0].get("constituency");
+											constituency.fetch({
+												success:function(results){
+													updateCounters();
+													showMemberLists();
+												},
+												error:function(error){
+													console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+													NProgress.done();
+												}
+											});
+									},
+									error:function(error){
+										console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+													NProgress.done();
+									}
+                                });
                             }                                
                         },
                         error: function(error){
@@ -379,7 +408,10 @@ function addMember(name,phone,email,age,list){
 		success:function(results){
 			console.log(results);
 			notify("Subscriber added successfuly","succses",3);
+
 			$('#addv-row').fadeOut();
+			populateSubscribers();
+			pagination();			
 		},
 		error:function(error){
 			//console.log("Error: "+error.message);
@@ -396,19 +428,191 @@ function setupMemberForm(){
 	$('#a-l').val("");
 }
 
-function getStatusIcon(){
-	
+function getStatusIcon(s){
+	if(s=="done"){
+		return 'icon-check gc';
+	}
+	else if(s=="pending"){
+		return 'icon-process yc';
+	}
+	else{
+		return 'icon-alert rc';
+	}	
+}
+
+function getStatusWord(s){
+	if(s=="done"){
+		return 'Delivered';
+	}
+	else if(s=="pending"){
+		return 'In Progress';
+	}
+	else{
+		return 'Failed';
+	}	
+}
+
+function statusCheck(m){
+    console.log("StatusCheck");
+    if(m.get('Campaign').get("isWhatsApp")==true){
+        if(box_w.checked){
+             return 1;
+        }
+    }
+    if(m.get('Campaign').get("isSms")==true){
+        if(box_s.checked){
+             return 1;
+        }
+    }
+	if(m.get('Campaign').get("isSmsTrans")==true){
+        if(box_st.checked){
+             return 1;
+        }
+    }
+	if(m.get('Campaign').get("isEmail")==true){
+        if(box_e.checked){
+             return 1;
+        }
+    }
+	if(m.get('Campaign').get("isPush")==true){
+        if(box_p.checked){
+             return 1;
+        }
+    }
+    return 0; 
+}
+
+function filter(){
+	NProgress.start();
+	crTable.html("");
+	for(var m=0;m<subscriberList.length;m++){
+		var p_timestam=String(subscriberList[m].createdAt);
+		var p_timestamp=p_timestam.split(" ");
+		var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
+		var p_time=p_timestamp[4];
+		p_statusicon=getStatusIcon(subscriberList[m].get('status'));
+		p_status=getStatusWord(subscriberList[m].get('status'));
+        if(statusCheck(subscriberList[m])==1){
+            crTable.append( "<tr><td>+91 "+p_number+"</td><td>"+p_status+"</td><td>"+p_time+"</td><td>"+p_date+"</td><td><i class='"+p_statusicon+"'></i></td></tr>")
+        }        
+    }
+	NProgress.done();	
 }
 
 function showCampaignReport(){
+	NProgress.start();
+	crTable.html("");
+    var Campaign = Parse.Object.extend("CampaignReport");
+    var pointer= new Parse.Object("Neta");
+    pointer.id=neta.id;
+	var pointer2= new Parse.Object("Campaign");
+    pointer2.id=currentCampaignId;
+	var query=new Parse.Query(Campaign);
+    query.equalTo("neta",pointer);
+	query.equalTo("neta",pointer2);
+	query.include('Campaign');
+	query.descending("createdAt");
+	query.limit(1000);
+	pointer2.fetch({
+		success:function(result){
+			$('#istatus').html(getStatusWord(pointer2.get('status'))+' <i class="'+getStatusIcon(pointer2.get('status'))+'"></i>');
+			$('#ipush').html(pointer2.get('numSuccessPush'));
+			$('#isms').html(pointer2.get('numSuccessSMS'));
+			$('#ismst').html(pointer2.get('numSuccessSMSTrans'));
+			$('#iwhatsapp').html(pointer2.get('numSuccessWhatsapp'));
+			$('#iemail').html(pointer2.get('numSuccessEmail'));
+			$('#ireach').html(totalReach);
+			var post=pointer2.get('post');
+			post.fetch({
+				success:function(results){
+					$('#icontent').html(post.get('content'));
+					if(post.get('file')!=undefined){
+						$('#iimg').fadeIn();
+						$('#iimg').html('<a href="'+post.get('file').url()+'">Link to Attachment</a>');
+					}
+					else{
+						$('#iimg').fadeOut();
+					}
+					
+					query.find({
+						success:function(result){
+							subscriberList=result;
+							filter();
+							NProgress.done();
+						},
+						error:function(error){
+							NProgress.done();
+							console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+						}
+					});
+				},
+				error:function(error){
+					NProgress.done();
+					console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+				}
+			});
+		},
+		error: function(error){
+			NProgress.done();
+			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+		}
+	});
+}
+
+function getReducedContent(s){
+	if (s.length<50){
+		return s;
+	}
+	else{
+		return s.substring(0,50)+"...";
+	}
 	
 }
 
 function showCampaign(){
-	
+	console.log("showCampaign");
+	NProgress.start();
+	cTable.html("");
+    var Campaign = Parse.Object.extend("Campaign");
+    var query=new Parse.Query(Campaign);
+    var pointer= new Parse.Object("Neta");
+    pointer.id=neta.id;
+    query.equalTo("neta",pointer);
+	query.include("post");
+	query.descending("createdAt");
+	query.limit(1000);
+    query.find({
+		success:function(result){
+			console.log(result.length);
+            for(var i=0;i<result.length;i++){
+                object=result[i];      
+				var p_timestam=String(object.createdAt);
+				var p_timestamp=p_timestam.split(" ");
+				var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
+				var p_time=p_timestamp[4];				
+				var totalSuccess=object.get("numSuccessWhatsapp")+object.get("numSuccessEmail")+object.get("numSuccessSMS")+object.get("numSuccessSMSTrans")+object.get("numSuccessPush");
+				var total=object.get("numTotalWhatsapp")+object.get("numTotalEmail")+object.get("numTotalSMS")+object.get("numTotalSMSTans")+object.get("numTotalPush");
+                cTable.append('<div class="row brbm cs" id="campaign-'+object.id+'"><div class="small-6 columns"><span class="secondary-color">#'+(i+1)+'</span>'+getReducedContent(object.get("post").get("content"))+'</div><div class="small-3 columns secondary secondary-color"><i class="icon-clock secondary"></i>'+p_time+'<i class="icon-calendar secondary"></i> '+p_date+'</div><div class="small-2 columns secondary secondary color"> '+totalSuccess+' <small>/'+total+'</small> </div> <div class="small-1 columns"> <i class="'+getStatusIcon(object.get("status"))+'"></i> </div> </div>');
+				$('#campaign-'+object.id).click(function(){ 
+							  currentCampaignId=this.id.toString().split('-')[1];
+                              console.log(currentCampaignId);
+							  showCampaignReport();
+							  $('#cmp-list-view').fadeOut();
+							  $('#cmp-single-listview').delay().fadeIn();
+                });
+			}
+            NProgress.done();
+			
+		},
+		error:function(error){
+			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+			NProgress.done();
+		}
+	});
 }
 
 function showMemberLists(){
+	NProgress.start();
 	nTable.html("");
     var NetaLists = Parse.Object.extend("NetaList");
     var query=new Parse.Query(NetaLists);
@@ -518,17 +722,25 @@ function initialize() {
       $('#addvs-row').fadeIn();
     });
     $('#list-trg').click(function(){
+	  $('#addv-row').fadeOut();
+	  $("#addList-Form").fadeOut();
+	  $('#addvs-row').fadeOut();
       $('#cmp-view').fadeOut();
       $('#outreach-single-listview').fadeOut();
       $('#outreach-view').delay(300).fadeIn();
       $('#outreach-list-view').delay(300).fadeIn();
     });
     $('#cmp-trg').click(function(){
-	  //notready();
+	  $('#addv-row').fadeOut();
+	  $("#addList-Form").fadeOut();
+	  $('#addvs-row').fadeOut();
       $('#outreach-view').fadeOut();
-      $('#cmp-view').delay().fadeIn();
-      $('#cmp-list-view').delay().fadeIn();
-      $('#cmp-single-listview').delay().fadeOut();
+	  $('#outreach-single-listview').fadeOut();
+	  $('#outreach-list-view').fadeOut();
+      $('#cmp-view').fadeIn();
+      $('#cmp-list-view').fadeIn();
+      $('#cmp-single-listview').fadeOut();
+	  showCampaign();
     });
 	$('#rep-trg').click(function(){
       notready();
@@ -547,11 +759,6 @@ function initialize() {
     });
 	$('#ver-btn').click(function(){
       notready();
-    });
-    $('#cmp-list-view').click(function(){
-      $('#cmp-list-view').fadeOut();
-      $('#cmp-single-listview').delay().fadeIn();
-
     });
 	$('#voteradd-form').submit(function(event){
           event.preventDefault();
@@ -578,7 +785,7 @@ function initialize() {
                           var k=1;
                           
                           for (var i=1; i<rows.length; i+=size) {
-                              var smallarray = rows.slice(i,i+size+1);
+                              var smallarray = rows.slice(i,i+min(size,rows.length)+1);
                               smallarrays.push(smallarray);
                               
                           }
@@ -650,6 +857,11 @@ function initialize() {
               }
           });
       });
+	  $('input[type=checkbox]').change(
+        function(){
+			NProgress.start();
+			filter();
+		});
 }
 
 initialize();

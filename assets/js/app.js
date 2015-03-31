@@ -6,6 +6,8 @@ var CU;
 var constituency;
 standardErrorMessage="Oops! There seems to be some problem. Please try again later.";
 standardErrorDuration=2;
+standardSuccessMessage="Operation Successful!";
+standardSuccessDuration=2;
 
 Parse.initialize("km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt", "BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI");
 internet();

@@ -64,7 +64,9 @@
           </div>
 
           <div id="outreach-single-listview" style="display:none;">
-
+			<div id="progress" style="display:none" class="small-3 columns m-ws-top secondary-color">
+			  Percentage Completed: <span class="f-3x yc" id="per">1</span>
+			</div>
             <div class="row">
               <div class="small-6 columns text-right">
                 <a href="#" class="button tiny s-ws-left" id="seg-btn">Segregate</a> <a href="#" id="ver-btn" class="button tiny s-ws-left">Verify</a><a href="#" id="com-btn" class="s-ws-left button tiny">Complete</a><a href="#" id="sgm-btn" class="button tiny s-ws-left">Segments</a>
@@ -155,86 +157,55 @@
               </div>
             </div>
           </div>
-        </div>
+        
         <div id="cmp-view" style="display:none;">
           <div id="cmp-list-view" style="display:none;" >
             <div class="panel" id='list-campaign'>
-              <div class="row brbm cs">
-                <div class="small-6 columns"><span class="secondary-color">#1 </span>Naresh yadav ji wants to Thank you ...
-                </div>
-                <div class="small-3 columns secondary secondary-color"><i class="icon-clock secondary"></i> 3:12 PM <i class="icon-calendar secondary"></i> 22nd Jan</div>
-                <div class="small-2 columns secondary secondary color">
-                  3245 <small>/2903</small>
-                </div>
-                <div class="small-1 columns">
-                  <i class="icon-process yc"></i>
-                </div>
-              </div>
-              <div class="row brbm cs">
-                <div class="small-6 columns"><span class="secondary-color">#2 </span>Naresh yadav ji wants to Thank you ...
-                </div>
-                <div class="small-3 columns secondary secondary-color"><i class="icon-clock secondary"></i> 3:12 PM <i class="icon-calendar secondary"></i> 22nd Jan</div>
-                <div class="small-2 columns secondary secondary color">
-                  3245 <small>/2903</small>
-                </div>
-                <div class="small-1 columns">
-                  <i class="icon-check gc"></i>
-                </div>
-              </div>
-              <div class="row brbm cs">
-                <div class="small-6 columns"><span class="secondary-color">#3 </span>Naresh yadav ji wants to Thank you ...
-                </div>
-                <div class="small-3 columns secondary secondary-color"><i class="icon-clock secondary"></i> 3:12 PM <i class="icon-calendar secondary"></i> 22nd Jan</div>
-                <div class="small-2 columns secondary secondary color">
-                  3245 <small>/2903</small>
-                </div>
-                <div class="small-1 columns">
-                 <i class="icon-alert rc"></i>
-               </div>
-             </div>
+              
            </div>
 
          </div>
          <div id="cmp-single-listview" style="display:none;">
            <div class="panel">
               <div class="row secondary secondary-color">
-                  <div class="small-12 columns text-right"><span class="secondary">Campaign Status:</span> In Progress <i class="icon-process yc"></i></div>
+                  <div class="small-12 columns text-right"><span class="secondary">Campaign Status:</span> <span id='istatus'>Loading...</span></div>
                 </div>
              <div class="row">
                <div class="small-10 columns s-ws-top">
                 <div class="row">
                   <div class="small-12 columns">
-                    <h5><span class="secondary-color secondary">#1</span>Naresh yadav ji wants to Thank you and complete message</h5>
+                    <h5 id='icontent'>Naresh yadav ji wants to Thank you and complete message</h5>
                   </div>
                 </div>
                 <div class="row secondary">
-                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Reach:</span> <span class="dbc">180</span></div>
-                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Pushes:</span> <span class="dbc">80</span></div>
-                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">SMS:</span> <span class="dbc">30</span></div>
-                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">SMS (T):</span> <span class="dbc">20</span></div>
-                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">WhatsApp:</span> <span class="dbc">40</span></div>
-                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Email:</span> <span class="dbc">10</span></div>
+                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Reach:</span> <span class="dbc" id='ireach'>Loading...</span></div>
+                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Pushes:</span> <span class="dbc" id='ipush'>Loading...</span></div>
+                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">SMS:</span> <span class="dbc" id='isms'>Loading...</span></div>
+                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">SMS (T):</span> <span class="dbc" id='ismst'>Loading...</span></div>
+                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">WhatsApp:</span> <span class="dbc" id='iwhatsapp'>Loading...</span></div>
+                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Email:</span> <span class="dbc" id='iemail'>Loading...</span></div>
                 </div>
 
               </div>
-              <div class="small-2 columns s-ws-top"><img src="http://placehold.it/800x450"></div>
+              <div class="small-2 columns s-ws-top" id='iimg'></div>
             </div> 
             </div>
             <div class="row">
             <div class="small-10 columns s-ws-top">
             <dl class="sub-nav">
               <dt>Filter:</dt>
-              <dd class="active"><a href="#">All</a></dd>
-              <dd><a href="#">Pushes</a></dd>
-              <dd><a href="#">SMS</a></dd>
-              <dd><a href="#">SMS (T)</a></dd>
-              <dd><a href="#">WhatsApp</a></dd>
-              <dd><a href="#">Email</a></dd>
+			  <br>
+			  <label for="a_cb"><input type="checkbox" id="a_cb" checked='true'>All</label>
+			  <label for="p_cb"><input type="checkbox" id="p_cb" >Pushes</label>
+			  <label for="s_cb"><input type="checkbox" id="s_cb" >SMS</label>
+			  <label for="st_cb"><input type="checkbox" id="st_cb" >SMS (T)</label>
+			  <label for="w_cb"><input type="checkbox" id="w_cb" >WhatsApp</label>
+			  <label for="e_cb"><input type="checkbox" id="e_cb" >Email</label>
             </dl>
             </div>
-            <div class="small-2 columns">
+           <!-- <div class="small-2 columns">
               <a href="#" class="button tiny" id='download'>Download</a>
-            </div>
+            </div>-->
 
            <div class="small-12 columns">
             <table id="delivery-table">
@@ -261,6 +232,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
   {% include footer.html %} 
   <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
