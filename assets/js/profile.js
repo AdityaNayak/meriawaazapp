@@ -235,13 +235,15 @@ function queryUserTable(){
 								queryPostTable();      
 							},
 							error:function(error){
-								console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+								//console.log("Error: "+error.message);
+                                notify(error.message, "error",standardErrorDuration);
 								NProgress.done();    
 							}
 						});
 				},
 				error:function(error){
-				   console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+				   //console.log("Error: "+error.message);
+                   notify(error.message, "error",standardErrorDuration);
 				   NProgress.done();   
 				}
 				});
@@ -249,13 +251,15 @@ function queryUserTable(){
 
 				},
 			error:function(error){
-			  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+			  //console.log("Error: "+error.message);
+              notify(error.message, "error",standardErrorDuration);
 			  NProgress.done();
 			}
 			});
 			},
 		error:function(){
-		  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+		  //console.log("Error: "+error.message);
+          notify(error.message, "error",standardErrorDuration);
 		  NProgress.done();
 		}
 		});
@@ -331,7 +335,7 @@ function queryUserTable(){
 //         queryPostTable();
 //       },
 //       error: function(error) {
-//         console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+//         //console.log("Error: "+error.message);notify(error.message, "error",standardErrorDuration);
 //       }
 //     });
 // }
@@ -357,7 +361,8 @@ function queryPostTable(){
         queryFollowerTable();
     },
     error: function(error) {
-        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+        //console.log("Error: "+error.message);
+        notify(error.message, "error",standardErrorDuration);
     }
 });
 }
@@ -379,7 +384,8 @@ function queryFollowerTable(){
         queryElectionTable();
     },
     error: function(error) {
-        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+        //console.log("Error: "+error.message);
+        notify(error.message, "error",standardErrorDuration);
     }
 });
 }
@@ -447,7 +453,8 @@ function queryUpdatedData(){
 			displayData();
 		},
 		error:function(error){
-		   console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+		   //console.log("Error: "+error.message);
+           notify(error.message, "error",standardErrorDuration);
 		   NProgress.done();   
 		}
 	});
@@ -456,8 +463,7 @@ function queryUpdatedData(){
 
 function updateBio(pb,pwl,pfb,ptwt){ 
 	NProgress.start();
-	console.log(pb+pwl+ptwt+pfb);
-	Parse.Cloud.run("changeBio", {objectId: neta.id, b: pb, wl: pwl, twt: ptwt, fb: pfb}, {
+	Parse.Cloud.run("changeBio", {b: pb, wl: pwl, twt: ptwt, fb: pfb}, {
 		success:function(results){
 			console.log(results);
 			queryUpdatedData();

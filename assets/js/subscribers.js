@@ -23,13 +23,15 @@ function deleterecords(n){
                   console.log("destroyAll done");
               },
               error: function(error) { 
-                  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                  //console.log("Error: "+error.message);
+                  notify(error.message, "error",standardErrorDuration);
               }
           });
         console.log("success1");
       },
       error: function(error){
-        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+        //console.log("Error: "+error.message);
+        notify(error.message, "error",standardErrorDuration);
       }
     });
 }
@@ -272,7 +274,7 @@ function populateSubscribers(){
 
         },
         error: function(error){
-            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+            //console.log("Error: "+error.message);notify(error.message, "error",standardErrorDuration);
             NProgress.done();
         }
     });
@@ -301,7 +303,7 @@ function getStuff(){
                                         pagination();
                                     },
                                     error:function(error){
-                                        console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                                        //console.log("Error: "+error.message);notify(error.message, "error",standardErrorDuration);
                                         NProgress.done();
                                     }
                                 })
@@ -309,7 +311,7 @@ function getStuff(){
                             }                                
                         },
                         error: function(error){
-                            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                            //console.log("Error: "+error.message);notify(error.message, "error",standardErrorDuration);
                             NProgress.done();
                         }
                     });
@@ -329,19 +331,19 @@ function getStuff(){
                                             populateSubscribers();
                                         },
                                         error:function(error){
-                                            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                                            //console.log("Error: "+error.message);notify(error.message, "error",standardErrorDuration);
                                             NProgress.done();
                                         }
                                     });
                                 },
                                 error:function(error){
-                                    console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                                    //console.log("Error: "+error.message);notify(error.message, "error",standardErrorDuration);
                                     NProgress.done();
                                 }
                             });  
                         },
                         error: function(error){
-                            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                            //console.log("Error: "+error.message);notify(error.message, "error",standardErrorDuration);
                             NProgress.done();
                         }
                     });
@@ -349,7 +351,7 @@ function getStuff(){
                 
             },
           error: function(error) {
-                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                //console.log("Error: "+error.message);notify(error.message, "error",standardErrorDuration);
                 NProgress.done();
           }
     });

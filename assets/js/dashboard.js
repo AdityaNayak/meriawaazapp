@@ -33,7 +33,8 @@ function createVoterArray(){
             })
 		},
 		error:function(){
-			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+			console.log("Error: "+error.message);
+            notify(error.message, "error",standardErrorDuration);
 		}
 	});
 }
@@ -147,7 +148,7 @@ function updatePost(pid){
                             var imige=currentUser.get("pic").url();
                         }
                         else{
-                            var imige=getDefaultIcon(currentUser.get("pic").url());
+                            var imige=getDefaultIcon(currentUser.get("type"));
                         }
                         thisview.html("<div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary cs'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color'><i class='icon-plus dbc'></i> New Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea id='text-"+object.id+"' class='secondary fx' rows='3' required></textarea><input type='submit'  value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
                         $('#form-'+object.id).submit(function(event){
@@ -205,7 +206,8 @@ function calculateNetaStats(n){
         $("#competitorlist").append("<div class='row collapse'><div class='small-3 columns'><img src="+photo+" class='circle-img gs hv pd'></div><div class='small-9 columns ct'><h4>"+name+"<small>("+age+")</small></h4><h6>"+partyname+"</h6></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x bgc'>"+followers+" </span>followers </div><div class='small-6 columns s-ws-top'><i class='icon-up gc'></i><span class='secondary secondary-color'>23 this week</span></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x bc'>"+interactions+"</span>interactions </div><div class='small-6 columns s-ws-top'><i class='icon-down rc'></i><span class='secondary secondary-color'>31 this week</span></div></div><div class='row tertiary'><div class='small-6 columns text-right'><span class='f-2x dbc'>"+actions+" </span>actions </div><div class='small-6 columns s-ws-top'><i class='icon-down rc'></i><span class='secondary secondary-color'>2 this week</span></div></div><hr>");
       },
       error: function(error) {
-            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+            console.log("Error: "+error.message);
+            notify(error.message, "error",standardErrorDuration);
             NProgress.done();
       }
     });
@@ -250,7 +252,8 @@ function fetchConstituencyData(c){
                 NProgress.done();
             },
           error: function(error){
-                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                //console.log("Error: "+error.message);
+                notify(error.message, "error",standardErrorDuration);
                 NProgress.done();
             } 
           });
@@ -285,8 +288,9 @@ function createCampaign(id,selectedNetaLists,selectedMediums){
 	}
 	Parse.Cloud.run("createCampaign", {objectId: currentNeta.id, isPush: ip,isSMS: is, isWhatsApp: iw, isTwitter: it, isEmail: ie, isFacebook: ib, p: post, netalists: nl}, {
 	  success:function(results){
+
 		console.log(results);
-		notify
+
 		populateStatus();
 		notify(standardSuccessMessage, "success",standardSuccessDuration);
 	  },
@@ -307,7 +311,7 @@ function postCampaign(id){
 	$.each($("input[name='medium-"+id+"']:checked"), function(){            
 		selectedMediums.push($(this).val());
 	});
-	alert("This post will be campaigned via: " + selectedMediums.join(", ") +" with- "+ selectedNetaLists.join(", "));
+	//alert("This post will be campaigned via: " + selectedMediums.join(", ") +" with- "+ selectedNetaLists.join(", "));
 	createCampaign(id,selectedNetaLists,selectedMediums); 
 }
 
@@ -320,7 +324,7 @@ function postCampaignFromPost(id){
 	$.each($("input[name='medium']:checked"), function(){            
 		selectedMediums.push($(this).val());
 	});
-	alert("This post will be campaigned via: " + selectedMediums.join(", ") +" with- "+ selectedNetaLists.join(", "));
+	//alert("This post will be campaigned via: " + selectedMediums.join(", ") +" with- "+ selectedNetaLists.join(", "));
 	createCampaign(id,selectedNetaLists,selectedMediums);
 }
 
@@ -333,7 +337,7 @@ function populateStatus(){
     var pointer = new Parse.Object("Neta");
     pointer.id = currentNeta.id;
     query.equalTo("neta", pointer);
-    console.log("I am here104!");
+    //console.log("I am here104!");
     query.descending('createdAt');
     query.find({
           success: function(results) {
@@ -392,7 +396,7 @@ function populateStatus(){
 									DisplayUpload="";
 								}
 								else{
-									DisplayUpload="<a href='"+uploadlink.url()+"' target='_blank'>Link to Attachment</a>";
+									DisplayUpload="<img src='"+uploadlink.url()+"'/>";
 								}
 								
 								/*
@@ -417,7 +421,7 @@ function populateStatus(){
 									}
 								}
                                 var cpgView='<form id="campaignform-'+object.id+'" style="display:none;"><div id="cmpg-form" class="s-ws-top"><div class="row collapse"><div class="small-2 columns text-center fx3"><label for="capp" class="inline secondary-color np tertiary"><div class="f-1-5x fx4"><i class="icon-phone blc"></i> </div> <input type="checkbox" name="medium-'+object.id+'" id="capp" value="1" checked=""> Push Send </label> </div> <div class="small-2 columns text-center fx3"> <label for="csms" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-comment blc"></i> </div> <input type="checkbox" id="csms" name="medium-'+object.id+'" value="2"> SMS </label> </div> <div class="small-2 columns text-center fx3"> <label for="cwhatsapp" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-whatsapp blc"></i> </div> <input type="checkbox" id="cwhatsapp" name="medium-'+object.id+'" value="3"> WhatsApp </label> </div> <div class="small-2 columns text-center fx3"> <label for="cemail" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-mail blc"></i> </div> <input type="checkbox" id="cemail" name="medium-'+object.id+'" value="4"> Email </label> </div> <div class="small-2 columns text-center fx3"> <label for="cfb" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-facebook blc"></i> </div> <input type="checkbox" id="cfb" name="medium-'+object.id+'" value="5"> Facebook </label> </div> <div class="small-2 columns text-center fx3"> <label for="ctwt" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-twitter blc"></i> </div> <input type="checkbox" id="ctwt" name="medium-'+object.id+'" value="6"> Twitter</label> </div> </div> <div class="row"></div><div class="small-12 columns s-ws-bottom">'+voterView+' <div class="small-4 columns"> <input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth"></div></div></div></form>';
-								postView.append("<div id='post-"+object.id+"'><div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p><p>"+DisplayUpload+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary cs'>"+cpgView+"<div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary' id='commentsclick-"+object.id+"'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color cs' id='campaignclick-"+object.id+"'><i class='icon-plus dbc'></i> Send Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
+								postView.append("<div id='post-"+object.id+"'><div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns s-ws-bottom'>"+DisplayUpload+"</div><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary cs'>"+cpgView+"<div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary' id='commentsclick-"+object.id+"'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color cs' id='campaignclick-"+object.id+"'><i class='icon-plus dbc'></i> Send Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
                                 console.log("form listener created for "+object.id);
                                 $('#form-'+object.id).submit(function(event){
                                       event.preventDefault();
@@ -721,20 +725,35 @@ function updateReach(){
     query2.count({
       success: function(count2) {
         console.log(count2);
-        var constituency=currentNeta.get("constituency");
-        var Citizens= Parse.Object.extend("Citizen");
-        var query1 = new Parse.Query(Citizens);
-        query1.equalTo("constituency",constituency);
-        query1.count({
-          success: function(count1) {
-            console.log("population:"+count1);
-            document.getElementById("population").innerHTML=count1+4487+count2;
-          },
-          error: function(error) {
-            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
-                    NProgress.done();
-          }
-        });
+		var Election = Parse.Object.extend("Election");
+		election = new Parse.Query(Election);
+		election.descending('createdAt');
+		var pointer = new Parse.Object("Neta");
+		pointer.id = currentNeta.id;
+		election.equalTo("arrayNetas", pointer);
+		election.include("constituency");
+		election.find({
+			success: function(results) {
+				var constituency=results[0].get("constituency");
+				var Citizens= Parse.Object.extend("Citizen");
+				var query1 = new Parse.Query(Citizens);
+				query1.equalTo("constituency",constituency);
+				query1.count({
+				  success: function(count1) {
+					console.log("population:"+count1);
+					document.getElementById("population").innerHTML=count1+4487+count2;
+				  },
+				  error: function(error) {
+					console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+							NProgress.done();
+				  }
+				});
+			},
+			error:function(error){
+				console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+							NProgress.done();
+			}
+		});
       },
       error: function(error) {
         alert("Error: " + error.code + " " + error.message);
@@ -817,19 +836,22 @@ function setCurrentNetaTM(n){
                             populateStatus();
                        },
                        error: function(error){
-                           console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                           //console.log("Error: "+error.message);
+                           notify(error.message, "error",standardErrorDuration);
                             NProgress.done();
                        } 
                     });
                 },
                 error:function(error){
-                    console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                    //console.log("Error: "+error.message);
+                    notify(error.message, "error",standardErrorDuration);
                     NProgress.done();
                 }
             });
      },
      error: function(error){
-         console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+         //console.log("Error: "+error.message);
+         notify(error.message, "error",standardErrorDuration);
         NProgress.done();
      }   
     });
@@ -868,14 +890,16 @@ function setCurrentNeta(u){
 					createVoterArray();
                } ,
                error: function(error){
-                   console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+                   //console.log("Error: "+error.message);
+                   notify(error.message, "error",standardErrorDuration);
                     NProgress.done();
                }
             });
             
        },
        error: function(error){
-           console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+           //console.log("Error: "+error.message);
+           notify(error.message, "error",standardErrorDuration);
                 NProgress.done();
        }
     });
