@@ -148,7 +148,7 @@ function updatePost(pid){
                             var imige=currentUser.get("pic").url();
                         }
                         else{
-                            var imige=getDefaultIcon(currentUser.get("pic").url());
+                            var imige=getDefaultIcon(currentUser.get("type"));
                         }
                         thisview.html("<div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary cs'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color'><i class='icon-plus dbc'></i> New Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea id='text-"+object.id+"' class='secondary fx' rows='3' required></textarea><input type='submit'  value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
                         $('#form-'+object.id).submit(function(event){
@@ -288,11 +288,14 @@ function createCampaign(id,selectedNetaLists,selectedMediums){
 	}
 	Parse.Cloud.run("createCampaign", {objectId: currentNeta.id, isPush: ip,isSMS: is, isWhatsApp: iw, isTwitter: it, isEmail: ie, isFacebook: ib, p: post, netalists: nl}, {
 	  success:function(results){
-		//console.log(results);
+
+		console.log(results);
+
 		populateStatus();
+		notify(standardSuccessMessage, "success",standardSuccessDuration);
 	  },
 	  error:function(error){
-		console.log(error.message);
+		console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 		NProgress.done();
 	  }
 	}); 

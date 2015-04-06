@@ -19,7 +19,7 @@ var subscriberList=[];
 var box_a=document.getElementById('a_cb');
 var box_w=document.getElementById('w_cb');
 var box_s=document.getElementById('s_cb');
-var box_st=document.getElementById('ct_cb');
+var box_st=document.getElementById('st_cb');
 var box_p=document.getElementById('p_cb');
 var box_e=document.getElementById('e_cb');
 
@@ -205,8 +205,7 @@ function updateCounters(){
       error: function(error) {
         console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
       }
-    });
-    
+    });    
 }
 
 function changePage(s){
@@ -455,35 +454,35 @@ function getStatusWord(s){
 
 function statusCheck(m){
     console.log("StatusCheck");
-    if(m.get('Campaign').get("isWhatsApp")==true){
-        if(box_w.checked){
+    if(m.get("type")=="whatsapp"){
+        if(box_w.checked || box_a.checked){
              return 1;
         }
     }
-    if(m.get('Campaign').get("isSms")==true){
-        if(box_s.checked){
+    if(m.get("type")=="sms"){
+        if(box_s.checked || box_a.checked){
              return 1;
         }
     }
-	if(m.get('Campaign').get("isSmsTrans")==true){
-        if(box_st.checked){
+	if(m.get("type")=="smstrans"){
+        if(box_st.checked || box_a.checked){
              return 1;
         }
     }
-	if(m.get('Campaign').get("isEmail")==true){
-        if(box_e.checked){
+	if(m.get("type")=="email"){
+        if(box_e.checked || box_a.checked){
              return 1;
         }
     }
-	if(m.get('Campaign').get("isPush")==true){
-        if(box_p.checked){
-             return 1;
-        }
-    }
-    return 0; 
+	if(m.get("type")=="push"){
+        if(box_p.checked || box_a.checked){
+			return 0; 
+		}
+	}
 }
 
 function filter(){
+	console.log("Filter");
 	NProgress.start();
 	crTable.html("");
 	for(var m=0;m<subscriberList.length;m++){
@@ -491,57 +490,60 @@ function filter(){
 		var p_timestamp=p_timestam.split(" ");
 		var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
 		var p_time=p_timestamp[4];
+
+		var p_number=subscriberList[m].get("subscriber").get("phone");
+		var p_status=getStatusWord(subscriberList[m].get("status"));
+		var p_statusicon=getStatusIcon(subscriberList[m].get("status"));
+
 		p_statusicon=getStatusIcon(subscriberList[m].get('status'));
 		p_status=getStatusWord(subscriberList[m].get('status'));
+
         if(statusCheck(subscriberList[m])==1){
-            crTable.append( "<tr><td>+91 "+p_number+"</td><td>"+p_status+"</td><td>"+p_time+"</td><td>"+p_date+"</td><td><i class='"+p_statusicon+"'></i></td></tr>")
+			console.log( "<tr><td>+91 "+p_number+"</td><td>"+p_status+"</td><td>"+p_time+"</td><td>"+p_date+"</td><td><i class='"+p_statusicon+"'></i></td></tr>")
+            crTable.append( "<tr><td>+91 "+p_number+"</td><td>"+p_status+"</td><td>"+p_time+"</td><td>"+p_date+"</td><td><i class='"+p_statusicon+"'></i></td></tr>");
         }        
-    }
-	NProgress.done();	
+
+    }     
+	NProgress.done();
 }
 
 function showCampaignReport(){
+	console.log("showCampaignReport");
 	NProgress.start();
 	crTable.html("");
-    var Campaign = Parse.Object.extend("CampaignReport");
-    var pointer= new Parse.Object("Neta");
-    pointer.id=neta.id;
-	var pointer2= new Parse.Object("Campaign");
-    pointer2.id=currentCampaignId;
-	var query=new Parse.Query(Campaign);
-    query.equalTo("neta",pointer);
-	query.equalTo("neta",pointer2);
-	query.include('Campaign');
-	query.descending("createdAt");
-	query.limit(1000);
-	pointer2.fetch({
-		success:function(result){
-			$('#istatus').html(getStatusWord(pointer2.get('status'))+' <i class="'+getStatusIcon(pointer2.get('status'))+'"></i>');
-			$('#ipush').html(pointer2.get('numSuccessPush'));
-			$('#isms').html(pointer2.get('numSuccessSMS'));
-			$('#ismst').html(pointer2.get('numSuccessSMSTrans'));
-			$('#iwhatsapp').html(pointer2.get('numSuccessWhatsapp'));
-			$('#iemail').html(pointer2.get('numSuccessEmail'));
-			$('#ireach').html(totalReach);
-			var post=pointer2.get('post');
-			post.fetch({
+
+	
+	var CampaignReport = Parse.Object.extend("CampaignReport");
+    var query=new Parse.Query(CampaignReport);
+    var pointer= new Parse.Object("Campaign");
+	console.log("Going to Search for:"+currentCampaignId);
+    pointer.id=currentCampaignId;
+    query.equalTo("campaign",pointer);
+	query.include("subscriber");
+	
+    query.find({
+		success:function(currentCampaignReport){
+			console.log(currentCampaignReport.length);
+			subscriberList=currentCampaignReport;
+			var currentCampaign= pointer;
+			currentCampaign.fetch({
 				success:function(results){
-					$('#icontent').html(post.get('content'));
-					if(post.get('file')!=undefined){
-						$('#iimg').fadeIn();
-						$('#iimg').html('<a href="'+post.get('file').url()+'">Link to Attachment</a>');
-					}
-					else{
-						$('#iimg').fadeOut();
-					}
-					
-					query.find({
-						success:function(result){
-							subscriberList=result;
+					var currentPost=currentCampaign.get("post");
+					currentPost.fetch({
+						success:function(){
+							$('#rp-content').html(currentPost.get("content"));
+							$('#rp-status').html(getStatusWord(currentCampaign.get("status"))+'<i class="'+getStatusIcon(currentCampaign.get("status"))+'"></i>');
+							$('#rp-sms').html(currentCampaign.get("numSuccessSMS"));
+							$('#rp-smst').html(currentCampaign.get("numSuccessSMSTrans"));
+							$('#rp-email').html(currentCampaign.get("numSuccessEmail"));
+							$('#rp-whatsapp').html(currentCampaign.get("numSuccessWhatsapp"));
+							$('#rp-push').html(currentCampaign.get("numSuccessPush"));
+							$('#rp-reach').html(currentCampaign.get("numSuccessPush")+currentCampaign.get("numSuccessWhatsapp")+currentCampaign.get("numSuccessSMSTrans")+currentCampaign.get("numSuccessSMS")+currentCampaign.get("numSuccessEmail"));
+							
 							filter();
 							NProgress.done();
 						},
-						error:function(error){
+						error: function(){
 							NProgress.done();
 							console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 						}
@@ -596,6 +598,7 @@ function showCampaign(){
                 cTable.append('<div class="row brbm cs" id="campaign-'+object.id+'"><div class="small-6 columns"><span class="secondary-color">#'+(i+1)+'</span>'+getReducedContent(object.get("post").get("content"))+'</div><div class="small-3 columns secondary secondary-color"><i class="icon-clock secondary"></i>'+p_time+'<i class="icon-calendar secondary"></i> '+p_date+'</div><div class="small-2 columns secondary secondary color"> '+totalSuccess+' <small>/'+total+'</small> </div> <div class="small-1 columns"> <i class="'+getStatusIcon(object.get("status"))+'"></i> </div> </div>');
 				$('#campaign-'+object.id).click(function(){ 
 							  currentCampaignId=this.id.toString().split('-')[1];
+                              console.log("Setting Current:"+currentCampaignId);
                               console.log(currentCampaignId);
 							  showCampaignReport();
 							  $('#cmp-list-view').fadeOut();
@@ -761,6 +764,7 @@ function initialize() {
       $('#cmp-view').fadeIn();
       $('#cmp-list-view').fadeIn();
       $('#cmp-single-listview').fadeOut();
+
 	  showCampaign();
     });
 	$('#rep-trg').click(function(){
@@ -787,9 +791,18 @@ function initialize() {
 		  var phone=document.getElementById("ph-l").value;
 		  var email=document.getElementById("email-l").value;
 		  var age=document.getElementById("a-l").value;
+
+		  if(name!="" || phone!="" || email!="" || age!=""){
+			addMember(name,phone,email,age);
+		  }
+		  else{
+			  alert("You need to add some data first.");
+		  }
+
       var list=$('');
 
           addMember(name,phone,email,age,list);
+
     });
 	$(function () {
           $("#uploadc").bind("click", function () {
