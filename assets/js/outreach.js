@@ -271,7 +271,7 @@ function pagination(){
     });
 }
 
-function populateSubscribers(){
+function populateSubscribers(id){
     sTable.html("");
     var Subscribers = Parse.Object.extend("Subscriber");
     var query=new Parse.Query(Subscribers);
@@ -280,6 +280,7 @@ function populateSubscribers(){
     query.equalTo("neta",pointer);
   	var currentList= new Parse.Object("NetaList");
   	currentList.id=currentListId;
+    console.log(currentList);
   	query.equalTo("netaList",currentList);
     query.include("puser");
     query.skip(skip);
@@ -628,7 +629,7 @@ function showMemberLists(){
                 nTable.append('<div class="row brbm"><a href="#"><div class="small-7 columns" id="list-'+object.id+'"><span class="f-1-5x">'+object.get("name")+'</span></div></a><div class="small-3 columns s-ws-top">'+object.get("number")+' <span class="secondary-color">subscribers</span></div><div class="small-2 columns"><a class="button tiny nm" id="btn-'+object.id+'">Make Default</a></div></div>');
   				      }
                 else{
-                  nTable.append('<div class="row brbm" id="list-'+object.id+'"><a href="#"><div class="small-7 columns"><span class="f-1-5x">'+object.get("name")+'</span></div></a><div class="small-3 columns s-ws-top">'+object.get("number")+' <span class="secondary-color">subscribers</span></div><div class="small-2 columns s-ws-top"><i class="icon-check gc"></i> Default List</div></div>');
+                  nTable.append('<div class="row brbm"><a href="#"><div class="small-7 columns" id="list-'+object.id+'"><span class="f-1-5x">'+object.get("name")+'</span></div></a><div class="small-3 columns s-ws-top">'+object.get("number")+' <span class="secondary-color">subscribers</span></div><div class="small-2 columns s-ws-top"><i class="icon-check gc"></i> Default List</div></div>');
                 }
            //      $('#btn-'+object.id).click(function(){ 
            //        //currentListId=this.id.toString().split('-')[1];
