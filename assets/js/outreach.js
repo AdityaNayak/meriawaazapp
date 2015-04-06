@@ -630,21 +630,23 @@ function showMemberLists(){
                 else{
                   nTable.append('<div class="row brbm" id="list-'+object.id+'"><a href="#"><div class="small-7 columns"><span class="f-1-5x">'+object.get("name")+'</span></div></a><div class="small-3 columns s-ws-top">'+object.get("number")+' <span class="secondary-color">subscribers</span></div><div class="small-2 columns s-ws-top"><i class="icon-check gc"></i> Default List</div></div>');
                 }
-                $('#btn-'+object.id).click(function(){ 
-                  //currentListId=this.id.toString().split('-')[1];
-                  currentListId=object.id;
-                  Parse.Cloud.run("changeDefaultList", {listID: currentListId}, {
-                    success:function(results){
-                      console.log(results);
-                      notify("Default list changed successfully","success",3);
-                      //showLists();
-                    },
-                    error:function(error){
-                      notify("Error: "+error.message, "alert", 3);
-                      NProgress.done();   
-                    }
-                  });
-                });
+           //      $('#btn-'+object.id).click(function(){ 
+           //        //currentListId=this.id.toString().split('-')[1];
+           //        currentListId2=object.id;
+           //        console.log(currentListId2);
+           //        // Parse.Cloud.run("changeDefaultList", {listID: currentListId2}, {
+           //        //   success:function(results){
+           //        //     console.log(results);
+           //        //     notify(results,"success",3);
+           //        //     //showLists();
+           //        //     showMemberLists();
+           //        //   },
+           //        //   error:function(error){
+           //        //     notify("Error: "+error.message, "alert", 3);
+           //        //     NProgress.done();   
+           //        //   }
+           //        // });
+           //      });
                 $('#list-'+object.id).click(function(){ 
   							  currentListId=object.id;
                   //console.log(currentListId);
@@ -652,8 +654,26 @@ function showMemberLists(){
   							  pagination();
   							  $('#outreach-view').fadeOut();
   							  $('#outreach-single-listview').fadeIn();
+                });
+              }
+              $('.button').click(function(){ 
+
+                  var currentListId2=this.id.toString().split('-')[1];
+                  //currentListId2=object.id;
+                  console.log(currentListId2);
+                   Parse.Cloud.run("changeDefaultList", {listID: currentListId2}, {
+                    success:function(results){
+                      console.log(results);
+                      notify(results,"success",3);
+                      //showLists();
+                      showMemberLists();
+                    },
+                    error:function(error){
+                      notify("Error: "+error.message, "alert", 3);
+                      NProgress.done();   
+                    }
                   });
-                }
+                });
             NProgress.done();
         },
         error: function(error){
