@@ -262,7 +262,6 @@ function pagination(){
         if(numpages!=0){
           $("#page-0").closest("li").addClass('current');
         }
-        
       },
       error: function(error) {
         console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
@@ -400,14 +399,15 @@ function getStuff(){
     });
 }
 
-function addMember(name,phone,email,age,list){
+function addMember(name,phone,email,age){
 	NProgress.start();
-	//console.log(name+email+phone+age);
+	console.log("addMember");
+	console.log(name+email+phone+age);
+	list=currentListId;
 	Parse.Cloud.run("addMember", {n: name, e: email, a: age, p: phone, l:list}, {
 		success:function(results){
 			console.log(results);
-			notify("Subscriber added successfuly","succses",3);
-
+			notify("Subscriber added successfuly","success",3);
 			$('#addv-row').fadeOut();
 			populateSubscribers();
 			pagination();			
@@ -615,6 +615,7 @@ function showCampaign(){
 }
 
 function showMemberLists(){
+	console.log("showMemberLists");
 	NProgress.start();
 	nTable.html("");
     var NetaLists = Parse.Object.extend("NetaList");
@@ -627,29 +628,28 @@ function showMemberLists(){
             console.log(result.length);
             for(var i=0;i<result.length;i++){
                 object=result[i];
-                if(object.get("ranking")=='1'){        
+                if(object.get("ranking")==1){        
                 nTable.append('<div class="row brbm"><a href="#"><div class="small-7 columns" id="list-'+object.id+'"><span class="f-1-5x">'+object.get("name")+'</span></div></a><div class="small-3 columns s-ws-top">'+object.get("number")+' <span class="secondary-color">subscribers</span></div><div class="small-2 columns"><a class="button tiny nm" id="btn-'+object.id+'">Make Default</a></div></div>');
   				      }
                 else{
                   nTable.append('<div class="row brbm" id="list-'+object.id+'"><a href="#"><div class="small-7 columns"><span class="f-1-5x">'+object.get("name")+'</span></div></a><div class="small-3 columns s-ws-top">'+object.get("number")+' <span class="secondary-color">subscribers</span></div><div class="small-2 columns s-ws-top"><i class="icon-check gc"></i> Default List</div></div>');
                 }
-           //      $('#btn-'+object.id).click(function(){ 
-           //        //currentListId=this.id.toString().split('-')[1];
-           //        currentListId2=object.id;
-           //        console.log(currentListId2);
-           //        // Parse.Cloud.run("changeDefaultList", {listID: currentListId2}, {
-           //        //   success:function(results){
-           //        //     console.log(results);
-           //        //     notify(results,"success",3);
-           //        //     //showLists();
-           //        //     showMemberLists();
-           //        //   },
-           //        //   error:function(error){
-           //        //     notify("Error: "+error.message, "alert", 3);
-           //        //     NProgress.done();   
-           //        //   }
-           //        // });
-           //      });
+                 $('#btn-'+object.id).click(function(){ 
+                   //currentListId=this.id.toString().split('-')[1];
+                   currentListId2=object.id;
+                   console.log(currentListId2);
+                    Parse.Cloud.run("changeDefaultList", {netaID: neta.id,listID: currentListId2}, {
+                      success:function(results){
+                        console.log(results);
+                        notify(results,"success",3);
+                        showMemberLists();
+                      },
+                      error:function(error){
+                        notify("Error: "+error.message, "alert", 3);
+                        NProgress.done();   
+                      }
+                    });
+                 });
                 $('#list-'+object.id).click(function(){ 
   							  currentListId=object.id;
                   //console.log(currentListId);
@@ -659,24 +659,7 @@ function showMemberLists(){
   							  $('#outreach-single-listview').fadeIn();
                 });
               }
-              $('.button').click(function(){ 
-
-                  var currentListId2=this.id.toString().split('-')[1];
-                  //currentListId2=object.id;
-                  console.log(currentListId2);
-                   Parse.Cloud.run("changeDefaultList", {listID: currentListId2}, {
-                    success:function(results){
-                      console.log(results);
-                      notify(results,"success",3);
-                      //showLists();
-                      showMemberLists();
-                    },
-                    error:function(error){
-                      notify("Error: "+error.message, "alert", 3);
-                      NProgress.done();   
-                    }
-                  });
-                });
+              
             NProgress.done();
         },
         error: function(error){
@@ -706,7 +689,7 @@ function addNetaList(name){
 		success:function(results){
 			console.log(results);
 			notify("List created successfuly","success",3);
-			//showLists();
+			showMemberLists();
 			$("#addList-Form").fadeOut();
 		},
 		error:function(error){
@@ -797,11 +780,6 @@ function initialize() {
 		  else{
 			  alert("You need to add some data first.");
 		  }
-
-      var list=$('');
-
-          addMember(name,phone,email,age,list);
-
     });
 	$(function () {
           $("#uploadc").bind("click", function () {
