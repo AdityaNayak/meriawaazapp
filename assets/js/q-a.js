@@ -36,7 +36,7 @@ function populateQuestions(val){
 	 question.include("constituency");
 	 question.equalTo("constituency",constituency);
 	 question.limit(1000);
-	 question.ascending("createdAt");
+	 question.descending("createdAt");
 	 if(val==0){
 	 	
 	 }

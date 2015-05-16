@@ -634,9 +634,10 @@ function showMemberLists(){
                 else{
                   nTable.append('<div class="row brbm" id="list-'+object.id+'"><a href="#"><div class="small-7 columns"><span class="f-1-5x">'+object.get("name")+'</span></div></a><div class="small-3 columns s-ws-top">'+object.get("number")+' <span class="secondary-color">subscribers</span></div><div class="small-2 columns s-ws-top"><i class="icon-check gc"></i> Default List</div></div>');
                 }
+				$('#btn-'+object.id).unbind("click");
                  $('#btn-'+object.id).click(function(){ 
-                   //currentListId=this.id.toString().split('-')[1];
-                   currentListId2=object.id;
+                   currentListId2=this.id.toString().split('-')[1];
+                   //currentListId2=object.id;
                    console.log(currentListId2);
                     Parse.Cloud.run("changeDefaultList", {netaID: neta.id,listID: currentListId2}, {
                       success:function(results){
@@ -650,9 +651,10 @@ function showMemberLists(){
                       }
                     });
                  });
+				 $('#list-'+object.id).unbind("click");
                 $('#list-'+object.id).click(function(){ 
-  							  currentListId=object.id;
-                  //console.log(currentListId);
+  							  currentListId=this.id.toString().split('-')[1];
+							  console.log(currentListId);
   							  populateSubscribers();
   							  pagination();
   							  $('#outreach-view').fadeOut();
@@ -778,7 +780,7 @@ function initialize() {
 			addMember(name,phone,email,age);
 		  }
 		  else{
-			  alert("You need to add some data first.");
+			  notify("Enter Some Data", "error",standardErrorDuration);
 		  }
     });
 	$(function () {
@@ -796,7 +798,7 @@ function initialize() {
                           var k=1;
                           
                           for (var i=1; i<rows.length; i+=size) {
-                              var smallarray = rows.slice(i,i+min(size,rows.length)+1);
+                              var smallarray = rows.slice(i,i+Math.min(size,rows.length)+1);
                               smallarrays.push(smallarray);
                               
                           }

@@ -17,10 +17,8 @@ function createVoterArray(){
 				voterViewArray.push([results[i].id,results[i].get("name")]);
 			}
 			var voterView="";
-			var flag=0;
 			for(var ik=0;ik<voterViewArray.length;ik++){
-				if(flag==0){
-					flag=1;
+				if(results[ik].get("ranking")==0){
 					voterView=voterView+"<div class='small-2 columns end s-ws-top'><label><input type='checkbox' checked=true value='"+voterViewArray[ik][0]+"' name='voter'> "+voterViewArray[ik][1]+"</label></div>";
 				}
 				else{
