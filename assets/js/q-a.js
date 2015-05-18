@@ -35,6 +35,8 @@ function populateQuestions(val){
 	 question.include(["lastAnswer.pUser"]);
 	 question.include("constituency");
 	 question.equalTo("constituency",constituency);
+	 question.limit(1000);
+	 question.descending("createdAt");
 	 if(val==0){
 	 	
 	 }
@@ -125,70 +127,113 @@ function singleQuestion(questionId){
 		 	var questionstatement=question.get("content");
 		 	var asked=question.get("askedTo");
 		 	console.log(asked);
-		 	asked.fetch({
-		 		success:function(results){
-		 			var asker=question.get("pAsker");
-		 			asker.fetch({
-		 				success:function(results){
-		 					if(asker.get("pic")!=undefined){
-		 						var askerphoto=asker.get("pic");
-		 					}
-		 					else{
-		 						var askerphoto=getDefaultIcon(asker.get("type"));
-		 					}
-		 					var askedto=asked.get("pUser");
-						 	if(askedto.get("pic")!=undefined){
-						 		var askedtophoto=askedto.get("pic").url();
-						 	}
-						 	else{
-						 		var askedtophoto=getDefaultIcon(askedto.get("type"));
-						 	}
+			if(asked!=undefined){
+				asked.fetch({
+					success:function(results){
+						var asker=question.get("pAsker");
+						asker.fetch({
+							success:function(results){
+								if(asker.get("pic")!=undefined){
+									var askerphoto=asker.get("pic");
+								}
+								else{
+									var askerphoto=getDefaultIcon(asker.get("type"));
+								}
+								var askedto=asked.get("pUser");
+								if(askedto.get("pic")!=undefined){
+									var askedtophoto=askedto.get("pic").url();
+								}
+								else{
+									var askedtophoto=getDefaultIcon(askedto.get("type"));
+								}
 
-						 	var opento=question.get("openTo");
-						 	var tdate=question.createdAt;
-						    var p_timestamp=tdate.toString().split(" ");
-						    var date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
-						    var time=p_timestamp[4];
-						 	var place=constituency.get("name");
-						 	var views=question.get("reach");
-						 	var followers=question.get("numFollowers");
-						 	var lastactivity=timeSince(new Date(question.get("lastUpdated")));
-						 	singleAnswers(question);
-						 	console.log(opento);
+								var opento=question.get("openTo");
+								var tdate=question.createdAt;
+								var p_timestamp=tdate.toString().split(" ");
+								var date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
+								var time=p_timestamp[4];
+								var place=constituency.get("name");
+								var views=question.get("reach");
+								var followers=question.get("numFollowers");
+								var lastactivity=timeSince(new Date(question.get("lastUpdated")));
+								singleAnswers(question);
+								console.log(opento);
 
-						 	if(opento=="neta"){
-						 		$("#opentoarea").html("");
-						 		$("#opentoarea").append("<img src='"+askedtophoto+"' class='circle-img'>");
-						 	}
-						 	else{
-						 		populateOpenTo(constituency);
-						 	}
-						 	$('#que-view').append("<h3>"+title+"</h3><hr><p>"+questionstatement+"</p>");
-						 	document.getElementById("askedtophoto").innerHTML="<img src='"+askedtophoto+"' class='circle-img'>";
+								if(opento=="neta"){
+									$("#opentoarea").html("");
+									$("#opentoarea").append("<img src='"+askedtophoto+"' class='circle-img'>");
+								}
+								else{
+									populateOpenTo(constituency);
+								}
+								$('#que-view').append("<h3>"+title+"</h3><hr><p>"+questionstatement+"</p>");
+								document.getElementById("askedtophoto").innerHTML="<img src='"+askedtophoto+"' class='circle-img'>";
 
-						 	document.getElementById("askedbyphoto").innerHTML="<img src='"+askerphoto+"' class='circle-img'>";
-						 	document.getElementById("singplace").innerHTML=place;
-						 	document.getElementById("singtime").innerHTML=time;
-						 	document.getElementById("singdate").innerHTML=date;
-						 	document.getElementById("singlast").innerHTML=lastactivity;
-						 	document.getElementById("singfollowers").innerHTML=followers;
-						 	document.getElementById("singviews").innerHTML=views;
-		 				},
-		 				error:function(error){
-		 					
-		 				}
-		 			});
-		 			
-		 		},
-		 		error:function(error){
-		 			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
-		 		}
-		 	});
+								document.getElementById("askedbyphoto").innerHTML="<img src='"+askerphoto+"' class='circle-img'>";
+								document.getElementById("singplace").innerHTML=place;
+								document.getElementById("singtime").innerHTML=time;
+								document.getElementById("singdate").innerHTML=date;
+								document.getElementById("singlast").innerHTML=lastactivity;
+								document.getElementById("singfollowers").innerHTML=followers;
+								document.getElementById("singviews").innerHTML=views;
+							},
+							error:function(error){
+								console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+							}
+						});
+						
+					},
+					error:function(error){
+						console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+					}
+				});
+			}
+			else{
+				var asker=question.get("pAsker");
+				asker.fetch({
+					success:function(results){
+						if(asker.get("pic")!=undefined){
+							var askerphoto=asker.get("pic");
+						}
+						else{
+							var askerphoto=getDefaultIcon(asker.get("type"));
+						}
+						var opento=question.get("openTo");
+						var tdate=question.createdAt;
+						var p_timestamp=tdate.toString().split(" ");
+						var date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
+						var time=p_timestamp[4];
+						var place=constituency.get("name");
+						var views=question.get("reach");
+						var followers=question.get("numFollowers");
+						var lastactivity=timeSince(new Date(question.get("lastUpdated")));
+						singleAnswers(question);
+						console.log(opento);
 
-		 	
+						if(opento=="neta"){
+							$("#opentoarea").html("");
+							$("#opentoarea").append("<img src='"+askedtophoto+"' class='circle-img'>");
+						}
+						else{
+							populateOpenTo(constituency);
+						}
+						$('#que-view').append("<h3>"+title+"</h3><hr><p>"+questionstatement+"</p>");
+						document.getElementById("askedbyphoto").innerHTML="<img src='"+askerphoto+"' class='circle-img'>";
+						document.getElementById("singplace").innerHTML=place;
+						document.getElementById("singtime").innerHTML=time;
+						document.getElementById("singdate").innerHTML=date;
+						document.getElementById("singlast").innerHTML=lastactivity;
+						document.getElementById("singfollowers").innerHTML=followers;
+						document.getElementById("singviews").innerHTML=views;
+					},
+					error:function(error){
+						console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+					}
+				});
+			}		 	
  		},
  		error:function(){
- 			
+ 			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
  		}
  	});
  }
@@ -312,7 +357,6 @@ function populateOpenTo(constituency){
 			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 		}
 	});
-	
 }
 
 function singleView(){
