@@ -159,13 +159,13 @@ function singleQuestion(questionId){
 								singleAnswers(question);
 								console.log(opento);
 
-								if(opento=="neta"){
+								/*if(opento=="neta"){
 									$("#opentoarea").html("");
 									$("#opentoarea").append("<img src='"+askedtophoto+"' class='circle-img'>");
 								}
 								else{
 									populateOpenTo(constituency);
-								}
+								}*/
 								$('#que-view').append("<h3>"+title+"</h3><hr><p>"+questionstatement+"</p>");
 								document.getElementById("askedtophoto").innerHTML="<img src='"+askedtophoto+"' class='circle-img'>";
 
@@ -310,6 +310,37 @@ function singleAnswers(question){
  	
  }
 
+ function followQuestion(){
+	NProgress.start();
+	console.log("followQuestion");
+	var question = currentUser.relation("questions");
+	question.query().find({
+	  success:function(results){
+	  		alreadyFollowed=false;
+	  		for(var i=0;i<results.length;i++){
+	  			if(results[i].id==currquestion.id){
+					alreadyFollowed=true;
+					break;
+				}
+	  		}
+			if(alreadyFollowed==false){
+				var relation = currentUser.relation("questions");
+				relation.add(currquestion);
+				currentUser.save(null, {
+				  success: function(result) {      
+				  },
+				  error: function(error) {
+					console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+				  }
+				});
+			}
+      	},
+    	error:function(error){
+    		console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+    	}
+    });
+ }
+ 
 function postAnswer(a){
 	NProgress.start();
 	console.log("postAnswers");
@@ -322,11 +353,12 @@ function postAnswer(a){
     answer.save(null, {
       success: function(comment) {
         document.getElementById("answerbox").value="";
+		followQuestion();
         singleAnswers(currquestion);        
       },
       error: function(comment, error) {
-        alert('Failed to Comment! ' + error.message);
-        singleAnswers(currquestion)
+        singleAnswers(currquestion);
+		console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
       }
     });
 }
