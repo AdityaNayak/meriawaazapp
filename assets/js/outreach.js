@@ -157,7 +157,6 @@ function updateCounters(){
     query3.equalTo("neta",neta);
     var query4 = new Parse.Query(Subscribers3);
     query4.equalTo("neta",neta);
-    query4.equalTo("phone","");
     query4.notEqualTo("email","");
     
 
@@ -792,7 +791,7 @@ function initialize() {
                   if (typeof (FileReader) != "undefined") {
                       var reader = new FileReader();
                       reader.onload = function (e) {
-                          var table = $("<table />");
+
                           var rows = e.target.result.split("\n");
                           var size = 500;
                           var k=1;
