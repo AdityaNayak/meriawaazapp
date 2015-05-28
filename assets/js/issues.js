@@ -173,7 +173,7 @@ function deleteMarkers() {
   markers = [];
 }
 
-
+// Returns Address given the Latitude and Longitude
 function getReverseGeocodingData(lat, lng) {
     console.log("getReverseGeocodingData");
     var latlng = new google.maps.LatLng(lat, lng);
@@ -195,6 +195,7 @@ function getReverseGeocodingData(lat, lng) {
     
 }
 
+// On Click Listener to Current Location on Map
 function CurrentLocationControl(controlDiv, map) {
   console.log("CurrentLocationControl");
   // Set CSS styles for the DIV containing the control
@@ -252,6 +253,7 @@ function CurrentLocationControl(controlDiv, map) {
 
 }
 
+
 function enableDetailsView(){
   $('#details-panel').children().prop('disabled',false);
 }
@@ -260,6 +262,7 @@ function disableDetailsView(){
   $('#details-panel').children().prop('disabled',true);
 }
 
+// Enable CheckBoxs 
 function enableCheckPoints(){
   console.log("enableCheckPoints");
   enableCategoryIcons();
@@ -332,7 +335,8 @@ function enableStatusIcons(){
   $('#fn1').closest("label").toggleClass("gs", false); 
 }
 
-//Starts NProgress
+// Refresh Screen
+// Starts NProgress
 function refresh1(){
   NProgress.start();
   console.log("NProgress Start");
@@ -366,9 +370,11 @@ function refresh1(){
   }
 }
 
+// Refresh Current Selected Marker
 function refresh2(){
   updateCurrentMarker(currmarker);
 }
+
 
 function disbleStatusIcons(i){
 
@@ -391,6 +397,7 @@ function disbleStatusIcons(i){
   }
 }
 
+// OnClick Listener for Specific Issue Map 
 function FixedLocationControl(controlDiv, map) {
   console.log("FixedLocationControl");
   // Set CSS styles for the DIV containing the control
@@ -428,6 +435,7 @@ function FixedLocationControl(controlDiv, map) {
 
 }
 
+// 
 function populateUpdates(){
     console.log("populateUpdates");
     timelineView.html("");    
@@ -473,11 +481,11 @@ function populateUpdates(){
                     else{
                         pphoto1=getDefaultIcon(user.get("type"));
                     }
-                    // if(object.get("type")=="unassigned"){
-                    //   console.log(assignee);
-                    //     var ass=assignee.get("pUser");
-                    //     timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was unassigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
-                    // }
+                    if(object.get("type")=="unassigned"){
+                       console.log(assignee);
+                         var ass=assignee.get("pUser");
+                         timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was unassigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
+                    }
                     if(object.get("type")=="assigned"){
                         var ass=assignee.get("pUser");
                         timelineView.append("<div class='panel nb'><p><strong class='ct'>"+ass.get("name")+"</strong> was assigned by <strong class='ct'>"+user.get("name")+"</strong> <small>"+ago+" ago</small></p></div>");                        
@@ -498,7 +506,7 @@ function populateUpdates(){
 
             },
           error: function(error) {
-                console.log("Error:"+error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
           }
     });
 }
@@ -521,7 +529,7 @@ function populateTeam(){
                 }
             },
           error: function(error) {
-                console.log("Error:"+error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
           }
     });
     
@@ -558,6 +566,8 @@ function postComment(c){
     });
 }
 
+
+
 //Starts NProgress
 function postClaim(){
     NProgress.start();
@@ -576,11 +586,12 @@ function postClaim(){
     claim.set("issue",i);
     claim.set("type", "claim");
     claim.set("user", u);
-      
+    var form = document.getElementById("estimateddays");
+ 	var days = form.time.value;
     claim.save(null, {
       success: function(claim) {
         console.log(i.id);
-        Parse.Cloud.run("changeStatus", {objectId: i.id, status: "progress"}, {
+        Parse.Cloud.run("changeStatus", {objectId: i.id, status: "progress", claimDays: days}, {
           success:function(results){
             console.log(results);
             updateCurrentMarker(currmarker);
@@ -681,55 +692,55 @@ function postAssignment(id){
     query.equalTo("type","assigned");
     query.find({
           success: function(results) {
-                var countclaims=0;
-                // console.log("People already Assigned"+results.length);
-                // if(results.length!=0){
-                //     var Assign = Parse.Object.extend("Update");
-                //     var assign = new Assign();
-                //     var u = new Parse.Object("User");
-                //     var i = new Parse.Object("Issue");
-                //     var a = new Parse.Object("TeamMember");
-                //     u.id = currentUser.id;
-                //     a.id = results[0].id; 
-                //     i.id = currmarker.content.id;
-                //     assign.set("type", "unassigned");
-                //     assign.set("issue", i);
-                //     assign.set("user", u);
-                //     assign.set("assignee", a);
-                //     assign.save(null, {
-                //       success: function(assign) {
-                //             var Assign2 = Parse.Object.extend("Update");
-                //             var assign2 = new Assign2();
-                //             var u2 = new Parse.Object("User");
-                //             var i2 = new Parse.Object("Issue");
-                //             var a2 = new Parse.Object("TeamMember");
-                //             var member2=teamMember(id);
-                //             u2.id = currentUser.id;
-                //             a2.id = member2.id; 
-                //             i2.id = currmarker.content.id;
-                //             assign2.set("type", "assigned");
-                //             assign2.set("issue", i2);
-                //             assign2.set("user", u2);
-                //             assign2.set("assignee", a2);
-                //             assign2.save(null, {
-                //               success: function(assign2) {
-                //                 updateCurrentMarker(currmarker);
-                //                 enableDetailsView();
+                 var countclaims=0;
+                 console.log("People already Assigned"+results.length);
+                 if(results.length!=0){
+                     var Assign = Parse.Object.extend("Update");
+                     var assign = new Assign();
+                     var u = new Parse.Object("User");
+                     var i = new Parse.Object("Issue");
+                     var a = new Parse.Object("TeamMember");
+                     u.id = currentUser.id;
+                     a.id = results[0].get("assignee").id; 
+                     i.id = currmarker.content.id;
+                     assign.set("type", "unassigned");
+                     assign.set("issue", i);
+                     assign.set("user", u);
+                     assign.set("assignee", a);
+                     assign.save(null, {
+						success: function(assign) {
+                             var Assign2 = Parse.Object.extend("Update");
+                             var assign2 = new Assign2();
+                             var u2 = new Parse.Object("User");
+                             var i2 = new Parse.Object("Issue");
+                             var a2 = new Parse.Object("TeamMember");
+                             var member2=teamMember(id);
+                             u2.id = currentUser.id;
+                             a2.id = member2.id; 
+                             i2.id = currmarker.content.id;
+                             assign2.set("type", "assigned");
+                             assign2.set("issue", i2);
+                             assign2.set("user", u2);
+                             assign2.set("assignee", a2);
+                             assign2.save(null, {
+                             success: function(assign2) {
+								updateCurrentMarker(currmarker);
+                                enableDetailsView();
                                 
-                //               },
-                //               error: function(assign2, error) {
-                //                 alert('Failed to Assign! ' + error.message);
-                //                 enableDetailsView();
-                //               }
-                //             });
-                //       },
-                //       error: function(assign, error) {
-                //         alert('Failed to Assign! ' + error.message);
-                //         enableDetailsView();
-                //       }
-                //     });
-                // }
-                // else{
+                             },
+                             error: function(assign2, error) {
+                                alert('Failed to Assign! ' + error.message);
+                                enableDetailsView();
+                             }
+                             });
+                        },
+                        error: function(assign, error) {
+							alert('Failed to Assign! ' + error.message);
+							enableDetailsView();
+                        }
+					});
+                 }
+                else{
                     var Assign = Parse.Object.extend("Update");
                     var assign = new Assign();
                     var u = new Parse.Object("User");
@@ -754,11 +765,11 @@ function postAssignment(id){
                         enableDetailsView();
                       }
                     });
-                //}
+                }
                 
             },
           error: function(error) {
-                console.log("Error:"+error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 
           }
     });  
@@ -769,6 +780,7 @@ function setIssueStatusButton(){
     console.log("setIssueStatusButton");
     if(currmarker.content.get("status")=="closed" || currmarker.content.get("status")=="review"){
         $('#claim-st1').delay(400).fadeOut(300);
+		$('#timebox').delay(400).fadeOut(300);
         $('#claim-st2').delay(400).fadeOut(300);
         $('#close').delay(400).fadeOut(300);
         $('#team').delay(400).fadeOut(300);
@@ -807,7 +819,7 @@ function setIssueStatusButton(){
                     } 
                 },
               error: function(error) {
-                    console.log("Error:"+error.message);
+                    console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
               }
         });   
     }
@@ -850,19 +862,21 @@ function setIssueStatusButton(){
                     
                     if(countclaims==0){
                         $('#claim-st1').delay(400).fadeIn(300);
+						$('#timebox').delay(400).fadeIn(300);
                         $('#claim-st2').delay(400).fadeOut(300);
                         $('#close').delay(400).fadeOut(300);
                         $('#team').delay(400).fadeOut(300);
                     }
                     else{
                         $('#claim-st1').delay(400).fadeOut(300);
+						$('#timebox').delay(400).fadeOut(300);
                         $('#claim-st2').delay(400).fadeIn(300);
                         $('#close').delay(400).fadeIn(300);
                         $('#team').delay(400).fadeIn(300);
                     }
                 },
               error: function(error) {
-                    console.log("Error:"+error.message);
+                    console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
               }
         });   
     }
@@ -898,7 +912,7 @@ function updateCurrentMarker(m){
             infowindow.open(map, currmarker);
         },
       error: function(error) {
-            console.log("Error:"+error.message);
+            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
         }
     }); 
 }
@@ -920,12 +934,14 @@ function updateContentWithCurrentMarker(){
     var p_id=currmarker.content.id;
     var p_photo=currmarker.content.get('file');
     var p_status=currmarker.content.get('status');
+	var p_daysLeft=currmarker.content.get('daysLeft');
     var p_title=currmarker.content.get('title');
     var p_issueId=currmarker.content.get('issueId').toString();
     infowindow.setContent(p_issueId);
     infowindow.open(map, marker);
     var status=document.getElementById('colorstatus');
     var date=document.getElementById('date');
+	var daysLeft=document.getElementById('daysLeft');
     var time=document.getElementById('time');
     var photo=document.getElementById('photo');
     var content=document.getElementById('content');
@@ -988,6 +1004,7 @@ function updateContentWithCurrentMarker(){
                 photo.src="./assets/images/no_image.jpg"; 
             }
             detailedissue.innerHTML=p_content; 
+			daysLeft.innerHTML=p_daysLeft;
             populateUpdates();
             showDetailsView();
             if(currentUser.get("type")=="neta"){
@@ -1103,7 +1120,7 @@ function plotConstituency(c){
                   }, i * 500);                
               },
             error: function(error) {
-                  console.log("Error:"+error.message);
+                  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
             }
       });
   }
@@ -1134,7 +1151,7 @@ function populateTM(){
                 if(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly)==true){
                     //Set Icon
                     myicon=getIcon(object.get("category"),object.get("status"));
-
+					
                                   
                     marker = new google.maps.Marker({
                         position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
@@ -1153,7 +1170,8 @@ function populateTM(){
                         content=object.get("content").substring(0,50)+"...";
                     }
                     listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
-                    markers.push(marker);
+                    console.log("<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+					markers.push(marker);
                     if((marker.content).get('status')=="open"){
                         no=no+1;
                     }
@@ -1326,6 +1344,8 @@ function populate(){
           console.log("NProgress Stop");
           },
           error: function(error) {
+			  NProgress.done();
+			  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
           }
         });
 }
@@ -1384,6 +1404,20 @@ function dateCheck(m){
     return 0;
 }
 
+
+
+function statusCounters(no,np,nr,nc){
+    console.log("statusCounter");
+    var numAnim1 = new countUp("fn1", 0, no);
+    numAnim1.start();
+    var numAnim2 = new countUp("fn2", 0, np);
+    numAnim2.start();
+    var numAnim3 = new countUp("fn3", 0, nr);
+    numAnim3.start();  
+    var numAnim4 = new countUp("fn4", 0, nc);
+    numAnim4.start();
+}
+
 function statusCheck(m){
     console.log("StatusCheck");
     if((m.content).get("status")=="open"){
@@ -1409,24 +1443,12 @@ function statusCheck(m){
     return 0; 
 }
 
-function statusCounters(no,np,nr,nc){
-    console.log("statusCounter");
-    var numAnim1 = new countUp("fn1", 0, no);
-    numAnim1.start();
-    var numAnim2 = new countUp("fn2", 0, np);
-    numAnim2.start();
-    var numAnim3 = new countUp("fn3", 0, nr);
-    numAnim3.start();  
-    var numAnim4 = new countUp("fn4", 0, nc);
-    numAnim4.start();
-}
-
 function filter(){
     console.log("filter");
     updateHistory();
     listView.html("");
     for(var m=0;m<markers.length;m++){
-        if(statusCheck(markers[m])==1 && categoryCheck(markers[m])==1 && dateCheck(markers[m])==1){
+        if(statusCheck(markers[m])==1 && categoryCheck(markers[m])==1){// && dateCheck(markers[m])==1){
             var d=new Date((markers[m].content).createdAt);
             var ago=timeSince(d);
             var content=markers[m].content.get('content');
@@ -1503,20 +1525,40 @@ function initializeMap(){
         var n=currentUser.get("neta");
         n.fetch({
           success:function(results1){
-            constituency=n.get("constituency");
-            constituency.fetch({
+            //constituency=n.get("constituency");
+			var Election = Parse.Object.extend("Election");
+			election = new Parse.Query(Election);
+			election.descending('createdAt');
+			var pointer = new Parse.Object("Neta");
+			pointer.id = n.id;
+			election.equalTo("arrayNetas", pointer);
+			election.include("constituency");
+			election.find({
+				success: function(results) {
+					constituency=results[0].get("constituency");
+					plotConstituency(constituency.get("index"));
+					map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+				},
+				error: function(error){
+					NProgress.done();
+					console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+				}													
+			});
+            /*
+			constituency.fetch({
               success:function(results2){
                 plotConstituency(constituency.get("index"));
                 map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
               },
               error:function(error){
-                console.log("Error: "+error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                 NProgress.done();
               }
             });
+			*/
           },
           error:function(error){
-            console.log("Error: "+error.message);
+            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
             NProgress.done();
           }
         });
@@ -1533,26 +1575,44 @@ function initializeMap(){
           var n=t.get("neta");
           n.fetch({
             success:function(results){
-              constituency=n.get("constituency");
+              /*constituency=n.get("constituency");
               constituency.fetch({
                 success:function(results){
                   plotConstituency(constituency.get("index"));
                   map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
                 },
                 error:function(error){
-                  console.log("Error: "+error.message);
+                  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                   NProgress.done();
                 }
-              });
+              });*/
+				var Election = Parse.Object.extend("Election");
+				election = new Parse.Query(Election);
+				election.descending('createdAt');
+				var pointer = new Parse.Object("Neta");
+				pointer.id = n.id;
+				election.equalTo("arrayNetas", pointer);
+				election.include("constituency");
+				election.find({
+					success: function(results) {
+						constituency=results[0].get("constituency");
+						plotConstituency(constituency.get("index"));
+						map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+					},
+					error: function(error){
+						NProgress.done();
+						console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+					}													
+				});
             },
             error:function(error){
-                console.log("Error: "+error.message);
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
                 NProgress.done();
             }
           });
         },
         error:function(error){
-            console.log("Error: "+error.message);
+            console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
             NProgress.done();         
         }
       });
@@ -1583,7 +1643,7 @@ function initializeMap(){
 //                 }
 //               },
 //               error: function(error){
-//                 console.log("Error: "+error.message); 
+//                 console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration); 
 //               }
 //         });
 //   }
@@ -1603,7 +1663,7 @@ function initializeMap(){
 //                 map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
 //               },
 //               error: function(error){
-//                 console.log("Error: "+error.message);
+//                 console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 //               }
 //         });
       
@@ -1851,7 +1911,7 @@ function initialize() {
     });
 
 
-    $('#reportrange').daterangepicker(
+   /* $('#reportrange').daterangepicker(
         {
             startDate: moment().subtract('days', 29),
             endDate: moment(),
@@ -1890,5 +1950,5 @@ function initialize() {
             filter();
             updateCounters();
         }
-    );
+    ); */
 }

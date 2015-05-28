@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="small-4 columns panel small">
-      <div id="reportrange" class="rangepicker-box secondary"><i class="icon-calendar"></i> <span></span></div>
+      <div id="reportrange" class="rangepicker-box secondary" onclick="notready()"><i class="icon-calendar"></i> <span></span></div>
     </div>
   </div>
   <div class="row panel filters text-center">
@@ -107,14 +107,14 @@
               </div>
             </div>
             <div class="row">
-            <div class="small-12 columns">
-            <hr>
-            </div>
-            <div class="small-12 s-ws-top columns">
-            <h4>Add a Comment</h4>
-            </div>
+              <div class="small-12 columns">
+                <hr>
+              </div>
+              <div class="small-12 s-ws-top columns">
+                <h4>Add a Comment</h4>
+              </div>
               <div class="small-2 columns s-ws-top">
-              <img id="profilepic" src="./assets/images/neta.png" width="300" class="circle-img">
+                <img id="profilepic" src="./assets/images/neta.png" width="300" class="circle-img">
               </div>
               <div id="comment-view" class="small-10 columns s-ws-top">
                 <form id="comment-form">
@@ -130,25 +130,44 @@
         <h4>Overview</h4>
         <div class="row">
           <div class="small-12 columns ct">
-            
             Status: <span id="colorstatus"><strong>Loading...</strong></span>
+          </div>       
+          <div class="small-12 columns ct">
+            Estimated Time Left: <span class="yc"><strong><span id="daysLeft">Loading...</span> <small>days</small></strong></span>
           </div>
-        </div>
+        </div>  
         <div class="row">
           <div class="small-12 columns s-ws-top">
             <div class="text-center" id="details-panel">
-              <div class="button fullwidth success" data-options="align:left" data-dropdown="drop1" id="close" style="display:none;"><strong>Mark as Completed</strong></div>
+              <div class="button fullwidth success" id="close" style="display:none;"><strong>Mark as Completed</strong></div>
               <div id="neta-panel" style="display:none;">
-              <div class="text-left">
-              <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
-              <div id="claim-st3">Assigned to: <strong>Loading...</strong></div>
-                <select id="team" style="display:none;">
-                  <option value="user 1"></option>
-                  <option value="user 3"></option>
-                  <option value="user 2"></option>
-                </select>
+				 <div class="s-ws-top" id="timebox">
+                  <p class="secondary secondary-color">Estimated Time Needed for Results</p>
+                    <div class="row collapse">
+                      <div class="small-9 columns">
+					  <form id="estimateddays">
+                        <input id="time" type="number" min="1"  value="7"/>
+						</form>
+                      </div>
+                      <div class="small-3 columns">
+                        <span class="postfix"> days</span>
+                      </div>
+                    </div>
+                  </div>
+                <div class="text-left">
+                  <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
+                  <div id="claim-st3">
+                    Assigned to: <strong>Loading...</strong>
+                  </div>
+				  <select id="team" style="display:none;" class="s-ws-top">
+                      <option value="user 1"></option>
+                      <option value="user 3"></option>
+                      <option value="user 2"></option>
+                  </select>
+                  <div class="button fullwidth" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
+
+                  
                 </div>
-                <div class="button fullwidth" data-options="align:left" data-dropdown="drop1" id="claim-st2" style="display:none;"><strong>Assign</strong></div>
               </div>
             </div>
           </div>
@@ -176,7 +195,7 @@
           <div class="small-12 columns">
             <hr>
             <p><div id="content">Loading...<hr></div></p>
-            
+
           </div>
         </div>
         <div class="row">
@@ -186,8 +205,8 @@
         </div>
         <div class="row">
           <div class="small-12 columns s-ws-top">
-          <div class="secondary">
-            <p id="address" class='ct'>Loading...</p>
+            <div class="secondary">
+              <p id="address" class='ct'>Loading...</p>
             </div>
           </div>
         </div>
@@ -196,21 +215,21 @@
     {% include footer.html %} 
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.dropdown.js"></script>
-    
+
 
     <script type="text/javascript">
       $(document).foundation();
     </script>
-    
+
     <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
     <script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
-    <script type="text/javascript" src="{{site.url}}/assets/js/daterangepicker.js"></script>
+    <!--<script type="text/javascript" src="{{site.url}}/assets/js/daterangepicker.js"></script> -->
     <script type="text/javascript" src="{{site.url}}/assets/js/issues.js"></script>
     <script>
       $( document ).ready(function() {
         initialize();
         //Set the initial state of the picker label
-        $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+       // $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY')); 
 
         
         // $('#assign').on('click',function(){
@@ -221,6 +240,6 @@
         //   postAssignment(id);
         // });
 
-      });
+    });
     </script>
     </html>

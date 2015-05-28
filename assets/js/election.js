@@ -3,6 +3,7 @@ var numc;
 var candidatesAAP=[];
 var candidatesBJP=[];
 var candidatesCON=[];
+var candidatesIND=[];
 
 function populateCandidates(){
 	nump=3;
@@ -11,6 +12,7 @@ function populateCandidates(){
 	var query=new Parse.Query(Candidates);
 	query.include("pUser");
 	query.include("party");
+	query.limit(1000);
 	query.include("constituency");
 	query.find({
 		success:function(results){
@@ -51,6 +53,15 @@ function populateCandidates(){
 						}
 						candidatesCON.push({0:neta.id,1:photo,2:pu.get("name"),3:c.get("name")});
 					}
+					else if(p.get("code")==0){
+						if(pu.get("pic")!=undefined){
+							var photo=pu.get("pic").url();
+						}
+						else{
+							var photo=getDefaultIcon("neta");
+						}
+						candidatesIND.push({0:neta.id,1:photo,2:pu.get("name"),3:c.get("name")});
+					}
 					else{
 						
 					}	
@@ -58,7 +69,7 @@ function populateCandidates(){
 			displayCandidates();
 		},
 		error:function(error){
-			console.log("Error: "+error.message);
+			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 		}
 	});
 	
@@ -113,7 +124,7 @@ function populateCandidates(){
  // 			displayCandidates();
  // 		},
  // 		error:function(error){
- // 			console.log("Error: "+error.message);
+ // 			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
  // 		}
  // 	});
 	
@@ -180,7 +191,7 @@ function populateCandidates(){
 // 			displayCandidates();
 // 		},
 // 		error:function(error){
-// 			console.log("Error: "+error.message);
+// 			console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
 // 		}
 // 	});
 	
@@ -229,6 +240,19 @@ function displayCandidates(){
 	}
 	CON+="</div>";
 	CONView.append(CON);
+	var INDView=$('#IND');
+	INDView.html("");
+	var IND="<div class='small-4 columns'>";
+	for(var i=0;i<candidatesIND.length;i++){
+		if(i%4==0 && i!=0){
+			IND+="</div><div class='small-4 columns'>";
+		}
+		IND+="<div class='row'><div class='small-3 columns s-ws-top'><a href='./candidate.html?id="+candidatesIND[i][0]+"'><img src="+candidatesIND[i][1]+" class='circle-img'></div><div class='small-9 columns s-ws-top ct'><h4>"+candidatesIND[i][2]+"</h4><h5 class='secondary-color ct'>"+candidatesIND[i][3]+"</h5></a></div></div>";
+	console.log('<url><loc>http://meriawaazapp.com/delhielections/candidate.html?id='+candidatesIND[i][0]+'</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>');
+	
+	}
+	IND+="</div>";
+	INDView.append(IND);
 
 	NProgress.done();
 }

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email Verification | Meri Awaaz</title>
+  <link rel="stylesheet" href="http://meriawaazapp.com/assets/css/style.css" type="text/css" />
+  <link href="https://fontastic.s3.amazonaws.com/8Qdq3qjYhFhJLC24tseVVc/icons.css" rel="stylesheet">
+  
+  <script src="http://meriawaazapp.com/assets/bower_components/modernizr/modernizr.js"></script>
+  <meta name="twitter:card" content="app">
+  <meta name="twitter:description" content="A Mobile-first platform that connects Citizens with their Netas and Government officials for Open, Accessible and Accountable governance">
+  <meta name="twitter:app:country" content="India">
+  <meta name="twitter:app:name:googleplay" content="Meri Awaaz | my voice. my right.">
+  <meta name="twitter:app:id:googleplay" content="com.meriawaaz.mygap">
+  <meta name="twitter:app:url:googleplay" content="https://play.google.com/store/apps/details?id=com.meriawaaz.mygap">
+
+  <meta property="og:title" content="Meri Awaaz | my voice. my right."/>
+  <meta property="og:image" content="http://dl.dropboxusercontent.com/u/37351082/fb-logo.png"/>
+  <meta property="og:site_name" content="Meri Awaaz | my voice. my right."/>
+  <meta property="og:description" content="A Mobile-first platform that connects Citizens with their Netas and Government officials for Open, Accessible and Accountable governance"/>
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="http://meriawaazapp.com/" />
+  <meta property="fb:app_id" content="261087750752180" />
+
+  <link rel="icon" type="image/png" href="http://meriawaazapp.com/assets/images/favicon.png">
+  <!--[if IE]><link rel="shortcut icon" href="http://meriawaazapp.com/assets/images/favicon.ico"/><![endif]-->
+</head>
+<body class="error-page">
+<div class="row">
+<div class="icon-bg">
+    </div>
+<div class="small-6 columns small-centered text-center b-ws-top">
+  <img src="http://meriawaazapp.com/assets/images/logo.png" class="img-h b-ws-top">
+  <div class='error' id='error'></div>
+  <div class="row">
+  <div class="b-ws-top small-10 columns small-centered panel text-left">
+    <i class="icon-check gc f-2x"></i> You have successfully verified your email
+  </div>
+  </div>
+</div>
+</div>
+</body>
+<script type="text/javascript" src="http://meriawaazapp.com/assets/bower_components/jquery/dist/jquery.min.js"></script>
+<script>
+function icon_bg(){
+      var iconBg = $('.icon-bg');
+      var iconArray = ['calendar','clock',
+      'location',
+      'phone',
+      'trophy',
+      'alert',
+      'broadcast',
+      'organization',
+      'network',
+      'comments',
+      'comment',
+      'map-streamline-user',
+      'check',
+      'person',
+      'milestone',
+      'android',
+      'share',
+      'data-science',
+      'help',
+      'voice',
+      'bulb',
+      'like',
+      'tweak',
+      'map'
+
+      ];
+      var arraySize=iconArray.length;
+      for (i = 1; i < arraySize; i++) { 
+        var randomNumber = Math.floor(Math.random()*arraySize);
+        iconBg.append('<i class="icon-'+iconArray[randomNumber]+'" style="font-size:'+Math.floor((Math.random() * 3) + 1.75)+'em; padding-top:'+Math.floor((Math.random() * 2) + 0.25)+'em;"></i>');
+        iconArray.splice(randomNumber, 1);
+      }
+      console.log('success');
+    }
+  $(document).ready(function() {
+    
+    icon_bg();
+    icon_bg();
+      //icon_bg();
+    });
+</script>
+</html>

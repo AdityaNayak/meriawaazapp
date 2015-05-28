@@ -4,8 +4,8 @@
 </div>
   <div class="hide-for-small small-12 large-6 columns text-right b-ws-top icon-bg-fx">
     <h3 class="hero-heading b-ws-top">
-      <div><span class="bgbg wc">Connecting Citizens with</span></div>
-      <div><span class="bbg wc">their Netas and Governments Officials</span></div>
+      <div><span class="bgbg wc">Enabling Netas to</span></div>
+      <div><span class="bbg wc">Connect, Listen & Engage their Citizens</span></div>
       <div><span class="dbbg wc">through the Mobile platform</span></div>
     </h3>
   </div>
@@ -14,7 +14,11 @@
   </div>
   <div class="small-12 large-3 columns panel b-ws-top icon-bg-fx">
     <div id="signin">
-      <form class="s-ws-top" id="signin-form">
+    <div data-alert class="alert-box alert radius ct" style="display:none;">
+          Loading
+          <a href="#" class="close">&times;</a>
+    </div>
+      <form class="b-ws-top" id="signin-form">
         <div class="row">
           <div class="large-12 columns">
             <label>Username
@@ -31,18 +35,27 @@
         </div>
         <div class="row">
           <div class="small-12 text-right columns m-ws-bottom secondary">
-            <a onclick="resetPassword();">forgot password?</a>
+            <a id="fpwd">forgot password?</a>
           </div>
         </div>
         <input type="submit" value="Sign In" id="signin-btn" class="button fullwidth small" /> 
-
-        <!--<div id="loading-btn" class="fullwidth text-center" style="display:none;" align="center"><img src="{{site.url}}/assets/images/loading.gif"></div>-->
       </form>
-      <!--<div class="row">
-        <div class="small-12 columns text-center">
-          <a onclick='setVisibility(0);' class="secondary-color">or Sign up for a new account</a>
+
+      <form class="b-ws-top" id="reset-form" style="display:none;">
+        <div class="row">
+          <div class="large-12 columns">
+            <label>Email
+              <input type="email" placeholder="example@gmail.com" id="email" required />
+            </label>
+          </div>
         </div>
-      </div>-->
+        <input type="submit" value="Send Reset Email" id="reset-btn" class="button fullwidth small" /> 
+        <div class="row">
+          <div class="small-12 text-right columns m-ws-bottom secondary">
+            <a id="signbk">back</a>
+          </div>
+        </div>
+      </form>
     </div>
     <!--
     <div id="signup">
@@ -86,15 +99,15 @@
 <div class="panel icon-bg-fx">
   <div class="row">
     <div class="large-4 small-12 columns text-center">
-      <div id="num1" class="f-3x bgc">0</div>
+      <div id="num1" class="f-2x bgc">0</div>
       <div>Issues Reported</div>
     </div>
     <div class="large-4 small-12 columns text-center">
-      <div id="num2" class="f-3x bc">0</div>
+      <div id="num2" class="f-2x bc">0</div>
       <div>Citizens</div>
     </div>
     <div class="small-12 large-4 columns text-center">
-      <div id="num3" class="f-3x dbc">0</div>
+      <div id="num3" class="f-2x dbc">0</div>
       <div>Netas</div>
     </div>
   </div>

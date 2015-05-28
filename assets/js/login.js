@@ -13,11 +13,18 @@ function initialize() {
         self.location="./dashboard.html";
         NProgress.done();
     }
+    $('#signin-form input').click(function(){
+    	$('.alert-box').hide().removeClass('alert');
+	  	$('#signin-form').delay().addClass('b-ws-top');
+    });
+    $('#fpwd').click(function(){
+    	resetPassword();
+    });
+    $('#signbk').click(function(){
+    	$('#reset-form').fadeOut(400);
+    	$('#signin-form').delay(400).fadeIn();
+    });
 }
-
-
-
-
 function updateCounters(){
 	
 	var Issues = Parse.Object.extend("Issue");
@@ -59,24 +66,12 @@ function updateCounters(){
 	
 }
 
-function loading() {
-	  console.log("I am changing the Inner Html Content");
-	  //$('#signin-btn').innerHTML = "Loading...";
-	  document.getElementById("signin-btn").value = "Loading...";
-}
-
-function hide(){
-	  console.log("Lets changing the Inner Html Content back!");	
-	  //$('#signin-btn').innerHTML = "Sign In";
-	  document.getElementById("signin-btn").value = "Sign In";
-}
-
- function login(){
+function login(){
  	  NProgress.start();
  	  console.log("Inside Login");
  	  //loading();
  	  loadingButton_id("signin-btn",12);
- 	  var form = document.getElementById("signin-form")
+ 	  var form = document.getElementById("signin-form");
  	  var username = form.username.value;
  	  console.log(username);
  	  var password = form.password.value;
@@ -91,7 +86,10 @@ function hide(){
  		  error: function(user, error) {
  		  	  NProgress.done();
  		  	  if(error.code==101){
- 		  	  	alert("An Error Occured!"+error.message);
+ 		  	  	$('.alert-box').show().addClass('alert');
+ 		  	  	$('.alert-box').html(error.message);
+ 		  	  	$('#signin-form').removeClass('b-ws-top');
+ 		  	  	loadingButton_id_stop("signin-btn", "Sign In");
  		  	  }	
  		      console.log("Error: " + error.code + " " + error.message);
  		  }
@@ -183,22 +181,30 @@ function hide(){
 function resetPassword() {
 	  console.log("Reset Password");
 	  NProgress.start();
-	  loading();
-	  var email = prompt("Please enter your Email ID: ", "");
-	  if (email != null) {
-	    Parse.User.requestPasswordReset(email, {
+	  $('#signin-form').fadeOut(400);
+	  $('#reset-form').delay(400).fadeIn();
+	  $("#reset-form").submit(function(event) {
+	  	var emailvar = $('#email').val();
+	  	loadingButton_id("reset-btn",12);
+	  	Parse.User.requestPasswordReset(emailvar, {
           success:function() {
-              alert("Reset instructions have been emailed to you.");
+  			$('.alert-box').show().addClass('success').removeClass('alert');
+	  	  	$('.alert-box').html("Reset instructions have been emailed to you");
+	  	  	$('#reset-form').removeClass('b-ws-top');
+	  	  	loadingButton_id_stop("reset-btn","Send Reset Email");
           },
           error:function(error) {
-            alert("An Error Occured!"+error.message);
+          	$('.alert-box').show().addClass('alert').removeClass('success');
+	  	  	$('.alert-box').html(error.message);
+	  	  	$('#reset-form').removeClass('b-ws-top');
+	  	  	loadingButton_id_stop("reset-btn","Send Reset Email");
           }
-      	});	
-	  }
-	  else{
-	  	resetPassword();
-	  	return;
-	  }      
+      	}),
+		  
+		  event.preventDefault();
+		});
+	    
+
 	  NProgress.done();
       //setTimeout(hide, 3000);
       //hide();

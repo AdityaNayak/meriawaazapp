@@ -4,14 +4,18 @@
 var count = 0 ;
 var CU;
 var constituency;
+standardErrorMessage="Oops! There seems to be some problem. Please try again later.";
+standardErrorDuration=2;
+standardSuccessMessage="Operation Successful!";
+standardSuccessDuration=2;
 
 Parse.initialize("km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt", "BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI");
+internet();
 
 function updateHistory()
 {
 	
 }
-
 var a=location.pathname.split('/').slice(-1)[0];
 console.log(a);
 if(a.length==0){
@@ -57,18 +61,41 @@ else{
 		                			p.fetch({
 		                				success: function(results){
 		                					if(CU.get("username")!="admin"){
-						                		console.log(n.get("constituency"));
+						                		/*
+												console.log(n.get("constituency"));
 						                		
 						                		constituency=n.get("constituency");
 						                		constituency.fetch({
 						                			success:function(results){
 						                				consti.innerHTML=n.get("constituency").get("name");
+						                				if(a=="q-a.html"){
+						                					populateQuestions(0);
+						                				}
+
 						                			},
 						                			error:function(error){
 						                				
 						                			}
-						                		})
-						                		
+						                		});*/
+												var Election = Parse.Object.extend("Election");
+												election = new Parse.Query(Election);
+												election.descending('createdAt');
+												var pointer = new Parse.Object("Neta");
+												pointer.id = CU.get("neta").id;
+												election.equalTo("arrayNetas", pointer);
+												election.include("constituency");
+												election.find({
+												  success: function(results) {
+														constituency=results[0].get("constituency");
+														consti.innerHTML=constituency.get("name");
+														if(a=="q-a.html"){
+						                					populateQuestions(0);
+						                				}
+													},
+													error: function(error){
+														console.log("Error: "+error.message);
+													}													
+												});
 						                	}	
 						                	if(p.get("logo")!=undefined){
 						                		plogo.src=p.get("logo").url();
@@ -100,9 +127,27 @@ else{
 						                			constituency=n.get("constituency");
 						                			constituency.fetch({
 						                				success:function(results){
-						                					consti.innerHTML=t.get("neta").get("constituency").get("name");
-								                	
-
+						                					//consti.innerHTML=t.get("neta").get("constituency").get("name");
+															var Election = Parse.Object.extend("Election");
+															election = new Parse.Query(Election);
+															election.descending('createdAt');
+															var pointer = new Parse.Object("Neta");
+															pointer.id = t.get("neta").id;
+															election.equalTo("arrayNetas", pointer);
+															election.include("constituency");
+															election.find({
+															  success: function(results) {
+																	constituency=results[0].get("constituency");
+																	consti.innerHTML=constituency.get("name");
+																	if(a=="q-a.html"){
+																		populateQuestions(0);
+																	}
+																},
+																error: function(error){
+																	console.log("Error: "+error.message);
+																}													
+															});
+															
 										                	if(p.get("logo")!=undefined){
 										                		plogo.src=p.get("logo").url();
 										                	}
@@ -196,7 +241,7 @@ function timeSince(date) {
 function loadingButton_id(id,d){
 	var Original=document.getElementById(id).value;
 	console.log("Original: "+Original );
-	document.getElementById(id).value = "Loading...";
+	document.getElementById(id).value = "Processing...";
 	$("#"+id).addClass('loading');
 	var ref=this;
 	setTimeout(function() {
@@ -206,10 +251,15 @@ function loadingButton_id(id,d){
 	}, d*1000);
 	console.log("Loading Button was Called!");
 }
+function loadingButton_id_stop(id,value){
+	var Original=value;
+	$("#"+id).removeClass('loading');
+	document.getElementById(id).value = Original;
+}
 
 function loadingButton_ref(d){
 	var Original=document.getElementById(this.id).value;
-	document.getElementById(this.id).value = "Loading...";
+	document.getElementById(this.id).value = "Processing...";
 	$(this).addClass('loading');
 	setTimeout(function() {
 		$(this).removeClass('loading');
@@ -220,7 +270,7 @@ function loadingButton_ref(d){
 
 $('.interactiveLoading').click(function() {
 	var Original=document.getElementById(this.id).value;
-	document.getElementById(this.id).value = "Loading...";
+	document.getElementById(this.id).value = "Processing...";
 	$(this).addClass('loading');
 	var ref=this;
 	setTimeout(function() {
@@ -234,6 +284,31 @@ $('#logout').click(function() {
 	logout();
 });
 
+function notready(){
+	notify("The feature is not ready yet, but coming soon. Stay Tuned", "warning",2);
+}
+
+function notify(text,type,duration){
+
+	$('.alert-box').fadeIn().addClass(type).removeClass('alert').html(text + '<a href="#" class="close">&times;</a>');
+	//Types are: alert, success, warning, info 
+	setTimeout(function() {
+		$('.alert-box').fadeOut().html('loading <a href="#" class="close">&times;</a>');
+	}, duration*1000);
+	$(document).on('close.alert', function(event) {
+  $('#alert-hook').html('<div data-alert id="alert-box" class="alert-box-wrapper alert-box alert radius" style="display:none;"> Loading... <a href="#" class="close">&times;</a> </div>');
+});
+}
+function internet(){
+	//console.log('connectivty being monitored');
+	window.addEventListener("offline", function(e) {
+		notify('Internet connectivty lost. Please check your connection.', 'error', 0);
+	}, false);
+
+	window.addEventListener("online", function(e) {
+		notify('Internet connectivty restored', 'success', 3);
+	}, false);
+}
 function icon_bg(){
 	var iconBg = $('.icon-bg');
 	var iconArray = ['calendar','clock',

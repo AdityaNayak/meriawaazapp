@@ -19,97 +19,168 @@
       <h5 id="ele" class="secondary-color ct">Loading...</h5>
       <h5 id="cs" class="secondary-color ct">Loading...</h5>
       <hr>
+	  <!--
       <select>
         <option value="week">This Week</option>
         <option value="month">This Month</option>
         <option value="year">This Year</option>
         <option value="lifetime">Lifetime</option>
       </select>
-      <div class="row collapse">
-        <div class="small-6 columns"><span id="f" class="f-2x bgc">...</span> followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
-      </div>
-      <div class="row collapse">
-        <div class="small-6 columns"><span id="i" class="f-2x bc">...</span> interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
-      </div>
-      <div class="row collapse">
-        <div class="small-6 columns"><span id="a" class="f-2x dbc">...</span> actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
-      </div>
+    -->
+    <div class="row collapse">
+      <div class="small-6 columns"><span id="f" class="f-2x bgc">...</span> followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
     </div>
-    <div class="small-6 columns">
-      <div id="netapost" class="panel">
+    <div class="row collapse">
+      <div class="small-6 columns"><span id="i" class="f-2x bc">...</span> interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
+    </div>
+    <div class="row collapse">
+      <div class="small-6 columns"><span id="a" class="f-2x dbc">...</span> actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
+    </div>
+  </div>
+  <div class="small-6 columns">
+    <div id="netapost" class="panel">
       <div class="row">
         <div class="small-8 columns">
-        <h5 class="dbc">Connect with your Voters</h5>
+          <h5 class="dbc">Connect with your Voters</h5>
         </div>
         <div class="small-4 columns text-right">
-        <span class='tertiary'>Estimated Reach: </span><span class='bc' id="population">Loading...</span>
+          <span class='tertiary'>Estimated Reach: </span><span class='bc' id="population">Loading...</span>
         </div>
       </div>
-          <form id="post-form">
-            <textarea id="postArea" class="nm" rows="2" required placeholder="Say something inspiring"></textarea>
-            <div class="row collapse" id="sh-ltr1" style="display:none;">
+      <form id="post-form">
+        <img id="thumbnil" style="width:100%; margin-top:10px; border:none; display:none;"  src=""/>
+        <span id="uploadname"></span>
+        <textarea id="postArea" class="nm" rows="2" required placeholder="Say something inspiring"></textarea>
+        <div class="progress radius" style="display:none;">
+          <span class="meter" style="width:10%;"></span>
+        </div>
+        <div id="sh-ltr1" style="display:none;">
+          <div class="row collapse">
+            <div class="small-2 columns text-center fx3">
+              <label for="app" class="inline secondary-color np tertiary">
+                <div class="f-1-5x fx4">
+                  <i class="icon-phone blc"></i>
+                </div>
+                <input type="checkbox" name="medium" id="app" value="1" checked=""> Push Send
+              </label>
+            </div>
+            <div class="small-2 columns text-center fx3">
+              <label for="sms" class="inline secondary-color np tertiary">
+                <div class="f-1-5x fx4">
+                  <i class="icon-comment blc"></i> 
+                </div>
+                <input type="checkbox" id="sms" name="medium" value="2"> SMS
+              </label>
+            </div>
+            <!--<div class="small-2 columns text-center fx3">
+              <label for="whatsapp" class="inline secondary-color np tertiary">
+                <div class="f-1-5x fx4">
+                  <i class="icon-whatsapp blc"></i>
+                </div>
+                <input type="checkbox" id="whatsapp" name="medium" value="3">
+                WhatsApp
+              </label>
+            </div>-->
+            <div class="small-2 columns text-center fx3">
+              <label for="email" class="inline secondary-color np tertiary" onclick="notready();">
+                <div class="f-1-5x fx4">
+                  <i class="icon-mail blc"></i>
+                </div>
+                <input type="checkbox" id="email" name="medium" value="4"> Email
+              </label>
+            </div>
+            <div class="small-2 columns text-center fx3">
+              <label for="fb" class="inline secondary-color np tertiary" onclick="notready();">
+                <div class="f-1-5x fx4">
+                  <i class="icon-facebook blc"></i>
+                </div>
+                <input type="checkbox" id="fb" name="medium" value="5"> Facebook
+              </label>
+            </div>
+            <div class="small-2 columns text-center fx3 end">
+              <label for="twt" class="inline secondary-color np tertiary" onclick="notready();">
+                <div class="f-1-5x fx4">
+                  <i class="icon-twitter blc"></i>
+                </div>
+                <input type="checkbox" id="twt" name="medium" value="6"> Twitter</label>
+              </div>
+            </div>
+            <div class="row">
               <div id="chcount" class="small-2 columns secondary fx3 bgc">
               </div>
-              <div class="small-2 columns text-center fx3">
-              <input type="checkbox" name="" id="app" value="" checked=""> <span class="tertiary secondary-color">Mobile App </span>
+              <div class="small-4 columns tertiary secondary-color s-ws-top text-right">
+                <span id="defaultList"></span>
               </div>
-              <div class="small-2 columns text-center fx3"><input type="checkbox" id="sms" name="" value=""> <span class="tertiary secondary-color">SMS </span> 
+              <div class="small-1 columns tertiary secondary-color">
+                <i id="listIcon" class="icon-list f-2x cs"></i>
               </div>
-              <div class="small-2 columns text-center fx3"><input type="checkbox" id="email" name="" value=""> <span class="tertiary secondary-color">Email </span> 
+              <div class="small-1 columns tertiary secondary-color">
+                <label for="fileUpload" id="imgStatus" class="icon-image-add f-2x bc" style="line-height:1;">
+                  <input id="fileUpload" type="file" name="media" multiple="1" accept="image/*" style="display:none; position:fixed; top:-9999px;">
+                </label>
               </div>
-              <div class="small-4 columns"><input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth">
+              <div class="small-4 columns">
+                <input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth">
               </div>
             </div>
-          </form>
-        </div>
-        <div id="posts">
-        <h4 class="text-center secondary-color b-ws-top">Loading...</h4>
-          
-        </div>
-      </div>
-      <div class="small-3 columns">
-        <div class="panel">
-          <div class="row">
-            <div class="small-12 columns">
-              <h5>Get Help</h5>
-            </div>
-            <div class="small-2 columns">
-              <i class="icon-email secondary-color"></i>
-            </div>
-            <div class="small-10 columns"><a href="mailto:mahelp@mutinylabs.in">help@mutinylabs.in</a>
-            </div>
-            <div class="small-2 columns">
-              <i class="icon-call secondary-color"></i>
-            </div>
-            <div class="small-10 columns">
-              +91 9999 999 999
+            <div class="row" id="cf1" style="display:none;">
+              
             </div>
           </div>
-        </div>
 
-        <hr>
-        <h5>Competitors</h5>
-        <select>
-          <option value="week">This Week</option>
-          <option value="month">This Month</option>
-          <option value="year">This Year</option>
-          <option value="lifetime">Lifetime</option>
-        </select>
-        <div id="competitorlist">
-        </div>
-
-
-
+        </form>
+      </div>
+      <div id="posts">
+        <h4 class="text-center secondary-color b-ws-top">Loading...</h4>
       </div>
     </div>
+    <div class="small-3 columns">
+      <div class="panel">
+        <div class="row">
+          <div class="small-12 columns">
+            <h5>Get Help</h5>
+          </div>
+          <div class="small-2 columns">
+            <i class="icon-email secondary-color"></i>
+          </div>
+          <div class="small-10 columns"><a href="mailto:mahelp@mutinylabs.in">help@mutinylabs.in</a>
+          </div>
+          <div class="small-2 columns">
+            <i class="icon-call secondary-color"></i>
+          </div>
+          <div class="small-10 columns">
+            +91 987 144 8741
+          </div>
+        </div>
+      </div>
+			<!--
+          <hr>
+          <h5>Competitors</h5>
+            <select>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="year">This Year</option>
+              <option value="lifetime">Lifetime</option>
+            </select>
+            <div id="competitorlist">
+            </div>
+          -->
 
-    {% include footer.html %} 
-    <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
 
-    <script type="text/javascript">
-      $(document).foundation();
-    </script>
+        </div>
+      </div>
 
-    <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
-    <script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
-    </html>
+      {% include footer.html %} 
+      <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
+
+      <script type="text/javascript">
+        $('#cf1-trg').click(function(){
+          $('#cf1').fadeIn();
+        });
+
+        $(document).foundation();
+      </script>
+
+      <!-- <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+      <script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script> -->
+      </html>
