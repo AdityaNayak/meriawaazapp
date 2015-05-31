@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Q & A | Meri Awaaz</title>
+  <title>Questions and Answers | Meri Awaaz</title>
 
   {% include header.html %}
 
@@ -18,21 +18,43 @@
         <li><a href="#" id="following">Following</a></li>
       </ul>
     </div>
-    <div class="small-9 columns panel" id="qView">
+    <div class="small-9 columns panel">
+      <div class="row">
+        <div class="small-12 columns">
+        <h6>Ask a question to your voters</h6>
+        </div>
+        <div class="small-10 columns">
+          
+          <textarea></textarea>
+          </div>
+          <div class="small-2 columns">
+          <div class="button tiny right">Ask Question</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="small-10 columns small-centered">
+          <hr>
+        </div>
+      </div>
+      <div id="qView">
+      </div>
     </div>
   </div>
 
   <div id="single-qa-view" class="row" style="display:none;">
-    <div class="small-2 columns b-ws-top text-right">
+    <div class="small-2 columns text-right">
+      <div class="s-ws-top b-ws-bottom">
+        <div><i class="icon-left"></i> <a class="font-2x">Back</a></div>
+      </div>
       <div class="row">
         <div class="small-12 columns secondary">
-          <i class="icon-clock dbc"></i><span id="singtime"></span> 
+          <i class="icon-clock secondary-color"></i> <span id="singtime"></span> 
         </div>
         <div class="small-12 columns secondary">
-          <i class="icon-calendar dbc"></i><span id="singdate"></span> 
+          <i class="icon-calendar secondary-color"></i> <span id="singdate"></span> 
         </div>
         <div class="small-12 columns secondary">
-          <i class="icon-location dbc"></i><span id="singplace"></span> 
+          <i class="icon-location secondary-color"></i> <span id="singplace" class="ct"></span> 
         </div>
       </div>
       <hr>
