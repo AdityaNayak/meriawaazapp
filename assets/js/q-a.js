@@ -163,7 +163,7 @@ function singleQuestion(questionId){
 						asker.fetch({
 							success:function(results){
 								if(asker.get("pic")!=undefined){
-									var askerphoto=asker.get("pic");
+									var askerphoto=asker.get("pic").url();
 								}
 								else{
 									var askerphoto=getDefaultIcon(asker.get("type"));
