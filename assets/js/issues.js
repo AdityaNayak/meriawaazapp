@@ -588,6 +588,7 @@ function postClaim(){
     claim.set("user", u);
     var form = document.getElementById("estimateddays");
  	var days = form.time.value;
+	console.log(days);
     claim.save(null, {
       success: function(claim) {
         console.log(i.id);
@@ -1009,10 +1010,13 @@ function updateContentWithCurrentMarker(){
                 photo.src="./assets/images/no_image.jpg"; 
             }
             detailedissue.innerHTML=p_content; 
-			var d=new Date(object.createdAt);
+			var d=new Date(object.updatedAt);
+			console.log(d);
 			if(p_daysLeft!=undefined){
 				d.setDate(d.getDate()+p_daysLeft);
-				var ago=timeSince(d);
+				console.log(d);
+				var ago=timeTo(d);
+				console.log(ago);
 				daysLeft.innerHTML=ago;
 			}
 			else{
