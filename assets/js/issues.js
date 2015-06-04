@@ -783,6 +783,7 @@ function setIssueStatusButton(){
 		$('#timebox').delay(400).fadeOut(300);
         $('#claim-st2').delay(400).fadeOut(300);
         $('#close').delay(400).fadeOut(300);
+		$('#estimateddaysleft').delay(400).fadeOut(300);
         $('#team').delay(400).fadeOut(300);
         ListItem = Parse.Object.extend("Update");
         query = new Parse.Query(ListItem);
@@ -865,6 +866,7 @@ function setIssueStatusButton(){
 						$('#timebox').delay(400).fadeIn(300);
                         $('#claim-st2').delay(400).fadeOut(300);
                         $('#close').delay(400).fadeOut(300);
+						$('#estimateddaysleft').delay(400).fadeOut(300);
                         $('#team').delay(400).fadeOut(300);
                     }
                     else{
@@ -872,6 +874,7 @@ function setIssueStatusButton(){
 						$('#timebox').delay(400).fadeOut(300);
                         $('#claim-st2').delay(400).fadeIn(300);
                         $('#close').delay(400).fadeIn(300);
+						$('#estimateddaysleft').delay(400).fadeIn(300);
                         $('#team').delay(400).fadeIn(300);
                     }
                 },
@@ -886,9 +889,11 @@ function setIssueStatusButtonTM(){
     console.log("setIssueStatusButton");
     if(currmarker.content.get("status")=="closed" || currmarker.content.get("status")=="review"){
         $('#close').delay(400).fadeOut(300);  
+		$('#estimateddaysleft').delay(400).fadeOut(300);
     }
-    else{
-        $('#close').delay(400).fadeIn(300);  
+	else{
+        $('#close').delay(400).fadeIn(300);
+		$('#estimateddaysleft').delay(400).fadeIn(300);
     }
 }
 
@@ -1004,8 +1009,16 @@ function updateContentWithCurrentMarker(){
                 photo.src="./assets/images/no_image.jpg"; 
             }
             detailedissue.innerHTML=p_content; 
-			daysLeft.innerHTML=p_daysLeft;
-            populateUpdates();
+			var d=new Date(object.createdAt);
+			if(p_daysLeft!=undefined){
+				d.setDate(d.getDate()+p_daysLeft);
+				var ago=timeSince(d);
+				daysLeft.innerHTML=ago;
+			}
+			else{
+				daysLeft.innerHTML="-";
+			}
+			populateUpdates();
             showDetailsView();
             if(currentUser.get("type")=="neta"){
                 setIssueStatusButton();
@@ -1825,11 +1838,13 @@ function initialize() {
     });
 
     $('#claim-st1').click(function(){
+		loadingButton_id("claim-st1",3);
         disableDetailsView();
         postClaim();
     });
 
     $('#claim-st2').click(function(){
+		loadingButton_id("claim-st2",3);
         disableDetailsView();
         var q= $('#team').val();
         if(q!=null){
@@ -1838,13 +1853,16 @@ function initialize() {
     });
 
     $('#close').click(function(){
+		loadingButton_id("close",3);
         disableDetailsView();
         postClose();
     });
 
     $('#comment-form').submit(function(event){
           event.preventDefault();
+		  loadingButton_id("commit_btn",3);
           var comment=document.getElementById("comment").value;
+		  
           postComment(comment);
     });
 
@@ -1911,9 +1929,9 @@ function initialize() {
     });
 
 
-   /* $('#reportrange').daterangepicker(
+   $('#reportrange').daterangepicker(
         {
-            startDate: moment().subtract('days', 29),
+            startDate: moment().subtract('year', 3),
             endDate: moment(),
             minDate: '01/01/2012',
             maxDate: '12/31/2015',
@@ -1930,7 +1948,8 @@ function initialize() {
                 'Last 30 Days': [moment().subtract('days', 29), moment()],
                 'This Month': [moment().startOf('month'), moment()],
                 'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                'This Year': [moment().startOf('year'), moment()]
+                'This Year': [moment().startOf('year'), moment()],
+				'Everything': [moment().subtract('year',3),moment()]
             },
             opens: 'left',
             format: 'MM/DD/YYYY',
@@ -1950,5 +1969,5 @@ function initialize() {
             filter();
             updateCounters();
         }
-    ); */
+    );
 }

@@ -593,7 +593,8 @@ function showCampaign(){
 				var p_date=p_timestamp[0]+" "+p_timestamp[1]+" "+p_timestamp[2]+" "+p_timestamp[3];
 				var p_time=p_timestamp[4];				
 				var totalSuccess=object.get("numSuccessWhatsapp")+object.get("numSuccessEmail")+object.get("numSuccessSMS")+object.get("numSuccessSMSTrans")+object.get("numSuccessPush");
-				var total=object.get("numTotalWhatsapp")+object.get("numTotalEmail")+object.get("numTotalSMS")+object.get("numTotalSMSTans")+object.get("numTotalPush");
+		
+				var total=object.get("numTotalWhatsapp")+object.get("numTotalEmail")+object.get("numTotalSMS")+object.get("numTotalSMSTrans")+object.get("numTotalPush");
                 cTable.append('<div class="row brbm cs" id="campaign-'+object.id+'"><div class="small-6 columns"><span class="secondary-color">#'+(i+1)+'</span>'+getReducedContent(object.get("post").get("content"))+'</div><div class="small-3 columns secondary secondary-color"><i class="icon-clock secondary"></i>'+p_time+'<i class="icon-calendar secondary"></i> '+p_date+'</div><div class="small-2 columns secondary secondary color"> '+totalSuccess+' <small>/'+total+'</small> </div> <div class="small-1 columns"> <i class="'+getStatusIcon(object.get("status"))+'"></i> </div> </div>');
 				$('#campaign-'+object.id).click(function(){ 
 							  currentCampaignId=this.id.toString().split('-')[1];
@@ -623,6 +624,7 @@ function showMemberLists(){
     var pointer= new Parse.Object("Neta");
     pointer.id=neta.id;
     query.equalTo("neta",pointer);
+	query.ascending("ranking");
     query.find({
         success: function(result){
             console.log(result.length);

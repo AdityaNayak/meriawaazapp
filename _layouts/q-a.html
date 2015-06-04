@@ -16,6 +16,7 @@
         <!--<li><a href="#" id="you">Asked to You</a></li>
         <li><a href="#" id="open">Open</a></li>-->
         <li><a href="#" id="following">Following</a></li>
+		<li><a href="#" id="my">Asked</a></li>
       </ul>
     </div>
     <div class="small-9 columns panel">
@@ -23,13 +24,11 @@
         <div class="small-12 columns">
         <h6>Ask a question to your voters</h6>
         </div>
-        <div class="small-10 columns">
-          
-          <textarea></textarea>
-          </div>
-          <div class="small-2 columns">
-          <div class="button tiny right">Ask Question</div>
-        </div>
+        <form id="question-form">
+        <textarea id="questiontitle" rows="1" /required>Title</textarea>
+		<textarea id="questionbox" rows="3" /required>What's on your mind?</textarea>
+        <input id="commit_btn2" type="submit" value="Ask Question" class="button small load-fx right">
+        </form>
       </div>
       <div class="row">
         <div class="small-10 columns small-centered">
@@ -44,7 +43,7 @@
   <div id="single-qa-view" class="row" style="display:none;">
     <div class="small-2 columns text-right">
       <div class="s-ws-top b-ws-bottom">
-        <div><i class="icon-left"></i> <a class="font-2x">Back</a></div>
+        <div id="back"><i class="icon-left"></i> <a class="font-2x">Back</a></div>
       </div>
       <div class="row">
         <div class="small-12 columns secondary">
