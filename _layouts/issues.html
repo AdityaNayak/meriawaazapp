@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="small-4 columns panel small">
-      <div id="reportrange" class="rangepicker-box secondary" onclick="notready()"><i class="icon-calendar"></i> <span></span></div>
+      <div id="reportrange" class="rangepicker-box secondary"><i class="icon-calendar"></i> <span></span></div>
     </div>
   </div>
   <div class="row panel filters text-center">
@@ -132,8 +132,8 @@
           <div class="small-12 columns ct">
             Status: <span id="colorstatus"><strong>Loading...</strong></span>
           </div>       
-          <div class="small-12 columns ct">
-            Estimated Time Left: <span class="yc"><strong><span id="daysLeft">Loading...</span> <small>days</small></strong></span>
+          <div class="small-12 columns ct" id="estimateddaysleft">
+            Estimated Time Left: <span class="yc"><strong><span id="daysLeft">Loading...</span></strong></span>
           </div>
         </div>  
         <div class="row">
@@ -223,13 +223,13 @@
 
     <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
     <script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
-    <!--<script type="text/javascript" src="{{site.url}}/assets/js/daterangepicker.js"></script> -->
+    <script type="text/javascript" src="{{site.url}}/assets/js/daterangepicker.js"></script>
     <script type="text/javascript" src="{{site.url}}/assets/js/issues.js"></script>
     <script>
       $( document ).ready(function() {
         initialize();
         //Set the initial state of the picker label
-       // $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY')); 
+        $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY')); 
 
         
         // $('#assign').on('click',function(){

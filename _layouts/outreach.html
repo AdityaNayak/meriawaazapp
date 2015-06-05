@@ -11,7 +11,7 @@
       Potential Reach: <span class="f-1-5x yc" id="pop">...</span>
     </div>
     <div class="small-3 columns m-ws-top secondary-color">
-      Supporters: <span class="f-1-5x bgc" id="tot">...</span>
+      Total Subscribers: <span class="f-1-5x bgc" id="tot">...</span>
     </div>
     <div class="small-3 columns m-ws-top secondary-color">
       Mobile Subscribers: <span class="f-1-5x bc" id="mob">...</span>
@@ -39,247 +39,245 @@
             <div class="button tiny" id="crl-btn"><i class="icon-add secondary-color"></i> Create List</div>
           </div>
         </div>
-		<div id="addList-Form" style='display:none'>
-		<form id="addListForm"> 
-        <div class="row">
-          <div class="small-12 columns text-right">
-          <input type="submit" value="Create New List" class="button tiny">
-          <div id="cancelListAddition" class="button tiny secondary">Cancel</div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="small-8 columns">
-            <textarea id="listName" rows="1" required placeholder="Name"></textarea>
-          </div>
-        </div>
-        </div>
-         </form>
-		 </div>
-        <div class="panel" id="netaLists">
-
-          
-            
-
-            </div>
-          </div>
-
-          <div id="outreach-single-listview" style="display:none;">
-			<div id="progress" style="display:none" class="small-3 columns m-ws-top secondary-color">
-			  Percentage Completed: <span class="f-3x yc" id="per">1</span>
-			</div>
+        <div id="addList-Form" style='display:none'>
+          <form id="addListForm"> 
             <div class="row">
-              <div class="small-6 columns text-right">
-                <a href="#" class="button tiny s-ws-left" id="seg-btn">Segregate</a> <a href="#" id="ver-btn" class="button tiny s-ws-left">Verify</a><a href="#" id="com-btn" class="s-ws-left button tiny">Complete</a><a href="#" id="sgm-btn" class="button tiny s-ws-left">Segments</a>
+              <div class="small-8 columns">
+                <input type="text" id="listName" required placeholder="Name">
               </div>
-              <div class="small-3 columns">
-                <div id="addv" class="button tiny fullwidth">Add a Subscriber</div>
-              </div>
-              <div class="small-3 columns">
-                <div id="addvs" class="button tiny fullwidth">Import Subscriber</div>
-              </div>
-            </div>
-            <div id="addv-row" style="display:none;">
-              <form id="voteradd-form">        
-                <div class="row">
-                  <div class="small-6 columns small-centered b-ws-top panel">
-                    <p class="secondary secondary-color text-center">All fields are optional</p>
-                    <div class="row">
-                      <div class="small-4 columns">
-                        <label for="name-l" class="right inline">Name</label>
-                      </div>
-                      <div class="small-8 columns">
-                        <input type="text" id="name-l" placeholder="Full Name">
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="small-4 columns">
-                        <label for="ph-l" class="right inline">Phone</label>
-                      </div>
-                      <div class="small-8 columns">
-                        <input type="tel" id="ph-l" placeholder="Without country code">
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="small-4 columns">
-                        <label for="email-l" class="right inline">Email</label>
-                      </div>
-                      <div class="small-8 columns">
-                        <input type="email" id="email-l" placeholder="example@gmail.com">
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="small-4 columns">
-                        <label for="a-l" class="right inline">Age</label>
-                      </div>
-                      <div class="small-8 columns">
-                        <input type="number" id="a-l" placeholder="Just the Number" min="0" max="99">
-                      </div>
-                    </div>
-                    <input type="submit" value="Add Voter" class="button fullwidth small">
-					<div id="cancelVoterAddition" class="button tiny secondary">Cancel</div>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div id="addvs-row" class="row" style="display:none;">
-			  <span>Upload a .csv file in the following format:</span>
-			  <table>
-                  <thead>
-                    <tr>
-                      <th width="400">Name</th>
-                      <th width="200">Phone Number</th>
-                      <th width="200">Email Address</th>
-                      <th width="100">Age</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-					<tr>
-					  <td width="400">John Doe</td>
-                      <td width="200">9222111333</td>
-                      <td width="200">johndoe@outlook.com</td>
-                      <td width="100">21</td>
-					</tr>
-                  </tbody>
-              </table>
-			  
-              <div class="small-4 columns b-ws-top">
-                <input type="file" id="fileUpload" multiple="1" class="secondary"/>
-              </div>
-              <div class="small-4 columns b-ws-top">
-                <input class="button tiny secondary" type="button" id="uploadc" value="Upload" />
-               
-                <input class="button tiny secondary" type="button" id="check" value="Check" />
-
-              </div>
-              <div id="dvCSV" class="small-4 columns b-ws-top">
-              </div>
-
-            </div>
-			<div class="row">
-			  <ul class="pagination" id="pages">
-			  </ul>
-			  </div>
-            <div class="row">
-              <div class="small-12 columns">
-                <table id="subscribers-table">
-                  <thead>
-                    <tr>
-                      <th width="400">Name</th>
-                      <th width="200">Phone Number</th>
-                      <th width="200">Email Address</th>
-                      <th width="100">Age</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
+              <div class="small-4 columns text-right">
+                <input type="submit" value="Create New List" class="button tiny">
+                <div id="cancelListAddition" class="button tiny secondary">Cancel</div>
               </div>
             </div>
           </div>
-        
-        <div id="cmp-view" style="display:none;">
-          <div id="cmp-list-view" style="display:none;" >
-            <div class="panel" id='list-campaign'>
-              
-           </div>
+        </form>
+      </div>
+      <div class="panel" id="netaLists">
 
-         </div>
-         <div id="cmp-single-listview" style="display:none;">
-           <div class="panel">
-              <div class="row secondary secondary-color">
-                  <div class="small-12 columns text-right"><span class="secondary">Campaign Status:</span> <span id="rp-status"></span></div>
 
-                </div>
-             <div class="row">
-               <div class="small-10 columns s-ws-top">
-                <div class="row">
-                  <div class="small-12 columns">
-                    <h5 id="rp-content">Naresh yadav ji wants to Thank you and complete message</h5>
-                  </div>
-                </div>
-                <div class="row secondary">
-                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Reach:</span> <span class="dbc" id="rp-reach">180</span></div>
-                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Pushes:</span> <span class="dbc" id="rp-push">80</span></div>
-                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">SMS:</span> <span class="dbc" id="rp-sms">30</span></div>
-                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">SMS (T):</span> <span class="dbc" id="rp-smst">20</span></div>
-                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">WhatsApp:</span> <span class="dbc" id="rp-whatsapp">40</span></div>
-                  <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Email:</span> <span class="dbc" id="rp-email">10</span></div>
-                </div>
 
-              </div>
 
-            </div> 
-            </div>
-            <div class="row">
-            <div class="small-10 columns s-ws-top">
-            <dl class="sub-nav">
-              <dt>Filter:</dt>
-			  <div class="small-2 columns">
-				<label for="a_cb"><input type="checkbox" id="a_cb" checked='true'>All</label>
-			  </div>
-			  <div class="small-2 columns">
-				<label for="p_cb"><input type="checkbox" id="p_cb" >Pushes</label>
-			  </div>
-			  <div class="small-2 columns">
-				<label for="s_cb"><input type="checkbox" id="s_cb" >SMS</label>
-			  </div>
-			  <div class="small-2 columns">
-				<label for="ct_cb"><input type="checkbox" id="st_cb" >SMS (T)</label>
-			  </div>
-			  <div class="small-2 columns">
-				<label for="w_cb"><input type="checkbox" id="w_cb" >WhatsApp</label>
-			  </div>
-			  <div class="small-2 columns">
-				<label for="e_cb"><input type="checkbox" id="e_cb" >Email</label>
-			  </div>
-            </dl>
-            </div>
-			<div class="row">
-				<div class="small-2 columns">
-				  <a href="#" class="button tiny" id='download'>Download</a>
-				</div>
-			</div>
-
-           <div class="small-12 columns">
-            <table id="delivery-table">
-                <thead>
-                  <tr>
-                    <th width="300">Channel</th>
-                    <th width="250">Status</th>
-                    <th width="200">Date</th>
-                    <th width="200">Time</th>
-                    <th width="50"> </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>+91 99999999</td>
-                    <td>In process</td>
-                    <td>3:02 PM</td>
-                    <td>22 Jan, 2015</td>
-                    <td><i class="icon-process"></i></td>
-                  </tr>
-                </tbody>
-              </table>
-              </div>
-        </div>
       </div>
     </div>
+
+    <div id="outreach-single-listview" style="display:none;">
+     <div id="progress" style="display:none" class="small-3 columns m-ws-top secondary-color">
+       Percentage Completed: <span class="f-3x yc" id="per">1</span>
+     </div>
+     <div class="row">
+      <div class="small-6 columns text-right">
+        <a href="#" class="button tiny s-ws-left" id="seg-btn">Segregate</a> <a href="#" id="ver-btn" class="button tiny s-ws-left">Verify</a><a href="#" id="com-btn" class="s-ws-left button tiny">Complete</a><a href="#" id="sgm-btn" class="button tiny s-ws-left">Segments</a>
+      </div>
+      <div class="small-3 columns">
+        <div id="addv" class="button tiny fullwidth">Add a Subscriber</div>
+      </div>
+      <div class="small-3 columns">
+        <div id="addvs" class="button tiny fullwidth">Import Subscriber</div>
+      </div>
+    </div>
+    <div id="addv-row" style="display:none;">
+      <form id="voteradd-form">        
+        <div class="row">
+          <div class="small-6 columns small-centered b-ws-top panel">
+            <p class="secondary secondary-color text-center">All fields are optional</p>
+            <div class="row">
+              <div class="small-4 columns">
+                <label for="name-l" class="right inline">Name</label>
+              </div>
+              <div class="small-8 columns">
+                <input type="text" id="name-l" placeholder="Full Name">
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-4 columns">
+                <label for="ph-l" class="right inline">Phone</label>
+              </div>
+              <div class="small-8 columns">
+                <input type="tel" id="ph-l" placeholder="Without country code">
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-4 columns">
+                <label for="email-l" class="right inline">Email</label>
+              </div>
+              <div class="small-8 columns">
+                <input type="email" id="email-l" placeholder="example@gmail.com">
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-4 columns">
+                <label for="a-l" class="right inline">Age</label>
+              </div>
+              <div class="small-8 columns">
+                <input type="number" id="a-l" placeholder="Just the Number" min="0" max="99">
+              </div>
+            </div>
+            <input type="submit" value="Add Voter" class="button fullwidth small">
+            <div id="cancelVoterAddition" class="button tiny secondary">Cancel</div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div id="addvs-row" class="row" style="display:none;">
+     <span>Upload a .csv file in the following format:</span>
+     <table>
+      <thead>
+        <tr>
+          <th width="400">Name</th>
+          <th width="200">Phone Number</th>
+          <th width="200">Email Address</th>
+          <th width="100">Age</th>
+        </tr>
+      </thead>
+      <tbody>
+       <tr>
+         <td width="400">John Doe</td>
+         <td width="200">9222111333</td>
+         <td width="200">johndoe@outlook.com</td>
+         <td width="100">21</td>
+       </tr>
+     </tbody>
+   </table>
+
+   <div class="small-4 columns b-ws-top">
+    <input type="file" id="fileUpload" multiple="1" class="secondary"/>
   </div>
+  <div class="small-4 columns b-ws-top">
+    <input class="button tiny secondary" type="button" id="uploadc" value="Upload" />
+
+    <input class="button tiny secondary" type="button" id="check" value="Check" />
+
   </div>
-  {% include footer.html %} 
-  <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
-  <script type="text/javascript" src="{{site.url}}/assets/js/outreach.js"></script>
+  <div id="dvCSV" class="small-4 columns b-ws-top">
+  </div>
+
+</div>
+<div class="row">
+ <ul class="pagination" id="pages">
+ </ul>
+</div>
+<div class="row">
+  <div class="small-12 columns">
+    <table id="subscribers-table">
+      <thead>
+        <tr>
+          <th width="400">Name</th>
+          <th width="200">Phone Number</th>
+          <th width="200">Email Address</th>
+          <th width="100">Age</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<div id="cmp-view" style="display:none;">
+  <div id="cmp-list-view" style="display:none;" >
+    <div class="panel" id='list-campaign'>
+
+    </div>
+
+  </div>
+  <div id="cmp-single-listview" style="display:none;">
+   <div class="panel">
+    <div class="row secondary secondary-color">
+      <div class="small-12 columns text-right"><span class="secondary">Campaign Status:</span> <span id="rp-status"></span></div>
+
+    </div>
+    <div class="row">
+     <div class="small-10 columns s-ws-top">
+      <div class="row">
+        <div class="small-12 columns">
+          <h5 id="rp-content">Naresh yadav ji wants to Thank you and complete message</h5>
+        </div>
+      </div>
+      <div class="row secondary">
+        <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Reach:</span> <span class="dbc" id="rp-reach">180</span></div>
+        <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Pushes:</span> <span class="dbc" id="rp-push">80</span></div>
+        <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">SMS:</span> <span class="dbc" id="rp-sms">30</span></div>
+        <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">SMS (T):</span> <span class="dbc" id="rp-smst">20</span></div>
+        <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">WhatsApp:</span> <span class="dbc" id="rp-whatsapp">40</span></div>
+        <div class="small-2 columns s-ws-top"><span class="secondary secondary-color">Email:</span> <span class="dbc" id="rp-email">10</span></div>
+      </div>
+
+    </div>
+
+  </div> 
+</div>
+<div class="row">
+  <div class="small-10 columns s-ws-top">
+    <dl class="sub-nav">
+      <dt>Filter:</dt>
+      <div class="small-2 columns">
+        <label for="a_cb"><input type="checkbox" id="a_cb" checked='true'>All</label>
+      </div>
+      <div class="small-2 columns">
+        <label for="p_cb"><input type="checkbox" id="p_cb" >Pushes</label>
+      </div>
+      <div class="small-2 columns">
+        <label for="s_cb"><input type="checkbox" id="s_cb" >SMS</label>
+      </div>
+      <div class="small-2 columns">
+        <label for="ct_cb"><input type="checkbox" id="st_cb" >SMS (T)</label>
+      </div>
+      <div class="small-2 columns">
+        <label for="w_cb"><input type="checkbox" id="w_cb" >WhatsApp</label>
+      </div>
+      <div class="small-2 columns">
+        <label for="e_cb"><input type="checkbox" id="e_cb" >Email</label>
+      </div>
+    </dl>
+  </div>
+  <div class="row">
+    <div class="small-2 columns">
+      <a href="#" class="button tiny" id='download'>Download</a>
+    </div>
+  </div>
+
+  <div class="small-12 columns">
+    <table id="delivery-table">
+      <thead>
+        <tr>
+          <th width="300">Channel</th>
+          <th width="250">Status</th>
+          <th width="200">Date</th>
+          <th width="200">Time</th>
+          <th width="50"> </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>+91 99999999</td>
+          <td>In process</td>
+          <td>3:02 PM</td>
+          <td>22 Jan, 2015</td>
+          <td><i class="icon-process"></i></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% include footer.html %} 
+<script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+<script type="text/javascript" src="{{site.url}}/assets/js/outreach.js"></script>
 
 
-  <script type="text/javascript">
-    $(document).foundation();
-  </script>
-  <script>
-    $( document ).ready(function() {
-      icon_bg();
-      icon_bg();
-   
-});
+<script type="text/javascript">
+  $(document).foundation();
+</script>
+<script>
+  $( document ).ready(function() {
+    icon_bg();
+    icon_bg();
+
+  });
 </script>
 </html>

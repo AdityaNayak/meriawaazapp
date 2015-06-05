@@ -1,4 +1,8 @@
 var constituency;
+
+
+var constituencyType;
+var polyArray=[];
 var poly;
 var view=0;
 
@@ -145,6 +149,27 @@ var iconso = [
     icon5o,
     icon6o, 
 ];
+
+function createConstituencyArray(){
+	console.log("createConstituencyArray");
+	var constituencyArra=["deoli","tughlakabad","okhla","kalkaji","sangam vihar"];
+    ListItem = Parse.Object.extend("Constituency");
+    query = new Parse.Query(ListItem);
+    query.containedIn("name", constituencyArra);
+    query.find({
+          success: function(results) {
+                testing=[];
+                for (var i = 0; i < results.length; i++) { 
+                    object= results[i];
+                    testing.push(object);
+				}
+				console.log(JSON.stringify(testing));
+            },
+          error: function(error) {
+                console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+          }
+    });
+}
 
 // Sets the map on all markers in the array.
 function setAllMap(map) {
@@ -588,6 +613,7 @@ function postClaim(){
     claim.set("user", u);
     var form = document.getElementById("estimateddays");
  	var days = form.time.value;
+	console.log(days);
     claim.save(null, {
       success: function(claim) {
         console.log(i.id);
@@ -783,6 +809,7 @@ function setIssueStatusButton(){
 		$('#timebox').delay(400).fadeOut(300);
         $('#claim-st2').delay(400).fadeOut(300);
         $('#close').delay(400).fadeOut(300);
+		$('#estimateddaysleft').delay(400).fadeOut(300);
         $('#team').delay(400).fadeOut(300);
         ListItem = Parse.Object.extend("Update");
         query = new Parse.Query(ListItem);
@@ -865,6 +892,7 @@ function setIssueStatusButton(){
 						$('#timebox').delay(400).fadeIn(300);
                         $('#claim-st2').delay(400).fadeOut(300);
                         $('#close').delay(400).fadeOut(300);
+						$('#estimateddaysleft').delay(400).fadeOut(300);
                         $('#team').delay(400).fadeOut(300);
                     }
                     else{
@@ -872,6 +900,7 @@ function setIssueStatusButton(){
 						$('#timebox').delay(400).fadeOut(300);
                         $('#claim-st2').delay(400).fadeIn(300);
                         $('#close').delay(400).fadeIn(300);
+						$('#estimateddaysleft').delay(400).fadeIn(300);
                         $('#team').delay(400).fadeIn(300);
                     }
                 },
@@ -886,9 +915,11 @@ function setIssueStatusButtonTM(){
     console.log("setIssueStatusButton");
     if(currmarker.content.get("status")=="closed" || currmarker.content.get("status")=="review"){
         $('#close').delay(400).fadeOut(300);  
+		$('#estimateddaysleft').delay(400).fadeOut(300);
     }
-    else{
-        $('#close').delay(400).fadeIn(300);  
+	else{
+        $('#close').delay(400).fadeIn(300);
+		$('#estimateddaysleft').delay(400).fadeIn(300);
     }
 }
 
@@ -1004,8 +1035,19 @@ function updateContentWithCurrentMarker(){
                 photo.src="./assets/images/no_image.jpg"; 
             }
             detailedissue.innerHTML=p_content; 
-			daysLeft.innerHTML=p_daysLeft;
-            populateUpdates();
+			var d=new Date(object.updatedAt);
+			console.log(d);
+			if(p_daysLeft!=undefined){
+				d.setDate(d.getDate()+p_daysLeft);
+				console.log(d);
+				var ago=timeTo(d);
+				console.log(ago);
+				daysLeft.innerHTML=ago;
+			}
+			else{
+				daysLeft.innerHTML="-";
+			}
+			populateUpdates();
             showDetailsView();
             if(currentUser.get("type")=="neta"){
                 setIssueStatusButton();
@@ -1077,6 +1119,58 @@ function getIcon(category,status){
     }
     return myicon;
 }
+
+function plotConstituencyArray(c,n){
+      console.log("Lets Plot a Constituency Array");
+      ListItem = Parse.Object.extend("Constituency");
+	  
+      query = new Parse.Query(ListItem);
+      query.equalTo("index", c);    
+      query.find({
+            success: function(results) {
+                  console.log("Starting Plotting: "+results[0].get("name"));
+                  var Coords=[];
+                  var pints=[];
+                  var points=results[0].get("points");
+                  console.log(points.length);
+                  for (var i = 0; i < points.length; i++) { 
+                      Coords.push(new google.maps.LatLng(points[i].latitude,points[i].longitude));
+                      pints.push({x:points[i].latitude,y:points[i].longitude});
+                  }
+                  console.log("First:"+points[0].longitude);
+                  console.log("Last:"+points[points.length-1].longitude);
+                  Poly = new google.maps.Polygon({
+                    paths: Coords,
+                    strokeColor: '#0E629B',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    constituency: results[0].get("name"),
+                    fillColor: '#0071BC',
+                    fillOpacity: 0.35
+                  });
+                  console.log("Polygon Created!");
+                  polyArray.push(Poly);
+                  Poly.setMap(map);   
+                  var i=0;
+				  console.log(n);
+				  if(n==1){
+					  
+					  setTimeout( function() {
+						  if(currentUser.get("type")=="teamMember"){
+							populateTM();
+						  }
+						  else if(currentUser.get("type")=="neta"){
+							populate();
+						  }
+						  populateTeam();
+					  }, i * 500);
+				  }				  
+              },
+            error: function(error) {
+                  console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+            }
+      });
+  }
 
 function plotConstituency(c){
       console.log("Lets Plot a Constituency");
@@ -1282,59 +1376,118 @@ function populate(){
                     })(marker,object));
                 }
                 else{
-                    if(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly)==true){
-                        //Set Icon
-                        myicon=getIcon(object.get("category"),object.get("status"));
-                                      
-                        marker = new google.maps.Marker({
-                            position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
-                            map: map,
-                            title: object.get('category'),
-                            content: object,
-                            icon : myicon,
-                            draggable: false,
-                            animation: google.maps.Animation.DROP
-                        });
+					if(constituencyType!=1){
+						if(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly)==true){
+							//Set Icon
+							myicon=getIcon(object.get("category"),object.get("status"));
+										  
+							marker = new google.maps.Marker({
+								position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
+								map: map,
+								title: object.get('category'),
+								content: object,
+								icon : myicon,
+								draggable: false,
+								animation: google.maps.Animation.DROP
+							});
 
-                        var d=new Date(object.createdAt);
-                        var ago=timeSince(d);
-                        var content=object.get("content");
-                        if(object.get("content").length > 50){
-                            content=object.get("content").substring(0,50)+"...";
-                        }
-                        listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
-                        markers.push(marker);
-                        if((marker.content).get('status')=="open"){
-                        no=no+1;
-                        }
-                        if((marker.content).get('status')=="progress"){
-                            np=np+1;
-                        }
-                        if((marker.content).get('status')=="review"){
-                            nr=nr+1;
-                        }
-                        if((marker.content).get('status')=="closed"){
-                            nc=nc+1;
-                        }
-                        google.maps.event.addListener(marker, 'click', (function(marker,object) {
-                            return function() {
-                                NProgress.start();
-                                console.log("NProgress start");
-                                if(infowindow) {
-                                    infowindow.close();
-                                }
-                                infowindow = new google.maps.InfoWindow({
-                                    maxWidth: 700,
-                                    maxHeight: 900
-                                });
-                                
-                                currmarker=marker;
-                                updateCurrentMarker(currmarker);                        
-                                infowindow.setContent(currmarker.content.get('status'));
-                                
-                            }
-                        })(marker,object));
-                    }
+							var d=new Date(object.createdAt);
+							var ago=timeSince(d);
+							var content=object.get("content");
+							if(object.get("content").length > 50){
+								content=object.get("content").substring(0,50)+"...";
+							}
+							listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+							markers.push(marker);
+							if((marker.content).get('status')=="open"){
+							no=no+1;
+							}
+							if((marker.content).get('status')=="progress"){
+								np=np+1;
+							}
+							if((marker.content).get('status')=="review"){
+								nr=nr+1;
+							}
+							if((marker.content).get('status')=="closed"){
+								nc=nc+1;
+							}
+							google.maps.event.addListener(marker, 'click', (function(marker,object) {
+								return function() {
+									NProgress.start();
+									console.log("NProgress start");
+									if(infowindow) {
+										infowindow.close();
+									}
+									infowindow = new google.maps.InfoWindow({
+										maxWidth: 700,
+										maxHeight: 900
+									});
+									
+									currmarker=marker;
+									updateCurrentMarker(currmarker);                        
+									infowindow.setContent(currmarker.content.get('status'));
+									
+								}
+							})(marker,object));
+						}
+					}
+					else{
+						for(var j=0;j<polyArray.length;j++){
+							if(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), polyArray[j])==true){
+								//Set Icon
+								myicon=getIcon(object.get("category"),object.get("status"));
+											  
+								marker = new google.maps.Marker({
+									position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
+									map: map,
+									title: object.get('category'),
+									content: object,
+									icon : myicon,
+									draggable: false,
+									animation: google.maps.Animation.DROP
+								});
+
+								var d=new Date(object.createdAt);
+								var ago=timeSince(d);
+								var content=object.get("content");
+								if(object.get("content").length > 50){
+									content=object.get("content").substring(0,50)+"...";
+								}
+								listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
+								markers.push(marker);
+								if((marker.content).get('status')=="open"){
+								no=no+1;
+								}
+								if((marker.content).get('status')=="progress"){
+									np=np+1;
+								}
+								if((marker.content).get('status')=="review"){
+									nr=nr+1;
+								}
+								if((marker.content).get('status')=="closed"){
+									nc=nc+1;
+								}
+								google.maps.event.addListener(marker, 'click', (function(marker,object) {
+									return function() {
+										NProgress.start();
+										console.log("NProgress start");
+										if(infowindow) {
+											infowindow.close();
+										}
+										infowindow = new google.maps.InfoWindow({
+											maxWidth: 700,
+											maxHeight: 900
+										});
+										
+										currmarker=marker;
+										updateCurrentMarker(currmarker);                        
+										infowindow.setContent(currmarker.content.get('status'));
+										
+									}
+								})(marker,object));
+							}
+						}
+					}
                 }
                 
              } 
@@ -1532,12 +1685,34 @@ function initializeMap(){
 			var pointer = new Parse.Object("Neta");
 			pointer.id = n.id;
 			election.equalTo("arrayNetas", pointer);
+			election.include("[constituency.constituencyArray]");
 			election.include("constituency");
 			election.find({
 				success: function(results) {
 					constituency=results[0].get("constituency");
-					plotConstituency(constituency.get("index"));
-					map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+					constituencyType=constituency.get("type");
+					if (constituencyType==1){
+						constituencyArray=constituency.get("constituencyArray");
+						console.log(constituencyArray);
+						polyArray=[];
+						
+						for(var i=0;i<constituencyArray.length;i++){
+							miniConstituency=constituencyArray[i];
+							
+							if(i==(constituencyArray.length-1)){
+								plotConstituencyArray(miniConstituency["index"],1);
+							}
+							else{
+								plotConstituencyArray(miniConstituency["index"],0);
+							}
+							
+							
+						}
+					}
+					else{
+						plotConstituency(constituency.get("index"));
+						map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+					}
 				},
 				error: function(error){
 					NProgress.done();
@@ -1593,11 +1768,29 @@ function initializeMap(){
 				pointer.id = n.id;
 				election.equalTo("arrayNetas", pointer);
 				election.include("constituency");
+				election.include("constituencyArray");
 				election.find({
 					success: function(results) {
 						constituency=results[0].get("constituency");
-						plotConstituency(constituency.get("index"));
-						map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+						constituencyType=results[0].get("type");
+						if (constituencyType==1){
+							constituencyArray=results[0].get("constituencyArray");
+							for(var i=0;i<constituencyArray.length;i++){
+								miniConstituency=constituencyArray[i];
+								
+								if(i==(constituencyArray.length-1)){
+									plotConstituencyArray(miniConstituency.get("index"),1);
+								}
+								else{
+									plotConstituencyArray(miniConstituency.get("index"),0);
+								}
+								map.setCenter(new google.maps.LatLng(miniConstituency.get("center").latitude, constituency.get("center").longitude));
+							}
+						}
+						else{
+							plotConstituency(constituency.get("index"));
+							map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
+						}
 					},
 					error: function(error){
 						NProgress.done();
@@ -1825,11 +2018,13 @@ function initialize() {
     });
 
     $('#claim-st1').click(function(){
+		loadingButton_id("claim-st1",3);
         disableDetailsView();
         postClaim();
     });
 
     $('#claim-st2').click(function(){
+		loadingButton_id("claim-st2",3);
         disableDetailsView();
         var q= $('#team').val();
         if(q!=null){
@@ -1838,13 +2033,16 @@ function initialize() {
     });
 
     $('#close').click(function(){
+		loadingButton_id("close",3);
         disableDetailsView();
         postClose();
     });
 
     $('#comment-form').submit(function(event){
           event.preventDefault();
+		  loadingButton_id("commit_btn",3);
           var comment=document.getElementById("comment").value;
+		  
           postComment(comment);
     });
 
@@ -1911,9 +2109,9 @@ function initialize() {
     });
 
 
-   /* $('#reportrange').daterangepicker(
+   $('#reportrange').daterangepicker(
         {
-            startDate: moment().subtract('days', 29),
+            startDate: moment().subtract('year', 3),
             endDate: moment(),
             minDate: '01/01/2012',
             maxDate: '12/31/2015',
@@ -1930,7 +2128,8 @@ function initialize() {
                 'Last 30 Days': [moment().subtract('days', 29), moment()],
                 'This Month': [moment().startOf('month'), moment()],
                 'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                'This Year': [moment().startOf('year'), moment()]
+                'This Year': [moment().startOf('year'), moment()],
+				'Everything': [moment().subtract('year',3),moment()]
             },
             opens: 'left',
             format: 'MM/DD/YYYY',
@@ -1950,5 +2149,5 @@ function initialize() {
             filter();
             updateCounters();
         }
-    ); */
+    );
 }
