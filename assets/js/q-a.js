@@ -124,13 +124,7 @@ function populateQuestions(val){
 			    var questionstatement=object.get("title");
 			    var questiondetails=object.get("content");
 			    var questionId=object.id;
-<<<<<<< HEAD
-
-			    qView.append("<div class='row list-qa'><div class='small-9 columns' ><h4 id='question-"+questionId+"'>"+questionstatement+"</h4><div class='row'><div class='small-4 columns secondary secondary-color'><i class='icon-clock'></i> "+time+"</div><div class='small-4 columns secondary secondary-color'><i class='icon-calendar'></i> "+date+"</div><div class='small-4 columns secondary secondary-color'><i class='icon-location'></i> "+place+"</div></div><p class='secondary-color s-ws-top'>"+lastReply+"</p></div><div class='small-3 columns'><div class='row'><div class='small-6 columns text-center'><img src='"+askedbyPhoto+"' class='circle-img img-h'><h5 class='secondary secondary-color'>Asked by</h5></div><div class='small-6 columns text-center'><img src='"+ lastReplyPhoto+"' class='circle-img img-h'><h5 class='secondary secondary-color'>Last reply</h5></div></div><div class='row secondary'><div class='small-6 columns text-right secondary-color'>Last actvity:</div><div class='small-6 columns'>"+lastActivityTime+"</div></div><div class='row'><div class='small-6 columns text-right secondary-color'>Views:</div><div class='small-6 columns'>"+views+"</div></div><div class='row'><div class='small-6 columns text-right secondary-color'>Comments:</div><div class='small-6 columns'>"+comments+"</div></div><div class='row'><div class='small-6 columns text-right secondary-color'>Followers:</div><div class='small-6 columns'>"+followers+"</div></div></div></div><hr>");
-
-=======
 			    qView.append("<div class='row list-qa'><div class='small-9 columns' ><h4 id='question-"+questionId+"'>"+questionstatement+"</h4><div class='row'><div class='small-4 columns secondary secondary-color'><i class='icon-clock secondary'></i> "+time+"</div><div class='small-4 columns secondary secondary-color'><i class='icon-calendar secondary'></i> "+date+"</div><div class='small-4 columns secondary secondary-color'><i class='icon-location secondary'></i> "+place+"</div></div><p class='s-ws-top'>"+questiondetails+"</p><p class='secondary-color secondary s-ws-top'> <strong>Last Reply: </strong>"+lastReply+"</p></div><div class='small-3 columns'><div class='row'><div class='small-6 columns text-center'><img src='"+askedbyPhoto+"' class='circle-img img-h'><h5 class='secondary secondary-color'>Asked by <span>"+askedbyName+"</span></h5></div><div class='small-6 columns text-center'><img src='"+ lastReplyPhoto+"' class='circle-img img-h'><h5 class='secondary secondary-color'>Last reply <span>"+lastreplyName+"</span></h5></div></div><div class='row secondary'><div class='small-6 columns text-right secondary-color'>Last actvity:</div><div class='small-6 columns secondary'>"+lastActivityTime+"</div></div><div class='row'><div class='small-6 columns text-right secondary-color'>Views:</div><div class='small-6 columns'>"+views+"</div></div><div class='row'><div class='small-6 columns text-right secondary-color'>Comments:</div><div class='small-6 columns'>"+comments+"</div></div><div class='row'><div class='small-6 columns text-right secondary-color'>Followers:</div><div class='small-6 columns'>"+followers+"</div></div></div></div><hr>");
->>>>>>> feature-redesignv2
 				$('#question-'+questionId).off();
 				$('#question-'+questionId).click(function(event){
 					  event.preventDefault();
@@ -510,6 +504,16 @@ function initialize() {
 			myQuestions();
 			
 		});
+    $('#ask-trg').click(function(){
+      event.preventDefault();
+      $('#ask').slideDown();
+      $('#ask-trg').html('Cancel').addClass('secondary ask-cancel');
+      $('.ask-cancel').click(function(){
+        event.preventDefault();
+        $('#ask').slideUp();
+        $('#ask-trg').html('Ask a question').removeClass('secondary ask-cancel');
+      });
+    });
 		$('#answer-form').submit(function(event){
 	          event.preventDefault();
 			  loadingButton_id("commit_btn",3);
