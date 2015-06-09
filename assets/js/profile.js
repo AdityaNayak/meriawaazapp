@@ -411,27 +411,39 @@ function queryElectionTable(){
         }
         else{
                     //Check if some new election has held in this constituency before
-                    if(results[0].get("winner")==undefined){
-                        ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Candidate)";
-                    }
-                    else{
-                        if(results[0].get("winner").id==neta.id){
-                            ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Winner)";
-                        }
-                        else{
-                            ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Contested)";
-                        }
-                    }
+					if(results[0].get("showStatus")==true){
+						if(results[0].get("winner")==undefined){
+							ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Candidate)";
+						}
+						else{
+							if(results[0].get("winner").id==neta.id){
+								ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Winner)";
+							}
+							else{
+								ele=results[0].get("name")+" "+results[0].get("year").toString()+" (Contested)";
+							}
+						}
+					}
+					else{
+							ele=results[0].get("name");
+					}
+                    
                     console.log("ele:"+ele);
                     cs=results[0].get("constituency").get("name")+"<small> "+results[0].get("constituency").get("state")+"</small>";
                     var chp;
                     for(var i=1;i<results.length;i++){
-                        if(results[i].get("winner").id==neta.id){
-                            chp=results[i].get("name")+" "+results[0].get("year").toString()+" (Winner)";
-                        }
-                        else{
-                            chp=results[i].get("name")+" "+results[0].get("year").toString()+" (Contested)";
-                        }
+						if(results[i].get("showStatus")==true){
+							if(results[i].get("winner").id==neta.id){
+								chp=results[i].get("name")+" "+results[0].get("year").toString()+" (Winner)";
+							}
+							else{
+								chp=results[i].get("name")+" "+results[0].get("year").toString()+" (Contested)";
+							}
+						}
+						else{
+								chp=results[i].get("name");
+						}
+                        
                         his.push(chp);
                     }
                 }

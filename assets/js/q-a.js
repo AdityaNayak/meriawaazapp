@@ -53,9 +53,10 @@ function getAllConstituencies(){
 	AC=[];
 	con.find({
     	success:function(results){
-			for(var i=0;i>results.length;i++){
+			for(var i=0;i<results.length;i++){
 				var temp=new Constituency();
 				temp.id=results[i].id;
+				temp.set("index",results[i].get("index"));
 				AC.push(temp);
 			}
 			console.log(JSON.stringify(AC));
@@ -67,6 +68,7 @@ function getAllConstituencies(){
 }
 
 function populateQuestions(val){
+	NProgress.start();
 	var qView=$('#qView');
 	console.log("populateQuestions");
 	qView.html("");
@@ -77,23 +79,24 @@ function populateQuestions(val){
 	 question.include("pAsker");
 	 question.include("lastAnswer");
 	 question.include(["lastAnswer.pUser"]);
-	 if(constituency.get("type")==1){
-		 constituencyArray=constituency.get("constituencyArray");
-		 console.log(constituencyArray);
-		 var Constituency = Parse.Object.extend("Constituency");
-		 pointerArray=[];
-		 for(var i=0;i<constituencyArray.length;i++){
-			 
-			 var con = new Constituency();
-			 con.id=constituencyArray[i]["objectId"];
-			 pointerArray.push(con);
+		 if(constituency.get("type")==1){
+			 constituencyArray=constituency.get("constituencyArray");
+			 console.log(constituencyArray);
+			 var Constituency = Parse.Object.extend("Constituency");
+			 pointerArray=[];
+			 for(var i=0;i<constituencyArray.length;i++){
+				 
+				 var con = new Constituency();
+				 con.id=constituencyArray[i]["objectId"];
+				 pointerArray.push(con);
+			 }
+			 console.log(pointerArray);
+			 question.containedIn("constituency", pointerArray);
 		 }
-		 console.log(pointerArray);
-		 question.containedIn("constituency", pointerArray);
-	 }
-	 else{
-		 question.equalTo("constituency",constituency);
-	 }
+		 else{
+			 question.equalTo("constituency",constituency);
+		 }
+	 
 	 question.include("constituency");
 	 question.limit(1000);
 	 question.descending("createdAt");
@@ -117,7 +120,7 @@ function populateQuestions(val){
     		var addition="";
     		for(var i=0;i<results.length;i++){
     			var object=results[i];
-
+				console.log(object);
     			if(object.get("lastAnswer")!=undefined){
     				var lastReply=object.get("lastAnswer").get("content");
     				if(object.get("lastAnswer").get("pUser").get("pic")!=undefined){
@@ -539,12 +542,12 @@ function initialize() {
 			myQuestions();
 			
 		});
-    $('#ask-trg').click(function(){
+    $('#ask-trg').click(function(event){
       event.preventDefault();
       $('#ask').slideDown();
       $('#ask-trg').html('Cancel').addClass('secondary ask-cancel');
-      $('.ask-cancel').click(function(){
-        event.preventDefault();
+      $('.ask-cancel').click(function(e){
+        e.preventDefault();
         $('#ask').slideUp();
         $('#ask-trg').html('Ask a question').removeClass('secondary ask-cancel');
       });

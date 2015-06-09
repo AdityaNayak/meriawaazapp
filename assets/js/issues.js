@@ -1122,6 +1122,7 @@ function getIcon(category,status){
 
 function plotConstituencyArray(c,n){
       console.log("Lets Plot a Constituency Array");
+	  console.log(c);
       ListItem = Parse.Object.extend("Constituency");
 	  
       query = new Parse.Query(ListItem);
@@ -1322,60 +1323,7 @@ function populate(){
             for (var i = 0; i < results.length; i++) { 
                 var object = results[i];
                 var myicon;
-                if(currentUser.get("username")=="admin"){
-                    //Set Icon
-                    myicon=getIcon(object.get("category"),object.get("status"));
-                                  
-                    marker = new google.maps.Marker({
-                        position: {lat: object.get('location').latitude, lng: object.get('location').longitude},
-                        map: map,
-                        title: object.get('category'),
-                        content: object,
-                        icon : myicon,
-                        draggable: false,
-                        animation: google.maps.Animation.DROP
-                    });
-
-                    var d=new Date(object.createdAt);
-                    var ago=timeSince(d);
-                    var content=object.get("content");
-                    if(object.get("content").length > 50){
-                        content=object.get("content").substring(0,50)+"...";
-                    }
-                    listView.append( "<tr id='"+object.id+"' class='"+object.get('status')+"' onClick='listViewClick("+object.id.toString()+");'><td width='100'>"+(object.get('issueId')).toString()+"</td><td width='100' class='ct'>"+object.get('category')+"</td><td class='ct'>"+content+"</td><td class='ct'>"+appropriateStatus(object.get('status'))+"</td><td width='100'>"+ago+" ago</td></tr>");                        
-                    markers.push(marker);
-                    if((marker.content).get('status')=="open"){
-                    no=no+1;
-                    }
-                    if((marker.content).get('status')=="progress"){
-                        np=np+1;
-                    }
-                    if((marker.content).get('status')=="review"){
-                        nr=nr+1;
-                    }
-                    if((marker.content).get('status')=="closed"){
-                        nc=nc+1;
-                    }
-                    google.maps.event.addListener(marker, 'click', (function(marker,object) {
-                        return function() {
-                            NProgress.start();
-                            console.log("NProgress start");
-                            if(infowindow) {
-                                infowindow.close();
-                            }
-                            infowindow = new google.maps.InfoWindow({
-                                maxWidth: 700,
-                                maxHeight: 900
-                            });
-                            
-                            currmarker=marker;
-                            updateCurrentMarker(currmarker);                        
-                            infowindow.setContent(currmarker.content.get('status'));
-                            
-                        }
-                    })(marker,object));
-                }
-                else{
+                
 					if(constituencyType!=1){
 						if(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly)==true){
 							//Set Icon
@@ -1487,7 +1435,6 @@ function populate(){
 								})(marker,object));
 							}
 						}
-					}
                 }
                 
              } 
@@ -1674,7 +1621,6 @@ function listViewClick(p) {
 function initializeMap(){
   var constituency;
   if (currentUser.get("type")=="neta"){
-      if(currentUser.get("username")!="admin"){
         var n=currentUser.get("neta");
         n.fetch({
           success:function(results1){
@@ -1687,6 +1633,7 @@ function initializeMap(){
 			election.equalTo("arrayNetas", pointer);
 			election.include("[constituency.constituencyArray]");
 			election.include("constituency");
+			election.limit(1000);
 			election.find({
 				success: function(results) {
 					constituency=results[0].get("constituency");
@@ -1737,11 +1684,6 @@ function initializeMap(){
             NProgress.done();
           }
         });
-      }  
-      else{
-        populate();
-        populateTeam();
-      }
   }
   else{  
       var t=currentUser.get("teamMember");

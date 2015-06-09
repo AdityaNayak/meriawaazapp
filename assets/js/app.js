@@ -60,7 +60,6 @@ else{
 		                			p=n.get("party");	
 		                			p.fetch({
 		                				success: function(results){
-		                					if(CU.get("username")!="admin"){
 						                		/*
 												console.log(n.get("constituency"));
 						                		
@@ -96,7 +95,6 @@ else{
 														console.log("Error: "+error.message);
 													}													
 												});
-						                	}	
 						                	if(p.get("logo")!=undefined){
 						                		plogo.src=p.get("logo").url();
 						                	}
@@ -139,7 +137,7 @@ else{
 															  success: function(results) {
 																	constituency=results[0].get("constituency");
 																	consti.innerHTML=constituency.get("name");
-																	if(a=="q-a.html"){
+																	if(a=="q-a.html" || a=="q-a.html#"){
 																		populateQuestions(0);
 																	}
 																},
