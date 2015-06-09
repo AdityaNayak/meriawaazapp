@@ -46,6 +46,26 @@ function myQuestions(){
     });
 }
 
+function getAllConstituencies(){
+	var Constituency=Parse.Object.extend("Constituency");
+    var con= new Parse.Query(Constituency);
+	con.limit(1000);
+	AC=[];
+	con.find({
+    	success:function(results){
+			for(var i=0;i>results.length;i++){
+				var temp=new Constituency();
+				temp.id=results[i].id;
+				AC.push(temp);
+			}
+			console.log(JSON.stringify(AC));
+		},
+		error:function(error){
+			console.log(error.message);
+		}
+	});
+}
+
 function populateQuestions(val){
 	var qView=$('#qView');
 	console.log("populateQuestions");
@@ -57,9 +77,24 @@ function populateQuestions(val){
 	 question.include("pAsker");
 	 question.include("lastAnswer");
 	 question.include(["lastAnswer.pUser"]);
+	 if(constituency.get("type")==1){
+		 constituencyArray=constituency.get("constituencyArray");
+		 console.log(constituencyArray);
+		 var Constituency = Parse.Object.extend("Constituency");
+		 pointerArray=[];
+		 for(var i=0;i<constituencyArray.length;i++){
+			 
+			 var con = new Constituency();
+			 con.id=constituencyArray[i]["objectId"];
+			 pointerArray.push(con);
+		 }
+		 console.log(pointerArray);
+		 question.containedIn("constituency", pointerArray);
+	 }
+	 else{
+		 question.equalTo("constituency",constituency);
+	 }
 	 question.include("constituency");
-	 question.equalTo("constituency",constituency);
-
 	 question.limit(1000);
 	 question.descending("createdAt");
 	 if(val==0){
