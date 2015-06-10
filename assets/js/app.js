@@ -312,8 +312,9 @@ $('#logout').click(function() {
 	logout();
 });
 
-function notready(){
+function notready(event){
 	notify("The feature is not ready yet, but coming soon. Stay Tuned", "warning",2);
+	event.preventDefault();
 }
 
 function notify(text,type,duration){
