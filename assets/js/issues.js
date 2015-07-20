@@ -1549,7 +1549,7 @@ function filter() {
     updateHistory();
     listView.html("");
     for (var m = 0; m < markers.length; m++) {
-        if (statusCheck(markers[m]) == 1 && categoryCheck(markers[m]) == 1) && dateCheck(markers[m])==1){
+        if ((statusCheck(markers[m]) == 1 && categoryCheck(markers[m]) == 1)) && dateCheck(markers[m])==1){
             var d = new Date((markers[m].content).createdAt);
             var ago = timeSince(d);
             var content = markers[m].content.get('content');
