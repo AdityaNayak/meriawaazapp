@@ -928,7 +928,7 @@ function updateCurrentMarker(m){
   console.log("updateCurrentMarker");
     ListItem = Parse.Object.extend("Issue");
     query = new Parse.Query(ListItem);
-    query.equalTo("objectId", m.content.id);
+    query.equalTo(objectId, m.content.id);
     query.find({
       success: function(results) {
         console.log("current marker updated: "+results.length);
