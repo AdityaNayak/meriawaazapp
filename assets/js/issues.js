@@ -972,18 +972,23 @@ function updateContentWithCurrentMarker() {
     var p_status = currmarker.content.get('status');
     var p_daysLeft = currmarker.content.get('daysLeft');
     var p_title = currmarker.content.get('title');
+    var p_phone="";
+    if(currmarker.content.get('PhoneNo')!=undefined){
+       p_phone= currmarker.content.get('PhoneNo').toString();
+    }
     var p_issueId = currmarker.content.get('issueId').toString();
     infowindow.setContent(p_issueId);
     infowindow.open(map, marker);
     var status = document.getElementById('colorstatus');
     var date = document.getElementById('date');
     var daysLeft = document.getElementById('daysLeft');
-    var time = document.getElementById('time');
+    var time = document.getElementById('times');
     var photo = document.getElementById('photo');
     var content = document.getElementById('content');
     var type = document.getElementById('type');
     var title = document.getElementById('ititle');
-
+    var phone1=document.getElementById('phone1');
+    var phone2=document.getElementById('phone2');
     var location = document.getElementById('location');
     var bigphoto = document.getElementById('bigphoto');
     var detailedissue = document.getElementById('detailedissue');
@@ -1016,6 +1021,9 @@ function updateContentWithCurrentMarker() {
         status.innerHTML = '<strong>' + appropriateStatus(p_status) + '</strong>';
         date.innerHTML = p_date;
         time.innerHTML = p_time;
+        console.log(p_time);
+        phone1.innerHTML=p_phone;
+        phone2.innerHTML=p_phone;
         if (p_content.length < 50) {
             content.innerHTML = p_content;
         } else {
