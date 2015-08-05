@@ -1,5 +1,6 @@
 var currquestion;
 var currentUser;
+var currentPUser;
 var currentNeta;
 var folllist=[];
 var mylist=[];
@@ -511,13 +512,22 @@ function initialize() {
 				}
 			})
 		}
-		if(currentUser.get("pic")!=undefined){
-			document.getElementById("myphoto").src=currentUser.get("pic").url();
-		}
-		else{
-			document.getElementById("myphoto").src=getDefaultIcon(currentUser.get("type"));
-		}
-	    $('#open').click(function(){
+		currentPUser=currentUser.get("pUser");
+		currentPUser.fetch({
+			success:function(results){
+				if(currentPUser.get("pic")!=undefined){
+					document.getElementById("myphoto").src=currentPUser.get("pic").url();
+				}
+				else{
+					document.getElementById("myphoto").src=getDefaultIcon(currentPUser.get("type"));
+				}
+			},
+			error:function(error){
+					console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+
+			}
+		});
+			    $('#open').click(function(){
 	    	NProgress.start();
 			populateQuestions(2);
 			

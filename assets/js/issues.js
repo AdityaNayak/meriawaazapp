@@ -1107,29 +1107,33 @@ function getIcon(category, status) {
     return myicon;
 }
 
-function plotConstituencyArray(c, n) {
+function plotConstituencyArray(c, n, state) {
     console.log("Lets Plot a Constituency Array");
     console.log(c);
     ListItem = Parse.Object.extend("Constituency");
 
     query = new Parse.Query(ListItem);
     query.equalTo("index", c);
+    query.equalTo("state", state);
     query.find({
         success: function(results) {
             console.log("Starting Plotting: " + results[0].get("name"));
             var Coords = [];
             var pints = [];
             var points = results[0].get("points");
-            console.log(points.length);
-            for (var i = 0; i < points.length; i++) {
-                Coords.push(new google.maps.LatLng(points[i].latitude, points[i].longitude));
-                pints.push({
-                    x: points[i].latitude,
-                    y: points[i].longitude
-                });
+            if(points!=undefined){
+                console.log(points.length);
+                for (var i = 0; i < points.length; i++) {
+                    Coords.push(new google.maps.LatLng(points[i].latitude, points[i].longitude));
+                    pints.push({
+                        x: points[i].latitude,
+                        y: points[i].longitude
+                    });
+                }
+
+                console.log("First:" + points[0].longitude);
+                 console.log("Last:" + points[points.length - 1].longitude);
             }
-            console.log("First:" + points[0].longitude);
-            console.log("Last:" + points[points.length - 1].longitude);
             Poly = new google.maps.Polygon({
                 paths: Coords,
                 strokeColor: '#0E629B',
@@ -1648,12 +1652,11 @@ function initializeMap() {
                                 miniConstituency = constituencyArray[i];
 
                                 if (i == (constituencyArray.length - 1)) {
-                                    plotConstituencyArray(miniConstituency["index"], 1);
+                                    plotConstituencyArray(miniConstituency["index"], 1, constituency.get("state"));
                                 } else {
-                                    plotConstituencyArray(miniConstituency["index"], 0);
+                                    plotConstituencyArray(miniConstituency["index"], 0, constituency.get("state"));
                                 }
-
-
+                                map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
                             }
                         } else {
                             plotConstituency(constituency.get("index"));
@@ -1698,11 +1701,11 @@ function initializeMap() {
                                         miniConstituency = constituencyArray[i];
 
                                         if (i == (constituencyArray.length - 1)) {
-                                            plotConstituencyArray(miniConstituency.get("index"), 1);
+                                            plotConstituencyArray(miniConstituency.get("index"), 1, constituency.get("state"));
                                         } else {
-                                            plotConstituencyArray(miniConstituency.get("index"), 0);
+                                            plotConstituencyArray(miniConstituency.get("index"), 0, constituency.get("state"));
                                         }
-                                        map.setCenter(new google.maps.LatLng(miniConstituency.get("center").latitude, constituency.get("center").longitude));
+                                        map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
                                     }
                                 } else {
                                     plotConstituency(constituency.get("index"));
