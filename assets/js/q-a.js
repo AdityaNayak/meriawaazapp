@@ -1,5 +1,6 @@
 var currquestion;
 var currentUser;
+var currentPUser;
 var currentNeta;
 var folllist=[];
 var mylist=[];
@@ -350,7 +351,7 @@ function singleAnswers(question){
  						var pphoto=getDefaultIcon(object.get("pUser").get("type"));
  					}
  					
- 					$("#participants").append("<li><img src='"+pphoto+"' class='circle-img gs hv'></li>");
+ 					$("#participants").append("<li><img src='"+pphoto+"' class='circle-img gs hv'>"+object.get('pUser').get('name')+"</li>");
  				}
  				var tdate=object.createdAt;
 			    var p_timestamp=tdate.toString().split(" ");
@@ -362,12 +363,15 @@ function singleAnswers(question){
  				var extraimage="";
  				console.log(question);
  				if(object.get("pUser").id==question.get("pAsker").id){
- 					extratext="<p>Added by Author</p>";
+ 					extratext="<p>Added by Author - "+object.get("pUser").get("name")+"</p>";
  					extraimage="<div class='small-4 columns small-offset-3 s-ws-top'><img src='./assets/images/neta.png' class='circle-img'></div>";
  				}
- 				else if(object.get("pUser").type=="neta"){
- 					extratext="<p>Added by Neta</p>";
+ 				else if(object.get("pUser").get("type")=="neta"){
+ 					extratext="<p>Added by Neta - "+object.get("pUser").get("name")+"</p>";
  					extraimage="<div class='small-4 columns small-offset-3 s-ws-top'><img src='./assets/images/asker.png' class='circle-img'></div>";
+ 				}
+ 				else{
+ 					extratext=object.get("pUser").get("name");
  				}
  				$("#ans-view").append("<div class='row'><div class='small-3 columns text-right m-ws-top'><div class='row'>"+extraimage+"<div class='small-5 columns small-offset-7'><img src='"+photo+"' class='circle-img'></div></div><div class='row'><div class='small-12 columns secondary s-ws-top'><i class='icon-clock secondary-color'></i> "+time+"</div><div class='small-12 columns secondary'><i class='icon-calendar secondary-color'></i> "+date+"</div><div class='small-12 columns secondary'><i class='icon-location secondary-color'></i>"+place+"</div></div></div><div class='small-9 columns secondary-panel m-ws-top'>"+extratext+"<p>"+answercontent+"</p></div></div>");
  			}
@@ -511,13 +515,22 @@ function initialize() {
 				}
 			})
 		}
-		if(currentUser.get("pic")!=undefined){
-			document.getElementById("myphoto").src=currentUser.get("pic").url();
-		}
-		else{
-			document.getElementById("myphoto").src=getDefaultIcon(currentUser.get("type"));
-		}
-	    $('#open').click(function(){
+		currentPUser=currentUser.get("pUser");
+		currentPUser.fetch({
+			success:function(results){
+				if(currentPUser.get("pic")!=undefined){
+					document.getElementById("myphoto").src=currentPUser.get("pic").url();
+				}
+				else{
+					document.getElementById("myphoto").src=getDefaultIcon(currentPUser.get("type"));
+				}
+			},
+			error:function(error){
+					console.log("Error: "+error.message);notify(standardErrorMessage, "error",standardErrorDuration);
+
+			}
+		});
+			    $('#open').click(function(){
 	    	NProgress.start();
 			populateQuestions(2);
 			

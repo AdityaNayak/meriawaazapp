@@ -1,6 +1,7 @@
 var currentNeta;
 var EC;
 var currentUser;
+var currentPUser;
 var file;
 var filePath;
 var filename;
@@ -376,9 +377,13 @@ function populateStatus(){
                                             photo=results2[j].get("pUser").get("pic").url();
                                         } 
                                         comm=results2[j].get("content");
+<<<<<<< HEAD
                                         console.log(results2[j].get("pUser"));
                                         var name=results2[j].get("pUser").get("username");
                                         chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
+=======
+                                        chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'>"+results2[j].get("pUser").get("name")+"</div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
+>>>>>>> gh-pages
                                     }
                                     
                                 }
@@ -407,8 +412,8 @@ function populateStatus(){
 								Define Stuff to Display the Upload Link here.
 								*/
 								
-                                if(currentUser.get("pic")!=undefined){
-                                var imige=currentUser.get("pic").url();
+                                if(currentPUser.get("pic")!=undefined){
+                                var imige=currentPUser.get("pic").url();
                                 }
                                 else{
                                     var imige=getDefaultIcon(currentUser.get("type"));
@@ -640,17 +645,22 @@ function fetchECStatus(u){
 					}
 					else{
 						//Check if newer elections in this constituency have happened
-						if(results[0].get("winner")==undefined){
-							EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Candidate)";
-						}
-						else{
-							if(results[0].get("winner").id==currentNeta.id){
-								EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Winner)";
-							}
-							else{
-								EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Contested)";
-							}
-						}
+                        if(results[0].get("showStatus")==true){
+    						if(results[0].get("winner")==undefined){
+    							EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Candidate)";
+    						}
+    						else{
+    							if(results[0].get("winner").id==currentNeta.id){
+    								EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Winner)";
+    							}
+    							else{
+    								EC.e=results[0].get("name")+" "+results[0].get("year").toString()+" (Contested)";
+    							}
+    						}
+                        }
+                        else{
+                            EC.e=results[0].get("name")+" "+results[0].get("year").toString()
+                        }
 						EC.c=results[0].get("constituency").get("name")+"<small> "+results[0].get("constituency").get("state")+"</small>";
 					}
 					if(u.get("type")=="neta"){
@@ -811,41 +821,49 @@ function setCurrentNetaTM(n){
     console.log("setCurrentNeta");
     n.fetch({
      success: function(result){
-            currentUser=n.get("user");
+            currentUser=n.get("User");
             currentNeta=n;
             currentUser.fetch({
                 success:function(results){
                     console.log("I was called Team Member!");
-                    if(currentUser.get("pic")!=undefined){
-                          var photo=currentUser.get("pic").url();
-                    }
-                    else{
-                          var photo="./assets/images/neta.png";
-                    }
-                    
-                    var name=currentUser.get("name");
-                    var party=currentNeta.get("party");
-                    party.fetch({
-                       success:function(result){
-                            var partyname=party.get("name");
-                            var population=currentNeta.get("constituency").get("population");
-                            var ele=EC.e;
-                            var cs=EC.c;
-                            document.getElementById('photo').src=photo;
-                            document.getElementById('myname').innerHTML=name;
-                            document.getElementById('population').innerHTML=population;
-                            document.getElementById('myparty').innerHTML=partyname;
-                            document.getElementById('ele').innerHTML=ele;
-                            document.getElementById('cs').innerHTML=cs;
-                            calculateCurrentNetaStats();
-                            createVoterArray();
-                            populateStatus();
-                       },
-                       error: function(error){
-                           //console.log("Error: "+error.message);
-                           notify(error.message, "error",standardErrorDuration);
-                            NProgress.done();
-                       } 
+                    currentPUser=currentUser.get("pUser");
+                    currentPUser.fetch({
+                        success:function(results){
+                            if(currentPUser.get("pic")!=undefined){
+                                  var photo=currentPUser.get("pic").url();
+                            }
+                            else{
+                                  var photo="./assets/images/neta.png";
+                            }
+                            
+                            var name=currentPUser.get("name");
+                            var party=currentNeta.get("party");
+                            party.fetch({
+                               success:function(result){
+                                    var partyname=party.get("name");
+                                    var population=currentNeta.get("constituency").get("population");
+                                    var ele=EC.e;
+                                    var cs=EC.c;
+                                    document.getElementById('photo').src=photo;
+                                    document.getElementById('myname').innerHTML=name;
+                                    document.getElementById('population').innerHTML=population;
+                                    document.getElementById('myparty').innerHTML=partyname;
+                                    document.getElementById('ele').innerHTML=ele;
+                                    document.getElementById('cs').innerHTML=cs;
+                                    calculateCurrentNetaStats();
+                                    createVoterArray();
+                                    populateStatus();
+                               },
+                               error: function(error){
+                                   //console.log("Error: "+error.message);
+                                   notify(error.message, "error",standardErrorDuration);
+                                    NProgress.done();
+                               } 
+                            });
+                        },
+                        error: function(error){
+
+                        }
                     });
                 },
                 error:function(error){
@@ -867,48 +885,59 @@ function setCurrentNetaTM(n){
 function setCurrentNeta(u){
     console.log("setCurrentNeta");
     currentUser=u;
-    currentNeta=currentUser.get("neta");
-    currentNeta.fetch({
-       success: function(results){
-            console.log("I was called Neta!");
-            if(currentUser.get("pic")!=undefined){
-                  var photo=currentUser.get("pic").url();
-            }
-            else{
-                  var photo="./assets/images/neta.png";
-            }
-            
-            var name=currentUser.get("name");
-            var party=currentNeta.get("party");
-            party.fetch({
-               success: function(result){
-                    var partyname=party.get("name");
-                    var ele=EC.e;
-                    var cs=EC.c;
-                    document.getElementById('photo').src=photo;
-                    document.getElementById('myname').innerHTML=name;
-                    document.getElementById('myparty').innerHTML=partyname;
-                    document.getElementById('ele').innerHTML=ele;
-                    document.getElementById('cs').innerHTML=cs;
-                    calculateCurrentNetaStats();
-                    populateStatus();   
-                    updateReach();
-					createVoterArray();
-               } ,
+    currentPUser=currentUser.get("pUser");
+    currentPUser.fetch({
+        success:function(results){
+            console.log(results);
+            currentNeta=currentUser.get("neta");
+            currentNeta.fetch({
+               success: function(results){
+                    console.log("I was called Neta!");
+                    if(currentPUser.get("pic")!=undefined){
+                          var photo=currentPUser.get("pic").url();
+                    }
+                    else{
+                          var photo="./assets/images/neta.png";
+                    }
+                    
+                    var name=currentPUser.get("name");
+                    var party=currentNeta.get("party");
+                    party.fetch({
+                       success: function(result){
+                            var partyname=party.get("name");
+                            var ele=EC.e;
+                            var cs=EC.c;
+                            document.getElementById('photo').src=photo;
+                            document.getElementById('myname').innerHTML=name;
+                            document.getElementById('myparty').innerHTML=partyname;
+                            document.getElementById('ele').innerHTML=ele;
+                            document.getElementById('cs').innerHTML=cs;
+                            calculateCurrentNetaStats();
+                            populateStatus();   
+                            updateReach();
+                            createVoterArray();
+                       } ,
+                       error: function(error){
+                           //console.log("Error: "+error.message);
+                           notify(error.message, "error",standardErrorDuration);
+                            NProgress.done();
+                       }
+                    });
+                    
+               },
                error: function(error){
                    //console.log("Error: "+error.message);
                    notify(error.message, "error",standardErrorDuration);
-                    NProgress.done();
+                        NProgress.done();
                }
             });
-            
-       },
-       error: function(error){
-           //console.log("Error: "+error.message);
-           notify(error.message, "error",standardErrorDuration);
-                NProgress.done();
-       }
+        },
+        error:function(){
+            notify(error.message, "error",standardErrorDuration);
+            NProgress.done();   
+        }
     });
+    
 }
 
 function initialize() {

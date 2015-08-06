@@ -518,7 +518,7 @@ function populateUpdates() {
 
                 }
                 if (object.get("type") == "comment") {
-                    timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'></div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("name") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
+                    timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("name")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("name") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
                 }
                 if (object.get("type") == "claim") {
                     timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
@@ -972,18 +972,23 @@ function updateContentWithCurrentMarker() {
     var p_status = currmarker.content.get('status');
     var p_daysLeft = currmarker.content.get('daysLeft');
     var p_title = currmarker.content.get('title');
+    var p_phone="";
+    if(currmarker.content.get('PhoneNo')!=undefined){
+       p_phone= currmarker.content.get('PhoneNo').toString();
+    }
     var p_issueId = currmarker.content.get('issueId').toString();
     infowindow.setContent(p_issueId);
     infowindow.open(map, marker);
     var status = document.getElementById('colorstatus');
     var date = document.getElementById('date');
     var daysLeft = document.getElementById('daysLeft');
-    var time = document.getElementById('time');
+    var time = document.getElementById('times');
     var photo = document.getElementById('photo');
     var content = document.getElementById('content');
     var type = document.getElementById('type');
     var title = document.getElementById('ititle');
-
+    var phone1=document.getElementById('phone1');
+    var phone2=document.getElementById('phone2');
     var location = document.getElementById('location');
     var bigphoto = document.getElementById('bigphoto');
     var detailedissue = document.getElementById('detailedissue');
@@ -1016,6 +1021,9 @@ function updateContentWithCurrentMarker() {
         status.innerHTML = '<strong>' + appropriateStatus(p_status) + '</strong>';
         date.innerHTML = p_date;
         time.innerHTML = p_time;
+        console.log(p_time);
+        phone1.innerHTML=p_phone;
+        phone2.innerHTML=p_phone;
         if (p_content.length < 50) {
             content.innerHTML = p_content;
         } else {
@@ -1107,29 +1115,33 @@ function getIcon(category, status) {
     return myicon;
 }
 
-function plotConstituencyArray(c, n) {
+function plotConstituencyArray(c, n, state) {
     console.log("Lets Plot a Constituency Array");
     console.log(c);
     ListItem = Parse.Object.extend("Constituency");
 
     query = new Parse.Query(ListItem);
     query.equalTo("index", c);
+    query.equalTo("state", state);
     query.find({
         success: function(results) {
             console.log("Starting Plotting: " + results[0].get("name"));
             var Coords = [];
             var pints = [];
             var points = results[0].get("points");
-            console.log(points.length);
-            for (var i = 0; i < points.length; i++) {
-                Coords.push(new google.maps.LatLng(points[i].latitude, points[i].longitude));
-                pints.push({
-                    x: points[i].latitude,
-                    y: points[i].longitude
-                });
+            if(points!=undefined){
+                console.log(points.length);
+                for (var i = 0; i < points.length; i++) {
+                    Coords.push(new google.maps.LatLng(points[i].latitude, points[i].longitude));
+                    pints.push({
+                        x: points[i].latitude,
+                        y: points[i].longitude
+                    });
+                }
+
+                console.log("First:" + points[0].longitude);
+                 console.log("Last:" + points[points.length - 1].longitude);
             }
-            console.log("First:" + points[0].longitude);
-            console.log("Last:" + points[points.length - 1].longitude);
             Poly = new google.maps.Polygon({
                 paths: Coords,
                 strokeColor: '#0E629B',
@@ -1648,12 +1660,11 @@ function initializeMap() {
                                 miniConstituency = constituencyArray[i];
 
                                 if (i == (constituencyArray.length - 1)) {
-                                    plotConstituencyArray(miniConstituency["index"], 1);
+                                    plotConstituencyArray(miniConstituency["index"], 1, constituency.get("state"));
                                 } else {
-                                    plotConstituencyArray(miniConstituency["index"], 0);
+                                    plotConstituencyArray(miniConstituency["index"], 0, constituency.get("state"));
                                 }
-
-
+                                map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
                             }
                         } else {
                             plotConstituency(constituency.get("index"));
@@ -1698,11 +1709,11 @@ function initializeMap() {
                                         miniConstituency = constituencyArray[i];
 
                                         if (i == (constituencyArray.length - 1)) {
-                                            plotConstituencyArray(miniConstituency.get("index"), 1);
+                                            plotConstituencyArray(miniConstituency.get("index"), 1, constituency.get("state"));
                                         } else {
-                                            plotConstituencyArray(miniConstituency.get("index"), 0);
+                                            plotConstituencyArray(miniConstituency.get("index"), 0, constituency.get("state"));
                                         }
-                                        map.setCenter(new google.maps.LatLng(miniConstituency.get("center").latitude, constituency.get("center").longitude));
+                                        map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
                                     }
                                 } else {
                                     plotConstituency(constituency.get("index"));
@@ -1735,24 +1746,34 @@ function initializeMap() {
 function initialize() {
     console.log("initialize");
     currentUser = CU;
+    currentPUser = currentUser.get("pUser");
     NProgress.start();
-    console.log("NProgress Start");
-    var pphoto = document.getElementById('profilepic');
-    if (currentUser.get("pic") != undefined) {
-        pphoto.src = currentUser.get("pic").url();
-    } else {
-        pphoto.src = getDefaultIcon(currentUser.get("type"));
-    }
+    currentPUser.fetch({
+        success:function(results){
+            console.log("NProgress Start");
+                var pphoto = document.getElementById('profilepic');
+                if (currentPUser.get("pic") != undefined) {
+                    pphoto.src = currentPUser.get("pic").url();
+                } else {
+                    pphoto.src = getDefaultIcon(currentPUser.get("type"));
+                }
 
-    if (currentUser.get("type") == "neta") {
-        console.log("Current User is a Neta");
-        document.getElementById("neta-panel").style.display = "block";
+                if (currentPUser.get("type") == "neta") {
+                    console.log("Current User is a Neta");
+                    document.getElementById("neta-panel").style.display = "block";
 
-    } else {
-        console.log("Current User is a Team Member");
-        document.getElementById("neta-panel").style.display = "none";
+                } else {
+                    console.log("Current User is a Team Member");
+                    document.getElementById("neta-panel").style.display = "none";
 
-    }
+                }
+        },
+        error:function(error){
+            console.log("Error: " + error.message);
+                notify(standardErrorMessage, "error", standardErrorDuration);
+        }
+    });
+    
     map2 = new google.maps.Map(document.getElementById('googleMap'), {
         zoom: 12,
         center: new google.maps.LatLng(28.612912, 77.22951),
