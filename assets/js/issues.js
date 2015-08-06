@@ -518,7 +518,7 @@ function populateUpdates() {
 
                 }
                 if (object.get("type") == "comment") {
-                    timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'></div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("name") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
+                    timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("name")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("name") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
                 }
                 if (object.get("type") == "claim") {
                     timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
@@ -1746,24 +1746,34 @@ function initializeMap() {
 function initialize() {
     console.log("initialize");
     currentUser = CU;
+    currentPUser = currentUser.get("pUser");
     NProgress.start();
-    console.log("NProgress Start");
-    var pphoto = document.getElementById('profilepic');
-    if (currentUser.get("pic") != undefined) {
-        pphoto.src = currentUser.get("pic").url();
-    } else {
-        pphoto.src = getDefaultIcon(currentUser.get("type"));
-    }
+    currentPUser.fetch({
+        success:function(results){
+            console.log("NProgress Start");
+                var pphoto = document.getElementById('profilepic');
+                if (currentPUser.get("pic") != undefined) {
+                    pphoto.src = currentPUser.get("pic").url();
+                } else {
+                    pphoto.src = getDefaultIcon(currentPUser.get("type"));
+                }
 
-    if (currentUser.get("type") == "neta") {
-        console.log("Current User is a Neta");
-        document.getElementById("neta-panel").style.display = "block";
+                if (currentPUser.get("type") == "neta") {
+                    console.log("Current User is a Neta");
+                    document.getElementById("neta-panel").style.display = "block";
 
-    } else {
-        console.log("Current User is a Team Member");
-        document.getElementById("neta-panel").style.display = "none";
+                } else {
+                    console.log("Current User is a Team Member");
+                    document.getElementById("neta-panel").style.display = "none";
 
-    }
+                }
+        },
+        error:function(error){
+            console.log("Error: " + error.message);
+                notify(standardErrorMessage, "error", standardErrorDuration);
+        }
+    });
+    
     map2 = new google.maps.Map(document.getElementById('googleMap'), {
         zoom: 12,
         center: new google.maps.LatLng(28.612912, 77.22951),
