@@ -132,7 +132,7 @@ function updatePost(pid){
                             var time;
                             var photo;
                             var comm;
-                            var name=results2[j].get("user").get("PUser").get("username");
+                            var name=results2[j].get("user").get("username");
                             time=timeSince(new Date(results2[j].createdAt));
                             if(results2[j].get("user").get("pic")==undefined){
                                 photo=getDefaultIcon(results2[j].get("user").get("type"));
@@ -377,13 +377,9 @@ function populateStatus(){
                                             photo=results2[j].get("pUser").get("pic").url();
                                         } 
                                         comm=results2[j].get("content");
-<<<<<<< HEAD
-                                        console.log(results2[j].get("pUser"));
-                                        var name=results2[j].get("pUser").get("username");
-                                        chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
-=======
+
                                         chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'>"+results2[j].get("pUser").get("name")+"</div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
->>>>>>> gh-pages
+
                                     }
                                     
                                 }

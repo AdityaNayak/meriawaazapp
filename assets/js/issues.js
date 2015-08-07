@@ -507,18 +507,18 @@ function populateUpdates() {
                 if (object.get("type") == "unassigned") {
                     console.log(assignee);
                     var ass = assignee.get("pUser");
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was unassigned by <strong class='ct'>" + user.get("name") + "</strong> <small>" + ago + " ago</small></p></div>");
+                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was unassigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
                 }
                 if (object.get("type") == "assigned") {
                     var ass = assignee.get("pUser");
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was assigned by <strong class='ct'>" + user.get("name") + "</strong> <small>" + ago + " ago</small></p></div>");
+                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was assigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
                 }
                 if (object.get("type") == "closed") {
                     timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> closed the issue <small>" + ago + " ago</small></p></div>");
 
                 }
                 if (object.get("type") == "comment") {
-                    timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("name")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("name") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
+                    timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
                 }
                 if (object.get("type") == "claim") {
                     timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
