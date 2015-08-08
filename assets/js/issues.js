@@ -932,7 +932,7 @@ function updateCurrentMarker(m) {
     console.log("updateCurrentMarker");
     ListItem = Parse.Object.extend("Issue");
     query = new Parse.Query(ListItem);
-    query.equalTo(objectId, m.content.id);
+    query.equalTo("objectId", m.content.id);
     query.find({
         success: function(results) {
             console.log("current marker updated: " + results.length);
@@ -1272,8 +1272,11 @@ function populateTM() {
                     if (object.get("content").length > 50) {
                         content = object.get("content").substring(0, 50) + "...";
                     }
-                    listView.append("<tr id='" + object.id + "' class='" + object.get('status') + "' onClick='listViewClick('" + object.id.toString() + "');'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
-                    console.log("<tr id='" + object.id + "' class='" + object.get('status') + "' onClick='listViewClick('" + object.id.toString() + ");'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                    listView.append("<tr id='" + object.id + "' class='" + object.get('status') + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                    console.log("<tr id='" + object.id + "' class='" + object.get('status') + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                    $('#'+object.id).click(function(){
+                                    listViewClick(this.id.toString());
+                    });
                     markers.push(marker);
                     if ((marker.content).get('status') == "open") {
                         no = no + 1;
@@ -1355,7 +1358,11 @@ function populate() {
                         if (object.get("content").length > 50) {
                             content = object.get("content").substring(0, 50) + "...";
                         }
-                        listView.append("<tr id='" + object.id + "' class='" + object.get('status') + "' onClick='listViewClick(" + object.id.toString() + ");'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                        listView.append("<tr id='" + object.id + "' class='" + object.get('status') + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                        $('#'+object.id).click(function(){
+                                    listViewClick(this.id.toString());
+                        });
+
                         markers.push(marker);
                         if ((marker.content).get('status') == "open") {
                             no = no + 1;
@@ -1413,7 +1420,10 @@ function populate() {
                             if (object.get("content").length > 50) {
                                 content = object.get("content").substring(0, 50) + "...";
                             }
-                            listView.append("<tr id='" + object.id + "' class='" + object.get('status') + "' onClick='listViewClick(" + object.id.toString() + ");'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                            listView.append("<tr id='" + object.id + "' class='" + object.get('status') + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                            $('#'+object.id).click(function(){
+                                        listViewClick(this.id.toString());
+                            });
                             markers.push(marker);
                             if ((marker.content).get('status') == "open") {
                                 no = no + 1;
@@ -1569,7 +1579,10 @@ function filter() {
                 content = markers[m].content.get('content').substring(0, 50) + "...";
             }
 
-            listView.append("<tr id='" + (markers[m].content).id + "' class='" + (markers[m].content).get('status') + "' onClick='listViewClick(" + (markers[m].content).id.toString() + ");'><td width='100' class='ct'>" + ((markers[m].content).get('issueId')).toString() + "</td><td width='100' class='ct'>" + (markers[m].content).get('category') + "</td><td class='ct'>" + content + "</td><td width='100' class='ct'>" + appropriateStatus((markers[m].content).get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+            listView.append("<tr id='" + (markers[m].content).id + "' class='" + (markers[m].content).get('status') + "'><td width='100' class='ct'>" + ((markers[m].content).get('issueId')).toString() + "</td><td width='100' class='ct'>" + (markers[m].content).get('category') + "</td><td class='ct'>" + content + "</td><td width='100' class='ct'>" + appropriateStatus((markers[m].content).get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+            $('#'+markers[m].content.id).click(function(){
+                        listViewClick(this.id.toString());
+            });
             markers[m].setMap(map);
         } else {
             markers[m].setMap(null);
@@ -1607,11 +1620,11 @@ function updateCounters() {
 function listViewClick(p) {
     NProgress.start();
     console.log("NProgress Start");
-    var trid = p.id;
+    var trid = p;
     var marker;
-    console.log("you clicked on-" + p.id);
+    console.log("you clicked on-" + p);
     for (var i = 0; i < markers.length; i++) {
-        console.log(markers[i].content.id);
+        //console.log(markers[i].content.id);
         if (markers[i].content.id == trid) {
             marker = markers[i];
             break;

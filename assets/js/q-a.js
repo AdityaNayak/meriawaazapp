@@ -239,6 +239,7 @@ function singleQuestion(questionId){
 								}*/
 								$('#que-view').append("<h3>"+title+"</h3><hr><p>"+questionstatement+"</p>");
 								document.getElementById("askedtophoto").innerHTML="<img src='"+askedtophoto+"' class='circle-img'>";
+								console.log("updating...");
 								document.getElementById("askedbyphoto").innerHTML="<img src='"+askerphoto+"' class='circle-img'><span>"+asker.get("username")+"</span>";
 								document.getElementById("singplace").innerHTML=place;
 								document.getElementById("singtime").innerHTML=time;
@@ -290,6 +291,7 @@ function singleQuestion(questionId){
 						
 						$('#que-view').append("<h3>"+title+"</h3><hr><p>"+questionstatement+"</p>");
 						document.getElementById("askedbyphoto").innerHTML="<img src='"+askerphoto+"' class='circle-img'>";
+						document.getElementById("askedbyphoto").innerHTML="<img src='"+askerphoto+"' class='circle-img'><span>"+asker.get("username")+"</span>";
 						document.getElementById("singplace").innerHTML=place;
 						document.getElementById("singtime").innerHTML=time;
 						document.getElementById("singdate").innerHTML=date;
@@ -350,7 +352,7 @@ function singleAnswers(question){
  						var pphoto=getDefaultIcon(object.get("pUser").get("type"));
  					}
  					
- 					$("#participants").append("<li><img src='"+pphoto+"' class='circle-img gs hv'>"+object.get('username')+"</li>");
+ 					$("#participants").append("<li><img src='"+pphoto+"' class='circle-img gs hv'>"+object.get("pUser").get("username")+"</li>");
  				}
  				var tdate=object.createdAt;
 			    var p_timestamp=tdate.toString().split(" ");
