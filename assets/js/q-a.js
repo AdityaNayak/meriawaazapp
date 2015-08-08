@@ -163,7 +163,7 @@ function populateQuestions(val){
 			    var questionstatement=object.get("title");
 			    var questiondetails=object.get("content");
 			    var questionId=object.id;
-			    qView.append("<div class='row list-qa'><div class='small-9 columns' ><h4 id='question-"+questionId+"'>"+questionstatement+"</h4><div class='row'><div class='small-4 columns secondary secondary-color'><i class='icon-clock secondary'></i> "+time+"</div><div class='small-4 columns secondary secondary-color'><i class='icon-calendar secondary'></i> "+date+"</div><div class='small-4 columns secondary secondary-color'><i class='icon-location secondary'></i> "+place+"</div></div><p class='s-ws-top'>"+questiondetails+"</p><p class='secondary-color secondary s-ws-top'> <strong>Last Reply: </strong>"+lastReply+"</p></div><div class='small-3 columns'><div class='row'><div class='small-6 columns text-center'><img src='"+askedbyPhoto+"' class='circle-img img-h'><h5 class='secondary secondary-color'>Asked by <span>"+askedbyName+"</span></h5></div><div class='small-6 columns text-center'><img src='"+ lastReplyPhoto+"' class='circle-img img-h'><h5 class='secondary secondary-color'>Last reply <span>"+lastreplyName+"</span></h5></div></div><div class='row secondary'><div class='small-6 columns text-right secondary-color'>Last actvity:</div><div class='small-6 columns secondary'>"+lastActivityTime+"</div></div><div class='row'><div class='small-6 columns text-right secondary-color'>Views:</div><div class='small-6 columns'>"+views+"</div></div><div class='row'><div class='small-6 columns text-right secondary-color'>Comments:</div><div class='small-6 columns'>"+comments+"</div></div><div class='row'><div class='small-6 columns text-right secondary-color'>Followers:</div><div class='small-6 columns'>"+followers+"</div></div></div></div><hr>");
+			    qView.append("<div class='row list-qa'><div class='small-9 columns' ><h4 id='question-"+questionId+"'>"+questionstatement+"</h4><div class='row'><div class='small-4 columns tertiary secondary-color'><i class='icon-clock secondary'></i> "+time+"</div><div class='small-4 columns tertiary secondary-color'><i class='icon-calendar secondary'></i> "+date+"</div><div class='small-4 columns tertiary secondary-color'><i class='icon-location secondary'></i> "+place+"</div></div><p class='s-ws-top'>"+questiondetails+"</p><p class='secondary-color secondary s-ws-top'> <strong>Last Reply: </strong>"+lastReply+"</p></div><div class='small-3 columns'><div class='row'><div class='small-6 columns text-center'><img src='"+askedbyPhoto+"' class='circle-img img-h'><div class='tertiary tertiary-color'>Asked by </div><div class='secondary-color secondary'>"+askedbyName+"</div></div><div class='small-6 columns text-center'><img src='"+ lastReplyPhoto+"' class='circle-img img-h'><div class='tertiary tertiary-color'>Last reply </div><div class='secondary-color secondary'>"+lastreplyName+"</div></div></div><div class='row'><div class='small-6 columns text-right s-ws-top'><span class='tertiary tertiary-color'>Last actvity:</span></div><div class='small-6 columns s-ws-top'><span class='secondary'>"+lastActivityTime+"</span></div></div><div class='row'><div class='small-6 columns text-right'><span class='tertiary-color tertiary'>Views:</div><div class='small-6 columns'><span class='secondary'>"+views+"</span></div></div><div class='row'><div class='small-6 columns text-right secondary-color'><span class='tertiary tertiary-color'>Comments:</span></div><div class='small-6 columns'><span class='secondary'>"+comments+"</div></div><div class='row'><div class='small-6 columns text-right secondary-color'><span class='tertiary-color tertiary'>Followers:</span></div><div class='small-6 columns'><span class='secondary'>"+followers+"</span></div></div></div></div><hr>");
 				$('#question-'+questionId).off();
 				$('#question-'+questionId).click(function(event){
 					  event.preventDefault();
@@ -291,7 +291,7 @@ function singleQuestion(questionId){
 						
 						$('#que-view').append("<h3>"+title+"</h3><hr><p>"+questionstatement+"</p>");
 						document.getElementById("askedbyphoto").innerHTML="<img src='"+askerphoto+"' class='circle-img'>";
-						document.getElementById("askedbyphoto").innerHTML="<img src='"+askerphoto+"' class='circle-img'><span>"+asker.get("username")+"</span>";
+						document.getElementById("askedbyphoto").innerHTML="<img src='"+askerphoto+"' class='circle-img'><div class='tertiary secondary-color'>"+asker.get("username")+"</div>";
 						document.getElementById("singplace").innerHTML=place;
 						document.getElementById("singtime").innerHTML=time;
 						document.getElementById("singdate").innerHTML=date;
@@ -352,7 +352,7 @@ function singleAnswers(question){
  						var pphoto=getDefaultIcon(object.get("pUser").get("type"));
  					}
  					
- 					$("#participants").append("<li><img src='"+pphoto+"' class='circle-img gs hv'>"+object.get("pUser").get("username")+"</li>");
+ 					$("#participants").append("<li class='tertiary secondary-color'><img src='"+pphoto+"' class='circle-img gs hv'><span class='secondary'>"+object.get("pUser").get("username")+"</span></li>");
  				}
  				var tdate=object.createdAt;
 			    var p_timestamp=tdate.toString().split(" ");
@@ -364,17 +364,17 @@ function singleAnswers(question){
  				var extraimage="";
  				console.log(question);
  				if(object.get("pUser").id==question.get("pAsker").id){
- 					extratext="<p>Added by Author - "+object.get("pUser").get("username")+"</p>";
- 					extraimage="<div class='small-4 columns s-ws-top'><img src='./assets/images/neta.png' class='circle-img'></div>";
+ 					extratext="Added by Asker - "+object.get("pUser").get("username");
+ 					extraimage="<div class='small-4 columns s-ws-top'><img src='./assets/images/asker.png' class='circle-img'></div>";
  				}
  				else if(object.get("pUser").get("type")=="neta"){
- 					extratext="<p>Added by Neta - "+object.get("pUser").get("username")+"</p>";
- 					extraimage="<div class='small-4 columns s-ws-top'><img src='./assets/images/asker.png' class='circle-img'></div>";
+ 					extratext="Added by Neta - "+object.get("pUser").get("username");
+ 					extraimage="<div class='small-4 columns s-ws-top'><img src='./assets/images/neta.png' class='circle-img'></div>";
  				}
  				else{
  					extratext=object.get("pUser").get("username");
  				}
- 				$("#ans-view").append("<div class='row'><div class='small-3 columns text-right m-ws-top'><div class='row'>"+extraimage+"<div class='small-5 columns small-offset-7'><img src='"+photo+"' class='circle-img'></div></div><div class='row'><div class='small-12 columns secondary s-ws-top'><i class='icon-clock secondary-color'></i> "+time+"</div><div class='small-12 columns secondary'><i class='icon-calendar secondary-color'></i> "+date+"</div><div class='small-12 columns secondary'><i class='icon-location secondary-color'></i>"+place+"</div></div></div><div class='small-9 columns secondary-panel m-ws-top'>"+extratext+"<p>"+answercontent+"</p></div></div>");
+ 				$("#ans-view").append("<div class='row'><div class='small-3 columns text-right m-ws-top'><div class='row'>"+extraimage+"<div class='small-5 columns'><img src='"+photo+"' class='circle-img'></div></div><div class='row'><div class='small-12 columns tertiary secondary-color s-ws-top'><i class='icon-clock secondary tertiary-color-color'></i> "+time+"</div><div class='small-12 columns secondary-color tertiary'><i class='icon-calendar secondary tertiary-color'></i> "+date+"</div><div class='small-12 columns secondary-color tertiary'><i class='icon-location secondary tertiary-color'></i>"+place+"</div></div></div><div class='small-9 columns secondary-panel m-ws-top'><p>"+answercontent+"</p><div class='tertiary m-ws-top secondary-color'>"+extratext+"</div></div></div>");
  			}
  			NProgress.done();
  		},
