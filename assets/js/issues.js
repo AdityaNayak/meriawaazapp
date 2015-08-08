@@ -1272,8 +1272,8 @@ function populateTM() {
                     if (object.get("content").length > 50) {
                         content = object.get("content").substring(0, 50) + "...";
                     }
-                    listView.append("<tr id='" + object.id + "' class='" + object.get('status') + "' onClick='listViewClick(" + object.id.toString() + ");'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
-                    console.log("<tr id='" + object.id + "' class='" + object.get('status') + "' onClick='listViewClick(" + object.id.toString() + ");'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                    listView.append("<tr id='" + object.id + "' class='" + object.get('status') + "' onClick='listViewClick('" + object.id.toString() + "');'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                    console.log("<tr id='" + object.id + "' class='" + object.get('status') + "' onClick='listViewClick('" + object.id.toString() + ");'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
                     markers.push(marker);
                     if ((marker.content).get('status') == "open") {
                         no = no + 1;
