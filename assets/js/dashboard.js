@@ -122,19 +122,21 @@ function updatePost(pid){
                 query2.equalTo("post", pointer1);
                 query2.include("post");
                 query2.include("user");
-                query2.include("PUser");
+                query2.include("pUser");
                 query2.ascending("createdAt");
                 query2.find({
                     success: function(results2) {
+                        console.log("lookout!");
                         var chaincomments ="";
                         object=results2[0];
                         for(var j=0;j<results2.length;j++){
+                            console.log(results2[j]);
                             var time;
                             var photo;
                             var comm;
-                            var name=results2[j].get("user").get("username");
+                            var name=results2[j].get("pUser").get("username");
                             time=timeSince(new Date(results2[j].createdAt));
-                            if(results2[j].get("user").get("pic")==undefined){
+                            if(results2[j].get("pUser").get("pic")==undefined){
                                 photo=getDefaultIcon(results2[j].get("user").get("type"));
                             }
                             else{
@@ -145,8 +147,8 @@ function updatePost(pid){
                         }
                         var thisview=$('#post-'+pid);
                         thisview.html("");  
-                        if(currentUser.get("pic")!=undefined){
-                            var imige=currentUser.get("pic").url();
+                        if(currentPUser.get("pic")!=undefined){
+                            var imige=currentPUser.get("pic").url();
                         }
                         else{
                             var imige=getDefaultIcon(currentUser.get("type"));
@@ -368,7 +370,9 @@ function populateStatus(){
                                         var time;
                                         var photo;
                                         var comm;
+                                        var name;
                                         console.log("I am here!142");
+                                        name=results2[j].get("pUser").get("username");
                                         time=timeSince(new Date(results2[j].createdAt));
                                         if(results2[j].get("pUser").get("pic")==undefined){
                                             photo=getDefaultIcon(results2[j].get("pUser").get("type"));
@@ -378,7 +382,7 @@ function populateStatus(){
                                         } 
                                         comm=results2[j].get("content");
 
-                                        chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'>"+results2[j].get("pUser").get("name")+"</div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
+                                        chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
 
                                     }
                                     
