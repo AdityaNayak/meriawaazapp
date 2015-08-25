@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Disallow: /dashboard.html
+Disallow: /isssues.html
+Disallow: /q-a.html
+Disallow: /profile.html
+Disallow: /subscribers.html
+Disallow: /assets/scss/
+Disallow: /assets/bower_components/

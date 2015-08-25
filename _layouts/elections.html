@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delhi Votes | Delhi Elections 2015 | Meri Awaaz</title>
+  <link rel="stylesheet" href="{{ste.url}}/assets/css/style.css" />
+  <link href="https://fontastic.s3.amazonaws.com/8Qdq3qjYhFhJLC24tseVVc/icons.css" rel="stylesheet">
+  <!-- <script src="bower_components/modernizr/modernizr.js"></script> -->
+  <meta name="twitter:card" content="app">
+  <meta name="twitter:description" content="A Mobile-first platform that connects Citizens with their Netas and Government officials for Open, Accessible and Accountable Governance">
+  <meta name="twitter:app:country" content="India">
+  <meta name="twitter:app:name:googleplay" content="Meri Awaaz | my voice. my right.">
+  <meta name="twitter:app:id:googleplay" content="com.meriawaaz.mygap">
+  <meta name="twitter:app:url:googleplay" content="https://play.google.com/store/apps/details?id=com.meriawaaz.mygap">
+
+  <meta property="og:title" content="Meri Awaaz | my voice. my right."/>
+  <meta property="og:image" content="http://dl.dropboxusercontent.com/u/37351082/fb-logo.png"/>
+  <meta property="og:site_name" content="Meri Awaaz | my voice. my right."/>
+  <meta property="og:description" content="A Mobile-first platform that connects Citizens with their Netas and Government officials for Open, Accessible and Accountable Governance"/>
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="http://meriawaazapp.com/" />
+  <meta property="fb:app_id" content="261087750752180" />
+
+  <link rel="icon" type="image/png" href="{{site.url}}/assets/images/favicon.png">
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
+  <!--[if IE]><link rel="shortcut icon" href="{{site.url}}/assets/images/favicon.ico"/><![endif]-->
+</head>
+<body class="elections">  
+  <div class="row b-ws-top">
+    <div class="icon-bg"></div>
+    <div class="small-5 small-centered columns s-ws-bottom">
+      <a href="{{site.url}}"><img src="{{site.url}}/assets/images/delhivotes.png" alt="Meri Awaaz"></a>
+    </div>
+  </div>
+  <div data-magellan-expedition="fixed" class="b-ws-bottom">
+    <div class="press-nav row">
+      <div class="text-center">
+        <dl class="sub-nav">
+          <dd data-magellan-arrival="1"><a href="#1">Overview</a></dd>
+          <dd data-magellan-arrival="2"><a href="#2">Timeline</a></dd>
+          <dd data-magellan-arrival="3"><a href="#3">Statistics</a></dd>
+          <dd data-magellan-arrival="4"><a href="#4">Candidates</a></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 columns text-center"> 
+      <h5 class="secondary-color">Countdown for the upcoming</h5>
+      <h1>Delhi Elections 2014</h1>
+      <div id="countdown" class="m-ws-bottom"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-8 small-centered columns">
+      <div class="panel">
+        <h3 class="dbc text-center s-ws-top">Timeline</h3>
+        <div class="timeline big m-ws-top">
+          <div class="row">
+            <div class="small-5 columns text-right m-ws-top">
+              <span class="f-2x secondary-color">Polling Day:</span>
+            </div>
+            <div class="small-2 columns text-center b-ws-top">
+              <i class="icon-circle"></i>
+            </div>
+            <div class="small-5 end columns m-ws-top">
+             <span class="f-2x yc">7th Feb</span>, 2015
+           </div>
+         </div>
+         <div class="row">
+          <div class="small-5 columns text-right m-ws-top">
+            <span class="secondary-color f-1-5x">Announcement of Results:</span>
+          </div>
+          <div class="small-2 columns text-center m-ws-top">
+            <i class="icon-circle"></i>
+          </div>
+          <div class="small-5 end columns m-ws-top">
+           <span class="dbc f-1-5x">10th Feb</span>, 2015
+         </div>
+       </div>
+       <div class="row">
+        <div class="small-5 columns text-right m-ws-top secondary-color">
+          Last date of filing nominations:
+        </div>
+        <div class="small-2 columns text-center m-ws-top">
+          <i class="icon-circle"></i>
+        </div>
+        <div class="small-5 end columns m-ws-top">
+         21st Jan, 2015
+       </div>
+     </div>
+     <div class="row">
+      <div class="small-5 columns text-right m-ws-top secondary-color">
+        Last date of withdrawal of nominations:
+      </div>
+      <div class="small-2 columns text-center m-ws-top">
+        <i class="icon-circle"></i>
+      </div>
+      <div class="small-5 end columns m-ws-top">
+       24th Jan, 2015
+     </div>
+   </div>
+ </div>
+</div>
+</div>
+</div>
+<div class="row">
+  <div class="panel icon-bg-fx">
+    <h3 class="dbc text-center s-ws-top">Statistics</h3>
+    <div class="small-12 columns text-center secondary-color" style="padding-bottom:2em;">
+      Coming Soon
+    </div>
+    <hr>
+  </div>
+</div>
+<div class="row">
+ <div class="panel icon-bg-fx">
+  <h3 class="dbc text-center m-ws-top">Candidates</h3>
+  <div class="row text-center">
+    <div class="small-6 columns secondary-color">
+      Number of Candidates: <span class="f-2x bc" id="numc">...</span>
+    </div>
+    <div class="small-6 columns secondary-color">
+      Number of Parties: <span class="f-2x bc" id="nump">...</span>
+    </div>
+  </div>
+  <div class="row" id="candidates">
+    <h4 class="text-center bgc m-ws-top">Aam Aadmi Party</h4>
+    <div id="AAP">
+                  
+    </div>
+  </div>
+  <div class="row">
+    <h4 class="text-center bgc m-ws-top">Bharatiya Janata Party</h4>
+    <div id="BJP">
+                  
+      </div>
+    
+  </div>
+  <div class="row">
+    <h4 class="text-center bgc m-ws-top">Indian National Congress</h4>
+    <div id="CON">
+                    
+      </div>
+   
+  </div>
+  <div class="row">
+    <h4 class="text-center bgc m-ws-top">Independent</h4>
+    <div id="IND">
+                    
+      </div>
+    
+  </div>
+</div>
+</div>
+<div class="row">
+  <hr>
+  <div class="small-7 columns">
+    <ul class="inline-list secondary">
+      <li><a href="{{site.url}}/press.html">Press</a></li>
+      <li><a href="{{site.url}}/join.html">Careers</a></li>
+      <li><a href="mailto:meriawaaz@mutinylabs.in">Contact</a></li>
+      <li><a href="http://facebook.com/meriAwaazapp" target="_blank">Facebook</a></li>
+      <li><a href="http://twitter.com/meriAwaazapp" target="_blank">Twitter</a></li>
+      <li><a href="https://plus.google.com/b/116904166401766610185" rel="publisher" target="_blank">Google+</a></li>
+    </ul>
+  </div>
+  <div class="small-5 columns">
+   <ul class="inline-list secondary right">
+    <li><a href="{{site.url}}/privacy-policy.html">Privacy Policy</a></li>
+    <li>Built with love at <a href="http://mutinylabs.in" style="display:inline;">Mutiny Labs</a></li>
+  </ul>
+</div>
+</div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-45177246-4', 'auto');
+  ga('send', 'pageview');
+</script>
+</body>
+<script type="text/javascript" src="{{site.url}}/assets/bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.js"></script>
+<script src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.magellan.js"></script>
+<script src="{{site.url}}/assets/js/jquery.countdown.min.js"></script>
+<script src="{{site.url}}/assets/js/election.js"></script>
+<script src="{{site.url}}/assets/js/nprogress.js"></script>
+<script>
+  $(document).foundation({
+    magellan: {
+      active_class: 'active',
+      threshold: 0,
+      destination_threshold: 20,
+      throttle_delay: 50 
+    },
+        /*orbit: {
+            animation: 'fade', 
+            timer: false,
+          } */
+        });
+
+ initialize();
+
+</script>
+</body>
+</html>

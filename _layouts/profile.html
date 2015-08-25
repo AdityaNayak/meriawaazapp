@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
   <meta charset="utf-8" />
@@ -6,170 +6,215 @@
   <title>Profile | Meri Awaaz</title>
 
   {% include header.html %}
-  <div class="row" style="margin-top:12em;">
-    <div class="small-offset-3 small-2 columns">
-      <span class="f-3x yc">378 </span><span class="secondary secondary-color"> supporters</span>
-    </div>
-    <div class="small-4 columns m-ws-top">
-      <div class="l-lc text-right secondary-color" style="width:63%">378 supporters</div>
-      <div class="d-lc secondary-color" style="width:35%">skeptics</div>
-    </div>
-    <div class="small-3 columns text-right s-ws-top">
-      <h3 class="subheader">Lok Sabha 2014</h3>
+  <div class="row">
+    <div class="icon-bg">
     </div>
   </div>
-  <div class="panel">
+  <div class="row" style="margin-top:12em;">
+    <div class="small-offset-3 small-2 columns">
+      <span id="bsupport" class="f-3x yc">...</span><span class="secondary secondary-color"> followers</span>
+    </div>
+    <div class="small-4 columns m-ws-top">
+      <div id="support" class="l-lc text-right secondary-color ct secondary" style="width:49%">Loading...</div>
+      <div id="skeptics" class="d-lc secondary-color ct secondary" style="width:49%">Loading...</div>
+    </div>
+    <div class="small-3 columns text-right s-ws-top">
+      <h5 id="election" class="subheader ct">Loading...</h5>
+    </div>
+  </div>
+  <div class="panel icon-bg-fx">
     <div class="row">
       <div class="small-3 columns text-right">
-        <img src="{{site.url}}/assets/images/politicians/narendra-modi.jpg" class="circle-img top-push">
-        <h3 class="m-ws-top yc">Narendra Modi <small>(63)</small></h3>
-        <h4>Bhartiya Janta Party</h4>
-        <h4 class="s-ws-top">Vadodra,<small> Gujarat</small></h4>
-        <h5 class="subheader">Social and Political activity</h5>
-        <a href="#" class="button v2">Edit</a>
+        <img id="photo" src="{{site.url}}/assets/images/neta.png" height="300px" class="circle-img top-push">
+        <h3 id="nameage" class="m-ws-top yc ct">Loading...</h3>
+        <h4 id="party" class="ct">Loading...</h4>
+        <h4 id="cstate" class="s-ws-top ct">Loading...</h4>
+        <h5 id="profession" class="subheader ct">Loading...</h5>
+        <div id="history2">
+        </div>
+          <div id="edittext" class="button tiny">Edit</div>
+
       </div>
-      <div class="small-3 columns m-ws-top">
-        <h4 class="bgc">Statistics</h4>
-        <hr>
-        <div class="row">
-          <div class="small-5 columns secondary-color">
-            Education:
+      <div class="small-9 columns">
+        <div class="row" id="currbio">
+          <div class="small-2 columns text-right" id="sociallinks">
+            <div><i class="icon-network secondary-color"></i><a id="wlink" href="#" target="_blank"> Website</a></div>
+            <div><i class="icon-facebook secondary-color"></i><a id="flink" href="#" target="_blank"> Facebook</a></div> 
+            <div><i class="icon-twitter secondary-color"></i><a id="tlink" href="#" target="_blank"> Twitter</a></div>
           </div>
-          <div class="small-7 columns">
-            Post Graduate
-            <br>
-            M.A., Gujarat University, Ahmedabad
+          <div class="small-10 columns">
+            <p id="netabio"></p>
           </div>
         </div>
-        <hr>
+        <div id="editform" style="display:none;">
+        <form id="edit-form"> 
         <div class="row">
-          <div class="small-5 columns secondary-color">
-            Total Assets:
-          </div>
-          <div class="small-7 columns">
-            1.65 Crores
+          <div class="small-12 columns text-right">
+          <input type="submit" value="Update Bio" class="button tiny">
+          <div id="canceledit" class="button tiny secondary">Cancel Edit</div>
           </div>
         </div>
         <div class="row">
-          <div class="small-5 columns secondary-color">
-            Liabilities:
+          <div class="small-4 columns text-right" id="sociallinks">
+            <div class="row"><div class="small-1 columns"><i class="icon-network secondary-color"></i></div><div class="small-11 columns"><input type="url" id="weblink" placeholder="http://example.com"></div></div>
+            <div class="row"><div class="small-1 columns"><i class="icon-facebook secondary-color"></i></div><div class="small-11 columns"><input type="url" id="fblink" placeholder="http://facebook.com/example"></div></div>
+            <div class="row"><div class="small-1 columns"><i class="icon-twitter secondary-color"></i></div><div class="small-11 columns"><input type="url" id="twtlink" placeholder="http://twitter.com/example"></div></div>
           </div>
-          <div class="small-7 columns">
-            None
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="small-5 columns secondary-color">
-            Criminal Cases:
-          </div>
-          <div class="small-7 columns">
-            None
+          <div class="small-8 columns">
+            <textarea id="bio" rows="5" required placeholder="Tell people something about yourself..."></textarea>
           </div>
         </div>
-      </div>
-      <div class="small-3 columns m-ws-top">
-        <h4 class="bc">Interactions</h4>
-        <hr>
-        <div class="row">
-          <div class="small-5 columns secondary-color">
-            New followers:
-          </div>
-          <div class="small-7 columns">
-            378
-          </div>
         </div>
+         </form>
         <div class="row">
-          <div class="small-5 columns secondary-color">
-            Reach:
+          <div class="small-4 columns m-ws-top">
+            <h4 class="bgc">Statistics</h4>
+            <hr>
+            <div class="row">
+              <div class="small-5 columns secondary-color">
+                Education:
+              </div>
+              <div id="education" class="small-7 columns ct">
+                Loading...
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="small-5 columns secondary-color">
+                Total Assets:
+              </div>
+              <div id="assets" class="small-7 columns ct">
+                Loading...
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-5 columns secondary-color">
+                Liabilities:
+              </div>
+              <div id="liabilities" class="small-7 columns ct">
+                Loading...
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="small-5 columns secondary-color">
+                Criminal Cases:
+              </div>
+              <div id="ccases" class="small-7 columns ct">
+                Loading...
+              </div>
+            </div>
           </div>
-          <div class="small-7 columns">
-            378
+          <div class="small-4 columns m-ws-top">
+            <h4 class="bc">Interactions</h4>
+            <hr>
+            <div class="row">
+              <div class="small-8 columns secondary-color">
+                New Followers:
+              </div>
+              <div id="num-followers" class="small-4 columns">
+                Loading...
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-8 columns secondary-color">
+                Reach:
+              </div>
+              <div id="num-reach" class="small-4 columns">
+                Loading...
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="small-8 columns secondary-color">
+                Comments:
+              </div>
+              <div id="num-comments" class="small-4 columns">
+                Loading...
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="small-8 columns secondary-color">
+                Posts:
+              </div>
+              <div id="num-posts" class="small-4 columns">
+                Loading...
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="small-8 columns secondary-color">
+                Questions Asked to:
+              </div>
+              <div id="num-qat" class="small-4 columns">
+                Loading...
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-8 columns secondary-color">
+                Questions Answered:
+              </div>
+              <div id="num-qa"class="small-4 columns">
+                Loading...
+              </div>
+            </div>
           </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="small-5 columns secondary-color">
-            Comments:
-          </div>
-          <div class="small-7 columns">
-            36
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="small-5 columns secondary-color">
-            Questions Asked to:
-          </div>
-          <div class="small-7 columns">
-            78
-          </div>
-        </div>
-        <div class="row">
-          <div class="small-5 columns secondary-color">
-            Questions Answered:
-          </div>
-          <div class="small-7 columns">
-            3
-          </div>
-        </div>
-      </div>
-      <div class="small-3 columns m-ws-top">
-        <h4 class="dbc">Actions</h4>
-        <hr>
-        <div class="row">
-          <div class="small-5 columns secondary-color">
-            Team size:
-          </div>
-          <div class="small-7 columns">
-            37
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="small-5 columns secondary-color">
-            Issues claimed:
-          </div>
-          <div class="small-7 columns">
-            78
-          </div>
-        </div>
-        <div class="row">
-          <div class="small-5 columns secondary-color">
-            Issues closed:
-          </div>
-          <div class="small-7 columns">
-            37
-          </div>
-        </div>
-        <div class="row">
-          <div class="small-5 columns secondary-color">
-            Issues Validated:
-          </div>
-          <div class="small-7 columns">
-            3
+          <div class="small-4 columns m-ws-top">
+            <h4 class="dbc">Actions</h4>
+            <hr>
+            <div class="row">
+              <div class="small-8 columns secondary-color">
+                Team size:
+              </div>
+              <div id="teamsize" class="small-4 columns">
+                Loading...
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="small-8 columns secondary-color">
+                Issues claimed:
+              </div>
+              <div id="num-iclaimed" class="small-4 columns">
+                Loading...
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-8 columns secondary-color">
+                Issues closed:
+              </div>
+              <div id="num-iclosed" class="small-4 columns">
+                Loading...
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-8 columns secondary-color">
+                Issues Validated:
+              </div>
+              <div id="num-ivalidated" class="small-4 columns">
+                Loading...
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    
     <div class="row">
-      <div class="small-3 columns text-right s-ws-top">
-        <h5>History</h4>
-          <h5 class="secondary-color">Delhi Assembly Elections 2014 (Seat name)</h5>
-          <h5 class="secondary-color">Lok Sabha 2014 (seat name)</h5>
-      </div>
-      <div class="small-3 columns m-ws-top">
+      <div class="small-3 small-offset-3 columns m-ws-top">
         <div class="row secondary-panel">
           <div class="small-2 columns">
-          <i class="icon-check gc f-2x">
-          </i>
+            <i class="icon-check gc f-2x">
+            </i>
           </div>
-          <div class="small-10 columns s-ws-top secondary">
-          Details verified from <a href="#">profile</a> 
+          <div id="profilelink" class="small-10 columns s-ws-top secondary">
+
           </div>
         </div>
       </div>
-      <div class="small-3 columns m-ws-top">
+   <!--   
+      <div class="small-4 columns m-ws-top">
         <div class="row secondary-panel">
           <div class="small-2 columns">
           <i class="icon-check gc f-2x">
@@ -198,7 +243,7 @@
           </div>
         </div>
       </div>
-      <div class="small-3 columns m-ws-top">
+      <div class="small-4 columns m-ws-top">
         <div class="row secondary-panel">
           <div class="small-2 columns">
           <i class="icon-check gc f-2x">
@@ -227,17 +272,20 @@
           </div>
         </div>
       </div>
-    </div>
+    -->
   </div>
+</div>
 
-  {% include footer.html %} 
-  <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
+{% include footer.html %} 
+<script type="text/javascript" src="{{site.url}}/assets/js/profile.js"></script>
 
-  <script type="text/javascript">
-    $(document).foundation();
-  </script>
-  <script>
-    $( document ).ready(function() {
-    });
-  </script>
-  </html>
+<script type="text/javascript">
+  $(document).foundation();
+</script>
+<script>
+  $( document ).ready(function() {
+    icon_bg();
+    icon_bg();
+  });
+</script>
+</html>

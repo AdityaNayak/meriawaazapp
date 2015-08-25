@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
   <meta charset="utf-8" />
@@ -11,119 +11,128 @@
     <div class="small-3 columns text-right">
       <div class="row">
         <div class="small-5 small-offset-7 columns s-ws-top">
-          <img src="{{site.url}}/assets/images/politicians/narendra-modi.jpg" class="circle-img">
+          <img id="photo" src="./assets/images/neta.png" class="circle-img">
         </div>
       </div>
-      <h3>Narendra Modi</h3>
-      <h5>Bhartiya Janta Party</h5>
-      <h5 class="secondary-color">Lok Sabha 2014</h5>
-      <h5 class="secondary-color">Vadodra, <small>Gujarat</small></h5>
+      <h3 id="myname" class="ct">Loading...</h3>
+      <h5 id="myparty" class="ct">Loading...</h5>
+      <h5 id="ele" class="secondary-color ct">Loading...</h5>
+      <h5 id="cs" class="secondary-color ct">Loading...</h5>
       <hr>
+	  <!--
       <select>
         <option value="week">This Week</option>
         <option value="month">This Month</option>
         <option value="year">This Year</option>
         <option value="lifetime">Lifetime</option>
       </select>
-      <div class="row collapse">
-        <div class="small-6 columns"><span class="f-2x bgc">365 </span>followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
-      </div>
-      <div class="row collapse">
-        <div class="small-6 columns"><span class="f-2x bc">45 </span>interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
-      </div>
-      <div class="row collapse">
-        <div class="small-6 columns"><span class="f-2x dbc">5 </span>actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
-      </div>
+    -->
+    <div class="row collapse">
+      <div class="small-6 columns"><span id="f" class="f-2x bgc">...</span> followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
     </div>
-    <div class="small-6 columns">
-      <div class="panel">
-        <h4 class="dbc">Connect with your Voters</h4>
-        <textarea rows="4" placeholder="Say something that inspires change"></textarea>
-        <div class="text-right">
-          <div class="button nm">Send Update</div>
+    <div class="row collapse">
+      <div class="small-6 columns"><span id="i" class="f-2x bc">...</span> interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
+    </div>
+    <div class="row collapse">
+      <div class="small-6 columns"><span id="a" class="f-2x dbc">...</span> actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
+    </div>
+  </div>
+  <div class="small-6 columns">
+    <div id="netapost" class="panel">
+      <div class="row">
+        <div class="small-8 columns">
+          <h5 class="dbc">Connect with your Voters</h5>
+        </div>
+        <div class="small-4 columns text-right">
+          <span class='tertiary'>Estimated Reach: </span><span class='bc' id="population">Loading...</span>
         </div>
       </div>
-      
-      <div class="panel">
-        <div class="row">
-          <div class="small-9 columns">
-            <p class="secondary-color">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-          </div>
-          <div class="small-3 columns secondary-color">
-            <div class="row">
-              <div class="small-12 columns secondary-color tertiary text-right">
-                44 min ago
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="small-8 columns text-right tertiary">
-                Reach
-              </div>
-              <div class="small-4 columns secondary">
-                871
-              </div>
-            </div>
-            <div class="row">
-              <div class="small-8 columns text-right tertiary">
-                Likes
-              </div>
-              <div class="small-4 columns secondary">
-                87
-              </div>
-            </div>
-            <div class="row">
-              <div class="small-8 columns text-right tertiary">
-                Comments
-              </div>
-              <div class="small-4 columns secondary">
-                8
-              </div>
-            </div>
-          </div>
+      <form id="post-form">
+        <img id="thumbnil" style="width:100%; margin-top:10px; border:none; display:none;"  src=""/>
+        <span id="uploadname"></span>
+        <textarea id="postArea" class="nm" rows="2" required placeholder="Say something inspiring"></textarea>
+        <div class="progress radius" style="display:none;">
+          <span class="meter" style="width:10%;"></span>
         </div>
-      </div>
+        <div id="sh-ltr1" style="display:none;">
+          <div class="row collapse">
+            <div class="small-2 columns text-center fx3">
+              <label for="app" class="inline secondary-color np tertiary">
+                <div class="f-1-5x fx4">
+                  <i class="icon-phone blc"></i>
+                </div>
+                <input type="checkbox" name="medium" id="app" value="1" checked=""> Push Send
+              </label>
+            </div>
+            <div class="small-2 columns text-center fx3">
+              <label for="sms" class="inline secondary-color np tertiary" onclick="notready();">
+                <div class="f-1-5x fx4">
+                  <i class="icon-comment blc"></i> 
+                </div>
+                <input type="checkbox" id="sms" name="medium" value="2"> SMS
+              </label>
+            </div>
+            <!--<div class="small-2 columns text-center fx3">
+              <label for="whatsapp" class="inline secondary-color np tertiary">
+                <div class="f-1-5x fx4">
+                  <i class="icon-whatsapp blc"></i>
+                </div>
+                <input type="checkbox" id="whatsapp" name="medium" value="3">
+                WhatsApp
+              </label>
+            </div>-->
+            <div class="small-2 columns text-center fx3">
+              <label for="email" class="inline secondary-color np tertiary" onclick="notready();">
+                <div class="f-1-5x fx4">
+                  <i class="icon-mail blc"></i>
+                </div>
+                <input type="checkbox" id="email" name="medium" value="4"> Email
+              </label>
+            </div>
+            <div class="small-2 columns text-center fx3">
+              <label for="fb" class="inline secondary-color np tertiary" onclick="notready();">
+                <div class="f-1-5x fx4">
+                  <i class="icon-facebook blc"></i>
+                </div>
+                <input type="checkbox" id="fb" name="medium" value="5"> Facebook
+              </label>
+            </div>
+            <div class="small-2 columns text-center fx3 end">
+              <label for="twt" class="inline secondary-color np tertiary" onclick="notready();">
+                <div class="f-1-5x fx4">
+                  <i class="icon-twitter blc"></i>
+                </div>
+                <input type="checkbox" id="twt" name="medium" value="6"> Twitter</label>
+              </div>
+            </div>
+            <div class="row">
+              <div id="chcount" class="small-2 columns secondary fx3 bgc">
+              </div>
+              <div class="small-4 columns tertiary secondary-color s-ws-top text-right">
+                <span id="defaultList"></span>
+              </div>
+              <div class="small-1 columns tertiary secondary-color">
+                <i id="listIcon" class="icon-list f-2x cs"></i>
+              </div>
+              <div class="small-1 columns tertiary secondary-color">
+                <label for="fileUpload" id="imgStatus" class="icon-image-add f-2x bc" style="line-height:1;">
+                  <input id="fileUpload" type="file" name="media" multiple="1" accept="image/*" style="display:none; position:fixed; top:-9999px;">
+                </label>
+              </div>
+              <div class="small-4 columns">
+                <input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth">
+              </div>
+            </div>
+            <div class="row" id="cf1" style="display:none;">
+              
+            </div>
+          </div>
 
-      <div class="panel">
-        <div class="row">
-          <div class="small-9 columns">
-            <p class="secondary-color">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-          </div>
-          <div class="small-3 columns secondary-color">
-            <div class="row">
-              <div class="small-12 columns secondary-color tertiary text-right">
-                44 min ago
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="small-8 columns text-right tertiary">
-                Reach
-              </div>
-              <div class="small-4 columns secondary">
-                871
-              </div>
-            </div>
-            <div class="row">
-              <div class="small-8 columns text-right tertiary">
-                Likes
-              </div>
-              <div class="small-4 columns secondary">
-                87
-              </div>
-            </div>
-            <div class="row">
-              <div class="small-8 columns text-right tertiary">
-                Comments
-              </div>
-              <div class="small-4 columns secondary">
-                8
-              </div>
-            </div>
-          </div>
-        </div>
+        </form>
       </div>
-
+      <div id="posts">
+        <h4 class="text-center secondary-color b-ws-top">Loading...</h4>
+      </div>
     </div>
     <div class="small-3 columns">
       <div class="panel">
@@ -140,72 +149,38 @@
             <i class="icon-call secondary-color"></i>
           </div>
           <div class="small-10 columns">
-            +91 9999 999 999
+            +91 987 144 8741
           </div>
         </div>
       </div>
+			<!--
+          <hr>
+          <h5>Competitors</h5>
+            <select>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="year">This Year</option>
+              <option value="lifetime">Lifetime</option>
+            </select>
+            <div id="competitorlist">
+            </div>
+          -->
 
-      <hr>
-      <h5>Competitors</h5>
-      <select>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-        <option value="year">This Year</option>
-        <option value="lifetime">Lifetime</option>
-      </select>
-      <div class="row collapse">
-        <div class="small-3 columns">
-          <img src="http://api.randomuser.me/portraits/med/men/12.jpg" class="circle-img gs hv pd">
-        </div>
-        <div class="small-9 columns">
-          <h4>Ghansham Bhai <small>(34)</small></h4>
-          <h6>INC</h6>
+
         </div>
       </div>
-      <div class="row tertiary">
-        <div class="small-6 columns text-right"><span class="f-2x bgc">365 </span>followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
-      </div>
-      <div class="row tertiary">
-        <div class="small-6 columns text-right"><span class="f-2x bc">45 </span>interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
-      </div>
-      <div class="row tertiary">
-        <div class="small-6 columns text-right"><span class="f-2x dbc">5 </span>actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
-      </div>
 
-      <hr>
+      {% include footer.html %} 
+      <script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
 
-      <div class="row collapse">
-        <div class="small-3 columns">
-          <img src="http://api.randomuser.me/portraits/med/men/16.jpg" class="circle-img gs hv pd">
-        </div>
-        <div class="small-9 columns">
-          <h4>Mota Bhai <small>(34)</small></h4>
-          <h6>AAP</h6>
-        </div>
-      </div>
-      <div class="row tertiary">
-        <div class="small-6 columns text-right"><span class="f-2x bgc">365 </span>followers </div><div class="small-6 columns s-ws-top"><i class="icon-up gc"></i><span class="secondary secondary-color">23 this week</span></div>
-      </div>
-      <div class="row tertiary">
-        <div class="small-6 columns text-right"><span class="f-2x bc">45 </span>interactions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">31 this week</span></div>
-      </div>
-      <div class="row tertiary">
-        <div class="small-6 columns text-right"><span class="f-2x dbc">5 </span>actions </div><div class="small-6 columns s-ws-top"><i class="icon-down rc"></i><span class="secondary secondary-color">2 this week</span></div>
-      </div>
-    </div>
-  </div>
+      <script type="text/javascript">
+        $('#cf1-trg').click(function(){
+          $('#cf1').fadeIn();
+        });
 
-{% include footer.html %} 
-<script type="text/javascript" src="{{site.url}}/assets/js/dashboard.js"></script>
+        $(document).foundation();
+      </script>
 
-<script type="text/javascript">
-  $(document).foundation();
-</script>
-
-<script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
-<script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
-<script>
-  $( document ).ready(function() {
-  });
-</script>
-</html>
+      <!-- <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+      <script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script> -->
+      </html>
