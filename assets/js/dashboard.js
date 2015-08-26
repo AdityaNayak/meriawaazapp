@@ -143,7 +143,7 @@ function updatePost(pid){
                                 photo=results2[j].get("user").get("pic").url();
                             } 
                             comm=results2[j].get("content");
-                            chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='text-right secondary'><i class='icon-close cs tertiary-color'></i> </div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
+                            chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='text-right secondary'><i id='close-"+object.id+"'class='icon-close cs tertiary-color'></i> </div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
                         }
                         var thisview=$('#post-'+pid);
                         thisview.html("");  
@@ -382,7 +382,7 @@ function populateStatus(){
                                         } 
                                         comm=results2[j].get("content");
 
-                                        chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i class='icon-close cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                                        chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+object.id+"'class='icon-close cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
 
                                     }
                                     
