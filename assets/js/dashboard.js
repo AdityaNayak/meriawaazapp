@@ -39,17 +39,17 @@ function createVoterArray(){
 }
 
 function postComment(pid){
-    console.log("postComment"+pid);
+ //   console.log("postComment"+pid);
     NProgress.start();
-    console.log("NProgress Start");
-    console.log("postComment");
+ //   console.log("NProgress Start");
+ //   console.log("postComment");
     var Comment = Parse.Object.extend("PostComment");
     var comment = new Comment();
     var p = new Parse.Object("Post");
     var u = new Parse.Object("User");
     p.id = pid;
     u.id = currentUser.id;
-    console.log("text-"+pid.toString());
+ //   console.log("text-"+pid.toString());
     var c=document.getElementById("text-"+pid.toString()).value;
     comment.set("content", c);
     comment.set("post", p);
@@ -72,7 +72,7 @@ function getFileName(){
 }
 
 function showMyImage(fileInput) {
-		console.log("Display Thumbnail");
+//		console.log("Display Thumbnail");
         $('#thumbnil').fadeIn();
         var files = fileInput.files;
         for (var i = 0; i < files.length; i++) {           
@@ -96,7 +96,7 @@ function showMyImage(fileInput) {
 
 
 function updatePost(pid){
-    console.log("updatePost");
+//    console.log("updatePost");
     ListItem1 = Parse.Object.extend("Post");
     query1 = new Parse.Query(ListItem1);
     query1.equalTo("objectId", pid);
@@ -126,11 +126,11 @@ function updatePost(pid){
                 query2.ascending("createdAt");
                 query2.find({
                     success: function(results2) {
-                        console.log("lookout!");
+                    //    console.log("lookout!");
                         var chaincomments ="";
                         object=results2[0];
                         for(var j=0;j<results2.length;j++){
-                            console.log(results2[j]);
+                        //    console.log(results2[j]);
                             var time;
                             var photo;
                             var comm;
@@ -161,7 +161,7 @@ function updatePost(pid){
                               postComment(event.target.id.toString().split('-')[1]);
                         });
                         NProgress.done();
-                        console.log('comment row');
+                    //    console.log('comment row');
                     },
                     error: function(error2){
                         console.log("Error: "+error2.message);
@@ -177,7 +177,7 @@ function updatePost(pid){
 }
 
 function calculateNetaStats(n){
-    console.log("calculateNetaStats");
+//    console.log("calculateNetaStats");
     var actions;
     var interactions;
     var followers;
@@ -220,7 +220,7 @@ function calculateNetaStats(n){
 }
 
 function calculateCurrentNetaStats(){
-        console.log("calculateCurrentNetaStats");
+//        console.log("calculateCurrentNetaStats");
         actions=currentNeta.get("numIsClaimed")+currentNeta.get("numIsClosed");
         interactions=currentNeta.get("numPosts")+currentNeta.get("numComments")+currentNeta.get("numQsAnswered");
         followers=currentNeta.get("numLikes");
@@ -231,7 +231,7 @@ function calculateCurrentNetaStats(){
 }
 
 function fetchConstituencyData(c){
-        console.log("fetchConstituencyData");
+  //      console.log("fetchConstituencyData");
         $("#competitorlist").innerHTML="";
         ListItem = Parse.Object.extend("Election");
         query = new Parse.Query(ListItem);
@@ -294,7 +294,7 @@ function createCampaign(id,selectedNetaLists,selectedMediums){
 	Parse.Cloud.run("createCampaign", {objectId: currentNeta.id, isPush: ip,isSMS: is, isWhatsApp: iw, isTwitter: it, isEmail: ie, isFacebook: ib, p: post, netalists: nl}, {
 	  success:function(results){
 
-		console.log(results);
+	//	console.log(results);
 
 		populateStatus();
 		notify(standardSuccessMessage, "success",standardSuccessDuration);
@@ -335,7 +335,7 @@ function postCampaignFromPost(id){
 
 function populateStatus(){
     var postView=$('#posts');
-    console.log("populateStatus");
+//    console.log("populateStatus");
     postView.html("");    
     ListItem = Parse.Object.extend("Post");
     query = new Parse.Query(ListItem);
@@ -381,8 +381,8 @@ function populateStatus(){
                                             photo=results2[j].get("pUser").get("pic").url();
                                         } 
                                         comm=results2[j].get("content");
-
-                                        chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+object.id+"'class='icon-close cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                                        console.log(results2[j].id);
+                                        chaincomments+="<div class='row' id='comment-'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+object.id+"'class='icon-close cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
 
                                     }
                                     
@@ -444,15 +444,26 @@ function populateStatus(){
 								$('#commentsclick-'+object.id).click(function(){
 									$('#comments-'+event.target.id.toString().split('-')[1]).fadeIn();
 								});
-                                $('#close-'+object.id).click(function(){
-                                    //console.log($('#post-'+object.id).html());
-                                    //$('#post-'+event.target.id.toString().split('-')[1]).slideUp();
-                                    
+                                // $('#close-'+object.id).click(function(){
+                                //     console.log('comment');
 
-                                    notready();
+                                //     //console.log($('#post-'+object.id).html());
+                                //     var tempObject1 = event.target.id.toString().split('-')[1];
+                                //     // Parse.Cloud.run("report", {objId: tempObject1, oClass: "Post", rStatus: "1"}, {
+                                //     //   success: function(comment) {
+                                //     //     //$('#comment-'+event.target.id.toString().split('-')[1]).slideUp();
+                                //     //     console.log('comment clicked');
+                                //     //   },
+                                //     //   error: function(error) {
+                                //     //     console.log("Error: "+error.message);
+                                //     //     //notify(standardErrorMessage, "error",standardErrorDuration);
+                                //     //   }
+                                //     // });
+
+                                //     //notready();
 
 
-                                });
+                                // });
 								$('#campaignclick-'+object.id).click(function(){
 									//$('#campaignform-'+event.target.id.toString().split('-')[1]).fadeIn();
                                     notready();
@@ -468,7 +479,7 @@ function populateStatus(){
                     
                 }
                 fetchConstituencyData(currentNeta.get("constituency"));
-                console.log("NProgress Stop");
+                //console.log("NProgress Stop");
           },
           error: function(error) {
                 console.log("Error0:"+error.message);
@@ -570,10 +581,10 @@ function postStatus(c) {
 	if(file!=undefined){
 		var parsefile=new Parse.File(file.name,file);
 		parsefile.save().then(function(){
-			console.log('postStatus');
+		//	console.log('postStatus');
 			NProgress.start();
-			console.log("NProgress Start");
-			console.log("postStatus");
+		//	console.log("NProgress Start");
+		//	console.log("postStatus");
 			loadingButton_id("post",4);
 			var Post = Parse.Object.extend("Post");
 			var post = new Post();
@@ -603,10 +614,10 @@ function postStatus(c) {
 		});
 	}
 	else{
-		console.log('postStatus');
+	//	console.log('postStatus');
 		NProgress.start();
-		console.log("NProgress Start");
-		console.log("postStatus");
+	//	console.log("NProgress Start");
+	//	console.log("postStatus");
 		loadingButton_id("post",4);
 		var Post = Parse.Object.extend("Post");
 		var post = new Post();
@@ -632,7 +643,7 @@ function postStatus(c) {
 }
 
 function fetchECStatus(u){
-    console.log("fetchECStatus");    
+  //  console.log("fetchECStatus");    
     ListItem = Parse.Object.extend("Election");
     query = new Parse.Query(ListItem);
     if(u.get("type")=="neta"){
@@ -647,7 +658,7 @@ function fetchECStatus(u){
 		EC={e:"",c:""};
 		query.find({
 			  success: function(results) {
-					console.log("Size:"+results.length);
+			//		console.log("Size:"+results.length);
 					if(results.length==0){
 						EC.e="-";
 						EC.c="-";
@@ -678,10 +689,10 @@ function fetchECStatus(u){
 					else if(u.get("type")=="teamMember"){
 						setCurrentNetaTM(currentNeta);
 					}
-					console.log("NProgress Stop");
+			//		console.log("NProgress Stop");
 			  },
 			  error: function(error) {
-					console.log("Error:"+error.message);
+				//	console.log("Error:"+error.message);
 					NProgress.done();
 			  }
 		});
@@ -700,7 +711,7 @@ function fetchECStatus(u){
 				EC={e:"",c:""};
 				query.find({
 					  success: function(results) {
-							console.log("Size:"+results.length);
+						//	console.log("Size:"+results.length);
 							if(results.length==0){
 								EC.e="-";
 								EC.c="-";
@@ -726,7 +737,7 @@ function fetchECStatus(u){
 							else if(u.get("type")=="teamMember"){
 								setCurrentNetaTM(currentNeta);
 							}
-							console.log("NProgress Stop");
+						//	console.log("NProgress Stop");
 					  },
 					  error: function(error) {
 							console.log("Error:"+error.message);
@@ -749,7 +760,7 @@ function updateReach(){
     query2.equalTo("neta",currentNeta);
     query2.count({
       success: function(count2) {
-        console.log(count2);
+     //   console.log(count2);
 		var Election = Parse.Object.extend("Election");
 		election = new Parse.Query(Election);
 		election.descending('createdAt');
@@ -765,7 +776,7 @@ function updateReach(){
 				query1.equalTo("constituency",constituency);
 				query1.count({
 				  success: function(count1) {
-					console.log("population:"+count1);
+				//	console.log("population:"+count1);
 					document.getElementById("population").innerHTML=count1+4487+count2;
 				  },
 				  error: function(error) {
@@ -812,7 +823,7 @@ function updateReach(){
 // }
 
 function queryUserTable(){
-    console.log('QueryUserTable');
+ //   console.log('QueryUserTable');
     CU.fetch({
       success: function(results) {
         fetchECStatus(CU);
@@ -827,14 +838,14 @@ function queryUserTable(){
 
 //given neta
 function setCurrentNetaTM(n){
-    console.log("setCurrentNeta");
+ //   console.log("setCurrentNeta");
     n.fetch({
      success: function(result){
             currentUser=n.get("User");
             currentNeta=n;
             currentUser.fetch({
                 success:function(results){
-                    console.log("I was called Team Member!");
+            //        console.log("I was called Team Member!");
                     currentPUser=currentUser.get("pUser");
                     currentPUser.fetch({
                         success:function(results){
@@ -892,16 +903,16 @@ function setCurrentNetaTM(n){
 
 //given user
 function setCurrentNeta(u){
-    console.log("setCurrentNeta");
+ //   console.log("setCurrentNeta");
     currentUser=u;
     currentPUser=currentUser.get("pUser");
     currentPUser.fetch({
         success:function(results){
-            console.log(results);
+        //    console.log(results);
             currentNeta=currentUser.get("neta");
             currentNeta.fetch({
                success: function(results){
-                    console.log("I was called Neta!");
+                 //   console.log("I was called Neta!");
                     if(currentPUser.get("pic")!=undefined){
                           var photo=currentPUser.get("pic").url();
                     }
@@ -950,7 +961,7 @@ function setCurrentNeta(u){
 }
 
 function initialize() {
-    console.log("initialize");
+//    console.log("initialize");
 	voterViewArray=[];
     NProgress.start();
     if(CU.get("type")!="neta"){
