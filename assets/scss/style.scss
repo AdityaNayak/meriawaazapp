@@ -68,6 +68,12 @@
 }
 .secondary-color{
 	color:scale-color($grey, $lightness:-25%) !important;
+	&.hv{
+		&:hover, &:focus{
+		color:scale-color($grey, $lightness:-50%) !important;
+		transition: color 0.5s;
+		}
+	}
 }
 .tertiary{
 	font-size:0.75em;
