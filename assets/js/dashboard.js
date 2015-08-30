@@ -517,10 +517,12 @@ function populateStatus(){
                         console.log(currentObj[1]);
 
                         Parse.Cloud.run("report", {objId: currentObj[1], oClass: "PostComment", rStatus: 1}, {
-                          success: function(comment) {
+                          success: function(results) {
+                            console.log('testing'+results);
                             //$('#comment-'+event.target.id.toString().split('-')[1]).slideUp();
                             notify('Post reported successfully','success',standardErrorDuration);
-                            console.log(currentObj[1]);
+                            //console.log(currentObj[1]);
+
                             $('#comment-'+currentObj[1]).slideUp();
                           },
                           error: function(error) {
