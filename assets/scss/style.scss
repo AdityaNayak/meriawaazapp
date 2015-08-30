@@ -725,4 +725,11 @@ tbody{
 }
 .cs{
 	cursor:pointer;
+	transition: color 0.5s;
+	&.hv{
+		&:hover, &:focus{
+		color:$black;
+		transition: color 0.5s;
+		}
+	}
 }

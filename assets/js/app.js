@@ -17,7 +17,7 @@ function updateHistory()
 	
 }
 var a=location.pathname.split('/').slice(-1)[0];
-console.log(a);
+//console.log(a);
 if(a.length==0){
 	
 }
@@ -47,7 +47,7 @@ else{
 		    
 		    CU.fetch({
 		          success: function(results) {
-		                console.log("Size:"+results.length);
+		                //console.log("Size:"+results.length);
 		                var plogo=document.getElementById('plogo');
 		                var consti=document.getElementById('consti');
 		                object=CU;
@@ -277,7 +277,7 @@ function loadingButton_id(id,d){
 		console.log("Changing value to "+Original);
 		document.getElementById(id).value = Original;
 	}, d*1000);
-	console.log("Loading Button was Called!");
+	//console.log("Loading Button was Called!");
 }
 function loadingButton_id_stop(id,value){
 	var Original=value;
