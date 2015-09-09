@@ -516,7 +516,7 @@ function populateStatus(){
                         var currentObj = e.target.id.split('-');
                         console.log(currentObj[1]);
 
-                        Parse.Cloud.run("report", {objId: currentObj[1], oClass: "PostComment", pClass: "Post" rStatus: 1}, {
+                        Parse.Cloud.run("report", {objId: currentObj[1], oClass: "PostComment", pClass: "Post", rStatus: 1}, {
                           success: function(results) {
                             //console.log('testing'+results.id);
                             //$('#comment-'+event.target.id.toString().split('-')[1]).slideUp();

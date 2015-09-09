@@ -4,6 +4,8 @@
 var count = 0 ;
 var CU;
 var constituency;
+var notifications=[];
+var notificationView = $('#droptop');
 standardErrorMessage="Oops! There seems to be some problem. Please try again later.";
 standardErrorDuration=2;
 standardSuccessMessage="Operation Successful!";
@@ -87,8 +89,10 @@ else{
 												  success: function(results) {
 														constituency=results[0].get("constituency");
 														consti.innerHTML=constituency.get("name");
+														fetchNotifications()
 														if(a=="q-a.html"){
 						                					populateQuestions(0);
+
 						                				}
 													},
 													error: function(error){
@@ -137,8 +141,10 @@ else{
 															  success: function(results) {
 																	constituency=results[0].get("constituency");
 																	consti.innerHTML=constituency.get("name");
+																	fetchNotifications();
 																	if(a=="q-a.html" || a=="q-a.html#"){
 																		populateQuestions(0);
+																		
 																	}
 																},
 																error: function(error){
@@ -311,6 +317,141 @@ $('.interactiveLoading').click(function() {
 $('#logout').click(function() {
 	logout();
 });
+
+$('#notification_b').click(function() {
+	console.log("notification_button clicked");
+	fetchNotifications();
+});
+
+function fetchNotifications(){
+	console.log("fetchNotifications");
+    notificationView.html("<li class='columns brbm'><strong>Notifications</strong></li>");
+    ListItem = Parse.Object.extend("Notification");
+    query = new Parse.Query(ListItem);
+    query.equalTo("constituency", constituency);
+    query.equalTo("constituency", constituency);
+    query.greaterThanOrEqualTo( "createdAt", CU.get("lastFetched") );
+    query.include("issue");
+    query.include("post");
+    query.include("postComment");
+    query.include("question");
+    query.include("answer");
+    query.include("update");
+    query.limit(10);
+    query.include(["question.pAsker"]);
+    query.include(["postComment.pUser"]);
+    query.include(["issue.pUser"]);
+    query.include(["answer.pUser"]);
+    query.include(["answer.question"]);
+    query.include(["update.issue"]);
+    query.include(["update.pUser"]);
+    query.include(["postComment.post"]);
+    //query.include("pUser");
+    query.descending('createdAt');
+    query.find({
+        success: function(results) {
+            console.log("Size:" + results.length);
+            notifications=results;
+            $("#notification_n")[0].innerHTML=notifications.length;
+            displayNotifications();
+            NProgress.done();
+            console.log("NProgress Stop");
+        },
+        error: function(error) {
+            console.log("Error: " + error.message);
+            notify(standardErrorMessage, "error", standardErrorDuration);
+        }
+    });
+}
+
+function displayNotifications(){
+	console.log("displayNotifications");
+	var limit;
+	if(notifications.length>3){
+		limit=3;
+	}
+	else{
+		limit=notifications.length;
+	}
+	console.log("limit: "+limit);
+	for (var i = 0; i < limit; i++) {
+        var object = notifications[i];
+
+        // Someone asked a question
+        if (object.get("type") == "question") {
+            console.log("notification - question");
+            notificationView.append("<li><a href='#'>New Question asked</a></li>");
+        }
+
+        // New Issue
+        if (object.get("type") == "issue") {
+        	console.log("notification - issue");
+            notificationView.append("<li><a href='#'>New Issue posted</a></li>");
+        }
+
+        // Update on an Issue
+        if (object.get("type") == "update") {
+        	console.log("notification - update");
+            notificationView.append("<li><a href='#'>New Update on an Issue</a></li>");
+
+        }
+
+        // Someone answered a question
+        if (object.get("type") == "answer") {
+        	console.log("notification - answer");
+            notificationView.append("<li><a href='#'>New Answer to your Question</a></li>");
+        }
+
+        // Someone commented on the post
+        if (object.get("type") == "postComment") {
+        	console.log("notification - postComment");
+            notificationView.append("<li><a href='#'>New Comment on your Post</a></li>");
+        }
+    }
+	
+	if(notifications.length>3){
+		notificationView.append("<li class='text-center nm fullwidth'><a href='#' onclick='displayAllNotifications();' class='bc nbr'><strong>See all</strong></a></li>");
+	}
+}
+
+function displayAllNotifications(){
+	console.log("displayAllNotifications");
+	notificationView.html("<li class='columns brbm'><strong>Notifications</strong></li>");
+	for (var i = 0; i < notifications.length; i++) {
+        var object = notifications[i];
+        notificationView.append("<li><a href='#'>New Question asked</a></li>");
+        // Someone asked a question
+        if (object.get("type") == "question") {
+            console.log("notification - question");
+            notificationView.append("<li><a href='#'>New Question asked</a></li>");
+        }
+
+        // New Issue
+        if (object.get("type") == "issue") {
+        	console.log("notification - issue");
+            notificationView.append("<li><a href='#'>New Issue posted</a></li>");
+        }
+
+        // Update on an Issue
+        if (object.get("type") == "update") {
+        	console.log("notification - update");
+            notificationView.append("<li><a href='#'>New Update on an Issue</a></li>");
+
+        }
+
+        // Someone answered a question
+        if (object.get("type") == "answer") {
+        	console.log("notification - answer");
+            notificationView.append("<li><a href='#'>New Answer to your Question</a></li>");
+        }
+
+        // Someone commented on the post
+        if (object.get("type") == "postComment") {
+        	console.log("notification - postComment");
+            notificationView.append("<li><a href='#'>New Comment on your Post</a></li>");
+        }
+    }
+}
 
 function notready(event){
 	notify("The feature is not ready yet, but coming soon. Stay Tuned", "warning",2);
