@@ -68,6 +68,12 @@
 }
 .secondary-color{
 	color:scale-color($grey, $lightness:-25%) !important;
+	&.hv{
+		&:hover, &:focus{
+		color:scale-color($grey, $lightness:-50%) !important;
+		transition: color 0.5s;
+		}
+	}
 }
 .tertiary{
 	font-size:0.75em;
@@ -707,7 +713,6 @@ tbody{
 .nbbl {
     position:absolute;
     top: 1em;
-    right:1em;
     padding:2px 5px 2px 4px;
     background-color:$yellow;
     color:$white;
@@ -725,4 +730,11 @@ tbody{
 }
 .cs{
 	cursor:pointer;
+	transition: color 0.5s;
+	&.hv{
+		&:hover, &:focus{
+		color:$black;
+		transition: color 0.5s;
+		}
+	}
 }

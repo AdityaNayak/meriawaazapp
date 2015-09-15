@@ -39,28 +39,33 @@ function createVoterArray(){
 }
 
 function postComment(pid){
-    console.log("postComment"+pid);
+ //   console.log("postComment"+pid);
+    console.log(pid)
+ loadingButton_id("commentBtn-"+pid,10);
     NProgress.start();
-    console.log("NProgress Start");
-    console.log("postComment");
+ //   console.log("NProgress Start");
+ //   console.log("postComment");
     var Comment = Parse.Object.extend("PostComment");
     var comment = new Comment();
     var p = new Parse.Object("Post");
     var u = new Parse.Object("User");
     p.id = pid;
     u.id = currentUser.id;
-    console.log("text-"+pid.toString());
+ //   console.log("text-"+pid.toString());
     var c=document.getElementById("text-"+pid.toString()).value;
     comment.set("content", c);
     comment.set("post", p);
     comment.set("user", u);
     comment.save(null, {
       success: function(comment) {
+        loadingButton_id_stop("commentBtn-"+pid,"comment");
         updatePost(pid); 
-        document.getElementById("text-"+pid.toString()).value="";       
+        document.getElementById("text-"+pid.toString()).value="";  
+        NProgress.done();
+        notify("Comment added","success", standardErrorDuration);     
       },
       error: function(comment, error) {
-        alert('Failed to Comment!' + error.message);
+        notify('Failed to Comment!' + error.message, "error", standardErrorDuration);
         NProgress.done();
       }
     });
@@ -72,7 +77,7 @@ function getFileName(){
 }
 
 function showMyImage(fileInput) {
-		console.log("Display Thumbnail");
+//		console.log("Display Thumbnail");
         $('#thumbnil').fadeIn();
         var files = fileInput.files;
         for (var i = 0; i < files.length; i++) {           
@@ -96,7 +101,7 @@ function showMyImage(fileInput) {
 
 
 function updatePost(pid){
-    console.log("updatePost");
+//    console.log("updatePost");
     ListItem1 = Parse.Object.extend("Post");
     query1 = new Parse.Query(ListItem1);
     query1.equalTo("objectId", pid);
@@ -108,12 +113,13 @@ function updatePost(pid){
                 var reach;
                 var likes;
                 var comments;
+                var DisplayUpload;
                 object= results1[0];
                 d=new Date(object.createdAt);
                 ago=timeSince(d);
                 content=object.get("content");
                 reach=object.get("reach");
-                likes=object.get("likes");
+                likes=object.get("numUpvotes");
                 comments=object.get("numComments");
                 ListItem2 = Parse.Object.extend("PostComment");
                 query2 = new Parse.Query(ListItem2);
@@ -126,11 +132,11 @@ function updatePost(pid){
                 query2.ascending("createdAt");
                 query2.find({
                     success: function(results2) {
-                        console.log("lookout!");
+                    //    console.log("lookout!");
                         var chaincomments ="";
                         object=results2[0];
                         for(var j=0;j<results2.length;j++){
-                            console.log(results2[j]);
+                        //    console.log(results2[j]);
                             var time;
                             var photo;
                             var comm;
@@ -140,10 +146,10 @@ function updatePost(pid){
                                 photo=getDefaultIcon(results2[j].get("user").get("type"));
                             }
                             else{
-                                photo=results2[j].get("user").get("pic").url();
+                                photo=results2[j].get("pUser").get("pic").url();
                             } 
                             comm=results2[j].get("content");
-                            chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6>"+name+"</h6></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
+                            chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='text-right secondary'><i class='icon-close hv cs tertiary-color'></i> </div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
                         }
                         var thisview=$('#post-'+pid);
                         thisview.html("");  
@@ -153,15 +159,31 @@ function updatePost(pid){
                         else{
                             var imige=getDefaultIcon(currentUser.get("type"));
                         }
+                        if(uploadlink==undefined){
+                                    DisplayUpload=" ";
+                                }
+                                else{
+                                    DisplayUpload="<img src='"+uploadlink.url()+"'/>";
+                                }
+
                         //thisview.html("<div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary cs'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color'><i class='icon-plus dbc'></i> New Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea id='text-"+object.id+"' class='secondary fx' rows='3' required></textarea><input type='submit'  value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
-                        thisview.html("<div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='secondary-color tertiary'>coming soon</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary cs'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color'><i class='icon-plus dbc'></i> New Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea id='text-"+object.id+"' class='secondary fx' rows='3' required></textarea><input type='submit'  value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
-                        
+                        thisview.html("<div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='secondary-color tertiary'>coming soon</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+" ago</div></div><div class='row'><div class='small-12 columns s-ws-bottom'>"+DisplayUpload+"</div><div class='small-12 columns'><p class=''>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary cs' id='commentsclick-"+object.id+"'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input id='commentBtn-"+object.id+"' type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div>");
+                        var url = window.location.href;    
+                        if (url.indexOf('#') == -1){
+                           url += '#'+pid
+                        }else{
+                            console.log(url);
+                           url = url.split('#')[0]+'#'+pid;
+                           console.log(url);
+                        }
+                        window.location.href = url;
+
                         $('#form-'+object.id).submit(function(event){
                               event.preventDefault();
                               postComment(event.target.id.toString().split('-')[1]);
                         });
                         NProgress.done();
-                        console.log('comment row');
+                    //    console.log('comment row');
                     },
                     error: function(error2){
                         console.log("Error: "+error2.message);
@@ -177,7 +199,7 @@ function updatePost(pid){
 }
 
 function calculateNetaStats(n){
-    console.log("calculateNetaStats");
+//    console.log("calculateNetaStats");
     var actions;
     var interactions;
     var followers;
@@ -220,7 +242,7 @@ function calculateNetaStats(n){
 }
 
 function calculateCurrentNetaStats(){
-        console.log("calculateCurrentNetaStats");
+//        console.log("calculateCurrentNetaStats");
         actions=currentNeta.get("numIsClaimed")+currentNeta.get("numIsClosed");
         interactions=currentNeta.get("numPosts")+currentNeta.get("numComments")+currentNeta.get("numQsAnswered");
         followers=currentNeta.get("numLikes");
@@ -231,7 +253,7 @@ function calculateCurrentNetaStats(){
 }
 
 function fetchConstituencyData(c){
-        console.log("fetchConstituencyData");
+  //      console.log("fetchConstituencyData");
         $("#competitorlist").innerHTML="";
         ListItem = Parse.Object.extend("Election");
         query = new Parse.Query(ListItem);
@@ -241,11 +263,11 @@ function fetchConstituencyData(c){
         query.include("arrayNetas");
         query.include("constituency");
         query.descending('createdAt');
-        console.log("I am here!");
+        //console.log("I am here!");
         query.find({
           success: function(results) {
                 if(results[0]!=undefined){
-                    console.log("I am here! 78");
+                    //console.log("I am here! 78");
                     netas=results[0].get("arrayNetas");
                     for(var i=0;i<netas.length;i++){
                         if(netas[i].id!=currentNeta.id){
@@ -294,7 +316,7 @@ function createCampaign(id,selectedNetaLists,selectedMediums){
 	Parse.Cloud.run("createCampaign", {objectId: currentNeta.id, isPush: ip,isSMS: is, isWhatsApp: iw, isTwitter: it, isEmail: ie, isFacebook: ib, p: post, netalists: nl}, {
 	  success:function(results){
 
-		console.log(results);
+	//	console.log(results);
 
 		populateStatus();
 		notify(standardSuccessMessage, "success",standardSuccessDuration);
@@ -335,7 +357,7 @@ function postCampaignFromPost(id){
 
 function populateStatus(){
     var postView=$('#posts');
-    console.log("populateStatus");
+//    console.log("populateStatus");
     postView.html("");    
     ListItem = Parse.Object.extend("Post");
     query = new Parse.Query(ListItem);
@@ -366,12 +388,12 @@ function populateStatus(){
                                 var object=results[i];
                                 var chaincomments ="";
                                 for(var j=0;j<results2.length;j++){
-                                    if(results2[j].get("post").id==object.id){
+                                    if(results2[j].get("post").id==object.id && results2[j].get("reported") !==1){
                                         var time;
                                         var photo;
                                         var comm;
                                         var name;
-                                        console.log("I am here!142");
+                                        //console.log("I am here!142");
                                         name=results2[j].get("pUser").get("username");
                                         time=timeSince(new Date(results2[j].createdAt));
                                         if(results2[j].get("pUser").get("pic")==undefined){
@@ -381,28 +403,34 @@ function populateStatus(){
                                             photo=results2[j].get("pUser").get("pic").url();
                                         } 
                                         comm=results2[j].get("content");
-
-                                        chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><p class='secondary nm'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
-
+                                        //console.log(commentId);
+                                        var commentId = results2[j].id;
+                                        //console.log(commentId);
+                                        chaincomments+="<div class='row comment' id='comment-"+commentId+"'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+commentId+"'class='reportbtn icon-close hv cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
                                     }
+                                    // Get the element, add a click listener...
+                                    // Get the element, add a click listener...
+                                    //console.log(object.id);
                                     
+
                                 }
+                                
                                 var d;
                                 var ago;
                                 var content;
                                 var reach;
                                 var likes;
                                 var comments;
-                                console.log("I am here!120");
+                                //console.log("I am here!120");
                                 d=new Date(object.createdAt);
                                 ago=timeSince(d);
                                 content=object.get("content");
                                 reach=object.get("reach");
-                                likes=object.get("likes");
+                                likes=object.get("numUpvotes");
                                 comments=object.get("numComments");
 								uploadlink=object.get("file");
 								if(uploadlink==undefined){
-									DisplayUpload="";
+									DisplayUpload=" ";
 								}
 								else{
 									DisplayUpload="<img src='"+uploadlink.url()+"'/>";
@@ -429,10 +457,11 @@ function populateStatus(){
 										voterView=voterView+"<label><input type='checkbox' value='"+voterViewArray[ik][0]+"' name='voter-"+object.id+"'>"+voterViewArray[ik][1]+"</label>";
 									}
 								}
-                                var cpgView='<form id="campaignform-'+object.id+'" style="display:none;"><div id="cmpg-form" class="s-ws-top"><div class="row collapse"><div class="small-2 columns text-center fx3"><label for="capp" class="inline secondary-color np tertiary"><div class="f-1-5x fx4"><i class="icon-phone blc"></i> </div> <input type="checkbox" name="medium-'+object.id+'" id="capp" value="1" checked=""> Push Send </label> </div> <div class="small-2 columns text-center fx3"> <label for="csms" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-comment blc"></i> </div> <input type="checkbox" id="csms" name="medium-'+object.id+'" value="2"> SMS </label> </div> <div class="small-2 columns text-center fx3"> <label for="cwhatsapp" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-whatsapp blc"></i> </div> <input type="checkbox" id="cwhatsapp" name="medium-'+object.id+'" value="3"> WhatsApp </label> </div> <div class="small-2 columns text-center fx3"> <label for="cemail" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-mail blc"></i> </div> <input type="checkbox" id="cemail" name="medium-'+object.id+'" value="4"> Email </label> </div> <div class="small-2 columns text-center fx3"> <label for="cfb" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-facebook blc"></i> </div> <input type="checkbox" id="cfb" name="medium-'+object.id+'" value="5"> Facebook </label> </div> <div class="small-2 columns text-center fx3"> <label for="ctwt" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-twitter blc"></i> </div> <input type="checkbox" id="ctwt" name="medium-'+object.id+'" value="6"> Twitter</label> </div> </div> <div class="row"></div><div class="small-12 columns s-ws-bottom">'+voterView+' <div class="small-4 columns"> <input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth"></div></div></div></form>';
+
+                                //var cpgView='<form id="campaignform-'+object.id+'" style="display:none;"><div id="cmpg-form" class="s-ws-top"><div class="row collapse"><div class="small-2 columns text-center fx3"><label for="capp" class="inline secondary-color np tertiary"><div class="f-1-5x fx4"><i class="icon-phone blc"></i> </div> <input type="checkbox" name="medium-'+object.id+'" id="capp" value="1" checked=""> Push Send </label> </div> <div class="small-2 columns text-center fx3"> <label for="csms" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-comment blc"></i> </div> <input type="checkbox" id="csms" name="medium-'+object.id+'" value="2"> SMS </label> </div> <div class="small-2 columns text-center fx3"> <label for="cwhatsapp" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-whatsapp blc"></i> </div> <input type="checkbox" id="cwhatsapp" name="medium-'+object.id+'" value="3"> WhatsApp </label> </div> <div class="small-2 columns text-center fx3"> <label for="cemail" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-mail blc"></i> </div> <input type="checkbox" id="cemail" name="medium-'+object.id+'" value="4"> Email </label> </div> <div class="small-2 columns text-center fx3"> <label for="cfb" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-facebook blc"></i> </div> <input type="checkbox" id="cfb" name="medium-'+object.id+'" value="5"> Facebook </label> </div> <div class="small-2 columns text-center fx3"> <label for="ctwt" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-twitter blc"></i> </div> <input type="checkbox" id="ctwt" name="medium-'+object.id+'" value="6"> Twitter</label> </div> </div> <div class="row"></div><div class="small-12 columns s-ws-bottom">'+voterView+' <div class="small-4 columns"> <input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth"></div></div></div></form>';
 								//postView.append("<div id='post-"+object.id+"'><div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns s-ws-bottom'>"+DisplayUpload+"</div><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary cs'>"+cpgView+"<div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary' id='commentsclick-"+object.id+"'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color cs' id='campaignclick-"+object.id+"'><i class='icon-plus dbc'></i> Send Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
-                                postView.append("<div id='post-"+object.id+"'><div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='secondary-color tertiary'>coming soon</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns s-ws-bottom'>"+DisplayUpload+"</div><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary cs'>"+cpgView+"<div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary' id='commentsclick-"+object.id+"'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color cs' id='campaignclick-"+object.id+"'><i class='icon-plus dbc'></i> Send Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
-                                console.log("form listener created for "+object.id);
+                                postView.append("<div id='post-"+object.id+"'><div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='secondary-color tertiary'>coming soon</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><a name="+object.id+" class='secondary-color hv'><i class='icon-clock tertiary'></i> "+ago+" ago</a></div></div><div class='row'><div class='small-12 columns s-ws-bottom'>"+DisplayUpload+"</div><div class='small-12 columns'><p class=''>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary cs' id='commentsclick-"+object.id+"'>Comments "+comments+"</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input id='commentBtn-"+object.id+"' type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
+                                //console.log("form listener created for "+object.id);
                                 $('#form-'+object.id).submit(function(event){
                                       event.preventDefault();
                                       postComment(event.target.id.toString().split('-')[1]);
@@ -442,13 +471,35 @@ function populateStatus(){
                                       postCampaign(event.target.id.toString().split('-')[1]);
                                 });
 								$('#commentsclick-'+object.id).click(function(){
-									$('#comments-'+event.target.id.toString().split('-')[1]).fadeIn();
+									$('#comments-'+event.target.id.toString().split('-')[1]).slideDown();
 								});
+                                // $('#close-'+object.id).click(function(){
+                                //     //console.log(object.id);
+
+                                //     //console.log($('#post-'+object.id).html());
+                                //     var tempObject1 = event.target.id.toString().split('-')[1];
+                                //     Parse.Cloud.run("report", {objId: tempObject1, oClass: "Post", rStatus: "1"}, {
+                                //       success: function(comment) {
+                                //         //$('#comment-'+event.target.id.toString().split('-')[1]).slideUp();
+                                //         console.log('comment clicked');
+                                //       },
+                                //       error: function(error) {
+                                //         console.log("Error: "+error.message);
+                                //         //notify(standardErrorMessage, "error",standardErrorDuration);
+                                //       }
+                                //     });
+
+                                //     //notready();
+
+
+                                //  });
 								$('#campaignclick-'+object.id).click(function(){
 									//$('#campaignform-'+event.target.id.toString().split('-')[1]).fadeIn();
                                     notready();
 								});
+
                             }
+
                         },
                         error: function(error2){
                             console.log("Error2:"+error2.message);
@@ -458,8 +509,34 @@ function populateStatus(){
                     
                     
                 }
+                $('#posts').click(function(e) {
+                    if ( $(e.target).is('.reportbtn') ) {
+                        //console.log(e.target.id);
+                        $(e.target).removeClass('icon-close hv').addClass('icon-process');
+                        var currentObj = e.target.id.split('-');
+                        console.log(currentObj[1]);
+
+                        Parse.Cloud.run("report", {objId: currentObj[1], oClass: "PostComment", pClass: "Post", rStatus: 1}, {
+                          success: function(results) {
+                            //console.log('testing'+results.id);
+                            //$('#comment-'+event.target.id.toString().split('-')[1]).slideUp();
+                            notify('Post reported successfully','success',standardErrorDuration);
+                            //console.log(currentObj[1]);
+                            console.log(results)
+
+                            $('#comment-'+currentObj[1]).slideUp();
+                          },
+                          error: function(error) {
+                            console.log("Error: "+error.message);
+                            notify(error.message, "error",standardErrorDuration);
+                            $(e.target).addClass('icon-close hv').removeClass('icon-process');
+                          }
+                        });
+
+                    }
+                });
                 fetchConstituencyData(currentNeta.get("constituency"));
-                console.log("NProgress Stop");
+                //console.log("NProgress Stop");
           },
           error: function(error) {
                 console.log("Error0:"+error.message);
@@ -561,10 +638,10 @@ function postStatus(c) {
 	if(file!=undefined){
 		var parsefile=new Parse.File(file.name,file);
 		parsefile.save().then(function(){
-			console.log('postStatus');
+		//	console.log('postStatus');
 			NProgress.start();
-			console.log("NProgress Start");
-			console.log("postStatus");
+		//	console.log("NProgress Start");
+		//	console.log("postStatus");
 			loadingButton_id("post",4);
 			var Post = Parse.Object.extend("Post");
 			var post = new Post();
@@ -573,7 +650,7 @@ function postStatus(c) {
 			post.set("file",parsefile);
 			post.set("content", c);
 			post.set("reach", 0);
-			post.set("likes", 0);
+			post.set("numUpvotes", 0);
 			post.set("numComments", 0);
 			post.set("neta",u);
 			post.save(null, {
@@ -594,10 +671,10 @@ function postStatus(c) {
 		});
 	}
 	else{
-		console.log('postStatus');
+	//	console.log('postStatus');
 		NProgress.start();
-		console.log("NProgress Start");
-		console.log("postStatus");
+	//	console.log("NProgress Start");
+	//	console.log("postStatus");
 		loadingButton_id("post",4);
 		var Post = Parse.Object.extend("Post");
 		var post = new Post();
@@ -606,7 +683,7 @@ function postStatus(c) {
 		//post.set("file",data);
 		post.set("content", c);
 		post.set("reach", 0);
-		post.set("likes", 0);
+		post.set("numUpvotes", 0);
 		post.set("numComments", 0);
 		post.set("neta",u);
 		post.save(null, {
@@ -623,7 +700,7 @@ function postStatus(c) {
 }
 
 function fetchECStatus(u){
-    console.log("fetchECStatus");    
+  //  console.log("fetchECStatus");    
     ListItem = Parse.Object.extend("Election");
     query = new Parse.Query(ListItem);
     if(u.get("type")=="neta"){
@@ -638,7 +715,7 @@ function fetchECStatus(u){
 		EC={e:"",c:""};
 		query.find({
 			  success: function(results) {
-					console.log("Size:"+results.length);
+			//		console.log("Size:"+results.length);
 					if(results.length==0){
 						EC.e="-";
 						EC.c="-";
@@ -669,10 +746,10 @@ function fetchECStatus(u){
 					else if(u.get("type")=="teamMember"){
 						setCurrentNetaTM(currentNeta);
 					}
-					console.log("NProgress Stop");
+			//		console.log("NProgress Stop");
 			  },
 			  error: function(error) {
-					console.log("Error:"+error.message);
+				//	console.log("Error:"+error.message);
 					NProgress.done();
 			  }
 		});
@@ -691,7 +768,7 @@ function fetchECStatus(u){
 				EC={e:"",c:""};
 				query.find({
 					  success: function(results) {
-							console.log("Size:"+results.length);
+						//	console.log("Size:"+results.length);
 							if(results.length==0){
 								EC.e="-";
 								EC.c="-";
@@ -717,7 +794,7 @@ function fetchECStatus(u){
 							else if(u.get("type")=="teamMember"){
 								setCurrentNetaTM(currentNeta);
 							}
-							console.log("NProgress Stop");
+						//	console.log("NProgress Stop");
 					  },
 					  error: function(error) {
 							console.log("Error:"+error.message);
@@ -740,7 +817,7 @@ function updateReach(){
     query2.equalTo("neta",currentNeta);
     query2.count({
       success: function(count2) {
-        console.log(count2);
+     //   console.log(count2);
 		var Election = Parse.Object.extend("Election");
 		election = new Parse.Query(Election);
 		election.descending('createdAt');
@@ -756,7 +833,7 @@ function updateReach(){
 				query1.equalTo("constituency",constituency);
 				query1.count({
 				  success: function(count1) {
-					console.log("population:"+count1);
+				//	console.log("population:"+count1);
 					document.getElementById("population").innerHTML=count1+4487+count2;
 				  },
 				  error: function(error) {
@@ -803,7 +880,7 @@ function updateReach(){
 // }
 
 function queryUserTable(){
-    console.log('QueryUserTable');
+ //   console.log('QueryUserTable');
     CU.fetch({
       success: function(results) {
         fetchECStatus(CU);
@@ -818,14 +895,14 @@ function queryUserTable(){
 
 //given neta
 function setCurrentNetaTM(n){
-    console.log("setCurrentNeta");
+ //   console.log("setCurrentNeta");
     n.fetch({
      success: function(result){
             currentUser=n.get("User");
             currentNeta=n;
             currentUser.fetch({
                 success:function(results){
-                    console.log("I was called Team Member!");
+            //        console.log("I was called Team Member!");
                     currentPUser=currentUser.get("pUser");
                     currentPUser.fetch({
                         success:function(results){
@@ -883,16 +960,16 @@ function setCurrentNetaTM(n){
 
 //given user
 function setCurrentNeta(u){
-    console.log("setCurrentNeta");
+ //   console.log("setCurrentNeta");
     currentUser=u;
     currentPUser=currentUser.get("pUser");
     currentPUser.fetch({
         success:function(results){
-            console.log(results);
+        //    console.log(results);
             currentNeta=currentUser.get("neta");
             currentNeta.fetch({
                success: function(results){
-                    console.log("I was called Neta!");
+                 //   console.log("I was called Neta!");
                     if(currentPUser.get("pic")!=undefined){
                           var photo=currentPUser.get("pic").url();
                     }
@@ -941,7 +1018,7 @@ function setCurrentNeta(u){
 }
 
 function initialize() {
-    console.log("initialize");
+//    console.log("initialize");
 	voterViewArray=[];
     NProgress.start();
     if(CU.get("type")!="neta"){

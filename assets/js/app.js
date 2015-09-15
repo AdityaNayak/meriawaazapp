@@ -4,6 +4,9 @@
 var count = 0 ;
 var CU;
 var constituency;
+var all=false;
+var notifications=[];
+var notificationView = $('#droptop');
 standardErrorMessage="Oops! There seems to be some problem. Please try again later.";
 standardErrorDuration=2;
 standardSuccessMessage="Operation Successful!";
@@ -17,7 +20,7 @@ function updateHistory()
 	
 }
 var a=location.pathname.split('/').slice(-1)[0];
-console.log(a);
+//console.log(a);
 if(a.length==0){
 	
 }
@@ -47,7 +50,7 @@ else{
 		    
 		    CU.fetch({
 		          success: function(results) {
-		                console.log("Size:"+results.length);
+		                //console.log("Size:"+results.length);
 		                var plogo=document.getElementById('plogo');
 		                var consti=document.getElementById('consti');
 		                object=CU;
@@ -87,8 +90,10 @@ else{
 												  success: function(results) {
 														constituency=results[0].get("constituency");
 														consti.innerHTML=constituency.get("name");
+														fetchNotifications()
 														if(a=="q-a.html"){
 						                					populateQuestions(0);
+
 						                				}
 													},
 													error: function(error){
@@ -99,8 +104,7 @@ else{
 						                		plogo.src=p.get("logo").url();
 						                	}
 
-						                	object.set("lastFetched",new Date());
-						                	object.save();
+						                	
 		                				},
 		                				error: function(error){
 		                					
@@ -137,9 +141,13 @@ else{
 															  success: function(results) {
 																	constituency=results[0].get("constituency");
 																	consti.innerHTML=constituency.get("name");
+																	fetchNotifications();
 																	if(a=="q-a.html" || a=="q-a.html#"){
 																		populateQuestions(0);
+																		
 																	}
+																	//object.set("lastFetched",new Date().subtractHours(4));
+										                			//object.save();
 																},
 																error: function(error){
 																	console.log("Error: "+error.message);
@@ -150,8 +158,7 @@ else{
 										                		plogo.src=p.get("logo").url();
 										                	}
 
-										                	object.set("lastFetched",new Date());
-										                	object.save();
+										                	
 						                				},
 						                				error:function(error){
 						                					
@@ -264,7 +271,10 @@ function timeSince(date) {
     return Math.floor(seconds) + " seconds";
 }
 
-
+Date.prototype.subtractHours= function(h){
+    this.setHours(this.getHours()-h);
+    return this;
+}
 
 function loadingButton_id(id,d){
 	var Original=document.getElementById(id).value;
@@ -277,7 +287,7 @@ function loadingButton_id(id,d){
 		console.log("Changing value to "+Original);
 		document.getElementById(id).value = Original;
 	}, d*1000);
-	console.log("Loading Button was Called!");
+	//console.log("Loading Button was Called!");
 }
 function loadingButton_id_stop(id,value){
 	var Original=value;
@@ -311,6 +321,176 @@ $('.interactiveLoading').click(function() {
 $('#logout').click(function() {
 	logout();
 });
+
+$('#notification_b').click(function() {
+	console.log("notification_button clicked");
+	fetchNotifications();
+});
+
+function fetchNotifications(){
+	console.log("fetchNotifications");
+	if(all==true){
+		displayAllNotifications();	
+	}
+	else{
+	    notificationView.html("<li class='columns brbm'><strong>Notifications</strong></li>");
+	    ListItem = Parse.Object.extend("Notification");
+	    query = new Parse.Query(ListItem);
+	    query.equalTo("constituency", constituency);
+	    query.equalTo("constituency", constituency);
+	    query.greaterThanOrEqualTo( "createdAt", new Date().subtractHours(48) );
+	    query.include("issue");
+	    query.include("post");
+	    query.include("postComment");
+	    query.include("question");
+	    query.include("answer");
+	    query.include("update");
+	    query.limit(1000);
+	    query.include(["question.pAsker"]);
+	    query.include(["postComment.pUser"]);
+	    query.include(["issue.pUser"]);
+	    query.include(["answer.pUser"]);
+	    query.include(["answer.question"]);
+	    query.include(["update.issue"]);
+	    query.include(["update.pUser"]);
+	    query.include(["postComment.post"]);
+	    //query.include("pUser");
+	    query.descending('createdAt');
+	    query.find({
+	        success: function(results) {
+	            console.log("Size:" + results.length);
+	            notifications=results;
+	            $("#notification_n")[0].innerHTML=notifications.length;
+	            object.set("lastFetched",new Date().subtractHours(48));
+				object.save();
+				displayNotifications();
+	            NProgress.done();
+	            console.log("NProgress Stop");
+	        },
+	        error: function(error) {
+	            console.log("Error: " + error.message);
+	            notify(standardErrorMessage, "error", standardErrorDuration);
+	        }
+	    });
+	}
+}
+
+function displayNotifications(){
+	console.log("displayNotifications");
+	var limit;
+	if(notifications.length>3){
+		limit=3;
+	}
+	else{
+		limit=notifications.length;
+	}
+	console.log("limit: "+limit);
+	for (var i = 0; i < limit; i++) {
+        var object = notifications[i];
+
+        // Someone asked a question
+        if (object.get("type") == "question") {
+            console.log("notification - question");
+            var pAsker_m=object.get("question").get("pAsker").get("username");
+            var title_m=object.get("question").get("title");
+            notificationView.append("<li><a href='#'>"+pAsker_m+" asked a new Question titled - "+title_m+"</a></li>");
+        }
+
+        // New Issue
+        if (object.get("type") == "issue") {
+        	console.log("notification - issue");
+        	var issueid_m=object.get("issue").get("issueId");
+            var issuetype_m=object.get("issue").get("category");
+            var issueposter_m=object.get("issue").get("title");
+            notificationView.append("<li><a href='#'>["+issueid_m+"] New "+issuetype_m+" issue was posted by "+issueposter_m+" </a></li>");
+        }
+
+        // Update on an Issue
+        if (object.get("type") == "update") {
+        	console.log("notification - update");
+			var issueupdate_m=object.get("update").get("type");
+            var issueid_m=object.get("update").get("issue").get("issueId");
+            var issueupdater_m=object.get("update").get("pUser").get("username");
+            notificationView.append("<li><a href='#'>New update("+issueupdate_m+") on an Issue ["+issueid_m+"] by "+issueupdater_m+"</a></li>");
+
+        }
+
+        // Someone answered a question
+        if (object.get("type") == "answer") {
+        	console.log("notification - answer");
+        	var pAsker_m=object.get("answer").get("pUser").get("username");
+            var title_m=object.get("answer").get("question").get("title");
+            notificationView.append("<li><a href='#'>"+pAsker_m+" answered the Question titled - "+title_m+"</a></li>");
+        }
+
+        // Someone commented on the post
+        if (object.get("type") == "postComment") {
+        	console.log("notification - postComment");
+        	var posttitle_m=object.get("postComment").get("post").get("title");
+            var answered_m=object.get("postComment").get("pUser").get("username");
+            notificationView.append("<li><a href='#'>New comment on your Post titled - "+posttitle_m+" by "+answered_m+"</a></li>");
+        }
+    }
+	
+	if(notifications.length>3){
+		notificationView.append("<li class='text-center nm fullwidth'><a onclick='callDisplayAllNotifications();' class='bc nbr'><strong>See all</strong></a></li>");
+	}
+}
+function callDisplayAllNotifications(){
+	console.log("callDisplayAllNotifications");
+	all=true;
+	$( '#notification_b' ).click();
+}
+function displayAllNotifications(){
+	console.log("displayAllNotifications");
+	//all=false;
+	notificationView.html("<li class='columns brbm'><strong>Notifications</strong></li>");
+	for (var i = 0; i < notifications.length; i++) {
+        var object = notifications[i];
+        // Someone asked a question
+        if (object.get("type") == "question") {
+            console.log("notification - question");
+            var pAsker_m=object.get("question").get("pAsker").get("username");
+            var title_m=object.get("question").get("title");
+            notificationView.append("<li><a href='#'>"+pAsker_m+" asked a new Question titled - "+title_m+"</a></li>");
+        }
+
+        // New Issue
+        if (object.get("type") == "issue") {
+        	console.log("notification - issue");
+        	var issueid_m=object.get("issue").get("issueId");
+            var issuetype_m=object.get("issue").get("category");
+            var issueposter_m=object.get("issue").get("title");
+            notificationView.append("<li><a href='#'>["+issueid_m+"] New "+issuetype_m+" issue was posted by "+issueposter_m+" </a></li>");
+        }
+
+        // Update on an Issue
+        if (object.get("type") == "update") {
+        	console.log("notification - update");
+			var issueupdate_m=object.get("update").get("type");
+            var issueid_m=object.get("update").get("issue").get("issueId");
+            var issueupdater_m=object.get("update").get("pUser").get("username");
+            notificationView.append("<li><a href='#'>New update("+issueupdate_m+") on an Issue ["+issueid_m+"] by "+issueupdater_m+"</a></li>");
+
+        }
+
+        // Someone answered a question
+        if (object.get("type") == "answer") {
+        	console.log("notification - answer");
+        	var pAsker_m=object.get("answer").get("pUser").get("username");
+            var title_m=object.get("answer").get("question").get("title");
+            notificationView.append("<li><a href='#'>"+pAsker_m+" answered the Question titled - "+title_m+"</a></li>");
+        }
+
+        // Someone commented on the post
+        if (object.get("type") == "postComment") {
+        	console.log("notification - postComment");
+        	var posttitle_m=object.get("postComment").get("post").get("title");
+            var answered_m=object.get("postComment").get("pUser").get("username");
+            notificationView.append("<li><a href='#'>New comment on your Post titled - "+posttitle_m+" by "+answered_m+"</a></li>");
+        }
+    }
+}
 
 function notready(event){
 	notify("The feature is not ready yet, but coming soon. Stay Tuned", "warning",2);
