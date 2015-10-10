@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Issue | Meri Awaaz</title>
+  {% include header-issue.html %}
+  
+  
+
+  <div class="row">
+    <div class="small-8 columns b-ws-top">
+      <div id="updates-view">
+        <div id="map-view2" class="br-fx-top"  style="width:100%;height:200px">
+          <div id="googleMap" class="google-map" style="width:100%;height:200px">
+          </div> 
+        </div>
+        <div class="panel br-fx-top">
+          <h2 id="ititle" class="s-ws-top text-center"><small>...</small> ...</h2>
+          <div class="row">
+            <div class="small-3 columns secondary">
+              <i class="icon-calendar"></i> <span id="date">Loading...</span>
+            </div>
+            <div class="small-3 columns secondary"><i class="icon-clock"></i> <span id="times">Loading...</span>
+            </div>
+
+            <div class="small-3 columns secondary">
+              Type: <span id="type" class="ct">Loading...</span>
+            </div>
+
+            <div class="small-3 columns secondary">
+              By: <span id="reporter" class="ct">Loading...</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-6 columns text-center s-ws-top" align="center">
+              <img id="beforephoto" src="{{site.url}}/assets/images/loading.gif">
+              <h6 class="s-ws-top">Before</h6>
+            </div>
+            <div class="small-6 columns text-center s-ws-top" align="center">
+              <img id="afterphoto" src="{{site.url}}/assets/images/loading.gif">
+              <h6 class="s-ws-top">After</h6>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="small-12 columns small-centered">
+              <p id="content">Loading...</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-12 columns">
+              <hr>
+            </div>
+          </div>
+          <div class="row" style="position:relative;">
+            <div class="timeline-view">
+              <div id="timeline-view" class="small-12 columns b-ws-top">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="small-4 columns b-ws-top">
+      <h4 class="b-ws-top ct" id="colorstatus">Loading...</h4>
+      <h4><small>Solved by: </small> Rajesh Rishi <img src="http://files.parsetfss.com/49d823b8-5cce-45ad-bc0f-9c944d36b966/tfss-4abc0c57-d533-4c7a-a215-827879fd1708-20150711075304.jpg" class="circle-img" style="width:48px;"></h4>
+      <h4><small>Committed to solve it in: </small> Coming soon</h4>
+      <h4 id="daysLeft"><small>Actually solved it in: </small> Coming soon</h4>
+      <h4><small>Citizens who upvoted it: </small> <span id="nvotes"> ... </span></h4>
+
+      <hr class="b-ws-top b-ws-bottom">
+
+
+      <h4>Download the app from Google Play store</h4>
+      <a href="https://play.google.com/store/apps/details?id=com.meriawaaz.mygap">
+        <img alt="Get it on Google Play"
+             src="./assets/images/webtomobile.png" />
+      </a>
+
+    </div>
+  </div>
+  <!-- {% include footer.html %}  -->
+  <div class="row">
+    <hr>
+    <div class="small-7 columns">
+      <ul class="inline-list secondary">
+        <li><a href="{{site.url}}/press.html">Press</a></li>
+        <li><a href="{{site.url}}/join.html">Careers</a></li>
+        <li><a href="mailto:meriawaaz@mutinylabs.in">Contact</a></li>
+        <li><a href="http://facebook.com/meriAwaazapp" target="_blank">Facebook</a></li>
+        <li><a href="http://twitter.com/meriAwaazapp" target="_blank">Twitter</a></li>
+        <li><a href="https://plus.google.com/b/116904166401766610185" rel="publisher" target="_blank">Google+</a></li>
+      </ul>
+    </div>
+    <div class="small-5 columns">
+     <ul class="inline-list secondary right">
+      <li><a href="{{site.url}}/privacy-policy.html">Privacy Policy</a></li>
+      <li>Built with love at <a href="http://mutinylabs.in" style="display:inline;">Mutiny Labs</a></li>
+    </ul>
+  </div>
+</div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-45177246-4', 'auto');
+  ga('send', 'pageview');
+</script>
+</body>
+<script type="text/javascript" src="{{site.url}}/assets/bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.js"></script>
+<script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.topbar.js"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<!-- <script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.dropdown.js"></script> -->
+
+
+<script type="text/javascript">
+  $(document).foundation();
+</script>
+
+<script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+<script type="text/javascript" src="{{site.url}}/assets/js/issue.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    initialize();
+  });
+
+</script>
+
+</html>

@@ -552,4 +552,6 @@ function icon_bg(){
 		iconArray.splice(randomNumber, 1);
 	}
 	console.log('success');
+
+
 }
