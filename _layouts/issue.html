@@ -16,7 +16,7 @@
           </div> 
         </div>
         <div class="panel br-fx-top">
-          <h2 id="ititle" class="s-ws-top text-center"><small>#304</small> Issue title </h2>
+          <h2 id="ititle" class="s-ws-top text-center"><small>Loading...</small></h2>
           <div class="row secondary">
             <div class="small-3 columns secondary">
               <i class="icon-calendar"></i> <span id="date">Loading...</span>
@@ -34,18 +34,18 @@
           </div>
           <div class="row">
             <div class="small-6 columns text-center s-ws-top" align="center">
-              <img id="bigphoto" src="{{site.url}}/assets/images/loading.gif">
-              <h6>Before</h6>
+              <img id="beforephoto" src="{{site.url}}/assets/images/loading.gif">
+              <h6 class="s-ws-top">Before</h6>
             </div>
             <div class="small-6 columns text-center s-ws-top" align="center">
               <img id="afterphoto" src="{{site.url}}/assets/images/loading.gif">
-              <h6>After</h6>
+              <h6 class="s-ws-top">After</h6>
             </div>
           </div>
-
+          <hr>
           <div class="row">
             <div class="small-12 columns small-centered">
-              <p id="detailedissue">Loading...</p>
+              <p id="content">Loading...</p>
             </div>
           </div>
           <div class="row">
@@ -63,11 +63,11 @@
       </div>
     </div>
     <div class="small-4 columns b-ws-top">
-      <h4 class="gc b-ws-top">Solved <i class="icon-solved gc"></i></h4>
-      <h4><small>Solved by: </small> Rajesh Rishi <img src="http://placehold.it/100x100" class="circle-img" style="width:48px;"></h4>
-      <h4><small>Committed to solve it in: </small> 12 days</h4>
-      <h4><small>Actually solved it in: </small> 3 days</h4>
-      <h4><small>Citizens who voiced: </small> 12</h4>
+      <h4 class="b-ws-top ct" id="colorstatus">Loading...</h4>
+      <h4><small>Solved by: </small> Rajesh Rishi <img src="http://files.parsetfss.com/49d823b8-5cce-45ad-bc0f-9c944d36b966/tfss-4abc0c57-d533-4c7a-a215-827879fd1708-20150711075304.jpg" class="circle-img" style="width:48px;"></h4>
+      <h4><small>Committed to solve it in: </small> Coming soon</h4>
+      <h4 id="daysLeft"><small>Actually solved it in: </small> Coming soon</h4>
+      <h4><small>Citizens who upvoted it: </small> <span id="nvotes"> Loading </span></h4>
     </div>
   </div>
   <!-- {% include footer.html %}  -->
@@ -113,5 +113,12 @@
 
 <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
 <script type="text/javascript" src="{{site.url}}/assets/js/issue.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    initialize();
+  });
+
+</script>
 
 </html>
