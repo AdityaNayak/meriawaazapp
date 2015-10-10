@@ -375,19 +375,3 @@ function icon_bg(){
 
 
 }
-
-function temp(){
-	query = new Parse.Query("Constituency");
-  query.limit(1000);
-  var gp = new Parse.GeoPoint({
-      latitude: 28.548633,
-      longitude: 77.213627
-    });
-  query.near("center", gp);
-  query.find({
-    success: function(results) { 
-    console.log(results[0].get('name'));//we have stopped getting the proper results and none of the results we get are within even 10 km of the geopoint provided where earlier at least 10 results were near the given location
-  },
-    error: function(error) {}
-  });
-}

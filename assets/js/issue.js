@@ -187,25 +187,42 @@ function FixedLocationControl(controlDiv, map) {
     });
 
 }
+function timeSince(date) {
+
+    var seconds = Math.floor(Math.abs(new Date() - date) / 1000);
+
+    var interval = Math.floor(seconds / 31536000);
+
+    if (interval > 1) {
+        return interval + " years";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+        return interval + " months";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+        return interval + " days";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+        return interval + " hours";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+        return interval + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+}
 
 // 
-function populateUpdates(numID) {
-    //console.log("populateUpdates");
+function populateUpdates() {
+    console.log("populateUpdates");
     timelineView.html("");
     ListItem = Parse.Object.extend("Update");
     query = new Parse.Query(ListItem);
     var pointer = new Parse.Object("Issue");
-    // var query2 = new Parse.Query(pointer);
-    // query2.equalTo("issueId", numID);
-    // query2.first({
-    //   success: function(object) {
-    //     console.log(object.id)
-    //   },
-    //   error: function(error) {
-    //     alert("Error: " + error.code + " " + error.message);
-    //   }
-    // });
-
+    pointer.id = issueObj.id;
     query.equalTo("issue", pointer);
     query.include("assignee");
     query.include(["assignee.pUser"]);
@@ -256,14 +273,14 @@ function populateUpdates(numID) {
 
                 }
                 if (object.get("type") == "comment") {
-                    timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small><i class='icon-close tertiary-color cs hv right'></i></div><p>" + content + "</p></div></div></div>");
+                    timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
                 }
                 if (object.get("type") == "claim") {
                     timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
                 }
             }
-            NProgress.done();
-            console.log("NProgress Stop");
+          //  NProgress.done();
+           // console.log("NProgress Stop");
 
         },
         error: function(error) {
@@ -327,12 +344,23 @@ function getIcon(category, status) {
     }
     return myicon;
 }
-
+function getDefaultIcon(type){
+    if(type=="neta"){
+        return "./assets/images/neta.png";
+    }
+    else if(type=="teamMember"){
+        return "./assets/images/neta.png";
+    }
+    else{
+        return "./assets/images/user.png";
+    }
+}
 function updateCurrentMarker(m) {
     //console.log("updateCurrentMarker");
     ListItem = Parse.Object.extend("Issue");
     query = new Parse.Query(ListItem);
     query.equalTo("issueId", m);
+    query.include('pUser');
     query.first({
         success: function(results) {
             //console.log("current marker updated: " + results.length);
@@ -362,7 +390,7 @@ function updateContentWithCurrentMarker() {
 
     var p_latitude = issueObj.get('location').latitude;
     var p_longitude = issueObj.get('location').longitude;
-     var p_location = p_latitude.toString().substring(0, 10) + ", " + p_longitude.toString().substring(0, 10);
+    var p_location = p_latitude.toString().substring(0, 10) + ", " + p_longitude.toString().substring(0, 10);
     // //getReverseGeocodingData(p_latitude, p_longitude);
    // var p_id = currmarker.content.id;
     var before_photo = issueObj.get('file');
@@ -372,6 +400,7 @@ function updateContentWithCurrentMarker() {
     var p_title = issueObj.get('title');
     var p_issueId = issueObj.get('issueId').toString();
     var p_numVotes=issueObj.get('numUpvotes');
+    var p_rtr= issueObj.get('pUser').get('username');
     //infowindow.setContent(p_issueId);
     //infowindow.open(map, marker);
     var status = document.getElementById('colorstatus');
@@ -382,8 +411,7 @@ function updateContentWithCurrentMarker() {
     var content = document.getElementById('content');
     var type = document.getElementById('type');
     var title = document.getElementById('ititle');
-    var phone1=document.getElementById('phone1');
-    //var phone2=document.getElementById('phone2');
+    var reporter = document.getElementById('reporter');
     //var location = document.getElementById('location');
     var beforephoto = document.getElementById('beforephoto');
     var afterphoto = document.getElementById('afterphoto');
@@ -422,8 +450,10 @@ function updateContentWithCurrentMarker() {
         //console.log(p_time);
         
         content.innerHTML = p_content;
-        type.innerHTML = p_type;
+        type.innerHTML = '<strong>'+p_type+'</strong>';
         title.innerHTML = "<small> #"+p_issueId + "</small> " + p_title;
+        reporter.innerHTML='<strong>@'+p_rtr+'</strong>';
+        numUp.innerHTML=p_numVotes;
        // location.innerHTML = p_location;
         if ((before_photo && after_photo) != undefined) {
             //console.log("photo is available");
@@ -458,7 +488,7 @@ function updateContentWithCurrentMarker() {
         //     daysLeft.innerHTML = "<small>Actually solved it in: </small> 3 days";
         // }
 
-      //  populateUpdates();
+        populateUpdates();
         //showDetailsView();
         
 
