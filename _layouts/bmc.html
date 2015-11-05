@@ -100,7 +100,7 @@
                         c.id = constArr[i]["objectId"];
                         constArray.push(c);
                   }
-                  var users = Parse.Object.extend("Citizen");
+                  var users = Parse.Object.extend("User");
                     var issues = Parse.Object.extend("Issue");
                     var questions = Parse.Object.extend("Question");
                     var query1 = new Parse.Query(users).containedIn('constituency', constArray).greaterThanOrEqualTo("createdAt", todaysDate);
