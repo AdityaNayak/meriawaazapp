@@ -91,7 +91,15 @@
             query.get('0x79E6ycKH', {
                 success: function(object) {
                   //object.increment(field, amount);
-                  var constArray = object.get("constituencyArray");
+                  var constArr = object.get("constituencyArray");
+                  //console.log(constArr);
+                  var constArray = [];
+                  for(i=0;i<constArr.length;i++){
+                        var c = new Parse.Object("constituency");
+                        //console.log(constArr[i]);
+                        c.id = constArr[i]["objectId"];
+                        constArray.push(c);
+                  }
                   var users = Parse.Object.extend("Citizen");
                     var issues = Parse.Object.extend("Issue");
                     var questions = Parse.Object.extend("Question");
