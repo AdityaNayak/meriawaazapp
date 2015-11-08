@@ -1242,6 +1242,7 @@ function populateTM() {
     query.equalTo("assignee", pointer);
     query.equalTo("type", "assigned");
     query.include("issue");
+    query.limit(1000);
     query.find({
         success: function(results) {
             for (var i = 0; i < results.length; i++) {
@@ -1250,6 +1251,7 @@ function populateTM() {
                 var myicon;
                 if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly) == true) {
                     //Set Icon
+                //if(true){
                     myicon = getIcon(object.get("category"), object.get("status"));
 
 
@@ -1328,6 +1330,7 @@ function populate() {
     ListItem = Parse.Object.extend("Issue");
     query = new Parse.Query(ListItem);
     query.descending('createdAt');
+    query.limit(1000);
     query.find({
         success: function(results) {
             for (var i = 0; i < results.length; i++) {
@@ -1335,7 +1338,11 @@ function populate() {
                 var myicon;
 
                 if (constituencyType != 1) {
-                    if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly) == true) {
+                    //if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly) == true) {
+                    console.log(object.get("constituency"));
+                    console.log(constituency);
+                    if(object.get("constituency")!=undefined){
+                    if(object.get("constituency").id=="7TRhKjpDcW"){ 
                         //Set Icon
                         myicon = getIcon(object.get("category"), object.get("status"));
 
@@ -1397,8 +1404,10 @@ function populate() {
                     }
                 } else {
                     for (var j = 0; j < polyArray.length; j++) {
+
                         if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), polyArray[j]) == true) {
                             //Set Icon
+                        //if(true){ 
                             myicon = getIcon(object.get("category"), object.get("status"));
 
                             marker = new google.maps.Marker({
@@ -1457,6 +1466,7 @@ function populate() {
                             })(marker, object));
                         }
                     }
+                }
                 }
 
             }
@@ -1645,7 +1655,7 @@ function listViewClick(p) {
 }
 
 function initializeMap() {
-    var constituency;
+    //var constituency;
     if (currentUser.get("type") == "neta") {
         var n = currentUser.get("neta");
         n.fetch({

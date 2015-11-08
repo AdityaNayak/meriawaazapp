@@ -92,7 +92,7 @@
                 success: function(object) {
                   //object.increment(field, amount);
                   var constArr = object.get("constituencyArray");
-                  //console.log(constArr);
+                  console.log(constArr);
                   var constArray = [];
                   for(i=0;i<constArr.length;i++){
                         var c = new Parse.Object("constituency");
@@ -100,6 +100,7 @@
                         c.id = constArr[i]["objectId"];
                         constArray.push(c);
                   }
+                  console.log(constArray);
                   var users = Parse.Object.extend("User");
                     var issues = Parse.Object.extend("Issue");
                     var questions = Parse.Object.extend("Question");
@@ -115,6 +116,7 @@
 
                     query1.count({
                       success: function(count1) {
+                                console.log(count1);
                                 var numAnim1 = new countUp("num1", 0, count1*2.5);
                                 numAnim1.start();
                             },
@@ -125,6 +127,7 @@
 
                             query2.count({
                               success: function(count2) {
+                                console.log(count2);
                                 var numAnim2 = new countUp("num2", 0, count2*2.5);
                                 numAnim2.start();
                             },
@@ -135,6 +138,7 @@
 
                             query3.count({
                               success: function(count3) {
+                                console.log(count3);
                                 var numAnim3 = new countUp("num3", 0, count3*2.5);
                                 numAnim3.start();
                                // NProgress.done();
@@ -146,6 +150,7 @@
 
                             query4.count({
                               success: function(count4) {
+                                console.log(count4);
                                 var numAnim4 = new countUp("num4", 0, count4*2.5);
                                 numAnim4.start();
                                // NProgress.done();
@@ -157,6 +162,7 @@
 
                             query5.count({
                               success: function(count5) {
+                                console.log(count5);
                                 var numAnim5 = new countUp("num5", 0, count5);
                                 numAnim5.start();
                                // NProgress.done();
@@ -168,6 +174,7 @@
 
                             query6.count({
                               success: function(count6) {
+                                console.log(count6);
                                 var numAnim6 = new countUp("num6", 0, count6);
                                 numAnim6.start();
                                // NProgress.done();
@@ -179,6 +186,7 @@
 
                             query7.count({
                               success: function(count7) {
+                                console.log(count7);
                                 var numAnim7 = new countUp("num7", 0, count7);
                                 numAnim7.start();
                                // NProgress.done();
@@ -189,7 +197,9 @@
                         });
 
                             query8.count({
+
                               success: function(count8) {
+                                console.log(count8);
                                 var numAnim8 = new countUp("num8", 0, count8);
                                 numAnim8.start();
                                // NProgress.done();
