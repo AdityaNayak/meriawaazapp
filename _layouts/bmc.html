@@ -6,7 +6,7 @@
     </div> -->
     <div class="row">
         <div class="small-12 columns">
-            <h3>Janakpuri campaign: Target 7000</h3>
+            <h3>BMC campaign: Target 7000</h3>
         </div>
     </div>
     <div class="row">
@@ -88,24 +88,35 @@
 
             //query.greaterThanOrEqualTo( "expiration", todaysDate );
             var query = new Parse.Query("Constituency");
-            query.get('7TRhKjpDcW', {
+            query.get('0x79E6ycKH', {
                 success: function(object) {
                   //object.increment(field, amount);
+                  var constArr = object.get("constituencyArray");
+                  console.log(constArr);
+                  var constArray = [];
+                  for(i=0;i<constArr.length;i++){
+                        var c = new Parse.Object("constituency");
+                        //console.log(constArr[i]);
+                        c.id = constArr[i]["objectId"];
+                        constArray.push(c);
+                  }
+                  console.log(constArray);
                   var users = Parse.Object.extend("User");
                     var issues = Parse.Object.extend("Issue");
                     var questions = Parse.Object.extend("Question");
-                    var query1 = new Parse.Query(users).equalTo('constituency',object).greaterThanOrEqualTo("createdAt", todaysDate);
-                    var query2 = new Parse.Query(users).equalTo('constituency',object).greaterThan("createdAt", twoDay).lessThanOrEqualTo("createdAt",todaysDate);
-                    var query3 = new Parse.Query(users).equalTo('constituency',object).greaterThanOrEqualTo("createdAt", oneWeek);
-                    var query4 = new Parse.Query(users).equalTo('constituency',object);
+                    var query1 = new Parse.Query(users).containedIn('constituency', constArray).greaterThanOrEqualTo("createdAt", todaysDate);
+                    var query2 = new Parse.Query(users).containedIn('constituency', constArray).greaterThan("createdAt", twoDay).lessThanOrEqualTo("createdAt",todaysDate);
+                    var query3 = new Parse.Query(users).containedIn('constituency', constArray).greaterThanOrEqualTo("createdAt", oneWeek);
+                    var query4 = new Parse.Query(users).containedIn('constituency', constArray);
 
-                    var query5 = new Parse.Query(issues).equalTo('constituency',object).greaterThanOrEqualTo("createdAt", oneWeek);
-                    var query6 = new Parse.Query(issues).equalTo('constituency',object).greaterThan("createdAt", twoWeek).lessThanOrEqualTo("createdAt",oneWeek);
-                    var query7 = new Parse.Query(questions).equalTo('constituency',object).greaterThanOrEqualTo("createdAt", oneWeek);
-                    var query8 = new Parse.Query(questions).equalTo('constituency',object).greaterThan("createdAt", twoWeek).lessThanOrEqualTo("createdAt",oneWeek);
+                    var query5 = new Parse.Query(issues).containedIn('constituency', constArray).greaterThanOrEqualTo("createdAt", oneWeek);
+                    var query6 = new Parse.Query(issues).containedIn('constituency', constArray).greaterThan("createdAt", twoWeek).lessThanOrEqualTo("createdAt",oneWeek);
+                    var query7 = new Parse.Query(questions).containedIn('constituency', constArray).greaterThanOrEqualTo("createdAt", oneWeek);
+                    var query8 = new Parse.Query(questions).containedIn('constituency', constArray).greaterThan("createdAt", twoWeek).lessThanOrEqualTo("createdAt",oneWeek);
 
                     query1.count({
                       success: function(count1) {
+                                console.log(count1);
                                 var numAnim1 = new countUp("num1", 0, count1*2.5);
                                 numAnim1.start();
                             },
@@ -116,6 +127,7 @@
 
                             query2.count({
                               success: function(count2) {
+                                console.log(count2);
                                 var numAnim2 = new countUp("num2", 0, count2*2.5);
                                 numAnim2.start();
                             },
@@ -126,6 +138,7 @@
 
                             query3.count({
                               success: function(count3) {
+                                console.log(count3);
                                 var numAnim3 = new countUp("num3", 0, count3*2.5);
                                 numAnim3.start();
                                // NProgress.done();
@@ -137,6 +150,7 @@
 
                             query4.count({
                               success: function(count4) {
+                                console.log(count4);
                                 var numAnim4 = new countUp("num4", 0, count4*2.5);
                                 numAnim4.start();
                                // NProgress.done();
@@ -148,6 +162,7 @@
 
                             query5.count({
                               success: function(count5) {
+                                console.log(count5);
                                 var numAnim5 = new countUp("num5", 0, count5);
                                 numAnim5.start();
                                // NProgress.done();
@@ -159,6 +174,7 @@
 
                             query6.count({
                               success: function(count6) {
+                                console.log(count6);
                                 var numAnim6 = new countUp("num6", 0, count6);
                                 numAnim6.start();
                                // NProgress.done();
@@ -170,6 +186,7 @@
 
                             query7.count({
                               success: function(count7) {
+                                console.log(count7);
                                 var numAnim7 = new countUp("num7", 0, count7);
                                 numAnim7.start();
                                // NProgress.done();
@@ -180,7 +197,9 @@
                         });
 
                             query8.count({
+
                               success: function(count8) {
+                                console.log(count8);
                                 var numAnim8 = new countUp("num8", 0, count8);
                                 numAnim8.start();
                                // NProgress.done();
