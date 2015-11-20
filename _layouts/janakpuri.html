@@ -91,7 +91,7 @@
             query.get('7TRhKjpDcW', {
                 success: function(object) {
                   //object.increment(field, amount);
-                  var users = Parse.Object.extend("User");
+                  var users = Parse.Object.extend("Citizen");
                     var issues = Parse.Object.extend("Issue");
                     var questions = Parse.Object.extend("Question");
                     var query1 = new Parse.Query(users).equalTo('constituency',object).greaterThanOrEqualTo("createdAt", todaysDate);

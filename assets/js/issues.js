@@ -935,7 +935,7 @@ function updateCurrentMarker(m) {
     query.equalTo("objectId", m.content.id);
     query.find({
         success: function(results) {
-            console.log("current marker updated: " + results.length);
+            //console.log("current marker updated: " + results.length);
             currmarker.content = results[0];
             for (var i = 0; i < markers.length; i++) {
                 if (markers[i].content.id == currmarker.content.id) {

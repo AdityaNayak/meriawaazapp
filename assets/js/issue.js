@@ -243,7 +243,6 @@ function toTime(sec) {
     }
     return Math.floor(seconds) + " seconds";
 }
-
 // 
 function populateUpdates() {
     console.log("populateUpdates");
@@ -460,7 +459,6 @@ function updateContentWithCurrentMarker() {
     var p_latitude = issueObj.get('location').latitude;
     var p_longitude = issueObj.get('location').longitude;
     var p_location = p_latitude.toString().substring(0, 10) + ", " + p_longitude.toString().substring(0, 10);
-    console.log(p_location);
     // //getReverseGeocodingData(p_latitude, p_longitude);
    // var p_id = currmarker.content.id;
     var before_photo = issueObj.get('file');
