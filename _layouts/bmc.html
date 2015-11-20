@@ -1,0 +1,235 @@
+{% include header-out.html %}
+    <!-- <div class="row b-ws-top">
+        <div class="small-4 small-centered columns s-ws-bottom">
+            <a href="{{site.url}}"><img src="{{site.url}}/assets/images/logo-full.png" alt="Meri Awaaz"></a>
+        </div>
+    </div> -->
+    <div class="row">
+        <div class="small-12 columns">
+            <h3>BMC campaign: Target 7000</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-3 small-12 columns text-center">
+            <div class="panel">
+            <div id="num1" class="f-2x bgc">0</div>
+            <div>Voters added today</div>
+            </div>
+        </div>
+        <div class="large-3 small-12 columns text-center">
+            <div class="panel">
+            <div id="num2" class="f-2x bc">0</div>
+            <div>Voters added yesterday</div>
+            </div>
+        </div>
+        <div class="small-12 large-3 columns text-center">
+        <div class="panel">
+            <div id="num3" class="f-2x dbc">0</div>
+            <div>Voters added this week</div>
+            </div>
+        </div>
+        <div class="small-12 large-3 columns text-center">
+        <div class="panel">
+            <div id="num4" class="f-2x dbc">0</div>
+            <div>Total voters</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-3 small-12 columns text-center s-ws-top">
+            <div class="panel">
+            <div id="num5" class="f-2x bgc">0</div>
+            <div>Issues reported this week</div>
+            </div>
+        </div>
+        <div class="large-3 small-12 columns text-center s-ws-top">
+            <div class="panel">
+            <div id="num6" class="f-2x bc">0</div>
+            <div>Issues reported last week</div>
+            </div>
+        </div>
+        <div class="small-12 large-3 columns text-center s-ws-top ">
+        <div class="panel">
+            <div id="num7" class="f-2x dbc">0</div>
+            <div>Questions asked this week</div>
+            </div>
+        </div>
+        <div class="small-12 large-3 columns text-center s-ws-top">
+        <div class="panel">
+            <div id="num8" class="f-2x dbc">0</div>
+            <div>Questions asked last week</div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <script type="text/javascript" src="{{site.url}}/assets/bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.js"></script>
+    <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+    <script>
+
+
+        function updateCounters(){
+            Parse.initialize("km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt", "BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI");
+            // Query Expiration
+            var d = new Date();
+            var time = ( 24 * 3600 * 1000);
+            var todaysDate = new Date(d.getTime()- (time)); 
+            console.log(todaysDate);
+            var time = ( 24 * 3600 * 1000);
+            var oneDay = new Date(d.getTime() - (time)+2);
+            console.log(oneDay);
+            var twoDay = new Date(d.getTime() - (time)*3);
+            //console.log(twoDay);
+            var oneWeek = new Date(d.getTime() - (time)*8);
+            var twoWeek = new Date(d.getTime() - (time)*15);
+            //console.log(oneWeek);
+
+            //query.greaterThanOrEqualTo( "expiration", todaysDate );
+            var query = new Parse.Query("Constituency");
+            query.get('0x79E6ycKH', {
+                success: function(object) {
+                  //object.increment(field, amount);
+                  var constArr = object.get("constituencyArray");
+                  console.log(constArr);
+                  var constArray = [];
+                  for(i=0;i<constArr.length;i++){
+                        var c = new Parse.Object("constituency");
+                        //console.log(constArr[i]);
+                        c.id = constArr[i]["objectId"];
+                        constArray.push(c);
+                  }
+                  console.log(constArray);
+                  var users = Parse.Object.extend("User");
+                    var issues = Parse.Object.extend("Issue");
+                    var questions = Parse.Object.extend("Question");
+                    var query1 = new Parse.Query(users).containedIn('constituency', constArray).greaterThanOrEqualTo("createdAt", todaysDate);
+                    var query2 = new Parse.Query(users).containedIn('constituency', constArray).greaterThan("createdAt", twoDay).lessThanOrEqualTo("createdAt",todaysDate);
+                    var query3 = new Parse.Query(users).containedIn('constituency', constArray).greaterThanOrEqualTo("createdAt", oneWeek);
+                    var query4 = new Parse.Query(users).containedIn('constituency', constArray);
+
+                    var query5 = new Parse.Query(issues).containedIn('constituency', constArray).greaterThanOrEqualTo("createdAt", oneWeek);
+                    var query6 = new Parse.Query(issues).containedIn('constituency', constArray).greaterThan("createdAt", twoWeek).lessThanOrEqualTo("createdAt",oneWeek);
+                    var query7 = new Parse.Query(questions).containedIn('constituency', constArray).greaterThanOrEqualTo("createdAt", oneWeek);
+                    var query8 = new Parse.Query(questions).containedIn('constituency', constArray).greaterThan("createdAt", twoWeek).lessThanOrEqualTo("createdAt",oneWeek);
+
+                    query1.count({
+                      success: function(count1) {
+                                console.log(count1);
+                                var numAnim1 = new countUp("num1", 0, count1*2.5);
+                                numAnim1.start();
+                            },
+                            error: function(error) {
+                                alert("Error: " + error.code + " " + error.message);
+                            }
+                        });
+
+                            query2.count({
+                              success: function(count2) {
+                                console.log(count2);
+                                var numAnim2 = new countUp("num2", 0, count2*2.5);
+                                numAnim2.start();
+                            },
+                            error: function(error) {
+                                alert("Error: " + error.code + " " + error.message);
+                            }
+                        });
+
+                            query3.count({
+                              success: function(count3) {
+                                console.log(count3);
+                                var numAnim3 = new countUp("num3", 0, count3*2.5);
+                                numAnim3.start();
+                               // NProgress.done();
+                            },
+                            error: function(error) {
+                                alert("Error: " + error.code + " " + error.message);
+                            }
+                        });
+
+                            query4.count({
+                              success: function(count4) {
+                                console.log(count4);
+                                var numAnim4 = new countUp("num4", 0, count4*2.5);
+                                numAnim4.start();
+                               // NProgress.done();
+                            },
+                            error: function(error) {
+                                alert("Error: " + error.code + " " + error.message);
+                            }
+                        });
+
+                            query5.count({
+                              success: function(count5) {
+                                console.log(count5);
+                                var numAnim5 = new countUp("num5", 0, count5);
+                                numAnim5.start();
+                               // NProgress.done();
+                            },
+                            error: function(error) {
+                                alert("Error: " + error.code + " " + error.message);
+                            }
+                        });
+
+                            query6.count({
+                              success: function(count6) {
+                                console.log(count6);
+                                var numAnim6 = new countUp("num6", 0, count6);
+                                numAnim6.start();
+                               // NProgress.done();
+                            },
+                            error: function(error) {
+                                alert("Error: " + error.code + " " + error.message);
+                            }
+                        });
+
+                            query7.count({
+                              success: function(count7) {
+                                console.log(count7);
+                                var numAnim7 = new countUp("num7", 0, count7);
+                                numAnim7.start();
+                               // NProgress.done();
+                            },
+                            error: function(error) {
+                                alert("Error: " + error.code + " " + error.message);
+                            }
+                        });
+
+                            query8.count({
+
+                              success: function(count8) {
+                                console.log(count8);
+                                var numAnim8 = new countUp("num8", 0, count8);
+                                numAnim8.start();
+                               // NProgress.done();
+                            },
+                            error: function(error) {
+                                alert("Error: " + error.code + " " + error.message);
+                            }
+                        });
+                },
+             
+                error: function(object, error) {
+                  response.error("overall error");
+                }
+              });
+
+            
+
+        }
+
+
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-45177246-4', 'auto');
+      ga('send', 'pageview');
+      $(document).ready(function() {
+        updateCounters();
+    });
+  </script>
+</body>
+</html>

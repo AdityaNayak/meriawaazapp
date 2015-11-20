@@ -2,7 +2,7 @@ Parse.initialize("km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt", "BS9nk6ykTKiEabLX1C
 
 function getQueryVariable(variable){
    var query = window.location.search.substring(1);
-   var vars = query.split("&");
+   var vars = query.split("?");
    for (var i=0;i<vars.length;i++) {
            var pair = vars[i].split("=");
            if(pair[0] == variable){return pair[1];}
@@ -215,6 +215,34 @@ function timeSince(date) {
     return Math.floor(seconds) + " seconds";
 }
 
+
+function toTime(sec) {
+
+    var seconds = Math.floor(Math.abs(sec) / 1000);
+
+    var interval = Math.floor(seconds / 31536000);
+
+    if (interval > 1) {
+        return interval + " years";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+        return interval + " months";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+        return interval + " days";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+        return interval + " hours";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+        return interval + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+}
 // 
 function populateUpdates() {
     console.log("populateUpdates");
@@ -303,6 +331,46 @@ function appropriateStatus(s) {
     return s;
 }
 
+
+// OnClick Listener for Specific Issue Map 
+function FixedLocationControl(controlDiv, map) {
+    console.log("FixedLocationControl");
+    // Set CSS styles for the DIV containing the control
+    // Setting padding to 5 px will offset the control
+    // from the edge of the map
+    controlDiv.style.padding = '5px';
+
+    // Set CSS for the control border
+    var controlUI = document.createElement('div');
+    controlUI.style.backgroundColor = 'white';
+    controlUI.style.borderStyle = 'solid';
+    controlUI.style.borderWidth = '2px';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Click to set the map Back to Issue Location';
+    controlDiv.appendChild(controlUI);
+
+    // Set CSS for the control interior
+    var controlText = document.createElement('div');
+    controlText.style.fontFamily = 'Arial,sans-serif';
+    controlText.style.fontSize = '12px';
+    controlText.style.paddingLeft = '4px';
+    controlText.style.paddingRight = '4px';
+    controlText.innerHTML = '<b>Issue Location</b>';
+    controlUI.appendChild(controlText);
+
+    // Setup the click event listeners: simply set the map to
+    // Chicago
+    google.maps.event.addDomListener(controlUI, 'click', function() {
+
+        map2.setCenter(currmarker.position);
+        map2.setZoom(12);
+
+    });
+
+}
+
+
 function getIcon(category, status) {
     var myicon;
     if (category == "road") {
@@ -359,7 +427,7 @@ function updateCurrentMarker(m) {
     //console.log("updateCurrentMarker");
     ListItem = Parse.Object.extend("Issue");
     query = new Parse.Query(ListItem);
-    query.equalTo("issueId", m);
+    query.equalTo("issueId",parseInt(m));
     query.include('pUser');
     query.first({
         success: function(results) {
@@ -406,6 +474,7 @@ function updateContentWithCurrentMarker() {
     var status = document.getElementById('colorstatus');
     var date = document.getElementById('date');
     var daysLeft = document.getElementById('daysLeft');
+    var daysTaken = document.getElementById('daysTaken');
     var time = document.getElementById('times');
     //var photo = document.getElementById('photo');
     var content = document.getElementById('content');
@@ -420,10 +489,11 @@ function updateContentWithCurrentMarker() {
     //$('#details-column').fadeOut(300);
     var myLatlng = new google.maps.LatLng(p_latitude, p_longitude);
     map2.setCenter(myLatlng);
-    singlemarker.setMap(null);
+    console.log(myLatlng);
+    //singlemarker.setMap(null);
     var myicon;
     myicon = getIcon(p_type, p_status);
-    singlemarker = new google.maps.Marker({
+    marker = new google.maps.Marker({
         position: myLatlng,
         map: map2,
         icon: myicon,
@@ -475,18 +545,49 @@ function updateContentWithCurrentMarker() {
             beforephoto.src = "./assets/images/no_image.jpg";
             afterphoto.src = "./assets/images/no_image.jpg";
         }
-       // detailedissue.innerHTML = p_content;
-        // var d = new Date(issueObj.updatedAt);
-        // console.log(d);
-        // if (p_daysLeft != undefined) {
-        //     d.setDate(d.getDate() + p_daysLeft);
-        //     console.log(d);
-        //     var ago = timeTo(d);
-        //     //console.log(ago);
-        //     daysLeft.innerHTML = '<small>Days left: </small>'+ago;
-        // } else {
-        //     daysLeft.innerHTML = "<small>Actually solved it in: </small> 3 days";
-        // }
+        
+        var d = new Date(issueObj.get("createdAt"));
+        if (p_daysLeft != undefined) {
+             //d.setDate(d.getDate() + p_daysLeft);
+             //console.log(d);
+             //var ago = timeSince(d);
+             //console.log(ago);
+             daysLeft.innerHTML = p_daysLeft +" days";
+        } else {
+             daysLeft.innerHTML = "unavailable";
+        }
+
+        if(p_status=="review" || p_status=="verified"){
+            ListItem = Parse.Object.extend("Update");
+            query = new Parse.Query(ListItem);
+            query.equalTo("issue",issueObj);
+            query.equalTo("type","closed");
+            query.first({
+                success: function(results) {
+                    //console.log("current marker updated: " + results.length);
+                    //currmarker.content.id = results.id;
+                    if(results!=undefined){
+                        d = new Date(results.get("createdAt"));
+                        ago = d - new Date(issueObj.get("createdAt"));
+                        ago = toTime(ago);
+                        daysTaken.innerHTML = ago ;
+                    }
+                    //console.log(results.id);
+                    //updateContentWithCurrentMarker();
+                    //infowindow.open(map, currmarker);
+                },
+                error: function(error) {
+                    console.log("Error: " + error.message);
+                    notify(standardErrorMessage, "error", standardErrorDuration);
+                }
+            });
+        }
+        else if(p_status=="progress"){
+            daysTaken.innerHTML = "in progress";
+        }
+        else{
+            daysTaken.innerHTML = "-";
+        }
 
         populateUpdates();
         //showDetailsView();
@@ -497,12 +598,13 @@ function updateContentWithCurrentMarker() {
 
 function initialize() {
     issueNum= getQueryVariable("id");
-    updateCurrentMarker(parseInt(issueNum));
+    console.log(issueNum);
+    updateCurrentMarker(issueNum);
     
     //initializeMap()
     map2 = new google.maps.Map(document.getElementById('googleMap'), {
         zoom: 12,
-        center: new google.maps.LatLng(p_latitude, p_longitude),
+        center: new google.maps.LatLng(28.612912, 77.22951),
         mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
@@ -513,6 +615,13 @@ function initialize() {
         draggable: false,
         animation: google.maps.Animation.DROP
     });
+
+
+    var homeControlDiv2 = document.createElement('div');
+    var homeControl2 = new FixedLocationControl(homeControlDiv2, map2);
+
+    homeControlDiv2.index = 1;
+    map2.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv2);
 
     
 }

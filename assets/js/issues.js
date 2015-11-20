@@ -1242,6 +1242,7 @@ function populateTM() {
     query.equalTo("assignee", pointer);
     query.equalTo("type", "assigned");
     query.include("issue");
+    query.limit(1000);
     query.find({
         success: function(results) {
             for (var i = 0; i < results.length; i++) {
@@ -1250,6 +1251,7 @@ function populateTM() {
                 var myicon;
                 if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly) == true) {
                     //Set Icon
+                //if(true){
                     myicon = getIcon(object.get("category"), object.get("status"));
 
 
@@ -1328,77 +1330,88 @@ function populate() {
     ListItem = Parse.Object.extend("Issue");
     query = new Parse.Query(ListItem);
     query.descending('createdAt');
+    query.limit(1000);
     query.find({
         success: function(results) {
             for (var i = 0; i < results.length; i++) {
                 var object = results[i];
                 var myicon;
-
+                console.log("ABOUT TO CHECK");
                 if (constituencyType != 1) {
-                    if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly) == true) {
-                        //Set Icon
-                        myicon = getIcon(object.get("category"), object.get("status"));
+                    console.log("YAHAN");
+                    //if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly) == true) {
+                    console.log(object.get("constituency"));
+                    console.log(constituency);
+                    if(object.get("constituency")!=undefined){
+                        if(object.get("constituency").id=="7TRhKjpDcW"){ 
+                            //Set Icon
+                            myicon = getIcon(object.get("category"), object.get("status"));
 
-                        marker = new google.maps.Marker({
-                            position: {
-                                lat: object.get('location').latitude,
-                                lng: object.get('location').longitude
-                            },
-                            map: map,
-                            title: object.get('category'),
-                            content: object,
-                            icon: myicon,
-                            draggable: false,
-                            animation: google.maps.Animation.DROP
-                        });
+                            marker = new google.maps.Marker({
+                                position: {
+                                    lat: object.get('location').latitude,
+                                    lng: object.get('location').longitude
+                                },
+                                map: map,
+                                title: object.get('category'),
+                                content: object,
+                                icon: myicon,
+                                draggable: false,
+                                animation: google.maps.Animation.DROP
+                            });
 
-                        var d = new Date(object.createdAt);
-                        var ago = timeSince(d);
-                        var content = object.get("content");
-                        if (object.get("content").length > 50) {
-                            content = object.get("content").substring(0, 50) + "...";
-                        }
-                        listView.append("<tr id='" + object.id + "' class='" + object.get('status') + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
-                        $('#'+object.id).click(function(){
-                                    listViewClick(this.id.toString());
-                        });
-
-                        markers.push(marker);
-                        if ((marker.content).get('status') == "open") {
-                            no = no + 1;
-                        }
-                        if ((marker.content).get('status') == "progress") {
-                            np = np + 1;
-                        }
-                        if ((marker.content).get('status') == "review") {
-                            nr = nr + 1;
-                        }
-                        if ((marker.content).get('status') == "closed") {
-                            nc = nc + 1;
-                        }
-                        google.maps.event.addListener(marker, 'click', (function(marker, object) {
-                            return function() {
-                                NProgress.start();
-                                console.log("NProgress start");
-                                if (infowindow) {
-                                    infowindow.close();
-                                }
-                                infowindow = new google.maps.InfoWindow({
-                                    maxWidth: 700,
-                                    maxHeight: 900
-                                });
-
-                                currmarker = marker;
-                                updateCurrentMarker(currmarker);
-                                infowindow.setContent(currmarker.content.get('status'));
-
+                            var d = new Date(object.createdAt);
+                            var ago = timeSince(d);
+                            var content = object.get("content");
+                            if (object.get("content").length > 50) {
+                                content = object.get("content").substring(0, 50) + "...";
                             }
-                        })(marker, object));
+                            listView.append("<tr id='" + object.id + "' class='" + object.get('status') + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                            $('#'+object.id).click(function(){
+                                        listViewClick(this.id.toString());
+                            });
+
+                            markers.push(marker);
+                            if ((marker.content).get('status') == "open") {
+                                no = no + 1;
+                            }
+                            if ((marker.content).get('status') == "progress") {
+                                np = np + 1;
+                            }
+                            if ((marker.content).get('status') == "review") {
+                                nr = nr + 1;
+                            }
+                            if ((marker.content).get('status') == "closed") {
+                                nc = nc + 1;
+                            }
+                            google.maps.event.addListener(marker, 'click', (function(marker, object) {
+                                return function() {
+                                    NProgress.start();
+                                    console.log("NProgress start");
+                                    if (infowindow) {
+                                        infowindow.close();
+                                    }
+                                    infowindow = new google.maps.InfoWindow({
+                                        maxWidth: 700,
+                                        maxHeight: 900
+                                    });
+
+                                    currmarker = marker;
+                                    updateCurrentMarker(currmarker);
+                                    infowindow.setContent(currmarker.content.get('status'));
+
+                                }
+                            })(marker, object));
+                        }
                     }
                 } else {
+                    console.log("WAHAN");
+                    console.log(polyArray.length);
                     for (var j = 0; j < polyArray.length; j++) {
+
                         if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), polyArray[j]) == true) {
                             //Set Icon
+                        //if(true){ 
                             myicon = getIcon(object.get("category"), object.get("status"));
 
                             marker = new google.maps.Marker({
@@ -1458,7 +1471,6 @@ function populate() {
                         }
                     }
                 }
-
             }
             statusCounters(no, np, nr, nc);
             filter();
@@ -1645,7 +1657,7 @@ function listViewClick(p) {
 }
 
 function initializeMap() {
-    var constituency;
+    //var constituency;
     if (currentUser.get("type") == "neta") {
         var n = currentUser.get("neta");
         n.fetch({
@@ -1664,7 +1676,9 @@ function initializeMap() {
                     success: function(results) {
                         constituency = results[0].get("constituency");
                         constituencyType = constituency.get("type");
+
                         if (constituencyType == 1) {
+                            console.log("POLYGON ARRAY");
                             constituencyArray = constituency.get("constituencyArray");
                             console.log(constituencyArray);
                             polyArray = [];
