@@ -1,6 +1,13 @@
 // Foundation JavaScript
 // Documentation can be found at: http://foundation.zurb.com/docs
 
+StatusEnum = {
+    OPEN : 0,
+    PROGRESS : 1,
+    CLOSE : 3,
+    REVIEW : 2
+}
+
 var count = 0 ;
 var CU;
 var constituency;
