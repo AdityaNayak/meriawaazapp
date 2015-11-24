@@ -503,6 +503,7 @@ function updateContentWithCurrentMarker() {
     var myLatlng = new google.maps.LatLng(p_latitude, p_longitude);
     map2.setCenter(myLatlng);
     console.log(myLatlng);
+    console.log(issueObj);
     //singlemarker.setMap(null);
     var myicon;
     myicon = getIcon(p_type, p_status);
@@ -510,7 +511,7 @@ function updateContentWithCurrentMarker() {
         position: myLatlng,
         map: map2,
         icon: myicon,
-        title: p_status,
+        title: appropriateStatus(p_status),
         animation: google.maps.Animation.DROP
     });
     
@@ -570,11 +571,11 @@ function updateContentWithCurrentMarker() {
              daysLeft.innerHTML = "unavailable";
         }
 
-        if(p_status=="review" || p_status=="verified"){
+        if(p_status==StatusEnum.CLOSE || p_status==StatusEnum.REVIEW){
             ListItem = Parse.Object.extend("Update");
             query = new Parse.Query(ListItem);
+            query.descending('createdAt');
             query.equalTo("issue",issueObj);
-            query.equalTo("type","closed");
             query.first({
                 success: function(results) {
                     //console.log("current marker updated: " + results.length);
@@ -595,7 +596,7 @@ function updateContentWithCurrentMarker() {
                 }
             });
         }
-        else if(p_status=="progress"){
+        else if(p_status==StatusEnum.PROGRESS){
             daysTaken.innerHTML = "in progress";
         }
         else{
