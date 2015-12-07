@@ -1,5 +1,12 @@
 Parse.initialize("km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt", "BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI");
 
+StatusEnum = {
+    OPEN : 0,
+    PROGRESS : 1,
+    CLOSE : 3,
+    REVIEW : 2
+}
+
 function getQueryVariable(variable){
    var query = window.location.search.substring(1);
    var vars = query.split("?");
@@ -319,13 +326,16 @@ function populateUpdates() {
 }
 
 function appropriateStatus(s) {
-    if (s == "progress") {
+    if (s == StatusEnum.PROGRESS) {
         return "in progress";
     }
-    else if (s == "review") {
+    if (s == StatusEnum.REVIEW) {
         return "solved <i class='icon-solved gc'></i>"
     }
-    else if (s == "closed") {
+    if (s == StatusEnum.OPEN) {
+        return "open";
+    }
+    if (s == StatusEnum.CLOSE) {
         return "verified <i class='icon-solved gc'></i>"
     }
     return s;
@@ -374,37 +384,37 @@ function FixedLocationControl(controlDiv, map) {
 function getIcon(category, status) {
     var myicon;
     if (category == "road") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
             myicon = iconso[0];
         } else {
             myicon = icons[0];
         }
     } else if (category == "electricity") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
             myicon = iconso[1];
         } else {
             myicon = icons[1];
         }
     } else if (category == "water") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
             myicon = iconso[2];
         } else {
             myicon = icons[2];
         }
     } else if (category == "law") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
             myicon = iconso[3];
         } else {
             myicon = icons[3];
         }
     } else if (category == "sanitation") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
             myicon = iconso[4];
         } else {
             myicon = icons[4];
         }
     } else {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
             myicon = iconso[5];
         } else {
             myicon = icons[5];
@@ -412,6 +422,7 @@ function getIcon(category, status) {
     }
     return myicon;
 }
+
 function getDefaultIcon(type){
     if(type=="neta"){
         return "./assets/images/neta.png";
@@ -463,7 +474,7 @@ function updateContentWithCurrentMarker() {
    // var p_id = currmarker.content.id;
     var before_photo = issueObj.get('file');
     var after_photo = issueObj.get('file2');
-    var p_status = issueObj.get('status');
+    var p_status = issueObj.get('statusCode');
     var p_daysLeft = issueObj.get('daysLeft');
     var p_title = issueObj.get('title');
     var p_issueId = issueObj.get('issueId').toString();
@@ -490,6 +501,7 @@ function updateContentWithCurrentMarker() {
     var myLatlng = new google.maps.LatLng(p_latitude, p_longitude);
     map2.setCenter(myLatlng);
     console.log(myLatlng);
+    console.log(issueObj);
     //singlemarker.setMap(null);
     var myicon;
     myicon = getIcon(p_type, p_status);
@@ -497,7 +509,7 @@ function updateContentWithCurrentMarker() {
         position: myLatlng,
         map: map2,
         icon: myicon,
-        title: p_status,
+        title: appropriateStatus(p_status),
         animation: google.maps.Animation.DROP
     });
     
@@ -505,11 +517,11 @@ function updateContentWithCurrentMarker() {
     setTimeout(function() {
 
         $("#colorstatus").removeClass('yc bgc gc');
-        if (p_status == "open") {
+        if (p_status == StatusEnum.OPEN) {
             $("#colorstatus").addClass('yc');
-        } else if (p_status == "progress") {
+        } else if (p_status == StatusEnum.PROGRESS) {
             $("#colorstatus").addClass('bgc');
-        } else if (p_status == "review") {
+        } else if (p_status == StatusEnum.REVIEW) {
             $("#colorstatus").addClass('gc');
         } else {
             $("#colorstatus").addClass('gc');
@@ -557,11 +569,11 @@ function updateContentWithCurrentMarker() {
              daysLeft.innerHTML = "unavailable";
         }
 
-        if(p_status=="review" || p_status=="verified"){
+        if(p_status==StatusEnum.CLOSE || p_status==StatusEnum.REVIEW){
             ListItem = Parse.Object.extend("Update");
             query = new Parse.Query(ListItem);
+            query.descending('createdAt');
             query.equalTo("issue",issueObj);
-            query.equalTo("type","closed");
             query.first({
                 success: function(results) {
                     //console.log("current marker updated: " + results.length);
@@ -582,7 +594,7 @@ function updateContentWithCurrentMarker() {
                 }
             });
         }
-        else if(p_status=="progress"){
+        else if(p_status==StatusEnum.PROGRESS){
             daysTaken.innerHTML = "in progress";
         }
         else{
