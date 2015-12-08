@@ -492,36 +492,49 @@ function populateUpdates() {
                     content = "";
                 }
                 user = object.get("pUser");
-                if (object.get("assignee") != undefined) {
-                    assignee = object.get("assignee");
-                    console.log("comments" + assignee.get("pUser"));
-                } else {
-                    assignee = "";
-                }
-                var pphoto1;
-                if (user.get("pic") != undefined) {
-                    pphoto1 = user.get("pic").url();
-                } else {
-                    pphoto1 = getDefaultIcon(user.get("type"));
-                }
-                if (object.get("type") == "unassigned") {
-                    console.log(assignee);
-                    var ass = assignee.get("pUser");
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was unassigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
-                }
-                if (object.get("type") == "assigned") {
-                    var ass = assignee.get("pUser");
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was assigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
-                }
-                if (object.get("type") == "closed") {
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> closed the issue <small>" + ago + " ago</small></p></div>");
+                    if(user!=undefined){
+                    if (object.get("assignee") != undefined) {
+                        assignee = object.get("assignee");
+                        console.log("comments" + assignee.get("pUser"));
+                    } else {
+                        assignee = "";
+                    }
+                    var pphoto1;
+                    if (user.get("pic") != undefined) {
+                        pphoto1 = user.get("pic").url();
+                    } else {
+                        pphoto1 = getDefaultIcon(user.get("type"));
+                    }
+                    if (object.get("typeCode") == TypeEnum.UNASSIGNED) {
+                        console.log(assignee);
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was unassigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.ASSIGNED) {
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was assigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.CLOSED) {
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> closed the issue <small>" + ago + " ago</small></p></div>");
 
-                }
-                if (object.get("type") == "comment") {
-                    timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small><i class='icon-close tertiary-color cs hv right'></i></div><p>" + content + "</p></div></div></div>");
-                }
-                if (object.get("type") == "claim") {
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.COMMENT) {
+                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.CLAIM) {
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.VERIFIED) {
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>This issue was verified <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.WORKING) {
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name")+ "</strong> started working on this issue <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.FINISHED) {
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> finished working on this issue <small>" + ago + " ago</small></p></div>");
+                    }
                 }
             }
             NProgress.done();
@@ -541,8 +554,8 @@ function populateTeam() {
     ListItem = Parse.Object.extend("TeamMember");
     query = new Parse.Query(ListItem);
     query.include("pUser");
-    query.include("neta");
-    query.equalTo("neta", currentUser.get("neta"));
+    query.include("netaArray");
+    query.equalTo("netaArray", currentUser.get("neta"));
     query.find({
         success: function(results) {
             team = [];
@@ -684,14 +697,14 @@ function appropriateStatus(s) {
     if (s == StatusEnum.PROGRESS) {
         return "in progress";
     }
-    if (s == StatusEnum.REVIEW) {
-        return "under review"
+    if (s == StatusEnum.CLOSE) {
+        return "solved"
     }
     if (s == StatusEnum.OPEN) {
         return "open";
     }
-    if (s == StatusEnum.CLOSE) {
-        return "closed"
+    if (s == StatusEnum.VERIFY) {
+        return "verified"
     }
     return s;
 }
@@ -807,7 +820,7 @@ function postAssignment(id) {
         error: function(error) {
             console.log("Error: " + error.message);
             notify(standardErrorMessage, "error", standardErrorDuration);
-
+            
         }
     });
 }
@@ -815,7 +828,7 @@ function postAssignment(id) {
 
 function setIssueStatusButton() {
     console.log("setIssueStatusButton");
-    if (currmarker.content.get("statusCode") == StatusEnum.CLOSE || currmarker.content.get("statusCode") == StatusEnum.REVIEW) {
+    if (currmarker.content.get("statusCode") == StatusEnum.VERIFY || currmarker.content.get("statusCode") == StatusEnum.CLOSE) {
         $('#claim-st1').delay(400).fadeOut(300);
         $('#timebox').delay(400).fadeOut(300);
         $('#claim-st2').delay(400).fadeOut(300);
@@ -924,7 +937,7 @@ function setIssueStatusButton() {
 
 function setIssueStatusButtonTM() {
     console.log("setIssueStatusButton");
-    if (currmarker.content.get("statusCode") == StatusEnum.CLOSE || currmarker.content.get("statusCode") == StatusEnum.REVIEW) {
+    if (currmarker.content.get("statusCode") == StatusEnum.VERIFY || currmarker.content.get("statusCode") == StatusEnum.CLOSE) {
         $('#close').delay(400).fadeOut(300);
         $('#estimateddaysleft').delay(400).fadeOut(300);
     } else {
@@ -1019,7 +1032,7 @@ function updateContentWithCurrentMarker() {
             $("#colorstatus").addClass('yc');
         } else if (p_status == StatusEnum.PROGRESS) {
             $("#colorstatus").addClass('bgc');
-        } else if (p_status == StatusEnum.REVIEW) {
+        } else if (p_status == StatusEnum.CLOSE) {
             $("#colorstatus").addClass('bc');
         } else {
             $("#colorstatus").addClass('dbc');
@@ -1082,37 +1095,37 @@ function showDetailsView() {
 function getIcon(category, status) {
     var myicon;
     if (category == "road") {
-        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[0];
         } else {
             myicon = icons[0];
         }
     } else if (category == "electricity") {
-        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[1];
         } else {
             myicon = icons[1];
         }
     } else if (category == "water") {
-        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[2];
         } else {
             myicon = icons[2];
         }
     } else if (category == "law") {
-        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[3];
         } else {
             myicon = icons[3];
         }
     } else if (category == "sanitation") {
-        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[4];
         } else {
             myicon = icons[4];
         }
     } else {
-        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[5];
         } else {
             myicon = icons[5];
@@ -1246,16 +1259,19 @@ function populateTM() {
     var pointer = new Parse.Object("TeamMember");
     pointer.id = currentUser.get("teamMember").id;
     query.equalTo("assignee", pointer);
-    query.equalTo("type", "assigned");
+    query.equalTo("typeCode", TypeEnum.ASSIGNED);
     query.include("issue");
     query.limit(1000);
     query.find({
         success: function(results) {
+            console.log(results);
             for (var i = 0; i < results.length; i++) {
+                console.log("populate for itam");
                 var object = results[i].get("issue");
 
                 var myicon;
-                if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly) == true) {
+                if(object.get("constituency")!=undefined){
+                        if(object.get("constituency").id==constituency.id){ 
                     //Set Icon
                 //if(true){
                     myicon = getIcon(object.get("category"), object.get("statusCode"));
@@ -1292,10 +1308,10 @@ function populateTM() {
                     if ((marker.content).get('statusCode') == StatusEnum.PROGRESS) {
                         np = np + 1;
                     }
-                    if ((marker.content).get('statusCode') == StatusEnum.REVIEW) {
+                    if ((marker.content).get('statusCode') == StatusEnum.CLOSE) {
                         nr = nr + 1;
                     }
-                    if ((marker.content).get('statusCode') == StatusEnum.CLOSE) {
+                    if ((marker.content).get('statusCode') == StatusEnum.VERIFY) {
                         nc = nc + 1;
                     }
                     google.maps.event.addListener(marker, 'click', (function(marker, object) {
@@ -1315,6 +1331,7 @@ function populateTM() {
                         }
                     })(marker, object));
                 }
+            }
             }
             statusCounters(no, np, nr, nc);
             filter();
@@ -1349,7 +1366,7 @@ function populate() {
                     console.log(object.get("constituency"));
                     console.log(constituency);
                     if(object.get("constituency")!=undefined){
-                        if(object.get("constituency").id=="7TRhKjpDcW"){ 
+                        if(object.get("constituency").id==constituency.id){ 
                             //Set Icon
                             myicon = getIcon(object.get("category"), object.get("statusCode"));
 
@@ -1384,10 +1401,10 @@ function populate() {
                             if ((marker.content).get('statusCode') == StatusEnum.PROGRESS) {
                                 np = np + 1;
                             }
-                            if ((marker.content).get('statusCode') == StatusEnum.REVIEW) {
+                            if ((marker.content).get('statusCode') == StatusEnum.CLOSE) {
                                 nr = nr + 1;
                             }
-                            if ((marker.content).get('statusCode') == StatusEnum.CLOSE) {
+                            if ((marker.content).get('statusCode') == StatusEnum.VERIFY) {
                                 nc = nc + 1;
                             }
                             google.maps.event.addListener(marker, 'click', (function(marker, object) {
@@ -1412,69 +1429,70 @@ function populate() {
                     }
                 } else {
                     console.log("WAHAN");
-                    console.log(polyArray.length);
+                    console.log(polyArray);
                     for (var j = 0; j < polyArray.length; j++) {
+                        console.log("Checking:"+polyArray[j].constituency);
+                            if(object.get("constituency")!=undefined){
+                                if(object.get("constituency").get("name")==polyArray[j].constituency){ 
+                                    
+                                    myicon = getIcon(object.get("category"), object.get("statusCode"));
 
-                        if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), polyArray[j]) == true) {
-                            //Set Icon
-                        //if(true){ 
-                            myicon = getIcon(object.get("category"), object.get("statusCode"));
-
-                            marker = new google.maps.Marker({
-                                position: {
-                                    lat: object.get('location').latitude,
-                                    lng: object.get('location').longitude
-                                },
-                                map: map,
-                                title: object.get('category'),
-                                content: object,
-                                icon: myicon,
-                                draggable: false,
-                                animation: google.maps.Animation.DROP
-                            });
-
-                            var d = new Date(object.createdAt);
-                            var ago = timeSince(d);
-                            var content = object.get("content");
-                            if (object.get("content").length > 50) {
-                                content = object.get("content").substring(0, 50) + "...";
-                            }
-                            listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
-                            $('#'+object.id).click(function(){
-                                        listViewClick(this.id.toString());
-                            });
-                            markers.push(marker);
-                            if ((marker.content).get('statusCode') == StatusEnum.OPEN) {
-                                no = no + 1;
-                            }
-                            if ((marker.content).get('statusCode') == StatusEnum.PROGRESS) {
-                                np = np + 1;
-                            }
-                            if ((marker.content).get('statusCode') == StatusEnum.REVIEW) {
-                                nr = nr + 1;
-                            }
-                            if ((marker.content).get('statusCode') == StatusEnum.CLOSE) {
-                                nc = nc + 1;
-                            }
-                            google.maps.event.addListener(marker, 'click', (function(marker, object) {
-                                return function() {
-                                    NProgress.start();
-                                    console.log("NProgress start");
-                                    if (infowindow) {
-                                        infowindow.close();
-                                    }
-                                    infowindow = new google.maps.InfoWindow({
-                                        maxWidth: 700,
-                                        maxHeight: 900
+                                    marker = new google.maps.Marker({
+                                        position: {
+                                            lat: object.get('location').latitude,
+                                            lng: object.get('location').longitude
+                                        },
+                                        map: map,
+                                        title: object.get('category'),
+                                        content: object,
+                                        icon: myicon,
+                                        draggable: false,
+                                        animation: google.maps.Animation.DROP
                                     });
 
-                                    currmarker = marker;
-                                    updateCurrentMarker(currmarker);
-                                    infowindow.setContent(getClassName(currmarker.content.get('statusCode')));
+                                    var d = new Date(object.createdAt);
+                                    var ago = timeSince(d);
+                                    var content = object.get("content");
+                                    if (object.get("content").length > 50) {
+                                        content = object.get("content").substring(0, 50) + "...";
+                                    }
+                                    listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                                    $('#'+object.id).click(function(){
+                                                listViewClick(this.id.toString());
+                                    });
+                                    markers.push(marker);
+                                    if ((marker.content).get('statusCode') == StatusEnum.OPEN) {
+                                        no = no + 1;
+                                    }
+                                    if ((marker.content).get('statusCode') == StatusEnum.PROGRESS) {
+                                        np = np + 1;
+                                    }
+                                    if ((marker.content).get('statusCode') == StatusEnum.CLOSE) {
+                                        nr = nr + 1;
+                                    }
+                                    if ((marker.content).get('statusCode') == StatusEnum.VERIFY) {
+                                        nc = nc + 1;
+                                    }
+                                    google.maps.event.addListener(marker, 'click', (function(marker, object) {
+                                        return function() {
+                                            NProgress.start();
+                                            console.log("NProgress start");
+                                            if (infowindow) {
+                                                infowindow.close();
+                                            }
+                                            infowindow = new google.maps.InfoWindow({
+                                                maxWidth: 700,
+                                                maxHeight: 900
+                                            });
 
+                                            currmarker = marker;
+                                            updateCurrentMarker(currmarker);
+                                            infowindow.setContent(getClassName(currmarker.content.get('statusCode')));
+
+                                        }
+                                    })(marker, object));
                                 }
-                            })(marker, object));
-                        }
+                            }
                     }
                 }
             }
@@ -1573,12 +1591,12 @@ function statusCheck(m) {
             return 1;
         }
     }
-    if ((m.content).get("status") == "review"|| (m.content).get("statusCode") == StatusEnum.CLOSE) {
+    if ((m.content).get("status") == "review"|| (m.content).get("statusCode") == StatusEnum.VERIFY) {
         if (box_rv.checked) {
             return 1;
         }
     }
-    if ((m.content).get("status") == "closed"|| (m.content).get("statusCode") == StatusEnum.REVIEW) {
+    if ((m.content).get("status") == "closed"|| (m.content).get("statusCode") == StatusEnum.CLOSE) {
         if (box_cl.checked) {
             return 1;
         }
@@ -1626,10 +1644,10 @@ function updateCounters() {
             if ((markers[m].content).get('statusCode') == StatusEnum.PROGRESS) {
                 np = np + 1;
             }
-            if ((markers[m].content).get('statusCode') == StatusEnum.REVIEW) {
+            if ((markers[m].content).get('statusCode') == StatusEnum.CLOSE) {
                 nr = nr + 1;
             }
-            if ((markers[m].content).get('statusCode') == StatusEnum.CLOSE) {
+            if ((markers[m].content).get('statusCode') == StatusEnum.VERIFY) {
                 nc = nc + 1;
             }
         }
@@ -1666,15 +1684,15 @@ function listViewClick(p) {
 
 function getClassName(s){
     if(s==StatusEnum.OPEN){
-return "open"; 
+        return "open"; 
     }
     if(s==StatusEnum.PROGRESS){
         return "progress"; 
     }
-    if(s==StatusEnum.REVIEW){
+    if(s==StatusEnum.CLOSE){
        return "review";  
     }
-    if(s==StatusEnum.CLOSE){
+    if(s==StatusEnum.VERIFY){
      return "closed";   
     }
 }
@@ -1796,33 +1814,42 @@ function initializeMap() {
 function initialize() {
     console.log("initialize");
     currentUser = CU;
-    currentPUser = currentUser.get("pUser");
-    NProgress.start();
-    currentPUser.fetch({
+    currentUser.fetch({
         success:function(results){
-            console.log("NProgress Start");
-                var pphoto = document.getElementById('profilepic');
-                if (currentPUser.get("pic") != undefined) {
-                    pphoto.src = currentPUser.get("pic").url();
-                } else {
-                    pphoto.src = getDefaultIcon(currentPUser.get("type"));
+            currentPUser = currentUser.get("pUser");
+            NProgress.start();
+            currentPUser.fetch({
+                success:function(results){
+                    console.log("NProgress Start");
+                        var pphoto = document.getElementById('profilepic');
+                        if (currentPUser.get("pic") != undefined) {
+                            pphoto.src = currentPUser.get("pic").url();
+                        } else {
+                            pphoto.src = getDefaultIcon(currentPUser.get("type"));
+                        }
+
+                        if (currentPUser.get("type") == "neta") {
+                            console.log("Current User is a Neta");
+                            document.getElementById("neta-panel").style.display = "block";
+
+                        } else {
+                            console.log("Current User is a Team Member");
+                            document.getElementById("neta-panel").style.display = "none";
+
+                        }
+                },
+                error:function(error){
+                    console.log("Error: " + error.message);
+                        notify(standardErrorMessage, "error", standardErrorDuration);
                 }
-
-                if (currentPUser.get("type") == "neta") {
-                    console.log("Current User is a Neta");
-                    document.getElementById("neta-panel").style.display = "block";
-
-                } else {
-                    console.log("Current User is a Team Member");
-                    document.getElementById("neta-panel").style.display = "none";
-
-                }
+            });
         },
         error:function(error){
-            console.log("Error: " + error.message);
+                        console.log("Error: " + error.message);
                 notify(standardErrorMessage, "error", standardErrorDuration);
         }
     });
+
     
     map2 = new google.maps.Map(document.getElementById('googleMap'), {
         zoom: 12,

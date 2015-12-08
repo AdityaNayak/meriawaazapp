@@ -190,7 +190,7 @@ function queryUserTable(){
                       neta=teammember.get("neta");
                       neta.fetch({
                           success:function(results){
-                            var u=neta.get("user");
+                            var u=neta.get("pUser");
                             u.fetch({
                                 success:function(results){
                                     if(u.get("pic")!=undefined){
