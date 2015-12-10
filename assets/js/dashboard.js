@@ -48,7 +48,7 @@ function postComment(pid){
     var Comment = Parse.Object.extend("PostComment");
     var comment = new Comment();
     var p = new Parse.Object("Post");
-    var u = new Parse.Object("User");
+    var u = new Parse.Object("_User");
     p.id = pid;
     u.id = currentUser.id;
  //   console.log("text-"+pid.toString());
@@ -744,7 +744,7 @@ function fetchECStatus(u){
 						setCurrentNeta(u);
 					}
 					else if(u.get("type")=="teamMember"){
-						setCurrentNetaTM(currentNeta);
+						setCurrentNetaTM(currentNeta,u);
 					}
 			//		console.log("NProgress Stop");
 			  },
@@ -792,7 +792,7 @@ function fetchECStatus(u){
 								setCurrentNeta(u);
 							}
 							else if(u.get("type")=="teamMember"){
-								setCurrentNetaTM(currentNeta);
+								setCurrentNetaTM(currentNeta,u);
 							}
 						//	console.log("NProgress Stop");
 					  },
@@ -894,26 +894,26 @@ function queryUserTable(){
 
 
 //given neta
-function setCurrentNetaTM(n){
+function setCurrentNetaTM(n,u){
  //   console.log("setCurrentNeta");
     n.fetch({
      success: function(result){
-            currentUser=n.get("User");
+            currentUser=u;
+            currentNetaPUser=n.get("pUser");
+            currentPUser=u.get("pUser");
             currentNeta=n;
-            currentUser.fetch({
+            currentPUser.fetch({
                 success:function(results){
-            //        console.log("I was called Team Member!");
-                    currentPUser=currentUser.get("pUser");
-                    currentPUser.fetch({
+                    currentNetaPUser.fetch({
                         success:function(results){
-                            if(currentPUser.get("pic")!=undefined){
-                                  var photo=currentPUser.get("pic").url();
+                            if(currentNetaPUser.get("pic")!=undefined){
+                                  var photo=currentNetaPUser.get("pic").url();
                             }
                             else{
                                   var photo="./assets/images/neta.png";
                             }
                             
-                            var name=currentPUser.get("name");
+                            var name=currentNetaPUser.get("name");
                             var party=currentNeta.get("party");
                             party.fetch({
                                success:function(result){
@@ -939,14 +939,14 @@ function setCurrentNetaTM(n){
                             });
                         },
                         error: function(error){
-
-                        }
-                    });
+                           //console.log("Error: "+error.message);
+                           notify(error.message, "error",standardErrorDuration);
+                            NProgress.done();
+                        } 
+                    });  
                 },
-                error:function(error){
-                    //console.log("Error: "+error.message);
-                    notify(error.message, "error",standardErrorDuration);
-                    NProgress.done();
+                error: function(error){
+
                 }
             });
      },
@@ -962,22 +962,23 @@ function setCurrentNetaTM(n){
 function setCurrentNeta(u){
  //   console.log("setCurrentNeta");
     currentUser=u;
-    currentPUser=currentUser.get("pUser");
-    currentPUser.fetch({
+    currentPUser=u.get("pUser");
+    currentNetaPUser=currentUser.get("pUser");
+    currentNetaPUser.fetch({
         success:function(results){
         //    console.log(results);
             currentNeta=currentUser.get("neta");
             currentNeta.fetch({
                success: function(results){
                  //   console.log("I was called Neta!");
-                    if(currentPUser.get("pic")!=undefined){
-                          var photo=currentPUser.get("pic").url();
+                    if(currentNetaPUser.get("pic")!=undefined){
+                          var photo=currentNetaPUser.get("pic").url();
                     }
                     else{
                           var photo="./assets/images/neta.png";
                     }
                     
-                    var name=currentPUser.get("name");
+                    var name=currentNetaPUser.get("name");
                     var party=currentNeta.get("party");
                     party.fetch({
                        success: function(result){

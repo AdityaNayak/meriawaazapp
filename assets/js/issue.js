@@ -3,8 +3,19 @@ Parse.initialize("km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt", "BS9nk6ykTKiEabLX1C
 StatusEnum = {
     OPEN : 0,
     PROGRESS : 1,
-    CLOSE : 3,
-    REVIEW : 2
+    VERIFY : 3,
+    CLOSE : 2
+}
+
+TypeEnum = {
+    CLAIM : 0,
+    ASSIGNED : 1,
+    UNASSIGNED : 2,
+    CLOSED : 3,
+    COMMENT : 4,
+    VERIFIED : 5,
+    WORKING : 6,
+    FINISHED : 7
 }
 
 function getQueryVariable(variable){
@@ -250,7 +261,6 @@ function toTime(sec) {
     }
     return Math.floor(seconds) + " seconds";
 }
-
 // 
 function populateUpdates() {
     console.log("populateUpdates");
@@ -283,36 +293,49 @@ function populateUpdates() {
                     content = "";
                 }
                 user = object.get("pUser");
-                if (object.get("assignee") != undefined) {
-                    assignee = object.get("assignee");
-                    console.log("comments" + assignee.get("pUser"));
-                } else {
-                    assignee = "";
-                }
-                var pphoto1;
-                if (user.get("pic") != undefined) {
-                    pphoto1 = user.get("pic").url();
-                } else {
-                    pphoto1 = getDefaultIcon(user.get("type"));
-                }
-                if (object.get("type") == "unassigned") {
-                    console.log(assignee);
-                    var ass = assignee.get("pUser");
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was unassigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
-                }
-                if (object.get("type") == "assigned") {
-                    var ass = assignee.get("pUser");
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was assigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
-                }
-                if (object.get("type") == "closed") {
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> closed the issue <small>" + ago + " ago</small></p></div>");
+                if(user!=undefined){
+                    if (object.get("assignee") != undefined) {
+                        assignee = object.get("assignee");
+                        console.log("comments" + assignee.get("pUser"));
+                    } else {
+                        assignee = "";
+                    }
+                    var pphoto1;
+                    if (user.get("pic") != undefined) {
+                        pphoto1 = user.get("pic").url();
+                    } else {
+                        pphoto1 = getDefaultIcon(user.get("type"));
+                    }
+                    if (object.get("typeCode") == TypeEnum.UNASSIGNED) {
+                        console.log(assignee);
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was unassigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.ASSIGNED) {
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was assigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.CLOSED) {
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> closed the issue <small>" + ago + " ago</small></p></div>");
 
-                }
-                if (object.get("type") == "comment") {
-                    timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
-                }
-                if (object.get("type") == "claim") {
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.COMMENT) {
+                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.CLAIM) {
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.VERIFIED) {
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>This issue was verified <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.WORKING) {
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name")+ "</strong> started working on this issue <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.FINISHED) {
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> finished working on this issue <small>" + ago + " ago</small></p></div>");
+                    }
                 }
             }
           //  NProgress.done();
@@ -330,13 +353,13 @@ function appropriateStatus(s) {
     if (s == StatusEnum.PROGRESS) {
         return "in progress";
     }
-    if (s == StatusEnum.REVIEW) {
+    if (s == StatusEnum.CLOSE) {
         return "solved <i class='icon-solved gc'></i>"
     }
     if (s == StatusEnum.OPEN) {
         return "open";
     }
-    if (s == StatusEnum.CLOSE) {
+    if (s == StatusEnum.VERIFY) {
         return "verified <i class='icon-solved gc'></i>"
     }
     return s;
@@ -385,37 +408,37 @@ function FixedLocationControl(controlDiv, map) {
 function getIcon(category, status) {
     var myicon;
     if (category == "road") {
-        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[0];
         } else {
             myicon = icons[0];
         }
     } else if (category == "electricity") {
-        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[1];
         } else {
             myicon = icons[1];
         }
     } else if (category == "water") {
-        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[2];
         } else {
             myicon = icons[2];
         }
     } else if (category == "law") {
-        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[3];
         } else {
             myicon = icons[3];
         }
     } else if (category == "sanitation") {
-        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[4];
         } else {
             myicon = icons[4];
         }
     } else {
-        if (status == StatusEnum.CLOSE || status == StatusEnum.REVIEW) {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[5];
         } else {
             myicon = icons[5];
@@ -471,7 +494,6 @@ function updateContentWithCurrentMarker() {
     var p_latitude = issueObj.get('location').latitude;
     var p_longitude = issueObj.get('location').longitude;
     var p_location = p_latitude.toString().substring(0, 10) + ", " + p_longitude.toString().substring(0, 10);
-    console.log(p_location);
     // //getReverseGeocodingData(p_latitude, p_longitude);
    // var p_id = currmarker.content.id;
     var before_photo = issueObj.get('file');
@@ -523,7 +545,7 @@ function updateContentWithCurrentMarker() {
             $("#colorstatus").addClass('yc');
         } else if (p_status == StatusEnum.PROGRESS) {
             $("#colorstatus").addClass('bgc');
-        } else if (p_status == StatusEnum.REVIEW) {
+        } else if (p_status == StatusEnum.CLOSE) {
             $("#colorstatus").addClass('gc');
         } else {
             $("#colorstatus").addClass('gc');
@@ -571,7 +593,7 @@ function updateContentWithCurrentMarker() {
              daysLeft.innerHTML = "unavailable";
         }
 
-        if(p_status==StatusEnum.CLOSE || p_status==StatusEnum.REVIEW){
+        if(p_status==StatusEnum.VERIFY || p_status==StatusEnum.CLOSE){
             ListItem = Parse.Object.extend("Update");
             query = new Parse.Query(ListItem);
             query.descending('createdAt');
