@@ -8,6 +8,7 @@ var view = 0;
 var listView = $('#list-view tbody');
 var timelineView = $('#timeline-view');
 var teamView = $('#team');
+var officialView = $('#officials');
 
 var box_r = document.getElementById('road_cb');
 var box_e = document.getElementById('electricity_cb');
@@ -30,6 +31,7 @@ var map2;
 var currmarker;
 var currentUser;
 var team = [];
+var officials = [];
 var markers = [];
 var singlemarker;
 var geomarker1;
@@ -573,6 +575,29 @@ function populateTeam() {
 
 }
 
+function populateOfficials() {
+    console.log("populateOfficials");
+    officialView.html("<option selected disabled hidden value='Text an Official'></option>");
+    ListItem = Parse.Object.extend("GovtOfficial");
+    query = new Parse.Query(ListItem);
+    query.equalTo("constituency", constituency);
+    query.find({
+        success: function(results) {
+            officials = [];
+            for (var i = 0; i < results.length; i++) {
+                object = results[i];
+                officials.push(object);
+                officialView.append("<option value=" + object.id + ">" + object.get('name') + "</option>");
+            }
+        },
+        error: function(error) {
+            console.log("Error: " + error.message);
+            notify(standardErrorMessage, "error", standardErrorDuration);
+        }
+    });
+
+}
+
 //Starts NProgress
 function postComment(c) {
     NProgress.start();
@@ -721,6 +746,54 @@ function teamMember(id) {
         }
     }
 }
+
+function official(id) {
+    console.log("official");
+    console.log("Find Official with ID: " + id);
+    var member;
+    for (var i = 0; i < officials.length; i++) {
+        if (officials[i].id == id) {
+            member = officials[i];
+            console.log("Member Found: " + member.id);
+            return member;
+        }
+    }
+}
+
+//Starts NProgress
+function postOfficial(id) {
+    NProgress.start();
+    console.log("NProgress Start");
+    if (currentUser.get("type") != "neta") {
+        alert("You do not have the required permissions");
+        return;
+    }
+    console.log("postOfficial");
+
+    var Assign = Parse.Object.extend("GovtOfficialUpdate");
+    var assign = new Assign();
+    var u = new Parse.Object("_User");
+    var i = new Parse.Object("Issue");
+    var a = new Parse.Object("govtOfficial");
+    var member = official(id);
+    u.id = currentUser.id;
+    a.id = member.id;
+    i.id = currmarker.content.id;
+    assign.set("issue", i);
+    assign.set("netaUser", u);
+    assign.set("official", a);
+    assign.save(null, {
+        success: function(assign) {
+            notify("SMS sent!", "success",standardSuccessDuration);
+            NProgress.done();
+        },
+        error: function(assign, error) {
+            notify(standardErrorMessage, "error", standardErrorDuration);w();
+            NProgress.done();
+        }
+    });
+}
+
 
 //Starts NProgress
 function postAssignment(id) {
@@ -1184,6 +1257,7 @@ function plotConstituencyArray(c, n, state) {
                         populate();
                     }
                     populateTeam();
+                    populateOfficials();
                 }, i * 500);
             }
         },
@@ -1235,6 +1309,7 @@ function plotConstituency(c) {
                     populate();
                 }
                 populateTeam();
+                populateOfficials();
             }, i * 500);
         },
         error: function(error) {
@@ -1988,6 +2063,14 @@ function initialize() {
         var q = $('#team').val();
         if (q != null) {
             postAssignment(q);
+        }
+    });
+
+    $('#reminder').click(function() {
+        loadingButton_id("reminder", 3);
+        var q = $('#officials').val();
+        if (q != null) {
+            postOfficial(q);
         }
     });
 
