@@ -1,8 +1,26 @@
 Parse.initialize("km3gtnQr78DlhMMWqMNCwDn4L1nR6zdBcMqzkUXt", "BS9nk6ykTKiEabLX1CwDzy4FLT1UryRR6KsdRPJI");
 
+StatusEnum = {
+    OPEN : 0,
+    PROGRESS : 1,
+    VERIFY : 3,
+    CLOSE : 2
+}
+
+TypeEnum = {
+    CLAIM : 0,
+    ASSIGNED : 1,
+    UNASSIGNED : 2,
+    CLOSED : 3,
+    COMMENT : 4,
+    VERIFIED : 5,
+    WORKING : 6,
+    FINISHED : 7
+}
+
 function getQueryVariable(variable){
    var query = window.location.search.substring(1);
-   var vars = query.split("&");
+   var vars = query.split("?");
    for (var i=0;i<vars.length;i++) {
            var pair = vars[i].split("=");
            if(pair[0] == variable){return pair[1];}
@@ -215,6 +233,34 @@ function timeSince(date) {
     return Math.floor(seconds) + " seconds";
 }
 
+
+function toTime(sec) {
+
+    var seconds = Math.floor(Math.abs(sec) / 1000);
+
+    var interval = Math.floor(seconds / 31536000);
+
+    if (interval > 1) {
+        return interval + " years";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+        return interval + " months";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+        return interval + " days";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+        return interval + " hours";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+        return interval + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+}
 // 
 function populateUpdates() {
     console.log("populateUpdates");
@@ -247,36 +293,49 @@ function populateUpdates() {
                     content = "";
                 }
                 user = object.get("pUser");
-                if (object.get("assignee") != undefined) {
-                    assignee = object.get("assignee");
-                    console.log("comments" + assignee.get("pUser"));
-                } else {
-                    assignee = "";
-                }
-                var pphoto1;
-                if (user.get("pic") != undefined) {
-                    pphoto1 = user.get("pic").url();
-                } else {
-                    pphoto1 = getDefaultIcon(user.get("type"));
-                }
-                if (object.get("type") == "unassigned") {
-                    console.log(assignee);
-                    var ass = assignee.get("pUser");
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was unassigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
-                }
-                if (object.get("type") == "assigned") {
-                    var ass = assignee.get("pUser");
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was assigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
-                }
-                if (object.get("type") == "closed") {
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> closed the issue <small>" + ago + " ago</small></p></div>");
+                if(user!=undefined){
+                    if (object.get("assignee") != undefined) {
+                        assignee = object.get("assignee");
+                        console.log("comments" + assignee.get("pUser"));
+                    } else {
+                        assignee = "";
+                    }
+                    var pphoto1;
+                    if (user.get("pic") != undefined) {
+                        pphoto1 = user.get("pic").url();
+                    } else {
+                        pphoto1 = getDefaultIcon(user.get("type"));
+                    }
+                    if (object.get("typeCode") == TypeEnum.UNASSIGNED) {
+                        console.log(assignee);
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was unassigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.ASSIGNED) {
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was assigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.CLOSED) {
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> closed the issue <small>" + ago + " ago</small></p></div>");
 
-                }
-                if (object.get("type") == "comment") {
-                    timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
-                }
-                if (object.get("type") == "claim") {
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.COMMENT) {
+                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.CLAIM) {
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.VERIFIED) {
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>This issue was verified <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.WORKING) {
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name")+ "</strong> started working on this issue <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.FINISHED) {
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> finished working on this issue <small>" + ago + " ago</small></p></div>");
+                    }
                 }
             }
           //  NProgress.done();
@@ -291,52 +350,95 @@ function populateUpdates() {
 }
 
 function appropriateStatus(s) {
-    if (s == "progress") {
+    if (s == StatusEnum.PROGRESS) {
         return "in progress";
     }
-    else if (s == "review") {
+    if (s == StatusEnum.CLOSE) {
         return "solved <i class='icon-solved gc'></i>"
     }
-    else if (s == "closed") {
+    if (s == StatusEnum.OPEN) {
+        return "open";
+    }
+    if (s == StatusEnum.VERIFY) {
         return "verified <i class='icon-solved gc'></i>"
     }
     return s;
 }
 
+
+// OnClick Listener for Specific Issue Map 
+function FixedLocationControl(controlDiv, map) {
+    console.log("FixedLocationControl");
+    // Set CSS styles for the DIV containing the control
+    // Setting padding to 5 px will offset the control
+    // from the edge of the map
+    controlDiv.style.padding = '5px';
+
+    // Set CSS for the control border
+    var controlUI = document.createElement('div');
+    controlUI.style.backgroundColor = 'white';
+    controlUI.style.borderStyle = 'solid';
+    controlUI.style.borderWidth = '2px';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Click to set the map Back to Issue Location';
+    controlDiv.appendChild(controlUI);
+
+    // Set CSS for the control interior
+    var controlText = document.createElement('div');
+    controlText.style.fontFamily = 'Arial,sans-serif';
+    controlText.style.fontSize = '12px';
+    controlText.style.paddingLeft = '4px';
+    controlText.style.paddingRight = '4px';
+    controlText.innerHTML = '<b>Issue Location</b>';
+    controlUI.appendChild(controlText);
+
+    // Setup the click event listeners: simply set the map to
+    // Chicago
+    google.maps.event.addDomListener(controlUI, 'click', function() {
+
+        map2.setCenter(currmarker.position);
+        map2.setZoom(12);
+
+    });
+
+}
+
+
 function getIcon(category, status) {
     var myicon;
     if (category == "road") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[0];
         } else {
             myicon = icons[0];
         }
     } else if (category == "electricity") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[1];
         } else {
             myicon = icons[1];
         }
     } else if (category == "water") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[2];
         } else {
             myicon = icons[2];
         }
     } else if (category == "law") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[3];
         } else {
             myicon = icons[3];
         }
     } else if (category == "sanitation") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[4];
         } else {
             myicon = icons[4];
         }
     } else {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[5];
         } else {
             myicon = icons[5];
@@ -344,6 +446,7 @@ function getIcon(category, status) {
     }
     return myicon;
 }
+
 function getDefaultIcon(type){
     if(type=="neta"){
         return "./assets/images/neta.png";
@@ -359,7 +462,7 @@ function updateCurrentMarker(m) {
     //console.log("updateCurrentMarker");
     ListItem = Parse.Object.extend("Issue");
     query = new Parse.Query(ListItem);
-    query.equalTo("issueId", m);
+    query.equalTo("issueId",parseInt(m));
     query.include('pUser');
     query.first({
         success: function(results) {
@@ -395,7 +498,7 @@ function updateContentWithCurrentMarker() {
    // var p_id = currmarker.content.id;
     var before_photo = issueObj.get('file');
     var after_photo = issueObj.get('file2');
-    var p_status = issueObj.get('status');
+    var p_status = issueObj.get('statusCode');
     var p_daysLeft = issueObj.get('daysLeft');
     var p_title = issueObj.get('title');
     var p_issueId = issueObj.get('issueId').toString();
@@ -406,6 +509,7 @@ function updateContentWithCurrentMarker() {
     var status = document.getElementById('colorstatus');
     var date = document.getElementById('date');
     var daysLeft = document.getElementById('daysLeft');
+    var daysTaken = document.getElementById('daysTaken');
     var time = document.getElementById('times');
     //var photo = document.getElementById('photo');
     var content = document.getElementById('content');
@@ -420,14 +524,16 @@ function updateContentWithCurrentMarker() {
     //$('#details-column').fadeOut(300);
     var myLatlng = new google.maps.LatLng(p_latitude, p_longitude);
     map2.setCenter(myLatlng);
-    singlemarker.setMap(null);
+    console.log(myLatlng);
+    console.log(issueObj);
+    //singlemarker.setMap(null);
     var myicon;
     myicon = getIcon(p_type, p_status);
-    singlemarker = new google.maps.Marker({
+    marker = new google.maps.Marker({
         position: myLatlng,
         map: map2,
         icon: myicon,
-        title: p_status,
+        title: appropriateStatus(p_status),
         animation: google.maps.Animation.DROP
     });
     
@@ -435,11 +541,11 @@ function updateContentWithCurrentMarker() {
     setTimeout(function() {
 
         $("#colorstatus").removeClass('yc bgc gc');
-        if (p_status == "open") {
+        if (p_status == StatusEnum.OPEN) {
             $("#colorstatus").addClass('yc');
-        } else if (p_status == "progress") {
+        } else if (p_status == StatusEnum.PROGRESS) {
             $("#colorstatus").addClass('bgc');
-        } else if (p_status == "review") {
+        } else if (p_status == StatusEnum.CLOSE) {
             $("#colorstatus").addClass('gc');
         } else {
             $("#colorstatus").addClass('gc');
@@ -475,18 +581,49 @@ function updateContentWithCurrentMarker() {
             beforephoto.src = "./assets/images/no_image.jpg";
             afterphoto.src = "./assets/images/no_image.jpg";
         }
-       // detailedissue.innerHTML = p_content;
-        // var d = new Date(issueObj.updatedAt);
-        // console.log(d);
-        // if (p_daysLeft != undefined) {
-        //     d.setDate(d.getDate() + p_daysLeft);
-        //     console.log(d);
-        //     var ago = timeTo(d);
-        //     //console.log(ago);
-        //     daysLeft.innerHTML = '<small>Days left: </small>'+ago;
-        // } else {
-        //     daysLeft.innerHTML = "<small>Actually solved it in: </small> 3 days";
-        // }
+        
+        var d = new Date(issueObj.get("createdAt"));
+        if (p_daysLeft != undefined) {
+             //d.setDate(d.getDate() + p_daysLeft);
+             //console.log(d);
+             //var ago = timeSince(d);
+             //console.log(ago);
+             daysLeft.innerHTML = p_daysLeft +" days";
+        } else {
+             daysLeft.innerHTML = "unavailable";
+        }
+
+        if(p_status==StatusEnum.VERIFY || p_status==StatusEnum.CLOSE){
+            ListItem = Parse.Object.extend("Update");
+            query = new Parse.Query(ListItem);
+            query.descending('createdAt');
+            query.equalTo("issue",issueObj);
+            query.first({
+                success: function(results) {
+                    //console.log("current marker updated: " + results.length);
+                    //currmarker.content.id = results.id;
+                    if(results!=undefined){
+                        d = new Date(results.get("createdAt"));
+                        ago = d - new Date(issueObj.get("createdAt"));
+                        ago = toTime(ago);
+                        daysTaken.innerHTML = ago ;
+                    }
+                    //console.log(results.id);
+                    //updateContentWithCurrentMarker();
+                    //infowindow.open(map, currmarker);
+                },
+                error: function(error) {
+                    console.log("Error: " + error.message);
+                    notify(standardErrorMessage, "error", standardErrorDuration);
+                }
+            });
+        }
+        else if(p_status==StatusEnum.PROGRESS){
+            daysTaken.innerHTML = "in progress";
+        }
+        else{
+            daysTaken.innerHTML = "-";
+        }
 
         populateUpdates();
         //showDetailsView();
@@ -497,12 +634,13 @@ function updateContentWithCurrentMarker() {
 
 function initialize() {
     issueNum= getQueryVariable("id");
-    updateCurrentMarker(parseInt(issueNum));
+    console.log(issueNum);
+    updateCurrentMarker(issueNum);
     
     //initializeMap()
     map2 = new google.maps.Map(document.getElementById('googleMap'), {
         zoom: 12,
-        center: new google.maps.LatLng(p_latitude, p_longitude),
+        center: new google.maps.LatLng(28.612912, 77.22951),
         mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
@@ -513,6 +651,13 @@ function initialize() {
         draggable: false,
         animation: google.maps.Animation.DROP
     });
+
+
+    var homeControlDiv2 = document.createElement('div');
+    var homeControl2 = new FixedLocationControl(homeControlDiv2, map2);
+
+    homeControlDiv2.index = 1;
+    map2.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv2);
 
     
 }

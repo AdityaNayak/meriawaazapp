@@ -1,6 +1,24 @@
 // Foundation JavaScript
 // Documentation can be found at: http://foundation.zurb.com/docs
 
+StatusEnum = {
+    OPEN : 0,
+    PROGRESS : 1,
+    VERIFY : 3,
+    CLOSE : 2
+}
+
+TypeEnum = {
+    CLAIM : 0,
+    ASSIGNED : 1,
+    UNASSIGNED : 2,
+    CLOSED : 3,
+    COMMENT : 4,
+    VERIFIED : 5,
+    WORKING : 6,
+    FINISHED : 7
+}
+
 var count = 0 ;
 var CU;
 var constituency;
@@ -341,6 +359,9 @@ function fetchNotifications(){
 	    query.greaterThanOrEqualTo( "createdAt", new Date().subtractHours(48) );
 	    query.include("issue");
 	    query.include("post");
+	    if(CU.get("type")=="teamMember"){
+	    	query.equalTo("constituency", constituency);
+	    }
 	    query.include("postComment");
 	    query.include("question");
 	    query.include("answer");
@@ -493,12 +514,13 @@ function displayAllNotifications(){
 }
 
 function notready(event){
+	 NProgress.done();
 	notify("The feature is not ready yet, but coming soon. Stay Tuned", "warning",2);
 	event.preventDefault();
 }
 
 function notify(text,type,duration){
-
+	 NProgress.done();
 	$('.alert-box').fadeIn().addClass(type).removeClass('alert').html(text + '<a href="#" class="close">&times;</a>');
 	//Types are: alert, success, warning, info 
 	setTimeout(function() {
@@ -509,6 +531,7 @@ function notify(text,type,duration){
 });
 }
 function internet(){
+	 NProgress.done();
 	//console.log('connectivty being monitored');
 	window.addEventListener("offline", function(e) {
 		notify('Internet connectivty lost. Please check your connection.', 'error', 0);

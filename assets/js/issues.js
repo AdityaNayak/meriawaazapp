@@ -1,4 +1,4 @@
-var constituency;
+//var constituency;
 
 var constituencyType;
 var polyArray = [];
@@ -8,6 +8,7 @@ var view = 0;
 var listView = $('#list-view tbody');
 var timelineView = $('#timeline-view');
 var teamView = $('#team');
+var officialView = $('#officials');
 
 var box_r = document.getElementById('road_cb');
 var box_e = document.getElementById('electricity_cb');
@@ -30,6 +31,7 @@ var map2;
 var currmarker;
 var currentUser;
 var team = [];
+var officials = [];
 var markers = [];
 var singlemarker;
 var geomarker1;
@@ -492,36 +494,49 @@ function populateUpdates() {
                     content = "";
                 }
                 user = object.get("pUser");
-                if (object.get("assignee") != undefined) {
-                    assignee = object.get("assignee");
-                    console.log("comments" + assignee.get("pUser"));
-                } else {
-                    assignee = "";
-                }
-                var pphoto1;
-                if (user.get("pic") != undefined) {
-                    pphoto1 = user.get("pic").url();
-                } else {
-                    pphoto1 = getDefaultIcon(user.get("type"));
-                }
-                if (object.get("type") == "unassigned") {
-                    console.log(assignee);
-                    var ass = assignee.get("pUser");
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was unassigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
-                }
-                if (object.get("type") == "assigned") {
-                    var ass = assignee.get("pUser");
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was assigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
-                }
-                if (object.get("type") == "closed") {
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> closed the issue <small>" + ago + " ago</small></p></div>");
+                    if(user!=undefined){
+                    if (object.get("assignee") != undefined) {
+                        assignee = object.get("assignee");
+                        console.log("comments" + assignee.get("pUser"));
+                    } else {
+                        assignee = "";
+                    }
+                    var pphoto1;
+                    if (user.get("pic") != undefined) {
+                        pphoto1 = user.get("pic").url();
+                    } else {
+                        pphoto1 = getDefaultIcon(user.get("type"));
+                    }
+                    if (object.get("typeCode") == TypeEnum.UNASSIGNED) {
+                        console.log(assignee);
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was unassigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.ASSIGNED) {
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> was assigned by <strong class='ct'>" + user.get("username") + "</strong> <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.CLOSED) {
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> closed the issue <small>" + ago + " ago</small></p></div>");
 
-                }
-                if (object.get("type") == "comment") {
-                    timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small><i class='icon-close tertiary-color cs hv right'></i></div><p>" + content + "</p></div></div></div>");
-                }
-                if (object.get("type") == "claim") {
-                    timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.COMMENT) {
+                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.CLAIM) {
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.VERIFIED) {
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>This issue was verified <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.WORKING) {
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name")+ "</strong> started working on this issue <small>" + ago + " ago</small></p></div>");
+                    }
+                    if (object.get("typeCode") == TypeEnum.FINISHED) {
+                        var ass = assignee.get("pUser");
+                        timelineView.append("<div class='panel nb'><p><strong class='ct'>" + ass.get("name") + "</strong> finished working on this issue <small>" + ago + " ago</small></p></div>");
+                    }
                 }
             }
             NProgress.done();
@@ -541,8 +556,8 @@ function populateTeam() {
     ListItem = Parse.Object.extend("TeamMember");
     query = new Parse.Query(ListItem);
     query.include("pUser");
-    query.include("neta");
-    query.equalTo("neta", currentUser.get("neta"));
+    query.include("netaArray");
+    query.equalTo("netaArray", currentUser.get("neta"));
     query.find({
         success: function(results) {
             team = [];
@@ -550,6 +565,29 @@ function populateTeam() {
                 object = results[i];
                 team.push(object);
                 teamView.append("<option value=" + object.id + ">" + object.get('pUser').get('name') + "</option>");
+            }
+        },
+        error: function(error) {
+            console.log("Error: " + error.message);
+            notify(standardErrorMessage, "error", standardErrorDuration);
+        }
+    });
+
+}
+
+function populateOfficials() {
+    console.log("populateOfficials");
+    officialView.html("<option selected disabled hidden value='Text an Official'></option>");
+    ListItem = Parse.Object.extend("GovtOfficial");
+    query = new Parse.Query(ListItem);
+    query.equalTo("constituency", constituency);
+    query.find({
+        success: function(results) {
+            officials = [];
+            for (var i = 0; i < results.length; i++) {
+                object = results[i];
+                officials.push(object);
+                officialView.append("<option value=" + object.id + ">" + object.get('name') + "</option>");
             }
         },
         error: function(error) {
@@ -568,7 +606,7 @@ function postComment(c) {
     loadingButton_id("commit_btn", 4);
     var Comment = Parse.Object.extend("Update");
     var comment = new Comment();
-    var u = new Parse.Object("User");
+    var u = new Parse.Object("_User");
     var i = new Parse.Object("Issue");
     u.id = currentUser.id;
     i.id = currmarker.content.id;
@@ -602,7 +640,7 @@ function postClaim() {
     console.log("postClaim");
     var Claim = Parse.Object.extend("Update");
     var claim = new Claim();
-    var u = new Parse.Object("User");
+    var u = new Parse.Object("_User");
     var i = new Parse.Object("Issue");
     u.id = currentUser.id;
     i.id = currmarker.content.id;
@@ -649,7 +687,7 @@ function postClose() {
     console.log("postClose");
     var Close = Parse.Object.extend("Update");
     var close = new Close();
-    var u = new Parse.Object("User");
+    var u = new Parse.Object("_User");
     var i = new Parse.Object("Issue");
     u.id = currentUser.id;
     i.id = currmarker.content.id;
@@ -681,11 +719,17 @@ function postClose() {
 }
 
 function appropriateStatus(s) {
-    if (s == "progress") {
+    if (s == StatusEnum.PROGRESS) {
         return "in progress";
     }
-    if (s == "review") {
-        return "under review"
+    if (s == StatusEnum.CLOSE) {
+        return "solved"
+    }
+    if (s == StatusEnum.OPEN) {
+        return "open";
+    }
+    if (s == StatusEnum.VERIFY) {
+        return "verified"
     }
     return s;
 }
@@ -703,6 +747,54 @@ function teamMember(id) {
     }
 }
 
+function official(id) {
+    console.log("official");
+    console.log("Find Official with ID: " + id);
+    var member;
+    for (var i = 0; i < officials.length; i++) {
+        if (officials[i].id == id) {
+            member = officials[i];
+            console.log("Member Found: " + member.id);
+            return member;
+        }
+    }
+}
+
+//Starts NProgress
+function postOfficial(id) {
+    NProgress.start();
+    console.log("NProgress Start");
+    if (currentUser.get("type") != "neta") {
+        alert("You do not have the required permissions");
+        return;
+    }
+    console.log("postOfficial");
+
+    var Assign = Parse.Object.extend("GovtOfficialUpdate");
+    var assign = new Assign();
+    var u = new Parse.Object("_User");
+    var i = new Parse.Object("Issue");
+    var a = new Parse.Object("govtOfficial");
+    var member = official(id);
+    u.id = currentUser.id;
+    a.id = member.id;
+    i.id = currmarker.content.id;
+    assign.set("issue", i);
+    assign.set("netaUser", u);
+    assign.set("official", a);
+    assign.save(null, {
+        success: function(assign) {
+            notify("SMS sent!", "success",standardSuccessDuration);
+            NProgress.done();
+        },
+        error: function(assign, error) {
+            notify(standardErrorMessage, "error", standardErrorDuration);w();
+            NProgress.done();
+        }
+    });
+}
+
+
 //Starts NProgress
 function postAssignment(id) {
     NProgress.start();
@@ -716,7 +808,7 @@ function postAssignment(id) {
     query = new Parse.Query(ListItem);
     var pointer = new Parse.Object("Issue");
     pointer.id = currmarker.content.id;
-    var u1 = new Parse.Object("User");
+    var u1 = new Parse.Object("_User");
     u1.id = currentUser.id;
     query.equalTo("issue", pointer);
     query.equalTo("user", u1);
@@ -728,7 +820,7 @@ function postAssignment(id) {
             if (results.length != 0) {
                 var Assign = Parse.Object.extend("Update");
                 var assign = new Assign();
-                var u = new Parse.Object("User");
+                var u = new Parse.Object("_User");
                 var i = new Parse.Object("Issue");
                 var a = new Parse.Object("TeamMember");
                 u.id = currentUser.id;
@@ -742,7 +834,7 @@ function postAssignment(id) {
                     success: function(assign) {
                         var Assign2 = Parse.Object.extend("Update");
                         var assign2 = new Assign2();
-                        var u2 = new Parse.Object("User");
+                        var u2 = new Parse.Object("_User");
                         var i2 = new Parse.Object("Issue");
                         var a2 = new Parse.Object("TeamMember");
                         var member2 = teamMember(id);
@@ -773,7 +865,7 @@ function postAssignment(id) {
             } else {
                 var Assign = Parse.Object.extend("Update");
                 var assign = new Assign();
-                var u = new Parse.Object("User");
+                var u = new Parse.Object("_User");
                 var i = new Parse.Object("Issue");
                 var a = new Parse.Object("TeamMember");
                 var member = teamMember(id);
@@ -801,7 +893,7 @@ function postAssignment(id) {
         error: function(error) {
             console.log("Error: " + error.message);
             notify(standardErrorMessage, "error", standardErrorDuration);
-
+            
         }
     });
 }
@@ -809,7 +901,7 @@ function postAssignment(id) {
 
 function setIssueStatusButton() {
     console.log("setIssueStatusButton");
-    if (currmarker.content.get("status") == "closed" || currmarker.content.get("status") == "review") {
+    if (currmarker.content.get("statusCode") == StatusEnum.VERIFY || currmarker.content.get("statusCode") == StatusEnum.CLOSE) {
         $('#claim-st1').delay(400).fadeOut(300);
         $('#timebox').delay(400).fadeOut(300);
         $('#claim-st2').delay(400).fadeOut(300);
@@ -820,7 +912,7 @@ function setIssueStatusButton() {
         query = new Parse.Query(ListItem);
         var pointer = new Parse.Object("Issue");
         pointer.id = currmarker.content.id;
-        var u = new Parse.Object("User");
+        var u = new Parse.Object("_User");
         u.id = currentUser.id;
         query.equalTo("issue", pointer);
         query.equalTo("user", u);
@@ -860,7 +952,7 @@ function setIssueStatusButton() {
         query = new Parse.Query(ListItem);
         var pointer = new Parse.Object("Issue");
         pointer.id = currmarker.content.id;
-        var u = new Parse.Object("User");
+        var u = new Parse.Object("_User");
         u.id = currentUser.id;
         query.equalTo("issue", pointer);
         query.equalTo("user", u);
@@ -918,7 +1010,7 @@ function setIssueStatusButton() {
 
 function setIssueStatusButtonTM() {
     console.log("setIssueStatusButton");
-    if (currmarker.content.get("status") == "closed" || currmarker.content.get("status") == "review") {
+    if (currmarker.content.get("statusCode") == StatusEnum.VERIFY || currmarker.content.get("statusCode") == StatusEnum.CLOSE) {
         $('#close').delay(400).fadeOut(300);
         $('#estimateddaysleft').delay(400).fadeOut(300);
     } else {
@@ -969,7 +1061,7 @@ function updateContentWithCurrentMarker() {
     getReverseGeocodingData(p_latitude, p_longitude);
     var p_id = currmarker.content.id;
     var p_photo = currmarker.content.get('file');
-    var p_status = currmarker.content.get('status');
+    var p_status = currmarker.content.get('statusCode');
     var p_daysLeft = currmarker.content.get('daysLeft');
     var p_title = currmarker.content.get('title');
     var p_phone="";
@@ -1009,11 +1101,11 @@ function updateContentWithCurrentMarker() {
     setTimeout(function() {
 
         $("#colorstatus").removeClass();
-        if (p_status == "open") {
+        if (p_status == StatusEnum.OPEN) {
             $("#colorstatus").addClass('yc');
-        } else if (p_status == "progress") {
+        } else if (p_status == StatusEnum.PROGRESS) {
             $("#colorstatus").addClass('bgc');
-        } else if (p_status == "review") {
+        } else if (p_status == StatusEnum.CLOSE) {
             $("#colorstatus").addClass('bc');
         } else {
             $("#colorstatus").addClass('dbc');
@@ -1076,37 +1168,37 @@ function showDetailsView() {
 function getIcon(category, status) {
     var myicon;
     if (category == "road") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[0];
         } else {
             myicon = icons[0];
         }
     } else if (category == "electricity") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[1];
         } else {
             myicon = icons[1];
         }
     } else if (category == "water") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[2];
         } else {
             myicon = icons[2];
         }
     } else if (category == "law") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[3];
         } else {
             myicon = icons[3];
         }
     } else if (category == "sanitation") {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[4];
         } else {
             myicon = icons[4];
         }
     } else {
-        if (status == "closed" || status == "review") {
+        if (status == StatusEnum.VERIFY || status == StatusEnum.CLOSE) {
             myicon = iconso[5];
         } else {
             myicon = icons[5];
@@ -1165,6 +1257,7 @@ function plotConstituencyArray(c, n, state) {
                         populate();
                     }
                     populateTeam();
+                    populateOfficials();
                 }, i * 500);
             }
         },
@@ -1216,6 +1309,7 @@ function plotConstituency(c) {
                     populate();
                 }
                 populateTeam();
+                populateOfficials();
             }, i * 500);
         },
         error: function(error) {
@@ -1240,17 +1334,22 @@ function populateTM() {
     var pointer = new Parse.Object("TeamMember");
     pointer.id = currentUser.get("teamMember").id;
     query.equalTo("assignee", pointer);
-    query.equalTo("type", "assigned");
+    query.equalTo("typeCode", TypeEnum.ASSIGNED);
     query.include("issue");
+    query.limit(1000);
     query.find({
         success: function(results) {
+            console.log(results);
             for (var i = 0; i < results.length; i++) {
+                console.log("populate for itam");
                 var object = results[i].get("issue");
 
                 var myicon;
-                if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly) == true) {
+                if(object.get("constituency")!=undefined){
+                        if(object.get("constituency").id==constituency.id){ 
                     //Set Icon
-                    myicon = getIcon(object.get("category"), object.get("status"));
+                //if(true){
+                    myicon = getIcon(object.get("category"), object.get("statusCode"));
 
 
                     marker = new google.maps.Marker({
@@ -1272,22 +1371,22 @@ function populateTM() {
                     if (object.get("content").length > 50) {
                         content = object.get("content").substring(0, 50) + "...";
                     }
-                    listView.append("<tr id='" + object.id + "' class='" + object.get('status') + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
-                    console.log("<tr id='" + object.id + "' class='" + object.get('status') + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                    listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                    console.log("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
                     $('#'+object.id).click(function(){
                                     listViewClick(this.id.toString());
                     });
                     markers.push(marker);
-                    if ((marker.content).get('status') == "open") {
+                    if ((marker.content).get('statusCode') == StatusEnum.OPEN) {
                         no = no + 1;
                     }
-                    if ((marker.content).get('status') == "progress") {
+                    if ((marker.content).get('statusCode') == StatusEnum.PROGRESS) {
                         np = np + 1;
                     }
-                    if ((marker.content).get('status') == "review") {
+                    if ((marker.content).get('statusCode') == StatusEnum.CLOSE) {
                         nr = nr + 1;
                     }
-                    if ((marker.content).get('status') == "closed") {
+                    if ((marker.content).get('statusCode') == StatusEnum.VERIFY) {
                         nc = nc + 1;
                     }
                     google.maps.event.addListener(marker, 'click', (function(marker, object) {
@@ -1303,10 +1402,11 @@ function populateTM() {
                             });
                             currmarker = marker;
                             updateCurrentMarker(currmarker);
-                            infowindow.setContent(currmarker.content.get('status'));
+                            infowindow.setContent(getClassName(currmarker.content.get('statusCode')));
                         }
                     })(marker, object));
                 }
+            }
             }
             statusCounters(no, np, nr, nc);
             filter();
@@ -1328,78 +1428,22 @@ function populate() {
     ListItem = Parse.Object.extend("Issue");
     query = new Parse.Query(ListItem);
     query.descending('createdAt');
+    query.limit(1000);
     query.find({
         success: function(results) {
             for (var i = 0; i < results.length; i++) {
                 var object = results[i];
                 var myicon;
-
+                console.log("ABOUT TO CHECK");
                 if (constituencyType != 1) {
-                    if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly) == true) {
-                        //Set Icon
-                        myicon = getIcon(object.get("category"), object.get("status"));
-
-                        marker = new google.maps.Marker({
-                            position: {
-                                lat: object.get('location').latitude,
-                                lng: object.get('location').longitude
-                            },
-                            map: map,
-                            title: object.get('category'),
-                            content: object,
-                            icon: myicon,
-                            draggable: false,
-                            animation: google.maps.Animation.DROP
-                        });
-
-                        var d = new Date(object.createdAt);
-                        var ago = timeSince(d);
-                        var content = object.get("content");
-                        if (object.get("content").length > 50) {
-                            content = object.get("content").substring(0, 50) + "...";
-                        }
-                        listView.append("<tr id='" + object.id + "' class='" + object.get('status') + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
-                        $('#'+object.id).click(function(){
-                                    listViewClick(this.id.toString());
-                        });
-
-                        markers.push(marker);
-                        if ((marker.content).get('status') == "open") {
-                            no = no + 1;
-                        }
-                        if ((marker.content).get('status') == "progress") {
-                            np = np + 1;
-                        }
-                        if ((marker.content).get('status') == "review") {
-                            nr = nr + 1;
-                        }
-                        if ((marker.content).get('status') == "closed") {
-                            nc = nc + 1;
-                        }
-                        google.maps.event.addListener(marker, 'click', (function(marker, object) {
-                            return function() {
-                                NProgress.start();
-                                console.log("NProgress start");
-                                if (infowindow) {
-                                    infowindow.close();
-                                }
-                                infowindow = new google.maps.InfoWindow({
-                                    maxWidth: 700,
-                                    maxHeight: 900
-                                });
-
-                                currmarker = marker;
-                                updateCurrentMarker(currmarker);
-                                infowindow.setContent(currmarker.content.get('status'));
-
-                            }
-                        })(marker, object));
-                    }
-                } else {
-                    for (var j = 0; j < polyArray.length; j++) {
-                        if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), polyArray[j]) == true) {
+                    console.log("YAHAN");
+                    //if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(object.get('location').latitude, object.get('location').longitude), poly) == true) {
+                    console.log(object.get("constituency"));
+                    console.log(constituency);
+                    if(object.get("constituency")!=undefined){
+                        if(object.get("constituency").id==constituency.id){ 
                             //Set Icon
-                            myicon = getIcon(object.get("category"), object.get("status"));
+                            myicon = getIcon(object.get("category"), object.get("statusCode"));
 
                             marker = new google.maps.Marker({
                                 position: {
@@ -1420,21 +1464,22 @@ function populate() {
                             if (object.get("content").length > 50) {
                                 content = object.get("content").substring(0, 50) + "...";
                             }
-                            listView.append("<tr id='" + object.id + "' class='" + object.get('status') + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                            listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
                             $('#'+object.id).click(function(){
                                         listViewClick(this.id.toString());
                             });
+
                             markers.push(marker);
-                            if ((marker.content).get('status') == "open") {
+                            if ((marker.content).get('statusCode') == StatusEnum.OPEN) {
                                 no = no + 1;
                             }
-                            if ((marker.content).get('status') == "progress") {
+                            if ((marker.content).get('statusCode') == StatusEnum.PROGRESS) {
                                 np = np + 1;
                             }
-                            if ((marker.content).get('status') == "review") {
+                            if ((marker.content).get('statusCode') == StatusEnum.CLOSE) {
                                 nr = nr + 1;
                             }
-                            if ((marker.content).get('status') == "closed") {
+                            if ((marker.content).get('statusCode') == StatusEnum.VERIFY) {
                                 nc = nc + 1;
                             }
                             google.maps.event.addListener(marker, 'click', (function(marker, object) {
@@ -1451,14 +1496,80 @@ function populate() {
 
                                     currmarker = marker;
                                     updateCurrentMarker(currmarker);
-                                    infowindow.setContent(currmarker.content.get('status'));
+                                    infowindow.setContent(currmarker.content.get('statusCode'));
 
                                 }
                             })(marker, object));
                         }
                     }
-                }
+                } else {
+                    console.log("WAHAN");
+                    console.log(polyArray);
+                    for (var j = 0; j < polyArray.length; j++) {
+                        console.log("Checking:"+polyArray[j].constituency);
+                            if(object.get("constituency")!=undefined){
+                                if(object.get("constituency").get("name")==polyArray[j].constituency){ 
+                                    
+                                    myicon = getIcon(object.get("category"), object.get("statusCode"));
 
+                                    marker = new google.maps.Marker({
+                                        position: {
+                                            lat: object.get('location').latitude,
+                                            lng: object.get('location').longitude
+                                        },
+                                        map: map,
+                                        title: object.get('category'),
+                                        content: object,
+                                        icon: myicon,
+                                        draggable: false,
+                                        animation: google.maps.Animation.DROP
+                                    });
+
+                                    var d = new Date(object.createdAt);
+                                    var ago = timeSince(d);
+                                    var content = object.get("content");
+                                    if (object.get("content").length > 50) {
+                                        content = object.get("content").substring(0, 50) + "...";
+                                    }
+                                    listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                                    $('#'+object.id).click(function(){
+                                                listViewClick(this.id.toString());
+                                    });
+                                    markers.push(marker);
+                                    if ((marker.content).get('statusCode') == StatusEnum.OPEN) {
+                                        no = no + 1;
+                                    }
+                                    if ((marker.content).get('statusCode') == StatusEnum.PROGRESS) {
+                                        np = np + 1;
+                                    }
+                                    if ((marker.content).get('statusCode') == StatusEnum.CLOSE) {
+                                        nr = nr + 1;
+                                    }
+                                    if ((marker.content).get('statusCode') == StatusEnum.VERIFY) {
+                                        nc = nc + 1;
+                                    }
+                                    google.maps.event.addListener(marker, 'click', (function(marker, object) {
+                                        return function() {
+                                            NProgress.start();
+                                            console.log("NProgress start");
+                                            if (infowindow) {
+                                                infowindow.close();
+                                            }
+                                            infowindow = new google.maps.InfoWindow({
+                                                maxWidth: 700,
+                                                maxHeight: 900
+                                            });
+
+                                            currmarker = marker;
+                                            updateCurrentMarker(currmarker);
+                                            infowindow.setContent(getClassName(currmarker.content.get('statusCode')));
+
+                                        }
+                                    })(marker, object));
+                                }
+                            }
+                    }
+                }
             }
             statusCounters(no, np, nr, nc);
             filter();
@@ -1541,24 +1652,26 @@ function statusCounters(no, np, nr, nc) {
     numAnim4.start();
 }
 
+
+
 function statusCheck(m) {
     console.log("StatusCheck");
-    if ((m.content).get("status") == "open") {
+    if ((m.content).get("status") == "open" || (m.content).get("statusCode") == StatusEnum.OPEN) {
         if (box_op.checked) {
             return 1;
         }
     }
-    if ((m.content).get("status") == "progress") {
+    if ((m.content).get("status") == "progress"|| (m.content).get("statusCode") == StatusEnum.PROGRESS) {
         if (box_pr.checked) {
             return 1;
         }
     }
-    if ((m.content).get("status") == "review") {
+    if ((m.content).get("status") == "review"|| (m.content).get("statusCode") == StatusEnum.VERIFY) {
         if (box_rv.checked) {
             return 1;
         }
     }
-    if ((m.content).get("status") == "closed") {
+    if ((m.content).get("status") == "closed"|| (m.content).get("statusCode") == StatusEnum.CLOSE) {
         if (box_cl.checked) {
             return 1;
         }
@@ -1579,7 +1692,7 @@ function filter() {
                 content = markers[m].content.get('content').substring(0, 50) + "...";
             }
 
-            listView.append("<tr id='" + (markers[m].content).id + "' class='" + (markers[m].content).get('status') + "'><td width='100' class='ct'>" + ((markers[m].content).get('issueId')).toString() + "</td><td width='100' class='ct'>" + (markers[m].content).get('category') + "</td><td class='ct'>" + content + "</td><td width='100' class='ct'>" + appropriateStatus((markers[m].content).get('status')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+            listView.append("<tr id='" + (markers[m].content).id + "' class='" + getClassName((markers[m].content).get('statusCode')) + "'><td width='100' class='ct'>" + ((markers[m].content).get('issueId')).toString() + "</td><td width='100' class='ct'>" + (markers[m].content).get('category') + "</td><td class='ct'>" + content + "</td><td width='100' class='ct'>" + appropriateStatus((markers[m].content).get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
             $('#'+markers[m].content.id).click(function(){
                         listViewClick(this.id.toString());
             });
@@ -1600,16 +1713,16 @@ function updateCounters() {
     var nc = 0;
     for (var m = 0; m < markers.length; m++) {
         if (markers[m].getMap() != null) {
-            if ((markers[m].content).get('status') == "open") {
+            if ((markers[m].content).get('statusCode') == StatusEnum.OPEN) {
                 no = no + 1;
             }
-            if ((markers[m].content).get('status') == "progress") {
+            if ((markers[m].content).get('statusCode') == StatusEnum.PROGRESS) {
                 np = np + 1;
             }
-            if ((markers[m].content).get('status') == "review") {
+            if ((markers[m].content).get('statusCode') == StatusEnum.CLOSE) {
                 nr = nr + 1;
             }
-            if ((markers[m].content).get('status') == "closed") {
+            if ((markers[m].content).get('statusCode') == StatusEnum.VERIFY) {
                 nc = nc + 1;
             }
         }
@@ -1639,13 +1752,28 @@ function listViewClick(p) {
         maxWidth: 700,
         maxHeight: 900
     });
-    infowindow.setContent(currmarker.content.get('status'));
+    infowindow.setContent(getClassName(currmarker.content.get('statusCode')));
 
     console.log('test');
 }
 
+function getClassName(s){
+    if(s==StatusEnum.OPEN){
+        return "open"; 
+    }
+    if(s==StatusEnum.PROGRESS){
+        return "progress"; 
+    }
+    if(s==StatusEnum.CLOSE){
+       return "review";  
+    }
+    if(s==StatusEnum.VERIFY){
+     return "closed";   
+    }
+}
+
 function initializeMap() {
-    var constituency;
+    //var constituency;
     if (currentUser.get("type") == "neta") {
         var n = currentUser.get("neta");
         n.fetch({
@@ -1664,7 +1792,9 @@ function initializeMap() {
                     success: function(results) {
                         constituency = results[0].get("constituency");
                         constituencyType = constituency.get("type");
+
                         if (constituencyType == 1) {
+                            console.log("POLYGON ARRAY");
                             constituencyArray = constituency.get("constituencyArray");
                             console.log(constituencyArray);
                             polyArray = [];
@@ -1759,33 +1889,42 @@ function initializeMap() {
 function initialize() {
     console.log("initialize");
     currentUser = CU;
-    currentPUser = currentUser.get("pUser");
-    NProgress.start();
-    currentPUser.fetch({
+    currentUser.fetch({
         success:function(results){
-            console.log("NProgress Start");
-                var pphoto = document.getElementById('profilepic');
-                if (currentPUser.get("pic") != undefined) {
-                    pphoto.src = currentPUser.get("pic").url();
-                } else {
-                    pphoto.src = getDefaultIcon(currentPUser.get("type"));
+            currentPUser = currentUser.get("pUser");
+            NProgress.start();
+            currentPUser.fetch({
+                success:function(results){
+                    console.log("NProgress Start");
+                        var pphoto = document.getElementById('profilepic');
+                        if (currentPUser.get("pic") != undefined) {
+                            pphoto.src = currentPUser.get("pic").url();
+                        } else {
+                            pphoto.src = getDefaultIcon(currentPUser.get("type"));
+                        }
+
+                        if (currentPUser.get("type") == "neta") {
+                            console.log("Current User is a Neta");
+                            document.getElementById("neta-panel").style.display = "block";
+
+                        } else {
+                            console.log("Current User is a Team Member");
+                            document.getElementById("neta-panel").style.display = "none";
+
+                        }
+                },
+                error:function(error){
+                    console.log("Error: " + error.message);
+                        notify(standardErrorMessage, "error", standardErrorDuration);
                 }
-
-                if (currentPUser.get("type") == "neta") {
-                    console.log("Current User is a Neta");
-                    document.getElementById("neta-panel").style.display = "block";
-
-                } else {
-                    console.log("Current User is a Team Member");
-                    document.getElementById("neta-panel").style.display = "none";
-
-                }
+            });
         },
         error:function(error){
-            console.log("Error: " + error.message);
+                        console.log("Error: " + error.message);
                 notify(standardErrorMessage, "error", standardErrorDuration);
         }
     });
+
     
     map2 = new google.maps.Map(document.getElementById('googleMap'), {
         zoom: 12,
@@ -1927,6 +2066,14 @@ function initialize() {
         }
     });
 
+    $('#reminder').click(function() {
+        loadingButton_id("reminder", 3);
+        var q = $('#officials').val();
+        if (q != null) {
+            postOfficial(q);
+        }
+    });
+
     $('#close').click(function() {
         loadingButton_id("close", 3);
         disableDetailsView();
@@ -1981,7 +2128,7 @@ function initialize() {
         updateHistory();
         NProgress.start();
         console.log("NProgress Start");
-        disableCheckPoints(currmarker.content.get("category"), currmarker.content.get("status"));
+        disableCheckPoints(currmarker.content.get("category"), currmarker.content.get("statusCode"));
         if (infowindow) {
             infowindow.close();
         }
