@@ -788,7 +788,7 @@ function postOfficial(id) {
             NProgress.done();
         },
         error: function(assign, error) {
-            notify(standardErrorMessage, "error", standardErrorDuration);w();
+            notify(standardErrorMessage, "error", standardErrorDuration);
             NProgress.done();
         }
     });
@@ -2053,8 +2053,15 @@ function initialize() {
 
     $('#claim-st1').click(function() {
         loadingButton_id("claim-st1", 3);
-        disableDetailsView();
-        postClaim();
+        
+        if (CU.get("subttype")=="mla"){
+            postClaim();    
+            disableDetailsView();
+        }
+        else{
+            notify("Your profile is not public yet","error",standardErrorDuration);
+        }
+        
     });
 
     $('#claim-st2').click(function() {
@@ -2069,8 +2076,14 @@ function initialize() {
     $('#reminder').click(function() {
         loadingButton_id("reminder", 3);
         var q = $('#officials').val();
-        if (q != null) {
+        
+        if (CU.get("subttype")=="mla"){
+           if (q != null) {
             postOfficial(q);
+            }
+        }
+        else{
+            notify("Your profile is not public yet","error",standardErrorDuration);
         }
     });
 
@@ -2080,13 +2093,19 @@ function initialize() {
         postClose();
     });
 
-    $('#comment-form').submit(function(event) {
+    if (CU.get("subttype")=="mla" || CU.get("subttype")=="wardincharge") {
+        $('#comment-form').submit(function(event) {
         event.preventDefault();
         loadingButton_id("commit_btn", 3);
         var comment = document.getElementById("comment").value;
 
         postComment(comment);
-    });
+        });
+    }
+    else{
+        $('#comment-view').html('<div class="scolor2 text-center">Commenting has not been enabled yet</div>');
+    }
+    
 
     $('#back').click(function() {
         updateHistory();

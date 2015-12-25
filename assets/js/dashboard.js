@@ -631,72 +631,75 @@ function populateStatus(){
 // }
 
 function postStatus(c) {
-    if(CU.get("type")!="neta"){
-        alert("You do not have the required permissions");
+    if(CU.get("type")!="neta" || CU.get("subtype")!="mla"){
+        notify("You do not have the required permissions","error",standardErrorDuration);
         return;
     }
-	if(file!=undefined){
-		var parsefile=new Parse.File(file.name,file);
-		parsefile.save().then(function(){
-		//	console.log('postStatus');
-			NProgress.start();
-		//	console.log("NProgress Start");
-		//	console.log("postStatus");
-			loadingButton_id("post",4);
-			var Post = Parse.Object.extend("Post");
-			var post = new Post();
-			var u = new Parse.Object("Neta");
-			u.id = currentNeta.id;
-			post.set("file",parsefile);
-			post.set("content", c);
-			post.set("reach", 0);
-			post.set("numUpvotes", 0);
-			post.set("numComments", 0);
-			post.set("neta",u);
-			post.save(null, {
-			  success: function(result) {
-				postCampaignFromPost(result.id);
-				document.getElementById("postArea").value="";
-				file=undefined;
-				thumbnil.src="";
-			  },
-			  error: function(comment, error) {
-				document.getElementById("postArea").value="";
-				file=undefined;
-				thumbnil.src="";
-				alert('Failed to Post! ' + error.message);
-				NProgress.done();
-			  }
-			});
-		});
-	}
-	else{
-	//	console.log('postStatus');
-		NProgress.start();
-	//	console.log("NProgress Start");
-	//	console.log("postStatus");
-		loadingButton_id("post",4);
-		var Post = Parse.Object.extend("Post");
-		var post = new Post();
-		var u = new Parse.Object("Neta");
-		u.id = currentNeta.id;
-		//post.set("file",data);
-		post.set("content", c);
-		post.set("reach", 0);
-		post.set("numUpvotes", 0);
-		post.set("numComments", 0);
-		post.set("neta",u);
-		post.save(null, {
-		  success: function(result) {
-			postCampaignFromPost(result.id);
-			document.getElementById("postArea").value="";
-		  },
-		  error: function(comment, error) {
-			alert('Failed to Post! ' + error.message);
-			NProgress.done();
-		  }
-		});
-	}
+    else{
+        if(file!=undefined){
+        var parsefile=new Parse.File(file.name,file);
+        parsefile.save().then(function(){
+        //  console.log('postStatus');
+            NProgress.start();
+        //  console.log("NProgress Start");
+        //  console.log("postStatus");
+            loadingButton_id("post",4);
+            var Post = Parse.Object.extend("Post");
+            var post = new Post();
+            var u = new Parse.Object("Neta");
+            u.id = currentNeta.id;
+            post.set("file",parsefile);
+            post.set("content", c);
+            post.set("reach", 0);
+            post.set("numUpvotes", 0);
+            post.set("numComments", 0);
+            post.set("neta",u);
+            post.save(null, {
+              success: function(result) {
+                postCampaignFromPost(result.id);
+                document.getElementById("postArea").value="";
+                file=undefined;
+                thumbnil.src="";
+              },
+              error: function(comment, error) {
+                document.getElementById("postArea").value="";
+                file=undefined;
+                thumbnil.src="";
+                alert('Failed to Post! ' + error.message);
+                NProgress.done();
+              }
+            });
+        });
+    }
+    else{
+    //  console.log('postStatus');
+        NProgress.start();
+    //  console.log("NProgress Start");
+    //  console.log("postStatus");
+        loadingButton_id("post",4);
+        var Post = Parse.Object.extend("Post");
+        var post = new Post();
+        var u = new Parse.Object("Neta");
+        u.id = currentNeta.id;
+        //post.set("file",data);
+        post.set("content", c);
+        post.set("reach", 0);
+        post.set("numUpvotes", 0);
+        post.set("numComments", 0);
+        post.set("neta",u);
+        post.save(null, {
+          success: function(result) {
+            postCampaignFromPost(result.id);
+            document.getElementById("postArea").value="";
+          },
+          error: function(comment, error) {
+            alert('Failed to Post! ' + error.message);
+            NProgress.done();
+          }
+        });
+    }
+    }
+	
 }
 
 function fetchECStatus(u){
@@ -1023,7 +1026,7 @@ function initialize() {
 	voterViewArray=[];
     NProgress.start();
     if(CU.get("type")!="neta"){
-        $("#netapost").fadeOut();
+        $("#netapost").hide();
     }
     queryUserTable();
 
@@ -1047,7 +1050,13 @@ function initialize() {
     $('#post-form').submit(function(event){
           event.preventDefault();
           var p=document.getElementById("postArea").value;
-          postStatus(p);
+          if (CU.get("subtype")=="mla"){
+            postStatus(p);  
+          }
+          else{
+            notify("Your profile is not public yet","error",standardErrorDuration);
+          }
+          
     });
     $('#postArea').focus(function(){
         $(this).animate({'height': '120px'}).removeClass('nm');
