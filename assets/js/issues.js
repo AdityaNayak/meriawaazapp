@@ -2054,7 +2054,7 @@ function initialize() {
     $('#claim-st1').click(function() {
         loadingButton_id("claim-st1", 3);
         
-        if (CU.get("subttype")=="mla"){
+        if (CU.get("subtype")=="mla"){
             postClaim();    
             disableDetailsView();
         }
@@ -2077,7 +2077,7 @@ function initialize() {
         loadingButton_id("reminder", 3);
         var q = $('#officials').val();
         
-        if (CU.get("subttype")=="mla"){
+        if (CU.get("subtype")=="mla"){
            if (q != null) {
             postOfficial(q);
             }
@@ -2093,7 +2093,7 @@ function initialize() {
         postClose();
     });
 
-    if (CU.get("subttype")=="mla" || CU.get("subttype")=="wardincharge") {
+    if (CU.get("subtype")=="mla" || CU.get("subtype")=="wardincharge") {
         $('#comment-form').submit(function(event) {
         event.preventDefault();
         loadingButton_id("commit_btn", 3);
