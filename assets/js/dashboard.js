@@ -89,13 +89,13 @@ function removeComment(cid,pid){
                 notify("Comment removed","success", standardErrorDuration);     
               },
               error: function(comment, error) {
-                    notify('Failed to Comment!' + error.message, "error", standardErrorDuration);
+                    notify('Failed to remove Comment!' + error.message, "error", standardErrorDuration);
                     NProgress.done();
               }
          });
       },
       error: function(error) {
-         notify('Failed to Comment!' + error.message, "error", standardErrorDuration);
+         notify('Failed to remove Comment!' + error.message, "error", standardErrorDuration);
          NProgress.done();
       }
     });

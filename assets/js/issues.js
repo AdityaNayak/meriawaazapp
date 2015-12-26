@@ -463,6 +463,38 @@ function FixedLocationControl(controlDiv, map) {
 
 }
 
+
+function removeComment(cid,pid){
+    console.log("removeComment-"+cid);
+    NProgress.start();
+ //   console.log("NProgress Start");
+ //   console.log("postComment");
+    var Update = Parse.Object.extend("Update");
+    var query = new Parse.Query(Update);
+    query.equalTo("objectId", cid);
+    query.first({
+      success: function(object) {
+         object.set("reported", 1);
+         object.save(null,{
+              success: function(comment) {
+                updateCurrentMarker(currmarker);
+                enableDetailsView();
+                notify("Comment removed","success", standardErrorDuration);     
+              },
+              error: function(comment, error) {
+                    notify('Failed to remove Comment!' + error.message, "error", standardErrorDuration);
+                    NProgress.done();
+              }
+         });
+      },
+      error: function(error) {
+         notify('Failed to remove Comment!' + error.message, "error", standardErrorDuration);
+         NProgress.done();
+      }
+    });
+}
+
+
 // 
 function populateUpdates() {
     console.log("populateUpdates");
@@ -473,6 +505,7 @@ function populateUpdates() {
     pointer.id = currmarker.content.id;
     query.equalTo("issue", pointer);
     query.include("assignee");
+    query.notEqualTo("reported",1);
     query.include(["assignee.pUser"]);
     query.include("pUser");
     query.ascending('createdAt');
@@ -486,6 +519,7 @@ function populateUpdates() {
             var assignee;
             for (var i = 0; i < results.length; i++) {
                 object = results[i];
+                objectId=object.id;
                 d = new Date(object.createdAt);
                 ago = timeSince(d);
                 if (object.get("content") != undefined) {
@@ -521,8 +555,12 @@ function populateUpdates() {
 
                     }
                     if (object.get("typeCode") == TypeEnum.COMMENT) {
-                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
+                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small><i id='close-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color' style='float:right;'></i></div><p>" + content + "</p></div></div></div>");
                     }
+                    $("#close-"+objectId).click(function(event){
+                        event.preventDefault();
+                        removeComment(event.target.id.toString().split('-')[1],pointer.id);
+                    });
                     if (object.get("typeCode") == TypeEnum.CLAIM) {
                         timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
                     }
