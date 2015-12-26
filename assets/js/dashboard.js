@@ -71,6 +71,36 @@ function postComment(pid){
     });
 }
 
+function removeComment(cid,pid){
+    console.log("removeComment-"+cid);
+    NProgress.start();
+ //   console.log("NProgress Start");
+ //   console.log("postComment");
+    var Comment = Parse.Object.extend("PostComment");
+    var query = new Parse.Query(Comment);
+    query.equalTo("objectId", cid);
+    query.first({
+      success: function(object) {
+         object.set("reported", 1);
+         object.save(null,{
+              success: function(comment) {
+                updatePost(pid);  
+                NProgress.done();
+                notify("Comment removed","success", standardErrorDuration);     
+              },
+              error: function(comment, error) {
+                    notify('Failed to Comment!' + error.message, "error", standardErrorDuration);
+                    NProgress.done();
+              }
+         });
+      },
+      error: function(error) {
+         notify('Failed to Comment!' + error.message, "error", standardErrorDuration);
+         NProgress.done();
+      }
+    });
+}
+
 function getFileName(){
 	var d=new Date();
 	return currentNeta.id+d.getTime();
@@ -135,6 +165,7 @@ function updatePost(pid){
                     //    console.log("lookout!");
                         var chaincomments ="";
                         object=results2[0];
+                        objectId=object.id;
                         for(var j=0;j<results2.length;j++){
                         //    console.log(results2[j]);
                             var time;
@@ -149,7 +180,13 @@ function updatePost(pid){
                                 photo=results2[j].get("pUser").get("pic").url();
                             } 
                             comm=results2[j].get("content");
-                            chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='text-right secondary'><i class='icon-close hv cs tertiary-color'></i> </div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
+                            var commentId = results2[j].id;
+                            chaincomments+="<div class='row comment' id='comment-"+commentId+"'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+commentId+"-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                            $("#close-"+commentId+"-"+objectId).click(function(event){
+                                event.preventDefault();
+                                removeComment(event.target.id.toString().split('-')[1],event.target.id.toString().split('-')[2]);
+                            });
+                            //chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='text-right secondary'><i class='icon-close hv cs tertiary-color'></i> </div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
                         }
                         var thisview=$('#post-'+pid);
                         thisview.html("");  
@@ -378,6 +415,7 @@ function populateStatus(){
                     ListItem2 = Parse.Object.extend("PostComment");
                     query2 = new Parse.Query(ListItem2);
                     query2.containedIn("post",qpost);
+                    query2.notEqualTo("reported",1);
                     query2.include("post");
                     query2.include("pUser");
                     query2.ascending("createdAt");
@@ -386,6 +424,7 @@ function populateStatus(){
                             console.log("Number of comments:"+results2.length);
                             for(var i=0;i<results.length;i++){
                                 var object=results[i];
+                                var objectId=object.id;
                                 var chaincomments ="";
                                 for(var j=0;j<results2.length;j++){
                                     if(results2[j].get("post").id==object.id && results2[j].get("reported") !==1){
@@ -406,7 +445,11 @@ function populateStatus(){
                                         //console.log(commentId);
                                         var commentId = results2[j].id;
                                         //console.log(commentId);
-                                        chaincomments+="<div class='row comment' id='comment-"+commentId+"'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+commentId+"'class='reportbtn icon-close hv cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                                        chaincomments+="<div class='row comment' id='comment-"+commentId+"'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+commentId+"-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                                        $("#close-"+commentId+"-"+objectId).click(function(event){
+                                            event.preventDefault();
+                                            removeComment(event.target.id.toString().split('-')[1],event.target.id.toString().split('-')[2]);
+                                        });
                                     }
                                     // Get the element, add a click listener...
                                     // Get the element, add a click listener...
