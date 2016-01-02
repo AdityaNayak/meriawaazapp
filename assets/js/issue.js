@@ -712,7 +712,7 @@ function setButton(){
         if(issueObj.get('statusCode')==StatusEnum.VERIFY || issueObj.get('statusCode') == StatusEnum.CLOSE){
             var title="Issue Resolved | "+issueObj.get('title');
             if(after_photo==undefined){
-                image="./assets/images/no_image.jpg";
+                image="http://dl.dropboxusercontent.com/u/37351082/fb-logo.png";
             }
             else{
                 image=after_photo.url();
@@ -721,7 +721,7 @@ function setButton(){
         else{
             var title="Issue Reported | "+issueObj.get('title');
             if(before_photo==undefined){
-                image="./assets/images/no_image.jpg";
+                image="http://dl.dropboxusercontent.com/u/37351082/fb-logo.png";
             }
             else{
                 image=before_photo.url();
@@ -730,7 +730,8 @@ function setButton(){
         
         var summary=issueObj.get('content');
         var url=window.location.href;
-        location.href='http://www.facebook.com/sharer.php?s=100&p[title]='+title+'&p[url]='+url+'&p[summary]='+summary+'&p[images][0]='+image;
+        location.href='http://www.facebook.com/sharer.php?s=100&p[title]="'+title+'"&p[url]="'+url+'"&p[summary]="'+summary+'"&p[images][0]="'+image+'"';
     }); 
+setProductMeta();
 }
 
