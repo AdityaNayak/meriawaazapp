@@ -732,6 +732,6 @@ function setButton(){
         var url=window.location.href;
         location.href='http://www.facebook.com/sharer.php?s=100&p[title]="'+title+'"&p[url]="'+url+'"&p[summary]="'+summary+'"&p[images][0]="'+image+'"';
     }); 
-setProductMeta();
+    setTimeout(setProductMeta, 5000);
 }
 
