@@ -467,30 +467,20 @@ function FixedLocationControl(controlDiv, map) {
 function removeComment(cid,pid){
     console.log("removeComment-"+cid);
     NProgress.start();
- //   console.log("NProgress Start");
- //   console.log("postComment");
-    var Update = Parse.Object.extend("Update");
-    var query = new Parse.Query(Update);
-    query.equalTo("objectId", cid);
-    query.first({
-      success: function(object) {
-         object.set("reported", 1);
-         object.save(null,{
-              success: function(comment) {
-                updateCurrentMarker(currmarker);
-                enableDetailsView();
-                notify("Comment removed","success", standardErrorDuration);     
-              },
-              error: function(comment, error) {
-                    notify('Failed to remove Comment!' + error.message, "error", standardErrorDuration);
-                    NProgress.done();
-              }
-         });
-      },
-      error: function(error) {
-         notify('Failed to remove Comment!' + error.message, "error", standardErrorDuration);
-         NProgress.done();
-      }
+    Parse.Cloud.run("report", {
+        oClass: "Update",
+        objId: cid,
+        rStatus: 1
+    }, {
+        success: function(results) {
+            console.log(results);
+            updateCurrentMarker(currmarker);
+            enableDetailsView();
+        },
+        error: function(error) {
+            notify('Failed to remove Comment!' + error.message, "error", standardErrorDuration);
+            NProgress.done();
+        }
     });
 }
 
