@@ -71,6 +71,36 @@ function postComment(pid){
     });
 }
 
+function removeComment(cid,pid){
+    console.log("removeComment-"+cid);
+    NProgress.start();
+ //   console.log("NProgress Start");
+ //   console.log("postComment");
+    var Comment = Parse.Object.extend("PostComment");
+    var query = new Parse.Query(Comment);
+    query.equalTo("objectId", cid);
+    query.first({
+      success: function(object) {
+         object.set("reported", 1);
+         object.save(null,{
+              success: function(comment) {
+                updatePost(pid);  
+                NProgress.done();
+                notify("Comment removed","success", standardErrorDuration);     
+              },
+              error: function(comment, error) {
+                    notify('Failed to remove Comment!' + error.message, "error", standardErrorDuration);
+                    NProgress.done();
+              }
+         });
+      },
+      error: function(error) {
+         notify('Failed to remove Comment!' + error.message, "error", standardErrorDuration);
+         NProgress.done();
+      }
+    });
+}
+
 function getFileName(){
 	var d=new Date();
 	return currentNeta.id+d.getTime();
@@ -135,6 +165,7 @@ function updatePost(pid){
                     //    console.log("lookout!");
                         var chaincomments ="";
                         object=results2[0];
+                        objectId=object.id;
                         for(var j=0;j<results2.length;j++){
                         //    console.log(results2[j]);
                             var time;
@@ -149,7 +180,13 @@ function updatePost(pid){
                                 photo=results2[j].get("pUser").get("pic").url();
                             } 
                             comm=results2[j].get("content");
-                            chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='text-right secondary'><i class='icon-close hv cs tertiary-color'></i> </div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
+                            var commentId = results2[j].id;
+                            chaincomments+="<div class='row comment' id='comment-"+commentId+"'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+commentId+"-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                            $("#close-"+commentId+"-"+objectId).click(function(event){
+                                event.preventDefault();
+                                removeComment(event.target.id.toString().split('-')[1],event.target.id.toString().split('-')[2]);
+                            });
+                            //chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='text-right secondary'><i class='icon-close hv cs tertiary-color'></i> </div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
                         }
                         var thisview=$('#post-'+pid);
                         thisview.html("");  
@@ -378,6 +415,7 @@ function populateStatus(){
                     ListItem2 = Parse.Object.extend("PostComment");
                     query2 = new Parse.Query(ListItem2);
                     query2.containedIn("post",qpost);
+                    query2.notEqualTo("reported",1);
                     query2.include("post");
                     query2.include("pUser");
                     query2.ascending("createdAt");
@@ -386,6 +424,7 @@ function populateStatus(){
                             console.log("Number of comments:"+results2.length);
                             for(var i=0;i<results.length;i++){
                                 var object=results[i];
+                                var objectId=object.id;
                                 var chaincomments ="";
                                 for(var j=0;j<results2.length;j++){
                                     if(results2[j].get("post").id==object.id && results2[j].get("reported") !==1){
@@ -406,7 +445,11 @@ function populateStatus(){
                                         //console.log(commentId);
                                         var commentId = results2[j].id;
                                         //console.log(commentId);
-                                        chaincomments+="<div class='row comment' id='comment-"+commentId+"'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+commentId+"'class='reportbtn icon-close hv cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                                        chaincomments+="<div class='row comment' id='comment-"+commentId+"'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+commentId+"-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                                        $("#close-"+commentId+"-"+objectId).click(function(event){
+                                            event.preventDefault();
+                                            removeComment(event.target.id.toString().split('-')[1],event.target.id.toString().split('-')[2]);
+                                        });
                                     }
                                     // Get the element, add a click listener...
                                     // Get the element, add a click listener...
@@ -631,72 +674,75 @@ function populateStatus(){
 // }
 
 function postStatus(c) {
-    if(CU.get("type")!="neta"){
-        alert("You do not have the required permissions");
+    if(CU.get("type")!="neta" || CU.get("subtype")!="mla"){
+        notify("You do not have the required permissions","error",standardErrorDuration);
         return;
     }
-	if(file!=undefined){
-		var parsefile=new Parse.File(file.name,file);
-		parsefile.save().then(function(){
-		//	console.log('postStatus');
-			NProgress.start();
-		//	console.log("NProgress Start");
-		//	console.log("postStatus");
-			loadingButton_id("post",4);
-			var Post = Parse.Object.extend("Post");
-			var post = new Post();
-			var u = new Parse.Object("Neta");
-			u.id = currentNeta.id;
-			post.set("file",parsefile);
-			post.set("content", c);
-			post.set("reach", 0);
-			post.set("numUpvotes", 0);
-			post.set("numComments", 0);
-			post.set("neta",u);
-			post.save(null, {
-			  success: function(result) {
-				postCampaignFromPost(result.id);
-				document.getElementById("postArea").value="";
-				file=undefined;
-				thumbnil.src="";
-			  },
-			  error: function(comment, error) {
-				document.getElementById("postArea").value="";
-				file=undefined;
-				thumbnil.src="";
-				alert('Failed to Post! ' + error.message);
-				NProgress.done();
-			  }
-			});
-		});
-	}
-	else{
-	//	console.log('postStatus');
-		NProgress.start();
-	//	console.log("NProgress Start");
-	//	console.log("postStatus");
-		loadingButton_id("post",4);
-		var Post = Parse.Object.extend("Post");
-		var post = new Post();
-		var u = new Parse.Object("Neta");
-		u.id = currentNeta.id;
-		//post.set("file",data);
-		post.set("content", c);
-		post.set("reach", 0);
-		post.set("numUpvotes", 0);
-		post.set("numComments", 0);
-		post.set("neta",u);
-		post.save(null, {
-		  success: function(result) {
-			postCampaignFromPost(result.id);
-			document.getElementById("postArea").value="";
-		  },
-		  error: function(comment, error) {
-			alert('Failed to Post! ' + error.message);
-			NProgress.done();
-		  }
-		});
-	}
+    else{
+        if(file!=undefined){
+        var parsefile=new Parse.File(file.name,file);
+        parsefile.save().then(function(){
+        //  console.log('postStatus');
+            NProgress.start();
+        //  console.log("NProgress Start");
+        //  console.log("postStatus");
+            loadingButton_id("post",4);
+            var Post = Parse.Object.extend("Post");
+            var post = new Post();
+            var u = new Parse.Object("Neta");
+            u.id = currentNeta.id;
+            post.set("file",parsefile);
+            post.set("content", c);
+            post.set("reach", 0);
+            post.set("numUpvotes", 0);
+            post.set("numComments", 0);
+            post.set("neta",u);
+            post.save(null, {
+              success: function(result) {
+                postCampaignFromPost(result.id);
+                document.getElementById("postArea").value="";
+                file=undefined;
+                thumbnil.src="";
+              },
+              error: function(comment, error) {
+                document.getElementById("postArea").value="";
+                file=undefined;
+                thumbnil.src="";
+                alert('Failed to Post! ' + error.message);
+                NProgress.done();
+              }
+            });
+        });
+    }
+    else{
+    //  console.log('postStatus');
+        NProgress.start();
+    //  console.log("NProgress Start");
+    //  console.log("postStatus");
+        loadingButton_id("post",4);
+        var Post = Parse.Object.extend("Post");
+        var post = new Post();
+        var u = new Parse.Object("Neta");
+        u.id = currentNeta.id;
+        //post.set("file",data);
+        post.set("content", c);
+        post.set("reach", 0);
+        post.set("numUpvotes", 0);
+        post.set("numComments", 0);
+        post.set("neta",u);
+        post.save(null, {
+          success: function(result) {
+            postCampaignFromPost(result.id);
+            document.getElementById("postArea").value="";
+          },
+          error: function(comment, error) {
+            alert('Failed to Post! ' + error.message);
+            NProgress.done();
+          }
+        });
+    }
+    }
+	
 }
 
 function fetchECStatus(u){
@@ -1023,7 +1069,7 @@ function initialize() {
 	voterViewArray=[];
     NProgress.start();
     if(CU.get("type")!="neta"){
-        $("#netapost").fadeOut();
+        $("#netapost").hide();
     }
     queryUserTable();
 
@@ -1047,7 +1093,13 @@ function initialize() {
     $('#post-form').submit(function(event){
           event.preventDefault();
           var p=document.getElementById("postArea").value;
-          postStatus(p);
+          if (CU.get("subtype")=="mla"){
+            postStatus(p);  
+          }
+          else{
+            notify("Your profile is not public yet","error",standardErrorDuration);
+          }
+          
     });
     $('#postArea').focus(function(){
         $(this).animate({'height': '120px'}).removeClass('nm');
