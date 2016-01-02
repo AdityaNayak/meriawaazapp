@@ -638,6 +638,7 @@ function updateContentWithCurrentMarker() {
 }
 
 function setProductMeta(){
+    console.log("Updating Meta!");
     var image;
     var before_photo = issueObj.get('file');
     var after_photo = issueObj.get('file2');
