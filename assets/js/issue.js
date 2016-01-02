@@ -469,6 +469,8 @@ function updateCurrentMarker(m) {
             //console.log("current marker updated: " + results.length);
             //currmarker.content.id = results.id;
             issueObj = results;
+            setButton();
+            setProductMeta();
             //console.log(results.id);
             //updateContentWithCurrentMarker();
             //infowindow.open(map, currmarker);
@@ -506,6 +508,7 @@ function updateContentWithCurrentMarker() {
     var p_rtr= issueObj.get('pUser').get('username');
     //infowindow.setContent(p_issueId);
     //infowindow.open(map, marker);
+    var commitment = document.getElementById('commitment');
     var status = document.getElementById('colorstatus');
     var date = document.getElementById('date');
     var daysLeft = document.getElementById('daysLeft');
@@ -584,13 +587,15 @@ function updateContentWithCurrentMarker() {
         
         var d = new Date(issueObj.get("createdAt"));
         if (p_daysLeft != undefined) {
-             //d.setDate(d.getDate() + p_daysLeft);
-             //console.log(d);
-             //var ago = timeSince(d);
-             //console.log(ago);
-             daysLeft.innerHTML = p_daysLeft +" days";
+             d.setDate(d.getDate() + p_daysLeft);
+             console.log(d);
+             var ago = timeSince(d);
+             console.log(ago);
+             daysLeft.innerHTML = ago;
+             commitment.innerHTML = p_daysLeft +" days"
         } else {
-             daysLeft.innerHTML = "unavailable";
+             daysLeft.innerHTML = "-";
+             commitment.innerHTML = "-";
         }
 
         if(p_status==StatusEnum.VERIFY || p_status==StatusEnum.CLOSE){
@@ -632,6 +637,36 @@ function updateContentWithCurrentMarker() {
     }, 300);
 }
 
+function setProductMeta(){
+    var image;
+    var before_photo = issueObj.get('file');
+    var after_photo = issueObj.get('file2');
+    if(issueObj.get('statusCode')==StatusEnum.VERIFY || issueObj.get('statusCode') == StatusEnum.CLOSE){
+        var title="Issue Resolved | "+issueObj.get('title');
+        if(after_photo==undefined){
+        }
+        else{
+            image=after_photo.url();
+            document.getElementById("metaimage").setAttribute("content","dynamic meta description");
+        }
+    }
+    else{
+        var title="Issue Reported | "+issueObj.get('title');
+        if(before_photo==undefined){
+        }
+        else{
+            image=before_photo.url();
+            document.getElementById("metaimage").setAttribute("content","dynamic meta description");
+        }
+    }
+    
+    var summary=issueObj.get('content');
+    var url=window.location.href;
+     document.getElementById("metatitle").setAttribute("content",title);
+     document.getElementById("metaurl").setAttribute("content",url);
+     document.getElementById("metacontent").setAttribute("content",summary);
+}
+
 function initialize() {
     issueNum= getQueryVariable("id");
     console.log(issueNum);
@@ -659,6 +694,42 @@ function initialize() {
     homeControlDiv2.index = 1;
     map2.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv2);
 
-    
+       
+}
+
+function setButton(){
+    if(issueObj.get('statusCode')==StatusEnum.VERIFY || issueObj.get('statusCode') == StatusEnum.CLOSE){
+        $("#sharecontent").text("Share");
+    }else{
+        $("#sharecontent").text("Promote");
+    }
+
+    $("#share").click(function(){
+        var image;
+        var before_photo = issueObj.get('file');
+        var after_photo = issueObj.get('file2');
+        if(issueObj.get('statusCode')==StatusEnum.VERIFY || issueObj.get('statusCode') == StatusEnum.CLOSE){
+            var title="Issue Resolved | "+issueObj.get('title');
+            if(after_photo==undefined){
+                image="./assets/images/no_image.jpg";
+            }
+            else{
+                image=after_photo.url();
+            }
+        }
+        else{
+            var title="Issue Reported | "+issueObj.get('title');
+            if(before_photo==undefined){
+                image="./assets/images/no_image.jpg";
+            }
+            else{
+                image=before_photo.url();
+            }
+        }
+        
+        var summary=issueObj.get('content');
+        var url=window.location.href;
+        location.href='http://www.facebook.com/sharer.php?s=100&p[title]='+title+'&p[url]='+url+'&p[summary]='+summary+'&p[images][0]='+image;
+    }); 
 }
 
