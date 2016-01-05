@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Issues | Meri Awaaz</title>
+  {% include header.html %}
+  
+  <div class="row">
+    <div class="small-1 columns panel text-center">
+        <h4>Filter</h4>
+        <div class="bbm">
+          <label for="today_it"><div id="fn1" class="f-2x yc">0</div>Today</label><input type='radio' name='test' value='1' id="today_it" checked>
+        </div>
+        <div class="bbm">
+          <label for="yesterday_it"><div id="fn2" class="f-2x bgc">0</div>Yesterday</label><input type='radio' name='test' value='2' id="yesterday_it">
+        </div>
+        <div class="bbm">
+          <label for="week_it"><div id="fn3" class="f-2x bc">0</div>This Week</label><input type='radio' name='test' value='3' id="week_it" disabled="true">
+        </div>
+      </div>
+      <div class="small-8 columns">
+     <div id="notification-view">
+      </div>
+    {% include footer.html %} 
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="{{site.url}}/assets/bower_components/foundation/js/foundation/foundation.dropdown.js"></script>
+
+
+    <script type="text/javascript">
+      $(document).foundation();
+    </script>
+
+    <script type="text/javascript" src="{{site.url}}/assets/js/countUp.min.js"></script>
+    <script type="text/javascript" src="{{site.url}}/assets/js/moment.min.js"></script>
+    <script type="text/javascript" src="{{site.url}}/assets/js/daterangepicker.js"></script>
+    <script type="text/javascript" src="{{site.url}}/assets/js/notifications.js"></script>
+    </html>

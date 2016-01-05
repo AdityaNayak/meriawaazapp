@@ -5,6 +5,9 @@ var polyArray = [];
 var poly;
 var view = 0;
 
+var specificIssue;
+var specificNum;
+
 var listView = $('#list-view tbody');
 var timelineView = $('#timeline-view');
 var teamView = $('#team');
@@ -150,6 +153,16 @@ var iconso = [
     icon5o,
     icon6o
 ];
+
+function getQueryVariable(variable){
+   var query = window.location.search.substring(1);
+   var vars = query.split("?");
+   for (var i=0;i<vars.length;i++) {
+           var pair = vars[i].split("=");
+           if(pair[0] == variable){return pair[1];}
+   }
+   return(false);
+}
 
 // Creates the Array of Constituencies
 function createConstituencyArray() {
@@ -1711,25 +1724,30 @@ function filter() {
     console.log("filter");
     updateHistory();
     listView.html("");
-    for (var m = 0; m < markers.length; m++) {
-        if (statusCheck(markers[m]) == 1 && categoryCheck(markers[m]) == 1 && dateCheck(markers[m])==1){
-            var d = new Date((markers[m].content).createdAt);
-            var ago = timeSince(d);
-            var content = markers[m].content.get('content');
-            if (markers[m].content.get('content').length > 50) {
-                content = markers[m].content.get('content').substring(0, 50) + "...";
+    if(specificIssue){
+        openSpecific();
+    }
+    else{
+        for (var m = 0; m < markers.length; m++) {
+            if (statusCheck(markers[m]) == 1 && categoryCheck(markers[m]) == 1 && dateCheck(markers[m])==1){
+                var d = new Date((markers[m].content).createdAt);
+                var ago = timeSince(d);
+                var content = markers[m].content.get('content');
+                if (markers[m].content.get('content').length > 50) {
+                    content = markers[m].content.get('content').substring(0, 50) + "...";
+                }
+
+                listView.append("<tr id='" + (markers[m].content).id + "' class='" + getClassName((markers[m].content).get('statusCode')) + "'><td width='100' class='ct'>" + ((markers[m].content).get('issueId')).toString() + "</td><td width='100' class='ct'>" + (markers[m].content).get('category') + "</td><td class='ct'>" + content + "</td><td width='100' class='ct'>" + appropriateStatus((markers[m].content).get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                $('#'+markers[m].content.id).click(function(){
+                            listViewClick(this.id.toString());
+                });
+                markers[m].setMap(map);
+            } else {
+                markers[m].setMap(null);
+
             }
 
-            listView.append("<tr id='" + (markers[m].content).id + "' class='" + getClassName((markers[m].content).get('statusCode')) + "'><td width='100' class='ct'>" + ((markers[m].content).get('issueId')).toString() + "</td><td width='100' class='ct'>" + (markers[m].content).get('category') + "</td><td class='ct'>" + content + "</td><td width='100' class='ct'>" + appropriateStatus((markers[m].content).get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
-            $('#'+markers[m].content.id).click(function(){
-                        listViewClick(this.id.toString());
-            });
-            markers[m].setMap(map);
-        } else {
-            markers[m].setMap(null);
-
         }
-
     }
 }
 
@@ -1797,6 +1815,33 @@ function getClassName(s){
     }
     if(s==StatusEnum.VERIFY){
      return "closed";   
+    }
+}
+
+function openSpecific(){
+    console.log("Opening Specific");
+    var found=false;
+    for (var m = 0; m < markers.length; m++) {
+        if ((markers[m].content).get("issueId")==specificNum){
+            notify("Loading your Issue", "success", standardErrorDuration);
+            if (infowindow) {
+                infowindow.close();
+            }
+            infowindow = new google.maps.InfoWindow({
+                maxWidth: 700,
+                maxHeight: 900
+            });
+            currmarker=markers[m];
+            updateCurrentMarker(markers[m]);
+            showDetailsView();
+            $('#details-button').click();
+            found=true;
+            break;
+        }
+    }
+    if(!found){
+        NProgress.done();
+        notify("Weird Error", "error", standardErrorDuration);
     }
 }
 
@@ -1916,6 +1961,15 @@ function initializeMap() {
 
 function initialize() {
     console.log("initialize");
+    issueNum= getQueryVariable("id");
+    console.log(issueNum);
+    if(issueNum!=""){
+        specificIssue=true;
+        specificNum=issueNum;
+    }
+    else{
+        specificIssue=false;
+    }
     currentUser = CU;
     currentUser.fetch({
         success:function(results){
