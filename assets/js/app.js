@@ -423,39 +423,45 @@ function displayNotifications(){
         // }
 
         // New Issue
-        if (object.get("type") == "issue") {
-        	console.log("notification - issue");
-        	var issueid_m=object.get("issue").get("issueId");
-            var issuetype_m=object.get("issue").get("category");
-            var issueposter_m=object.get("issue").get("pUser").get("username");
-            var issuetitle_m=object.get("issue").get("title");
-            notificationView.append("<li><a href='./issues.html?id="+issueid_m+"'>["+issueid_m+"] New "+issuetype_m+" issue was posted:"+issuetitle_m+" by "+issueposter_m+" </a></li>");
-        }
+        try {
+			if (object.get("type") == "issue") {
+	        	console.log("notification - issue");
+	        	var issueid_m=object.get("issue").get("issueId");
+	            var issuetype_m=object.get("issue").get("category");
+	            var issueposter_m=object.get("issue").get("pUser").get("username");
+	            var issuetitle_m=object.get("issue").get("title");
+	            notificationView.append("<li><a href='./issues.html?id="+issueid_m+"'>["+issueid_m+"] New "+issuetype_m+" issue was posted:"+issuetitle_m+" by "+issueposter_m+" </a></li>");
+	        }
 
-        // Update on an Issue
-        if (object.get("type") == "update") {
-        	console.log("notification - update");
-			var issueupdate_m=object.get("update").get("type");
-            var issueid_m=object.get("update").get("issue").get("issueId");
-            var issueupdater_m=object.get("update").get("pUser").get("username");
-            notificationView.append("<li><a href='./issues.html?id="+issueid_m+"'>New update("+issueupdate_m+") on an Issue ["+issueid_m+"] by "+issueupdater_m+"</a></li>");
-        }
+	        // Update on an Issue
+	        if (object.get("type") == "update") {
+	        	console.log("notification - update");
+				var issueupdate_m=object.get("update").get("type");
+	            var issueid_m=object.get("update").get("issue").get("issueId");
+	            var issueupdater_m=object.get("update").get("pUser").get("username");
+	            notificationView.append("<li><a href='./issues.html?id="+issueid_m+"'>New update("+issueupdate_m+") on an Issue ["+issueid_m+"] by "+issueupdater_m+"</a></li>");
+	        }
 
-        // Someone answered a question
-        // if (object.get("type") == "answer") {
-        // 	console.log("notification - answer");
-        // 	var pAsker_m=object.get("answer").get("pUser").get("username");
-        //     var title_m=object.get("answer").get("question").get("title");
-        //     notificationView.append("<li><a href='#'>"+pAsker_m+" answered the Question titled - "+title_m+"</a></li>");
-        // }
+	        // Someone answered a question
+	        // if (object.get("type") == "answer") {
+	        // 	console.log("notification - answer");
+	        // 	var pAsker_m=object.get("answer").get("pUser").get("username");
+	        //     var title_m=object.get("answer").get("question").get("title");
+	        //     notificationView.append("<li><a href='#'>"+pAsker_m+" answered the Question titled - "+title_m+"</a></li>");
+	        // }
 
-        // Someone commented on the post
-        if (object.get("type") == "postComment") {
-        	console.log("notification - postComment");
-        	var posttitle_m=object.get("postComment").get("post").get("title");
-            var answered_m=object.get("postComment").get("pUser").get("username");
-            notificationView.append("<li><a href='./dashboard.html'>New comment on your Post titled - "+posttitle_m+" by "+answered_m+"</a></li>");
-        }
+	        // Someone commented on the post
+	        if (object.get("type") == "postComment") {
+	        	console.log("notification - postComment");
+	        	var posttitle_m=object.get("postComment").get("post").get("title");
+	            var answered_m=object.get("postComment").get("pUser").get("username");
+	            notificationView.append("<li><a href='./dashboard.html#post-'"+object.get("postComment").get("post").id+">New comment on your Post titled - "+posttitle_m+" by "+answered_m+"</a></li>");
+	        }
+		}
+		catch(err) {
+		    console.log("lol");
+		}
+        
     }
 	
 	if(notifications.length>3){

@@ -1123,7 +1123,10 @@ function updateContentWithCurrentMarker() {
     var p_location = p_latitude.toString().substring(0, 10) + ", " + p_longitude.toString().substring(0, 10);
     getReverseGeocodingData(p_latitude, p_longitude);
     var p_id = currmarker.content.id;
+    p_upvotes = currmarker.content.get('numUpvotes');
     var p_photo = currmarker.content.get('file');
+    var p_username = currmarker.content.get('pUser').get("username");
+    var p_userphoto = currmarker.content.get('pUser').get("pic");
     var p_status = currmarker.content.get('statusCode');
     var p_daysLeft = currmarker.content.get('daysLeft');
     var p_title = currmarker.content.get('title');
@@ -1139,8 +1142,11 @@ function updateContentWithCurrentMarker() {
     var daysLeft = document.getElementById('daysLeft');
     var time = document.getElementById('times');
     var photo = document.getElementById('photo');
+    var upvotes = document.getElementById('upvotes');
     var content = document.getElementById('content');
     var type = document.getElementById('type');
+    var username = document.getElementById('username_i');
+    var userphoto = document.getElementById('userphoto_i');
     var title = document.getElementById('ititle');
     var phone1=document.getElementById('phone1');
     var phone2=document.getElementById('phone2');
@@ -1176,9 +1182,18 @@ function updateContentWithCurrentMarker() {
         status.innerHTML = '<strong>' + appropriateStatus(p_status) + '</strong>';
         date.innerHTML = p_date;
         time.innerHTML = p_time;
+        username.innerHTML = p_username;
+        if (p_userphoto!= undefined) {
+            console.log("photo is available");
+            userphoto.src = p_userphoto.url();
+        } else {
+            console.log("photo is unavailable");
+            userphoto.src = "./assets/images/user.png";
+        }
         console.log(p_time);
         phone1.innerHTML=p_phone;
         phone2.innerHTML=p_phone;
+        upvotes.innerHTML=p_upvotes;
         if (p_content.length < 50) {
             content.innerHTML = p_content;
         } else {
@@ -1399,6 +1414,7 @@ function populateTM() {
     query.equalTo("assignee", pointer);
     query.equalTo("typeCode", TypeEnum.ASSIGNED);
     query.include("issue");
+    query.include(["issue.pUser"]);
     query.limit(1000);
     query.find({
         success: function(results) {
@@ -1491,6 +1507,7 @@ function populate() {
     ListItem = Parse.Object.extend("Issue");
     query = new Parse.Query(ListItem);
     query.descending('createdAt');
+    query.include(["issue.pUser"]);
     query.limit(1000);
     query.find({
         success: function(results) {
@@ -2230,37 +2247,38 @@ function initialize() {
     
 
     $('#back').click(function() {
-        updateHistory();
-        NProgress.start();
-        console.log("NProgress Start");
-        if (infowindow) {
-            infowindow.close();
-        }
-        $('#photo').delay(400).fadeIn(300);
-        $('#content').delay(400).fadeIn(300);
-        $('#details-button').delay(400).fadeIn(300);
-        if (view == 1) {
-            $('#list-view').delay(400).fadeIn(300);
-            $('#map-view').delay(400).fadeOut(300);
-        } else {
-            $('#map-view').delay(400).fadeIn(300);
-            setTimeout(function() {
-                google.maps.event.trigger(map, 'resize');
-                map.setZoom(map.getZoom());
-            }, 700);
-            $('#list-view').delay(400).fadeOut(300);
-        }
-        $('#details-column').delay(400).fadeOut(300);
-        $('#updates-view').delay(400).fadeOut(300);
-        $('#back').delay(400).fadeOut(300);
+        window.location = "./issues.html"
+        // updateHistory();
+        // NProgress.start();
+        // console.log("NProgress Start");
+        // if (infowindow) {
+        //     infowindow.close();
+        // }
+        // $('#photo').delay(400).fadeIn(300);
+        // $('#content').delay(400).fadeIn(300);
+        // $('#details-button').delay(400).fadeIn(300);
+        // if (view == 1) {
+        //     $('#list-view').delay(400).fadeIn(300);
+        //     $('#map-view').delay(400).fadeOut(300);
+        // } else {
+        //     $('#map-view').delay(400).fadeIn(300);
+        //     setTimeout(function() {
+        //         google.maps.event.trigger(map, 'resize');
+        //         map.setZoom(map.getZoom());
+        //     }, 700);
+        //     $('#list-view').delay(400).fadeOut(300);
+        // }
+        // $('#details-column').delay(400).fadeOut(300);
+        // $('#updates-view').delay(400).fadeOut(300);
+        // $('#back').delay(400).fadeOut(300);
 
-        enableCheckPoints();
+        // enableCheckPoints();
 
-        if (currentUser.get("type") == "teamMember") {
-            populateTM();
-        } else if (currentUser.get("type") == "neta") {
-            populate();
-        }
+        // if (currentUser.get("type") == "teamMember") {
+        //     populateTM();
+        // } else if (currentUser.get("type") == "neta") {
+        //     populate();
+        // }
     });
 
 
