@@ -231,7 +231,7 @@ function filter() {
                 console.log("notification - postComment");
                 var posttitle_m=object.get("postComment").get("post").get("title");
                 var answered_m=object.get("postComment").get("pUser").get("username");
-                AllNotificationView.append("<div class='row'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>"+ago + " ago</small></div><p><a href='./dashboard.html#post-"+object.get("postComment").get("post").id+"'>New comment on your Post titled - "+posttitle_m+" by "+answered_m+"</a></p></div>");
+                AllNotificationView.append("<div class='row'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>"+ago + " ago</small></div><p><a href='./dashboard.html#"+object.get("postComment").get("post").id+"'>New comment on your Post titled - "+posttitle_m+" by "+answered_m+"</a></p></div>");
             }
         }
         catch(err){

@@ -72,11 +72,18 @@ function postComment(pid){
                     updatePost(pid); 
                     document.getElementById("text-"+pid.toString()).value="";  
                     NProgress.done();
-                    $('#thumbnil-'+pid).src("");
+                    $('#thumbnil-'+pid).attr("src","");
+                    file=undefined;
+                    filename=undefined;
+                    filePath=undefined;
                     notify("Comment added","success", standardErrorDuration);     
                   },
                   error: function(comment, error) {
-                    $('#thumbnil-'+pid).src("");
+                    $('#thumbnil-'+pid).attr("src","");
+                    updatePost(pid); 
+                    file=undefined;
+                    filename=undefined;
+                    filePath=undefined;
                     notify('Failed to Comment!' + error.message, "error", standardErrorDuration);
                     NProgress.done();
                   }
@@ -232,6 +239,7 @@ function updatePost(pid){
                 query2.include("post");
                 query2.include("user");
                 query2.include("pUser");
+                query2.notEqualTo("reported",1);
                 query2.ascending("createdAt");
                 query2.find({
                     success: function(results2) {
