@@ -1,4 +1,7 @@
 //var constituency;
+var file;
+var filePath;
+var filename;
 
 var constituencyType;
 var polyArray = [];
@@ -594,7 +597,14 @@ function populateUpdates() {
 
                     }
                     if (object.get("typeCode") == TypeEnum.COMMENT) {
-                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small><i id='close-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color' style='float:right;'></i></div><p>" + content + "</p></div></div></div>");
+                        if(object.get("file")==undefined){
+                            timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small><i id='close-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color' style='float:right;'></i></div><p>" + content + "</p></div></div></div>");
+                        }
+                        else{
+                            var comimage= '<img style="width:100%; margin-top:10px; border:none;"  src="'+object.get("file").url()+'"/>';
+                            timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small><i id='close-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color' style='float:right;'></i></div>"+comimage+"<p>" + content + "</p></div></div></div>");
+                        }
+                        
                     }
                     $("#close-"+objectId).click(function(event){
                         event.preventDefault();
@@ -675,36 +685,106 @@ function populateOfficials() {
 
 }
 
-//Starts NProgress
-function postComment(c) {
-    NProgress.start();
-    console.log("NProgress Start");
-    console.log("postComment");
-    loadingButton_id("commit_btn", 4);
-    var Comment = Parse.Object.extend("Update");
-    var comment = new Comment();
-    var u = new Parse.Object("_User");
-    var i = new Parse.Object("Issue");
-    u.id = currentUser.id;
-    i.id = currmarker.content.id;
-    comment.set("type", "comment");
-    comment.set("content", c);
-    comment.set("issue", i);
-    comment.set("user", u);
+function postComment(c){
+       if(file!=undefined){
+            var parsefile=new Parse.File(file.name,file);
+            parsefile.save().then(function(){
+            //  console.log('postStatus');
+                NProgress.start();
+            //  console.log("NProgress Start");
+            //  console.log("postStatus");
 
-    comment.save(null, {
-        success: function(comment) {
-            updateCurrentMarker(currmarker);
-            document.getElementById("comment").value = "";
-            enableDetailsView();
+                
+                loadingButton_id("commit_btn", 4);
+                var Comment = Parse.Object.extend("Update");
+                var comment = new Comment();
+                var u = new Parse.Object("_User");
+                var i = new Parse.Object("Issue");
+                u.id = currentUser.id;
+                i.id = currmarker.content.id;
+                comment.set("type", "comment");
+                comment.set("content", c);
+                comment.set("issue", i);
+                comment.set("user", u);
 
-        },
-        error: function(comment, error) {
-            alert('Failed to Comment! ' + error.message);
-            enableDetailsView();
+                comment.set("file",parsefile);
+                comment.save(null, {
+                    success: function(comment) {
+                        updateCurrentMarker(currmarker);
+                        document.getElementById("comment").value = "";
+                        $('#thumbnil').attr("src","");
+                        enableDetailsView();
+                        file=undefined;
+                        filename=undefined;
+                        filePath=undefined;
+
+                    },
+                    error: function(comment, error) {
+                        alert('Failed to Comment! ' + error.message);
+                        $('#thumbnil').attr("src","");
+                        enableDetailsView();
+                        file=undefined;
+                        filename=undefined;
+                        filePath=undefined;
+                    }
+                });
+            });
         }
-    });
+    else{
+        //  console.log('postStatus');
+            NProgress.start();
+        //  console.log("NProgress Start");
+        //  console.log("postStatus");
+            loadingButton_id("commit_btn", 4);
+            var Comment = Parse.Object.extend("Update");
+            var comment = new Comment();
+            var u = new Parse.Object("_User");
+            var i = new Parse.Object("Issue");
+            u.id = currentUser.id;
+            i.id = currmarker.content.id;
+            comment.set("type", "comment");
+            comment.set("content", c);
+            comment.set("issue", i);
+            comment.set("user", u);
+            comment.save(null, {
+                success: function(comment) {
+                    updateCurrentMarker(currmarker);
+                    document.getElementById("comment").value = "";
+                    enableDetailsView();
+
+                },
+                error: function(comment, error) {
+                    alert('Failed to Comment! ' + error.message);
+                    enableDetailsView();
+                }
+            });
+    }
+ //   console.log("postComment"+pid);
 }
+
+function showMyImage(fileInput) {
+//      console.log("Display Thumbnail");
+    $('#thumbnil').fadeIn();
+    var files = fileInput.files;
+    for (var i = 0; i < files.length; i++) {           
+        var file = files[i];
+        var imageType = /image.*/;     
+        if (!file.type.match(imageType)) {
+            continue;
+        }           
+        var img=document.getElementById("thumbnil");            
+        img.file = file;    
+        var reader = new FileReader();
+        reader.onload = (function(aImg) { 
+            return function(e) { 
+                aImg.src = e.target.result; 
+            }; 
+        })(img);
+        reader.readAsDataURL(file);
+    }    
+}
+
+
 
 //Starts NProgress
 function postClaim() {
@@ -1167,6 +1247,7 @@ function updateContentWithCurrentMarker() {
     var p_status = currmarker.content.get('statusCode');
     var p_daysLeft = currmarker.content.get('daysLeft');
     var p_title = currmarker.content.get('title');
+    var p_constituency = currmarker.content.get('constituency').get("name");
     var p_phone="";
     if(currmarker.content.get('PhoneNo')!=undefined){
        p_phone= currmarker.content.get('PhoneNo').toString();
@@ -1185,6 +1266,7 @@ function updateContentWithCurrentMarker() {
     var username = document.getElementById('username_i');
     var userphoto = document.getElementById('userphoto_i');
     var title = document.getElementById('ititle');
+    var issue_constituency = document.getElementById('issue_constituency');
     var phone1=document.getElementById('phone1');
     var phone2=document.getElementById('phone2');
     var location = document.getElementById('location');
@@ -1235,6 +1317,7 @@ function updateContentWithCurrentMarker() {
         console.log(p_time);
         phone1.innerHTML=p_phone;
         phone2.innerHTML=p_phone;
+        issue_constituency.innerHTML=p_constituency;
         upvotes.innerHTML=p_upvotes;
         if (p_content.length < 50) {
             content.innerHTML = p_content;
@@ -1457,6 +1540,7 @@ function populateTM() {
     query.equalTo("typeCode", TypeEnum.ASSIGNED);
     query.include("issue");
     query.include(["issue.pUser"]);
+    query.include(["issue.constituency"]);
     query.limit(1000);
     query.find({
         success: function(results) {
@@ -1492,7 +1576,7 @@ function populateTM() {
                     if (object.get("content").length > 50) {
                         content = object.get("content").substring(0, 50) + "...";
                     }
-                    listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                    listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('constituency').get('name')).toString() + "</td><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
                     console.log("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
                     $('#'+object.id).click(function(){
                                     listViewClick(this.id.toString());
@@ -1550,6 +1634,7 @@ function populate() {
     query = new Parse.Query(ListItem);
     query.descending('createdAt');
     query.include("pUser");
+    query.include("constituency");
     query.limit(1000);
     query.find({
         success: function(results) {
@@ -1586,7 +1671,7 @@ function populate() {
                             if (object.get("content").length > 50) {
                                 content = object.get("content").substring(0, 50) + "...";
                             }
-                            listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                            listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('constituency').get('name')).toString() + "</td><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
                             $('#'+object.id).click(function(){
                                         listViewClick(this.id.toString());
                             });
@@ -1653,7 +1738,7 @@ function populate() {
                                     if (object.get("content").length > 50) {
                                         content = object.get("content").substring(0, 50) + "...";
                                     }
-                                    listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                                    listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('constituency').get('name')).toString() + "</td><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
                                     $('#'+object.id).click(function(){
                                                 listViewClick(this.id.toString());
                                     });
@@ -1818,7 +1903,7 @@ function filter() {
                     content = markers[m].content.get('content').substring(0, 50) + "...";
                 }
 
-                listView.append("<tr id='" + (markers[m].content).id + "' class='" + getClassName((markers[m].content).get('statusCode')) + "'><td width='100' class='ct'>" + ((markers[m].content).get('issueId')).toString() + "</td><td width='100' class='ct'>" + (markers[m].content).get('category') + "</td><td class='ct'>" + content + "</td><td width='100' class='ct'>" + appropriateStatus((markers[m].content).get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                listView.append("<tr id='" + (markers[m].content).id + "' class='" + getClassName((markers[m].content).get('statusCode')) + "'><td width='100'>" + ((markers[m].content).get('constituency').get('name')).toString() + "</td><td width='100' class='ct'>" + ((markers[m].content).get('issueId')).toString() + "</td><td width='100' class='ct'>" + (markers[m].content).get('category') + "</td><td class='ct'>" + content + "</td><td width='100' class='ct'>" + appropriateStatus((markers[m].content).get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
                 $('#'+markers[m].content.id).click(function(){
                             listViewClick(this.id.toString());
                 });
@@ -2150,6 +2235,14 @@ function initialize() {
     //     });
 
     // }            
+
+    $('#fileUpload').bind("change", function(e) {
+        showMyImage(this);
+        $('#imgStatus').removeClass('icon-image-add bc').addClass('icon-image-accept gc');
+        var files = e.target.files || e.dataTransfer.files;
+        // Our file var now holds the selected file
+        file = files[0];
+    });
 
     $('input[type=checkbox]').change(
         function() {

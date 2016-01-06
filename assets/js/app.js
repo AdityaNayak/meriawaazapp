@@ -453,7 +453,7 @@ function displayNotifications(){
 	        	console.log("notification - postComment");
 	        	var posttitle_m=object.get("postComment").get("post").get("title");
 	            var answered_m=object.get("postComment").get("pUser").get("username");
-	            notificationView.append("<li><a href='./dashboard.html#post-'"+object.get("postComment").get("post").id+">New comment on your Post titled - "+posttitle_m+" by "+answered_m+"</a></li>");
+	            notificationView.append("<li><a href='./dashboard.html#"+object.get("postComment").get("post").id+"'>New comment on your Post titled - "+posttitle_m+" by "+answered_m+"</a></li>");
 	        }
 		}
 		catch(err) {
