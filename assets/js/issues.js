@@ -718,6 +718,28 @@ function postClaim() {
 }
 
 //Starts NProgress
+function reportWrong() {
+    NProgress.start();
+    console.log("NProgress Start");
+    if (currentUser.get("type") != "neta") {
+        alert("You do not have the required permissions");
+        return;
+    }
+    console.log("postClaim");
+    Parse.Cloud.run("reportWrong", {
+        objectId: currmarker.content.id
+    }, {
+        success: function(results) {
+            console.log(results);
+            location.reload();
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+//Starts NProgress
 function postClose() {
     NProgress.start();
     console.log("NProgress Start");
@@ -2145,6 +2167,18 @@ function initialize() {
         if (CU.get("subtype")=="mla"){
             postClaim();    
             disableDetailsView();
+        }
+        else{
+            notify("Your profile is not public yet","error",standardErrorDuration);
+        }
+        
+    });
+
+    $('#reportWrong').click(function() {
+        loadingButton_id("reportWrong", 3);
+        
+        if (CU.get("subtype")=="mla"){
+            reportWrong();
         }
         else{
             notify("Your profile is not public yet","error",standardErrorDuration);
