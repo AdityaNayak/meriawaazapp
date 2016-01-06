@@ -718,6 +718,28 @@ function postClaim() {
 }
 
 //Starts NProgress
+function reportWrong() {
+    NProgress.start();
+    console.log("NProgress Start");
+    if (currentUser.get("type") != "neta") {
+        alert("You do not have the required permissions");
+        return;
+    }
+    console.log("postClaim");
+    Parse.Cloud.run("reportWrong", {
+        objectId: currmarker.content.id
+    }, {
+        success: function(results) {
+            console.log(results);
+            location.reload();
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+//Starts NProgress
 function postClose() {
     NProgress.start();
     console.log("NProgress Start");
@@ -1915,23 +1937,29 @@ function initializeMap() {
                         election.equalTo("arrayNetas", pointer);
                         election.include("constituency");
                         election.include("constituencyArray");
+                        election.limit(1000);
                         election.find({
                             success: function(results) {
                                 constituency = results[0].get("constituency");
-                                constituencyType = results[0].get("type");
+                                console.log("yolo"+constituency.get("type"));
+                                constituencyType = constituency.get("type");
                                 if (constituencyType == 1) {
-                                    constituencyArray = results[0].get("constituencyArray");
+                                    console.log("POLYGON ARRAY");
+                                    constituencyArray = constituency.get("constituencyArray");
+                                     polyArray = [];
+
                                     for (var i = 0; i < constituencyArray.length; i++) {
                                         miniConstituency = constituencyArray[i];
-
+                                        console.log(miniConstituency);
                                         if (i == (constituencyArray.length - 1)) {
-                                            plotConstituencyArray(miniConstituency.get("index"), 1, constituency.get("state"));
+                                            plotConstituencyArray(miniConstituency["index"], 1, constituency.get("state"));
                                         } else {
-                                            plotConstituencyArray(miniConstituency.get("index"), 0, constituency.get("state"));
+                                            plotConstituencyArray(miniConstituency["index"], 0, constituency.get("state"));
                                         }
                                         map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
                                     }
                                 } else {
+                                    console.log("what the fuck");
                                     plotConstituency(constituency.get("index"));
                                     map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
                                 }
@@ -2139,6 +2167,18 @@ function initialize() {
         if (CU.get("subtype")=="mla"){
             postClaim();    
             disableDetailsView();
+        }
+        else{
+            notify("Your profile is not public yet","error",standardErrorDuration);
+        }
+        
+    });
+
+    $('#reportWrong').click(function() {
+        loadingButton_id("reportWrong", 3);
+        
+        if (CU.get("subtype")=="mla"){
+            reportWrong();
         }
         else{
             notify("Your profile is not public yet","error",standardErrorDuration);
