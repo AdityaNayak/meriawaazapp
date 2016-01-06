@@ -383,8 +383,6 @@ function fetchNotifications(){
 	            console.log("Size:" + results.length);
 	            notifications=results;
 	            $("#notification_n")[0].innerHTML=notifications.length;
-	            object.set("lastFetched",new Date().subtractHours(48));
-				object.save();
 				displayNotifications();
 				var page=location.pathname.split('/').slice(-1)[0];
 				if(a=="notifications.html"){

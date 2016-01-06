@@ -12,6 +12,7 @@ var listView = $('#list-view tbody');
 var timelineView = $('#timeline-view');
 var teamView = $('#team');
 var officialView = $('#officials');
+var upvotesView = $('#droptop_upvotes');
 
 var box_r = document.getElementById('road_cb');
 var box_e = document.getElementById('electricity_cb');
@@ -236,6 +237,41 @@ function getReverseGeocodingData(lat, lng) {
         }
     });
 
+}
+
+function getUpvotes(){
+    NProgress.start();
+    upvotesView.html("");
+    upvotesView.html("<li class='columns brbm'><strong>Upvotes</strong></li>");
+    Parse.Cloud.run("getPeople", {
+        class: "Issue",
+        id: currmarker.content.id,
+        column: "issuesUpvoted"
+    }, {
+        success: function(results) {
+            result=results.result;
+            console.log("Upvotes Size:" + result.length);
+            console.log("Upvotes:" + result);
+            for(var i=0;i<result.length;i++){
+                upvotesView.append("<li>"+result[i]+"</li>");
+            }
+            NProgress.done();
+            console.log("NProgress Stop");
+        },
+        error: function(error) {
+            notify('Failed to fetch Upvotes!' + error.message, "error", standardErrorDuration);
+            NProgress.done();
+        }
+    });
+    query.find({
+        success: function(results) {
+            
+        },
+        error: function(error) {
+            console.log("Error: " + error.message);
+            notify(standardErrorMessage, "error", standardErrorDuration);
+        }
+    });
 }
 
 // On Click Listener to Current Location on Map
@@ -1125,6 +1161,7 @@ function updateContentWithCurrentMarker() {
     var p_id = currmarker.content.id;
     p_upvotes = currmarker.content.get('numUpvotes');
     var p_photo = currmarker.content.get('file');
+    var p_name = currmarker.content.get('pUser').get("name");
     var p_username = currmarker.content.get('pUser').get("username");
     var p_userphoto = currmarker.content.get('pUser').get("pic");
     var p_status = currmarker.content.get('statusCode');
@@ -1182,7 +1219,12 @@ function updateContentWithCurrentMarker() {
         status.innerHTML = '<strong>' + appropriateStatus(p_status) + '</strong>';
         date.innerHTML = p_date;
         time.innerHTML = p_time;
-        username.innerHTML = p_username;
+        if(p_name==undefined){
+            username.innerHTML = p_username;
+        }
+        else{
+            username.innerHTML = p_name;
+        }
         if (p_userphoto!= undefined) {
             console.log("photo is available");
             userphoto.src = p_userphoto.url();
@@ -1231,7 +1273,7 @@ function updateContentWithCurrentMarker() {
         } else if (currentUser.get("type") == "teamMember") {
             setIssueStatusButtonTM();
         }
-
+        getUpvotes();
     }, 300);
 }
 
@@ -1507,7 +1549,7 @@ function populate() {
     ListItem = Parse.Object.extend("Issue");
     query = new Parse.Query(ListItem);
     query.descending('createdAt');
-    query.include(["issue.pUser"]);
+    query.include("pUser");
     query.limit(1000);
     query.find({
         success: function(results) {
