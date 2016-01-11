@@ -2447,7 +2447,7 @@ function initialize() {
             startDate: moment().subtract('year', 3),
             endDate: moment(),
             minDate: '01/01/2012',
-            maxDate: '12/31/2015',
+            maxDate: '12/31/2016',
             dateLimit: {
                 days: 60
             },
