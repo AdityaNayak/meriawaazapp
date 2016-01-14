@@ -38,35 +38,123 @@ function createVoterArray(){
 	});
 }
 
+
 function postComment(pid){
+       if(file!=undefined){
+            var parsefile=new Parse.File(file.name,file);
+            parsefile.save().then(function(){
+            //  console.log('postStatus');
+                NProgress.start();
+            //  console.log("NProgress Start");
+            //  console.log("postStatus");
+
+                
+                console.log(pid)
+                loadingButton_id("commentBtn-"+pid,10);
+                NProgress.start();
+             //   console.log("NProgress Start");
+             //   console.log("postComment");
+                var Comment = Parse.Object.extend("PostComment");
+                var comment = new Comment();
+                var p = new Parse.Object("Post");
+                var u = new Parse.Object("_User");
+                p.id = pid;
+                u.id = currentUser.id;
+             //   console.log("text-"+pid.toString());
+                var c=document.getElementById("text-"+pid.toString()).value;
+                comment.set("content", c);
+                comment.set("post", p);
+                comment.set("user", u);
+                comment.set("file",parsefile);
+                comment.save(null, {
+                  success: function(comment) {
+                    loadingButton_id_stop("commentBtn-"+pid,"comment");
+                    updatePost(pid); 
+                    document.getElementById("text-"+pid.toString()).value="";  
+                    NProgress.done();
+                    $('#thumbnil-'+pid).attr("src","");
+                    file=undefined;
+                    filename=undefined;
+                    filePath=undefined;
+                    notify("Comment added","success", standardErrorDuration);     
+                  },
+                  error: function(comment, error) {
+                    $('#thumbnil-'+pid).attr("src","");
+                    updatePost(pid); 
+                    file=undefined;
+                    filename=undefined;
+                    filePath=undefined;
+                    notify('Failed to Comment!' + error.message, "error", standardErrorDuration);
+                    NProgress.done();
+                  }
+                });
+            });
+        }
+    else{
+        //  console.log('postStatus');
+            NProgress.start();
+        //  console.log("NProgress Start");
+        //  console.log("postStatus");
+            console.log(pid)
+            loadingButton_id("commentBtn-"+pid,10);
+            NProgress.start();
+         //   console.log("NProgress Start");
+         //   console.log("postComment");
+            var Comment = Parse.Object.extend("PostComment");
+            var comment = new Comment();
+            var p = new Parse.Object("Post");
+            var u = new Parse.Object("_User");
+            p.id = pid;
+            u.id = currentUser.id;
+         //   console.log("text-"+pid.toString());
+            var c=document.getElementById("text-"+pid.toString()).value;
+            comment.set("content", c);
+            comment.set("post", p);
+            comment.set("user", u);
+            comment.save(null, {
+              success: function(comment) {
+                loadingButton_id_stop("commentBtn-"+pid,"comment");
+                updatePost(pid); 
+                document.getElementById("text-"+pid.toString()).value="";  
+                NProgress.done();
+                notify("Comment added","success", standardErrorDuration);     
+              },
+              error: function(comment, error) {
+                notify('Failed to Comment!' + error.message, "error", standardErrorDuration);
+                NProgress.done();
+              }
+            });
+    }
  //   console.log("postComment"+pid);
-    console.log(pid)
- loadingButton_id("commentBtn-"+pid,10);
+    
+}
+
+function removeComment(cid,pid){
+    console.log("removeComment-"+cid);
     NProgress.start();
  //   console.log("NProgress Start");
  //   console.log("postComment");
     var Comment = Parse.Object.extend("PostComment");
-    var comment = new Comment();
-    var p = new Parse.Object("Post");
-    var u = new Parse.Object("_User");
-    p.id = pid;
-    u.id = currentUser.id;
- //   console.log("text-"+pid.toString());
-    var c=document.getElementById("text-"+pid.toString()).value;
-    comment.set("content", c);
-    comment.set("post", p);
-    comment.set("user", u);
-    comment.save(null, {
-      success: function(comment) {
-        loadingButton_id_stop("commentBtn-"+pid,"comment");
-        updatePost(pid); 
-        document.getElementById("text-"+pid.toString()).value="";  
-        NProgress.done();
-        notify("Comment added","success", standardErrorDuration);     
+    var query = new Parse.Query(Comment);
+    query.equalTo("objectId", cid);
+    query.first({
+      success: function(object) {
+         object.set("reported", 1);
+         object.save(null,{
+              success: function(comment) {
+                updatePost(pid);  
+                NProgress.done();
+                notify("Comment removed","success", standardErrorDuration);     
+              },
+              error: function(comment, error) {
+                    notify('Failed to remove Comment!' + error.message, "error", standardErrorDuration);
+                    NProgress.done();
+              }
+         });
       },
-      error: function(comment, error) {
-        notify('Failed to Comment!' + error.message, "error", standardErrorDuration);
-        NProgress.done();
+      error: function(error) {
+         notify('Failed to remove Comment!' + error.message, "error", standardErrorDuration);
+         NProgress.done();
       }
     });
 }
@@ -97,8 +185,30 @@ function showMyImage(fileInput) {
             reader.readAsDataURL(file);
         }    
     }
-	
 
+function showMyCommentImage(fileInput) {
+         console.log("Display Comment Thumbnail");
+        var id=event.target.id.toString().split('-')[1];
+        $('#thumbnil-'+id).fadeIn();
+        var files = fileInput.files;
+        for (var i = 0; i < files.length; i++) {           
+            var file = files[i];
+            var imageType = /image.*/;     
+            if (!file.type.match(imageType)) {
+                continue;
+            }           
+            var img=document.getElementById("thumbnil-"+id);            
+            img.file = file;    
+            var reader = new FileReader();
+            reader.onload = (function(aImg) { 
+                return function(e) { 
+                    aImg.src = e.target.result; 
+                }; 
+            })(img);
+            reader.readAsDataURL(file);
+        }    
+    }
+    
 
 function updatePost(pid){
 //    console.log("updatePost");
@@ -129,12 +239,14 @@ function updatePost(pid){
                 query2.include("post");
                 query2.include("user");
                 query2.include("pUser");
+                query2.notEqualTo("reported",1);
                 query2.ascending("createdAt");
                 query2.find({
                     success: function(results2) {
                     //    console.log("lookout!");
                         var chaincomments ="";
                         object=results2[0];
+                        objectId=object.id;
                         for(var j=0;j<results2.length;j++){
                         //    console.log(results2[j]);
                             var time;
@@ -149,7 +261,20 @@ function updatePost(pid){
                                 photo=results2[j].get("pUser").get("pic").url();
                             } 
                             comm=results2[j].get("content");
-                            chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='text-right secondary'><i class='icon-close hv cs tertiary-color'></i> </div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
+                            var commentId = results2[j].id;
+                            if(results2[j].get("file")==undefined){
+                                chaincomments+="<div class='row comment' id='comment-"+commentId+"'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+commentId+"-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                            }
+                            else{
+                                var comimage= '<img style="width:100%; margin-top:10px; border:none;"  src="'+results2[j].get("file").url()+'"/>';
+                                chaincomments+="<div class='row comment' id='comment-"+commentId+"'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+commentId+"-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color'></i></div>"+comimage+"<p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                            }
+                            
+                            $("#close-"+commentId+"-"+objectId).click(function(event){
+                                event.preventDefault();
+                                removeComment(event.target.id.toString().split('-')[1],event.target.id.toString().split('-')[2]);
+                            });
+                            //chaincomments+="<div class='row'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='text-right secondary'><i class='icon-close hv cs tertiary-color'></i> </div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+"</div></div></div>";
                         }
                         var thisview=$('#post-'+pid);
                         thisview.html("");  
@@ -165,9 +290,18 @@ function updatePost(pid){
                                 else{
                                     DisplayUpload="<img src='"+uploadlink.url()+"'/>";
                                 }
-
+                        var imagepreview='<img id="thumbnil-'+object.id+'" style="width:100%; margin-top:10px; border:none; display:none;"  src=""/>';
+                        var fileu='<div class="small-1 columns tertiary secondary-color"><label for="fileUpload-'+object.id+'" id="imgStatus-'+object.id+'" class="icon-image-add f-2x bc" style="line-height:1;"><input id="fileUpload-'+object.id+'" type="file" name="media" multiple="1" accept="image/*" style="display:none; position:fixed; top:-9999px;"></label></div>'
                         //thisview.html("<div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary cs'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color'><i class='icon-plus dbc'></i> New Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea id='text-"+object.id+"' class='secondary fx' rows='3' required></textarea><input type='submit'  value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
-                        thisview.html("<div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='secondary-color tertiary'>coming soon</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+" ago</div></div><div class='row'><div class='small-12 columns s-ws-bottom'>"+DisplayUpload+"</div><div class='small-12 columns'><p class=''>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary cs' id='commentsclick-"+object.id+"'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input id='commentBtn-"+object.id+"' type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div>");
+                        
+                        thisview.html("<div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='secondary-color tertiary'>coming soon</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+" ago</div></div><div class='row'><div class='small-12 columns s-ws-bottom'>"+DisplayUpload+"</div><div class='small-12 columns'><p class=''>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary cs' id='commentsclick-"+object.id+"'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input id='commentBtn-"+object.id+"' type='submit' value='comment' placeholder='add a comment' class='tiny button'>"+fileu+"</form></div>"+imagepreview+"</div></div></div>");
+                        $('#fileUpload-'+object.id).bind("change", function(e) {
+                            showMyCommentImage(this);
+                            $('#imgStatus-'+object.id).removeClass('icon-image-add bc').addClass('icon-image-accept gc');
+                            var files = e.target.files || e.dataTransfer.files;
+                            // Our file var now holds the selected file
+                            file = files[0];
+                        });
                         var url = window.location.href;    
                         if (url.indexOf('#') == -1){
                            url += '#'+pid
@@ -378,6 +512,7 @@ function populateStatus(){
                     ListItem2 = Parse.Object.extend("PostComment");
                     query2 = new Parse.Query(ListItem2);
                     query2.containedIn("post",qpost);
+                    query2.notEqualTo("reported",1);
                     query2.include("post");
                     query2.include("pUser");
                     query2.ascending("createdAt");
@@ -386,6 +521,7 @@ function populateStatus(){
                             console.log("Number of comments:"+results2.length);
                             for(var i=0;i<results.length;i++){
                                 var object=results[i];
+                                var objectId=object.id;
                                 var chaincomments ="";
                                 for(var j=0;j<results2.length;j++){
                                     if(results2[j].get("post").id==object.id && results2[j].get("reported") !==1){
@@ -406,7 +542,18 @@ function populateStatus(){
                                         //console.log(commentId);
                                         var commentId = results2[j].id;
                                         //console.log(commentId);
-                                        chaincomments+="<div class='row comment' id='comment-"+commentId+"'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+commentId+"'class='reportbtn icon-close hv cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                                        if(results2[j].get("file")==undefined){
+                                            chaincomments+="<div class='row comment' id='comment-"+commentId+"'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+commentId+"-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                                        }
+                                        else{
+                                            var comimage= '<img style="width:100%; margin-top:10px; border:none;"  src="'+results2[j].get("file").url()+'"/>';
+                                            chaincomments+="<div class='row comment' id='comment-"+commentId+"'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+commentId+"-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color'></i></div>"+comimage+"<p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                                        }
+                                        //chaincomments+="<div class='row comment' id='comment-"+commentId+"'><div class='small-2 columns text-right s-ws-top'><img src="+photo+" class='circle-img gs hv img-h'><h6 class='tertiary secondary-color'>"+name+"</h6></div><div class='small-10 columns s-ws-top'><div class='secondary text-right'><i id='close-"+commentId+"-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color'></i></div><p class='secondary nm xs-ws-top'>"+comm+"</p><div class='tertiary secondary-color'><i class='icon-clock tertiary'></i> "+time+" </div></div></div>";
+                                        $("#close-"+commentId+"-"+objectId).click(function(event){
+                                            event.preventDefault();
+                                            removeComment(event.target.id.toString().split('-')[1],event.target.id.toString().split('-')[2]);
+                                        });
                                     }
                                     // Get the element, add a click listener...
                                     // Get the element, add a click listener...
@@ -460,7 +607,20 @@ function populateStatus(){
 
                                 //var cpgView='<form id="campaignform-'+object.id+'" style="display:none;"><div id="cmpg-form" class="s-ws-top"><div class="row collapse"><div class="small-2 columns text-center fx3"><label for="capp" class="inline secondary-color np tertiary"><div class="f-1-5x fx4"><i class="icon-phone blc"></i> </div> <input type="checkbox" name="medium-'+object.id+'" id="capp" value="1" checked=""> Push Send </label> </div> <div class="small-2 columns text-center fx3"> <label for="csms" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-comment blc"></i> </div> <input type="checkbox" id="csms" name="medium-'+object.id+'" value="2"> SMS </label> </div> <div class="small-2 columns text-center fx3"> <label for="cwhatsapp" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-whatsapp blc"></i> </div> <input type="checkbox" id="cwhatsapp" name="medium-'+object.id+'" value="3"> WhatsApp </label> </div> <div class="small-2 columns text-center fx3"> <label for="cemail" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-mail blc"></i> </div> <input type="checkbox" id="cemail" name="medium-'+object.id+'" value="4"> Email </label> </div> <div class="small-2 columns text-center fx3"> <label for="cfb" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-facebook blc"></i> </div> <input type="checkbox" id="cfb" name="medium-'+object.id+'" value="5"> Facebook </label> </div> <div class="small-2 columns text-center fx3"> <label for="ctwt" class="inline secondary-color np tertiary"> <div class="f-1-5x fx4"> <i class="icon-twitter blc"></i> </div> <input type="checkbox" id="ctwt" name="medium-'+object.id+'" value="6"> Twitter</label> </div> </div> <div class="row"></div><div class="small-12 columns s-ws-bottom">'+voterView+' <div class="small-4 columns"> <input id="post" type="submit" id value="Send Update" class="button tiny nm fullwidth"></div></div></div></form>';
 								//postView.append("<div id='post-"+object.id+"'><div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns s-ws-bottom'>"+DisplayUpload+"</div><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary cs'>"+cpgView+"<div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary' id='commentsclick-"+object.id+"'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color cs' id='campaignclick-"+object.id+"'><i class='icon-plus dbc'></i> Send Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
-                                postView.append("<div id='post-"+object.id+"'><div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='secondary-color tertiary'>coming soon</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><a name="+object.id+" class='secondary-color hv'><i class='icon-clock tertiary'></i> "+ago+" ago</a></div></div><div class='row'><div class='small-12 columns s-ws-bottom'>"+DisplayUpload+"</div><div class='small-12 columns'><p class=''>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary cs' id='commentsclick-"+object.id+"'>Comments "+comments+"</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input id='commentBtn-"+object.id+"' type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
+                                
+                                var imagepreview='<img id="thumbnil-'+object.id+'" style="width:100%; margin-top:10px; border:none; display:none;"  src=""/>';
+                                var fileu='<div class="small-1 columns tertiary secondary-color"><label for="fileUpload-'+object.id+'" id="imgStatus-'+object.id+'" class="icon-image-add f-2x bc" style="line-height:1;"><input id="fileUpload-'+object.id+'" type="file" name="media" multiple="1" accept="image/*" style="display:none; position:fixed; top:-9999px;"></label></div>'
+                                //thisview.html("<div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='bc'>"+reach+"</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+"</div></div><div class='row'><div class='small-12 columns'><p class='secondary-color'>"+content+"</p></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary cs'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary'>Comments "+comments+"</div><div class='small-3 columns secondary secondary-color'><i class='icon-plus dbc'></i> New Campaign</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea id='text-"+object.id+"' class='secondary fx' rows='3' required></textarea><input type='submit'  value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
+                                
+                                postView.append("<div id='post-"+object.id+"'><div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='secondary-color tertiary'>coming soon</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><i class='icon-clock tertiary'></i> "+ago+" ago</div></div><div class='row'><div class='small-12 columns s-ws-bottom'>"+DisplayUpload+"</div><div class='small-12 columns'><p class=''>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary cs' id='commentsclick-"+object.id+"'>Comments "+comments+"</div></div><div id='comments-"+object.id+"'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input id='commentBtn-"+object.id+"' type='submit' value='comment' placeholder='add a comment' class='tiny button'>"+fileu+"</form></div>"+imagepreview+"</div></div></div>");
+                                $('#fileUpload-'+object.id).bind("change", function(e) {
+                                    showMyCommentImage(this);
+                                    $('#imgStatus-'+object.id).removeClass('icon-image-add bc').addClass('icon-image-accept gc');
+                                    var files = e.target.files || e.dataTransfer.files;
+                                    // Our file var now holds the selected file
+                                    file = files[0];
+                                });
+                                //<div class='panel nm br-fx-bottom'><div class='row'><div class='small-3 small-offset-6 columns text-right secondary-color s-ws-bottom'><span class='tertiary'>Reach: </span><span class='secondary-color tertiary'>coming soon</span></div><div class='small-3 columns secondary-color tertiary text-right s-ws-bottom'><a name="+object.id+" class='secondary-color hv'><i class='icon-clock tertiary'></i> "+ago+" ago</a></div></div><div class='row'><div class='small-12 columns s-ws-bottom'>"+DisplayUpload+"</div><div class='small-12 columns'><p class=''>"+content+"</p></div></div></div><div class='bg2 br-fx1-top np2'><div id='expand' name='"+object.id+"' class='row expnd secondary'><div class='small-3 s-ws-bottom columns secondary-color secondary'>Likes "+likes+"</div><div class='small-3 s-ws-bottom columns end secondary-color secondary cs' id='commentsclick-"+object.id+"'>Comments "+comments+"</div></div><div id='comments-"+object.id+"' style='display:none;'>"+chaincomments+"<div class='row'><div class='small-2 columns text-right m-ws-top'><img src="+imige+" class='circle-img gs hv img-h'></div><div class='small-10 columns s-ws-top'><form id='form-"+object.id+"'><textarea class='secondary fx' rows='3' id='text-"+object.id+"' required></textarea><input id='commentBtn-"+object.id+"' type='submit' value='comment' placeholder='add a comment' class='tiny button'></form></div></div></div></div></div>");
                                 //console.log("form listener created for "+object.id);
                                 $('#form-'+object.id).submit(function(event){
                                       event.preventDefault();

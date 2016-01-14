@@ -68,6 +68,7 @@
           <table class="list-table" id="list-view-table">
             <thead>
               <tr>
+                <th>Constituency</th>
                 <th>Issue Number</th>
                 <th>Type</th>
                 <th>Content</th>
@@ -120,8 +121,13 @@
               </div>
               <div id="comment-view" class="small-10 columns s-ws-top">
                 <form id="comment-form">
+                  <img id="thumbnil" style="width:100%; margin-top:10px; border:none; display:none;"  src=""/>
+                  <label for="fileUpload" id="imgStatus" class="icon-image-add f-2x bc" style="line-height:1;">
+                    <input id="fileUpload" type="file" name="media" multiple="1" accept="image/*" style="display:none; position:fixed; top:-9999px;">
+                  </label>
                   <textarea id="comment" rows="5" required placeholder="Contribute something meaningful to the conversation"></textarea>
                   <input id="commit_btn" type="submit" value="Comment" class="button small load-fx right">
+
                 </form>
               </div>
             </div>
@@ -130,6 +136,29 @@
       </div>
       <div id="details-column" class="small-3 columns panel" style="display:none;">
         <h4>Overview</h4>
+        <div class="row">
+          <div class="small-6 columns">
+            Constituency: 
+          </div>
+          <div class="small-6 columns">
+            <strong><span id="issue_constituency"></span></strong>
+          </div>      
+        </div>  
+        <div class="row">
+          <div class="small-9 columns">
+            Raised by <strong><span id="username_i"></span></strong>
+          </div>
+          <div class="small-3 columns">
+            <img id="userphoto_i" src="./assets/images/user.png" class="circle-img gs hv">
+          </div>      
+        </div>  
+        <div class="row text-center">
+              <a href="#" id="upvotes_b" class="nhv f-1-5-x" data-dropdown="droptop_upvotes" aria-controls="droptop_upvotes" aria-expanded="false" style="display:relative;"><strong><span class="f-1-5x yc" id="upvotes">...</span></strong> upvotes</a>
+              <ul id="droptop_upvotes" class="f-dropdown small" data-dropdown-content aria-hidden="true" tabindex="-1">
+              <li class="columns brbm"><strong>Upvotes</strong></li>
+              </ul>
+        </div> 
+        <hr>
         <div class="row">
           <div class="small-12 columns ct">
             Status: <span id="colorstatus"><strong>Loading...</strong></span>
@@ -158,6 +187,7 @@
                   </div>
                 <div class="text-left">
                   <div class="button fullwidth" id="claim-st1"><strong>Claim</strong></div>
+                  <div class="button fullwidth" id="reportWrong"><strong>Wrong Constituency?</strong></div>
                   <div id="claim-st3">
                     Assigned to: <strong>Loading...</strong>
                   </div>

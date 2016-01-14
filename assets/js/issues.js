@@ -1,14 +1,21 @@
 //var constituency;
+var file;
+var filePath;
+var filename;
 
 var constituencyType;
 var polyArray = [];
 var poly;
 var view = 0;
 
+var specificIssue;
+var specificNum;
+
 var listView = $('#list-view tbody');
 var timelineView = $('#timeline-view');
 var teamView = $('#team');
 var officialView = $('#officials');
+var upvotesView = $('#droptop_upvotes');
 
 var box_r = document.getElementById('road_cb');
 var box_e = document.getElementById('electricity_cb');
@@ -151,6 +158,16 @@ var iconso = [
     icon6o
 ];
 
+function getQueryVariable(variable){
+   var query = window.location.search.substring(1);
+   var vars = query.split("?");
+   for (var i=0;i<vars.length;i++) {
+           var pair = vars[i].split("=");
+           if(pair[0] == variable){return pair[1];}
+   }
+   return(false);
+}
+
 // Creates the Array of Constituencies
 function createConstituencyArray() {
     console.log("createConstituencyArray");
@@ -223,6 +240,41 @@ function getReverseGeocodingData(lat, lng) {
         }
     });
 
+}
+
+function getUpvotes(){
+    NProgress.start();
+    upvotesView.html("");
+    upvotesView.html("<li class='columns brbm'><strong>Upvotes</strong></li>");
+    Parse.Cloud.run("getPeople", {
+        class: "Issue",
+        id: currmarker.content.id,
+        column: "issuesUpvoted"
+    }, {
+        success: function(results) {
+            result=results.result;
+            console.log("Upvotes Size:" + result.length);
+            console.log("Upvotes:" + result);
+            for(var i=0;i<result.length;i++){
+                upvotesView.append("<li>"+result[i]+"</li>");
+            }
+            NProgress.done();
+            console.log("NProgress Stop");
+        },
+        error: function(error) {
+            notify('Failed to fetch Upvotes!' + error.message, "error", standardErrorDuration);
+            NProgress.done();
+        }
+    });
+    query.find({
+        success: function(results) {
+            
+        },
+        error: function(error) {
+            console.log("Error: " + error.message);
+            notify(standardErrorMessage, "error", standardErrorDuration);
+        }
+    });
 }
 
 // On Click Listener to Current Location on Map
@@ -463,6 +515,28 @@ function FixedLocationControl(controlDiv, map) {
 
 }
 
+
+function removeComment(cid,pid){
+    console.log("removeComment-"+cid);
+    NProgress.start();
+    Parse.Cloud.run("report", {
+        oClass: "Update",
+        objId: cid,
+        rStatus: 1
+    }, {
+        success: function(results) {
+            console.log(results);
+            updateCurrentMarker(currmarker);
+            enableDetailsView();
+        },
+        error: function(error) {
+            notify('Failed to remove Comment!' + error.message, "error", standardErrorDuration);
+            NProgress.done();
+        }
+    });
+}
+
+
 // 
 function populateUpdates() {
     console.log("populateUpdates");
@@ -473,6 +547,7 @@ function populateUpdates() {
     pointer.id = currmarker.content.id;
     query.equalTo("issue", pointer);
     query.include("assignee");
+    query.notEqualTo("reported",1);
     query.include(["assignee.pUser"]);
     query.include("pUser");
     query.ascending('createdAt');
@@ -486,6 +561,7 @@ function populateUpdates() {
             var assignee;
             for (var i = 0; i < results.length; i++) {
                 object = results[i];
+                objectId=object.id;
                 d = new Date(object.createdAt);
                 ago = timeSince(d);
                 if (object.get("content") != undefined) {
@@ -521,8 +597,19 @@ function populateUpdates() {
 
                     }
                     if (object.get("typeCode") == TypeEnum.COMMENT) {
-                        timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small></div><p>" + content + "</p></div></div></div>");
+                        if(object.get("file")==undefined){
+                            timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small><i id='close-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color' style='float:right;'></i></div><p>" + content + "</p></div></div></div>");
+                        }
+                        else{
+                            var comimage= '<img style="width:100%; margin-top:10px; border:none;"  src="'+object.get("file").url()+'"/>';
+                            timelineView.append("<div class='row'><div class='small-2 columns wbg-fx wd-fx text-right'><img src='" + pphoto1 + "' class='circle-img'>"+user.get("username")+"</div><div class='small-10 columns'><div class='panel p-fx'><div class='panel-head'><strong class='ct'>" + user.get("username") + "</strong> commented <small>" + ago + " ago</small><i id='close-"+objectId+"'class='reportbtn icon-close hv cs tertiary-color' style='float:right;'></i></div>"+comimage+"<p>" + content + "</p></div></div></div>");
+                        }
+                        
                     }
+                    $("#close-"+objectId).click(function(event){
+                        event.preventDefault();
+                        removeComment(event.target.id.toString().split('-')[1],pointer.id);
+                    });
                     if (object.get("typeCode") == TypeEnum.CLAIM) {
                         timelineView.append("<div class='panel nb'><p><strong class='ct'>" + user.get("name") + "</strong> claimed this issue <small>" + ago + " ago</small></p></div>");
                     }
@@ -598,36 +685,106 @@ function populateOfficials() {
 
 }
 
-//Starts NProgress
-function postComment(c) {
-    NProgress.start();
-    console.log("NProgress Start");
-    console.log("postComment");
-    loadingButton_id("commit_btn", 4);
-    var Comment = Parse.Object.extend("Update");
-    var comment = new Comment();
-    var u = new Parse.Object("_User");
-    var i = new Parse.Object("Issue");
-    u.id = currentUser.id;
-    i.id = currmarker.content.id;
-    comment.set("type", "comment");
-    comment.set("content", c);
-    comment.set("issue", i);
-    comment.set("user", u);
+function postComment(c){
+       if(file!=undefined){
+            var parsefile=new Parse.File(file.name,file);
+            parsefile.save().then(function(){
+            //  console.log('postStatus');
+                NProgress.start();
+            //  console.log("NProgress Start");
+            //  console.log("postStatus");
 
-    comment.save(null, {
-        success: function(comment) {
-            updateCurrentMarker(currmarker);
-            document.getElementById("comment").value = "";
-            enableDetailsView();
+                
+                loadingButton_id("commit_btn", 4);
+                var Comment = Parse.Object.extend("Update");
+                var comment = new Comment();
+                var u = new Parse.Object("_User");
+                var i = new Parse.Object("Issue");
+                u.id = currentUser.id;
+                i.id = currmarker.content.id;
+                comment.set("type", "comment");
+                comment.set("content", c);
+                comment.set("issue", i);
+                comment.set("user", u);
 
-        },
-        error: function(comment, error) {
-            alert('Failed to Comment! ' + error.message);
-            enableDetailsView();
+                comment.set("file",parsefile);
+                comment.save(null, {
+                    success: function(comment) {
+                        updateCurrentMarker(currmarker);
+                        document.getElementById("comment").value = "";
+                        $('#thumbnil').attr("src","");
+                        enableDetailsView();
+                        file=undefined;
+                        filename=undefined;
+                        filePath=undefined;
+
+                    },
+                    error: function(comment, error) {
+                        alert('Failed to Comment! ' + error.message);
+                        $('#thumbnil').attr("src","");
+                        enableDetailsView();
+                        file=undefined;
+                        filename=undefined;
+                        filePath=undefined;
+                    }
+                });
+            });
         }
-    });
+    else{
+        //  console.log('postStatus');
+            NProgress.start();
+        //  console.log("NProgress Start");
+        //  console.log("postStatus");
+            loadingButton_id("commit_btn", 4);
+            var Comment = Parse.Object.extend("Update");
+            var comment = new Comment();
+            var u = new Parse.Object("_User");
+            var i = new Parse.Object("Issue");
+            u.id = currentUser.id;
+            i.id = currmarker.content.id;
+            comment.set("type", "comment");
+            comment.set("content", c);
+            comment.set("issue", i);
+            comment.set("user", u);
+            comment.save(null, {
+                success: function(comment) {
+                    updateCurrentMarker(currmarker);
+                    document.getElementById("comment").value = "";
+                    enableDetailsView();
+
+                },
+                error: function(comment, error) {
+                    alert('Failed to Comment! ' + error.message);
+                    enableDetailsView();
+                }
+            });
+    }
+ //   console.log("postComment"+pid);
 }
+
+function showMyImage(fileInput) {
+//      console.log("Display Thumbnail");
+    $('#thumbnil').fadeIn();
+    var files = fileInput.files;
+    for (var i = 0; i < files.length; i++) {           
+        var file = files[i];
+        var imageType = /image.*/;     
+        if (!file.type.match(imageType)) {
+            continue;
+        }           
+        var img=document.getElementById("thumbnil");            
+        img.file = file;    
+        var reader = new FileReader();
+        reader.onload = (function(aImg) { 
+            return function(e) { 
+                aImg.src = e.target.result; 
+            }; 
+        })(img);
+        reader.readAsDataURL(file);
+    }    
+}
+
+
 
 //Starts NProgress
 function postClaim() {
@@ -672,6 +829,28 @@ function postClaim() {
         error: function(claim, error) {
             console.log('Failed to Claim! ' + error.message);
             enableDetailsView();
+        }
+    });
+}
+
+//Starts NProgress
+function reportWrong() {
+    NProgress.start();
+    console.log("NProgress Start");
+    if (currentUser.get("type") != "neta") {
+        alert("You do not have the required permissions");
+        return;
+    }
+    console.log("postClaim");
+    Parse.Cloud.run("reportWrong", {
+        objectId: currmarker.content.id
+    }, {
+        success: function(results) {
+            console.log(results);
+            location.reload();
+        },
+        error: function(error) {
+            console.log(error);
         }
     });
 }
@@ -1060,10 +1239,15 @@ function updateContentWithCurrentMarker() {
     var p_location = p_latitude.toString().substring(0, 10) + ", " + p_longitude.toString().substring(0, 10);
     getReverseGeocodingData(p_latitude, p_longitude);
     var p_id = currmarker.content.id;
+    p_upvotes = currmarker.content.get('numUpvotes');
     var p_photo = currmarker.content.get('file');
+    var p_name = currmarker.content.get('pUser').get("name");
+    var p_username = currmarker.content.get('pUser').get("username");
+    var p_userphoto = currmarker.content.get('pUser').get("pic");
     var p_status = currmarker.content.get('statusCode');
     var p_daysLeft = currmarker.content.get('daysLeft');
     var p_title = currmarker.content.get('title');
+    var p_constituency = currmarker.content.get('constituency').get("name");
     var p_phone="";
     if(currmarker.content.get('PhoneNo')!=undefined){
        p_phone= currmarker.content.get('PhoneNo').toString();
@@ -1076,9 +1260,13 @@ function updateContentWithCurrentMarker() {
     var daysLeft = document.getElementById('daysLeft');
     var time = document.getElementById('times');
     var photo = document.getElementById('photo');
+    var upvotes = document.getElementById('upvotes');
     var content = document.getElementById('content');
     var type = document.getElementById('type');
+    var username = document.getElementById('username_i');
+    var userphoto = document.getElementById('userphoto_i');
     var title = document.getElementById('ititle');
+    var issue_constituency = document.getElementById('issue_constituency');
     var phone1=document.getElementById('phone1');
     var phone2=document.getElementById('phone2');
     var location = document.getElementById('location');
@@ -1113,9 +1301,24 @@ function updateContentWithCurrentMarker() {
         status.innerHTML = '<strong>' + appropriateStatus(p_status) + '</strong>';
         date.innerHTML = p_date;
         time.innerHTML = p_time;
+        if(p_name==undefined){
+            username.innerHTML = p_username;
+        }
+        else{
+            username.innerHTML = p_name;
+        }
+        if (p_userphoto!= undefined) {
+            console.log("photo is available");
+            userphoto.src = p_userphoto.url();
+        } else {
+            console.log("photo is unavailable");
+            userphoto.src = "./assets/images/user.png";
+        }
         console.log(p_time);
         phone1.innerHTML=p_phone;
         phone2.innerHTML=p_phone;
+        issue_constituency.innerHTML=p_constituency;
+        upvotes.innerHTML=p_upvotes;
         if (p_content.length < 50) {
             content.innerHTML = p_content;
         } else {
@@ -1153,7 +1356,7 @@ function updateContentWithCurrentMarker() {
         } else if (currentUser.get("type") == "teamMember") {
             setIssueStatusButtonTM();
         }
-
+        getUpvotes();
     }, 300);
 }
 
@@ -1336,6 +1539,8 @@ function populateTM() {
     query.equalTo("assignee", pointer);
     query.equalTo("typeCode", TypeEnum.ASSIGNED);
     query.include("issue");
+    query.include(["issue.pUser"]);
+    query.include(["issue.constituency"]);
     query.limit(1000);
     query.find({
         success: function(results) {
@@ -1371,7 +1576,7 @@ function populateTM() {
                     if (object.get("content").length > 50) {
                         content = object.get("content").substring(0, 50) + "...";
                     }
-                    listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                    listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('constituency').get('name')).toString() + "</td><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
                     console.log("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
                     $('#'+object.id).click(function(){
                                     listViewClick(this.id.toString());
@@ -1428,6 +1633,8 @@ function populate() {
     ListItem = Parse.Object.extend("Issue");
     query = new Parse.Query(ListItem);
     query.descending('createdAt');
+    query.include("pUser");
+    query.include("constituency");
     query.limit(1000);
     query.find({
         success: function(results) {
@@ -1464,7 +1671,7 @@ function populate() {
                             if (object.get("content").length > 50) {
                                 content = object.get("content").substring(0, 50) + "...";
                             }
-                            listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                            listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('constituency').get('name')).toString() + "</td><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
                             $('#'+object.id).click(function(){
                                         listViewClick(this.id.toString());
                             });
@@ -1531,7 +1738,7 @@ function populate() {
                                     if (object.get("content").length > 50) {
                                         content = object.get("content").substring(0, 50) + "...";
                                     }
-                                    listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                                    listView.append("<tr id='" + object.id + "' class='" + getClassName(object.get('statusCode')) + "'><td width='100'>" + (object.get('constituency').get('name')).toString() + "</td><td width='100'>" + (object.get('issueId')).toString() + "</td><td width='100' class='ct'>" + object.get('category') + "</td><td class='ct'>" + content + "</td><td class='ct'>" + appropriateStatus(object.get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
                                     $('#'+object.id).click(function(){
                                                 listViewClick(this.id.toString());
                                     });
@@ -1683,25 +1890,30 @@ function filter() {
     console.log("filter");
     updateHistory();
     listView.html("");
-    for (var m = 0; m < markers.length; m++) {
-        if (statusCheck(markers[m]) == 1 && categoryCheck(markers[m]) == 1 && dateCheck(markers[m])==1){
-            var d = new Date((markers[m].content).createdAt);
-            var ago = timeSince(d);
-            var content = markers[m].content.get('content');
-            if (markers[m].content.get('content').length > 50) {
-                content = markers[m].content.get('content').substring(0, 50) + "...";
+    if(specificIssue){
+        openSpecific();
+    }
+    else{
+        for (var m = 0; m < markers.length; m++) {
+            if (statusCheck(markers[m]) == 1 && categoryCheck(markers[m]) == 1 && dateCheck(markers[m])==1){
+                var d = new Date((markers[m].content).createdAt);
+                var ago = timeSince(d);
+                var content = markers[m].content.get('content');
+                if (markers[m].content.get('content').length > 50) {
+                    content = markers[m].content.get('content').substring(0, 50) + "...";
+                }
+
+                listView.append("<tr id='" + (markers[m].content).id + "' class='" + getClassName((markers[m].content).get('statusCode')) + "'><td width='100'>" + ((markers[m].content).get('constituency').get('name')).toString() + "</td><td width='100' class='ct'>" + ((markers[m].content).get('issueId')).toString() + "</td><td width='100' class='ct'>" + (markers[m].content).get('category') + "</td><td class='ct'>" + content + "</td><td width='100' class='ct'>" + appropriateStatus((markers[m].content).get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
+                $('#'+markers[m].content.id).click(function(){
+                            listViewClick(this.id.toString());
+                });
+                markers[m].setMap(map);
+            } else {
+                markers[m].setMap(null);
+
             }
 
-            listView.append("<tr id='" + (markers[m].content).id + "' class='" + getClassName((markers[m].content).get('statusCode')) + "'><td width='100' class='ct'>" + ((markers[m].content).get('issueId')).toString() + "</td><td width='100' class='ct'>" + (markers[m].content).get('category') + "</td><td class='ct'>" + content + "</td><td width='100' class='ct'>" + appropriateStatus((markers[m].content).get('statusCode')) + "</td><td width='100'>" + ago + " ago</td></tr>");
-            $('#'+markers[m].content.id).click(function(){
-                        listViewClick(this.id.toString());
-            });
-            markers[m].setMap(map);
-        } else {
-            markers[m].setMap(null);
-
         }
-
     }
 }
 
@@ -1769,6 +1981,33 @@ function getClassName(s){
     }
     if(s==StatusEnum.VERIFY){
      return "closed";   
+    }
+}
+
+function openSpecific(){
+    console.log("Opening Specific");
+    var found=false;
+    for (var m = 0; m < markers.length; m++) {
+        if ((markers[m].content).get("issueId")==specificNum){
+            notify("Loading your Issue", "success", standardErrorDuration);
+            if (infowindow) {
+                infowindow.close();
+            }
+            infowindow = new google.maps.InfoWindow({
+                maxWidth: 700,
+                maxHeight: 900
+            });
+            currmarker=markers[m];
+            updateCurrentMarker(markers[m]);
+            showDetailsView();
+            $('#details-button').click();
+            found=true;
+            break;
+        }
+    }
+    if(!found){
+        NProgress.done();
+        notify("Weird Error", "error", standardErrorDuration);
     }
 }
 
@@ -1842,23 +2081,29 @@ function initializeMap() {
                         election.equalTo("arrayNetas", pointer);
                         election.include("constituency");
                         election.include("constituencyArray");
+                        election.limit(1000);
                         election.find({
                             success: function(results) {
                                 constituency = results[0].get("constituency");
-                                constituencyType = results[0].get("type");
+                                console.log("yolo"+constituency.get("type"));
+                                constituencyType = constituency.get("type");
                                 if (constituencyType == 1) {
-                                    constituencyArray = results[0].get("constituencyArray");
+                                    console.log("POLYGON ARRAY");
+                                    constituencyArray = constituency.get("constituencyArray");
+                                     polyArray = [];
+
                                     for (var i = 0; i < constituencyArray.length; i++) {
                                         miniConstituency = constituencyArray[i];
-
+                                        console.log(miniConstituency);
                                         if (i == (constituencyArray.length - 1)) {
-                                            plotConstituencyArray(miniConstituency.get("index"), 1, constituency.get("state"));
+                                            plotConstituencyArray(miniConstituency["index"], 1, constituency.get("state"));
                                         } else {
-                                            plotConstituencyArray(miniConstituency.get("index"), 0, constituency.get("state"));
+                                            plotConstituencyArray(miniConstituency["index"], 0, constituency.get("state"));
                                         }
                                         map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
                                     }
                                 } else {
+                                    console.log("what the fuck");
                                     plotConstituency(constituency.get("index"));
                                     map.setCenter(new google.maps.LatLng(constituency.get("center").latitude, constituency.get("center").longitude));
                                 }
@@ -1888,6 +2133,15 @@ function initializeMap() {
 
 function initialize() {
     console.log("initialize");
+    issueNum= getQueryVariable("id");
+    console.log(issueNum);
+    if(issueNum!=""){
+        specificIssue=true;
+        specificNum=issueNum;
+    }
+    else{
+        specificIssue=false;
+    }
     currentUser = CU;
     currentUser.fetch({
         success:function(results){
@@ -1982,6 +2236,14 @@ function initialize() {
 
     // }            
 
+    $('#fileUpload').bind("change", function(e) {
+        showMyImage(this);
+        $('#imgStatus').removeClass('icon-image-add bc').addClass('icon-image-accept gc');
+        var files = e.target.files || e.dataTransfer.files;
+        // Our file var now holds the selected file
+        file = files[0];
+    });
+
     $('input[type=checkbox]').change(
         function() {
             updateHistory();
@@ -2054,9 +2316,21 @@ function initialize() {
     $('#claim-st1').click(function() {
         loadingButton_id("claim-st1", 3);
         
-        if (CU.get("subttype")=="mla"){
+        if (CU.get("subtype")=="mla"){
             postClaim();    
             disableDetailsView();
+        }
+        else{
+            notify("Your profile is not public yet","error",standardErrorDuration);
+        }
+        
+    });
+
+    $('#reportWrong').click(function() {
+        loadingButton_id("reportWrong", 3);
+        
+        if (CU.get("subtype")=="mla"){
+            reportWrong();
         }
         else{
             notify("Your profile is not public yet","error",standardErrorDuration);
@@ -2077,7 +2351,7 @@ function initialize() {
         loadingButton_id("reminder", 3);
         var q = $('#officials').val();
         
-        if (CU.get("subttype")=="mla"){
+        if (CU.get("subtype")=="mla"){
            if (q != null) {
             postOfficial(q);
             }
@@ -2093,7 +2367,7 @@ function initialize() {
         postClose();
     });
 
-    if (CU.get("subttype")=="mla" || CU.get("subttype")=="wardincharge") {
+    if (CU.get("subtype")=="mla" || CU.get("subtype")=="wardincharge") {
         $('#comment-form').submit(function(event) {
         event.preventDefault();
         loadingButton_id("commit_btn", 3);
@@ -2108,37 +2382,38 @@ function initialize() {
     
 
     $('#back').click(function() {
-        updateHistory();
-        NProgress.start();
-        console.log("NProgress Start");
-        if (infowindow) {
-            infowindow.close();
-        }
-        $('#photo').delay(400).fadeIn(300);
-        $('#content').delay(400).fadeIn(300);
-        $('#details-button').delay(400).fadeIn(300);
-        if (view == 1) {
-            $('#list-view').delay(400).fadeIn(300);
-            $('#map-view').delay(400).fadeOut(300);
-        } else {
-            $('#map-view').delay(400).fadeIn(300);
-            setTimeout(function() {
-                google.maps.event.trigger(map, 'resize');
-                map.setZoom(map.getZoom());
-            }, 700);
-            $('#list-view').delay(400).fadeOut(300);
-        }
-        $('#details-column').delay(400).fadeOut(300);
-        $('#updates-view').delay(400).fadeOut(300);
-        $('#back').delay(400).fadeOut(300);
+        window.location = "./issues.html"
+        // updateHistory();
+        // NProgress.start();
+        // console.log("NProgress Start");
+        // if (infowindow) {
+        //     infowindow.close();
+        // }
+        // $('#photo').delay(400).fadeIn(300);
+        // $('#content').delay(400).fadeIn(300);
+        // $('#details-button').delay(400).fadeIn(300);
+        // if (view == 1) {
+        //     $('#list-view').delay(400).fadeIn(300);
+        //     $('#map-view').delay(400).fadeOut(300);
+        // } else {
+        //     $('#map-view').delay(400).fadeIn(300);
+        //     setTimeout(function() {
+        //         google.maps.event.trigger(map, 'resize');
+        //         map.setZoom(map.getZoom());
+        //     }, 700);
+        //     $('#list-view').delay(400).fadeOut(300);
+        // }
+        // $('#details-column').delay(400).fadeOut(300);
+        // $('#updates-view').delay(400).fadeOut(300);
+        // $('#back').delay(400).fadeOut(300);
 
-        enableCheckPoints();
+        // enableCheckPoints();
 
-        if (currentUser.get("type") == "teamMember") {
-            populateTM();
-        } else if (currentUser.get("type") == "neta") {
-            populate();
-        }
+        // if (currentUser.get("type") == "teamMember") {
+        //     populateTM();
+        // } else if (currentUser.get("type") == "neta") {
+        //     populate();
+        // }
     });
 
 
@@ -2172,7 +2447,7 @@ function initialize() {
             startDate: moment().subtract('year', 3),
             endDate: moment(),
             minDate: '01/01/2012',
-            maxDate: '12/31/2015',
+            maxDate: '12/31/2016',
             dateLimit: {
                 days: 60
             },

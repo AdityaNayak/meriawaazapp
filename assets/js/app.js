@@ -68,7 +68,7 @@ else{
 		    
 		    CU.fetch({
 		          success: function(results) {
-		                //console.log("Size:"+results.length);
+		                console.log("Size:"+results.length);
 		                var plogo=document.getElementById('plogo');
 		                var consti=document.getElementById('consti');
 		                object=CU;
@@ -102,10 +102,12 @@ else{
 												election.descending('createdAt');
 												var pointer = new Parse.Object("Neta");
 												pointer.id = CU.get("neta").id;
+												console.log("Size:"+pointer.id);
 												election.equalTo("arrayNetas", pointer);
 												election.include("constituency");
 												election.find({
 												  success: function(results) {
+												  	console.log("Size:"+results.length);
 														constituency=results[0].get("constituency");
 														consti.innerHTML=constituency.get("name");
 														fetchNotifications()
@@ -355,8 +357,7 @@ function fetchNotifications(){
 	    ListItem = Parse.Object.extend("Notification");
 	    query = new Parse.Query(ListItem);
 	    query.equalTo("constituency", constituency);
-	    query.equalTo("constituency", constituency);
-	    query.greaterThanOrEqualTo( "createdAt", new Date().subtractHours(48) );
+	    query.greaterThanOrEqualTo( "createdAt", new Date().subtractHours(72) );
 	    query.include("issue");
 	    query.include("post");
 	    if(CU.get("type")=="teamMember"){
@@ -382,9 +383,11 @@ function fetchNotifications(){
 	            console.log("Size:" + results.length);
 	            notifications=results;
 	            $("#notification_n")[0].innerHTML=notifications.length;
-	            object.set("lastFetched",new Date().subtractHours(48));
-				object.save();
 				displayNotifications();
+				var page=location.pathname.split('/').slice(-1)[0];
+				if(a=="notifications.html"){
+					initializeNotifications();
+				}
 	            NProgress.done();
 	            console.log("NProgress Stop");
 	        },
@@ -410,108 +413,60 @@ function displayNotifications(){
         var object = notifications[i];
 
         // Someone asked a question
-        if (object.get("type") == "question") {
-            console.log("notification - question");
-            var pAsker_m=object.get("question").get("pAsker").get("username");
-            var title_m=object.get("question").get("title");
-            notificationView.append("<li><a href='#'>"+pAsker_m+" asked a new Question titled - "+title_m+"</a></li>");
-        }
+        // if (object.get("type") == "question") {
+        //     console.log("notification - question");
+        //     var pAsker_m=object.get("question").get("pAsker").get("username");
+        //     var title_m=object.get("question").get("title");
+        //     notificationView.append("<li><a href='#'>"+pAsker_m+" asked a new Question titled - "+title_m+"</a></li>");
+        // }
 
         // New Issue
-        if (object.get("type") == "issue") {
-        	console.log("notification - issue");
-        	var issueid_m=object.get("issue").get("issueId");
-            var issuetype_m=object.get("issue").get("category");
-            var issueposter_m=object.get("issue").get("title");
-            notificationView.append("<li><a href='#'>["+issueid_m+"] New "+issuetype_m+" issue was posted by "+issueposter_m+" </a></li>");
-        }
+        try {
+			if (object.get("type") == "issue") {
+	        	console.log("notification - issue");
+	        	var issueid_m=object.get("issue").get("issueId");
+	            var issuetype_m=object.get("issue").get("category");
+	            var issueposter_m=object.get("issue").get("pUser").get("username");
+	            var issuetitle_m=object.get("issue").get("title");
+	            notificationView.append("<li><a href='./issues.html?id="+issueid_m+"'>["+issueid_m+"] New "+issuetype_m+" issue was posted:"+issuetitle_m+" by "+issueposter_m+" </a></li>");
+	        }
 
-        // Update on an Issue
-        if (object.get("type") == "update") {
-        	console.log("notification - update");
-			var issueupdate_m=object.get("update").get("type");
-            var issueid_m=object.get("update").get("issue").get("issueId");
-            var issueupdater_m=object.get("update").get("pUser").get("username");
-            notificationView.append("<li><a href='#'>New update("+issueupdate_m+") on an Issue ["+issueid_m+"] by "+issueupdater_m+"</a></li>");
+	        // Update on an Issue
+	        if (object.get("type") == "update") {
+	        	console.log("notification - update");
+				var issueupdate_m=object.get("update").get("type");
+	            var issueid_m=object.get("update").get("issue").get("issueId");
+	            var issueupdater_m=object.get("update").get("pUser").get("username");
+	            notificationView.append("<li><a href='./issues.html?id="+issueid_m+"'>New update("+issueupdate_m+") on an Issue ["+issueid_m+"] by "+issueupdater_m+"</a></li>");
+	        }
 
-        }
+	        // Someone answered a question
+	        // if (object.get("type") == "answer") {
+	        // 	console.log("notification - answer");
+	        // 	var pAsker_m=object.get("answer").get("pUser").get("username");
+	        //     var title_m=object.get("answer").get("question").get("title");
+	        //     notificationView.append("<li><a href='#'>"+pAsker_m+" answered the Question titled - "+title_m+"</a></li>");
+	        // }
 
-        // Someone answered a question
-        if (object.get("type") == "answer") {
-        	console.log("notification - answer");
-        	var pAsker_m=object.get("answer").get("pUser").get("username");
-            var title_m=object.get("answer").get("question").get("title");
-            notificationView.append("<li><a href='#'>"+pAsker_m+" answered the Question titled - "+title_m+"</a></li>");
-        }
-
-        // Someone commented on the post
-        if (object.get("type") == "postComment") {
-        	console.log("notification - postComment");
-        	var posttitle_m=object.get("postComment").get("post").get("title");
-            var answered_m=object.get("postComment").get("pUser").get("username");
-            notificationView.append("<li><a href='#'>New comment on your Post titled - "+posttitle_m+" by "+answered_m+"</a></li>");
-        }
+	        // Someone commented on the post
+	        if (object.get("type") == "postComment") {
+	        	console.log("notification - postComment");
+	        	var posttitle_m=object.get("postComment").get("post").get("title");
+	            var answered_m=object.get("postComment").get("pUser").get("username");
+	            notificationView.append("<li><a href='./dashboard.html#"+object.get("postComment").get("post").id+"'>New comment on your Post titled - "+posttitle_m+" by "+answered_m+"</a></li>");
+	        }
+		}
+		catch(err) {
+		    console.log("lol");
+		}
+        
     }
 	
 	if(notifications.length>3){
-		notificationView.append("<li class='text-center nm fullwidth'><a onclick='callDisplayAllNotifications();' class='bc nbr'><strong>See all</strong></a></li>");
+		notificationView.append("<li class='text-center nm fullwidth'><a href='./notifications.html' class='bc nbr'><strong>See all</strong></a></li>");
 	}
 }
-function callDisplayAllNotifications(){
-	console.log("callDisplayAllNotifications");
-	all=true;
-	$( '#notification_b' ).click();
-}
-function displayAllNotifications(){
-	console.log("displayAllNotifications");
-	//all=false;
-	notificationView.html("<li class='columns brbm'><strong>Notifications</strong></li>");
-	for (var i = 0; i < notifications.length; i++) {
-        var object = notifications[i];
-        // Someone asked a question
-        if (object.get("type") == "question") {
-            console.log("notification - question");
-            var pAsker_m=object.get("question").get("pAsker").get("username");
-            var title_m=object.get("question").get("title");
-            notificationView.append("<li><a href='#'>"+pAsker_m+" asked a new Question titled - "+title_m+"</a></li>");
-        }
 
-        // New Issue
-        if (object.get("type") == "issue") {
-        	console.log("notification - issue");
-        	var issueid_m=object.get("issue").get("issueId");
-            var issuetype_m=object.get("issue").get("category");
-            var issueposter_m=object.get("issue").get("title");
-            notificationView.append("<li><a href='#'>["+issueid_m+"] New "+issuetype_m+" issue was posted by "+issueposter_m+" </a></li>");
-        }
-
-        // Update on an Issue
-        if (object.get("type") == "update") {
-        	console.log("notification - update");
-			var issueupdate_m=object.get("update").get("type");
-            var issueid_m=object.get("update").get("issue").get("issueId");
-            var issueupdater_m=object.get("update").get("pUser").get("username");
-            notificationView.append("<li><a href='#'>New update("+issueupdate_m+") on an Issue ["+issueid_m+"] by "+issueupdater_m+"</a></li>");
-
-        }
-
-        // Someone answered a question
-        if (object.get("type") == "answer") {
-        	console.log("notification - answer");
-        	var pAsker_m=object.get("answer").get("pUser").get("username");
-            var title_m=object.get("answer").get("question").get("title");
-            notificationView.append("<li><a href='#'>"+pAsker_m+" answered the Question titled - "+title_m+"</a></li>");
-        }
-
-        // Someone commented on the post
-        if (object.get("type") == "postComment") {
-        	console.log("notification - postComment");
-        	var posttitle_m=object.get("postComment").get("post").get("title");
-            var answered_m=object.get("postComment").get("pUser").get("username");
-            notificationView.append("<li><a href='#'>New comment on your Post titled - "+posttitle_m+" by "+answered_m+"</a></li>");
-        }
-    }
-}
 
 function notready(event){
 	 NProgress.done();
