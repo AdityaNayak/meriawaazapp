@@ -12,8 +12,8 @@
 @charset "UTF-8";
 
 // Behold, here are all the Foundation components.
-//@imports
-//3"foundation/components/accordion",
+@imports
+//"foundation/components/accordion",
 //"foundation/components/alert-boxes",
 //"foundation/components/block-grid",
 //"foundation/components/breadcrumbs",
@@ -106,6 +106,14 @@
 	}
 	.name{
 		max-width:20em;
+	}
+}
+.inline-list{
+	&.center{
+		>li{
+			display: inline-block;
+			float: none;
+		}
 	}
 }
 @media #{$medium-up} { 
