@@ -496,7 +496,7 @@ function internet(){
 		notify('Internet connectivty restored', 'success', 3);
 	}, false);
 }
-function icon_bg(){
+function icon_bg(num){
 	var iconBg = $('.icon-bg');
 	var iconArray = ['calendar','clock',
 	'location',
@@ -529,7 +529,4 @@ function icon_bg(){
 		iconBg.append('<i class="icon-'+iconArray[randomNumber]+'" style="font-size:'+Math.floor((Math.random() * 3) + 1.75)+'em; padding-top:'+Math.floor((Math.random() * 2) + 0.25)+'em;"></i>');
 		iconArray.splice(randomNumber, 1);
 	}
-	console.log('success');
-
-
 }
